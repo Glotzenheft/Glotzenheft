@@ -1,0 +1,65 @@
+<?php
+
+declare(strict_types=1);
+
+namespace DoctrineMigrations;
+
+use Doctrine\DBAL\Schema\Schema;
+use Doctrine\Migrations\AbstractMigration;
+
+/**
+ * Auto-generated Migration: Please modify to your needs!
+ */
+final class Version20250124121627 extends AbstractMigration
+{
+    public function getDescription(): string
+    {
+        return 'Create entities';
+    }
+
+    public function up(Schema $schema): void
+    {
+        // this up() migration is auto-generated, please modify it to your needs
+        $this->addSql('CREATE TABLE episode (id INT AUTO_INCREMENT NOT NULL, tmdb_season_id INT NOT NULL, name VARCHAR(255) NOT NULL, overview LONGTEXT NOT NULL, episode_number INT NOT NULL, runtime INT NOT NULL, poster_path VARCHAR(255) NOT NULL, air_date DATE DEFAULT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE media (id INT AUTO_INCREMENT NOT NULL, tmdb_id INT DEFAULT NULL, mal_id INT DEFAULT NULL, imdb_id VARCHAR(255) DEFAULT NULL, original_name VARCHAR(255) NOT NULL, name VARCHAR(255) NOT NULL, description LONGTEXT NOT NULL, first_air_date DATE DEFAULT NULL, type VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE season (id INT AUTO_INCREMENT NOT NULL, media_id INT NOT NULL, tmdb_season_id INT NOT NULL, season_number INT NOT NULL, name VARCHAR(255) NOT NULL, overview LONGTEXT NOT NULL, air_date DATE DEFAULT NULL, episode_count INT NOT NULL, poster_path VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', INDEX IDX_F0E45BA9EA9FDD75 (media_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tmdbgenre (id INT AUTO_INCREMENT NOT NULL, tmdb_genre_id INT NOT NULL, name VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tmdbgenre_media (tmdbgenre_id INT NOT NULL, media_id INT NOT NULL, INDEX IDX_D65A0E204AF4A685 (tmdbgenre_id), INDEX IDX_D65A0E20EA9FDD75 (media_id), PRIMARY KEY(tmdbgenre_id, media_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tracklist (id INT AUTO_INCREMENT NOT NULL, rating INT DEFAULT NULL, status VARCHAR(255) NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tracklist_media (tracklist_id INT NOT NULL, media_id INT NOT NULL, INDEX IDX_FF9B3AE68C5F30E1 (tracklist_id), INDEX IDX_FF9B3AE6EA9FDD75 (media_id), PRIMARY KEY(tracklist_id, media_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tracklist_user (tracklist_id INT NOT NULL, user_id INT NOT NULL, INDEX IDX_8542BE818C5F30E1 (tracklist_id), INDEX IDX_8542BE81A76ED395 (user_id), PRIMARY KEY(tracklist_id, user_id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('CREATE TABLE tracklist_episode (id INT AUTO_INCREMENT NOT NULL, tracklist_id INT NOT NULL, episode_id INT NOT NULL, watch_date DATETIME NOT NULL, created_at DATETIME NOT NULL COMMENT \'(DC2Type:datetime_immutable)\', updated_at DATETIME DEFAULT NULL COMMENT \'(DC2Type:datetime_immutable)\', INDEX IDX_1EE6D8C78C5F30E1 (tracklist_id), UNIQUE INDEX UNIQ_1EE6D8C7362B62A0 (episode_id), PRIMARY KEY(id)) DEFAULT CHARACTER SET utf8mb4 COLLATE `utf8mb4_unicode_ci` ENGINE = InnoDB');
+        $this->addSql('ALTER TABLE season ADD CONSTRAINT FK_F0E45BA9EA9FDD75 FOREIGN KEY (media_id) REFERENCES media (id)');
+        $this->addSql('ALTER TABLE tmdbgenre_media ADD CONSTRAINT FK_D65A0E204AF4A685 FOREIGN KEY (tmdbgenre_id) REFERENCES tmdbgenre (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE tmdbgenre_media ADD CONSTRAINT FK_D65A0E20EA9FDD75 FOREIGN KEY (media_id) REFERENCES media (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE tracklist_media ADD CONSTRAINT FK_FF9B3AE68C5F30E1 FOREIGN KEY (tracklist_id) REFERENCES tracklist (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE tracklist_media ADD CONSTRAINT FK_FF9B3AE6EA9FDD75 FOREIGN KEY (media_id) REFERENCES media (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE tracklist_user ADD CONSTRAINT FK_8542BE818C5F30E1 FOREIGN KEY (tracklist_id) REFERENCES tracklist (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE tracklist_user ADD CONSTRAINT FK_8542BE81A76ED395 FOREIGN KEY (user_id) REFERENCES `user` (id) ON DELETE CASCADE');
+        $this->addSql('ALTER TABLE tracklist_episode ADD CONSTRAINT FK_1EE6D8C78C5F30E1 FOREIGN KEY (tracklist_id) REFERENCES tracklist (id)');
+        $this->addSql('ALTER TABLE tracklist_episode ADD CONSTRAINT FK_1EE6D8C7362B62A0 FOREIGN KEY (episode_id) REFERENCES episode (id)');
+    }
+
+    public function down(Schema $schema): void
+    {
+        // this down() migration is auto-generated, please modify it to your needs
+        $this->addSql('ALTER TABLE season DROP FOREIGN KEY FK_F0E45BA9EA9FDD75');
+        $this->addSql('ALTER TABLE tmdbgenre_media DROP FOREIGN KEY FK_D65A0E204AF4A685');
+        $this->addSql('ALTER TABLE tmdbgenre_media DROP FOREIGN KEY FK_D65A0E20EA9FDD75');
+        $this->addSql('ALTER TABLE tracklist_media DROP FOREIGN KEY FK_FF9B3AE68C5F30E1');
+        $this->addSql('ALTER TABLE tracklist_media DROP FOREIGN KEY FK_FF9B3AE6EA9FDD75');
+        $this->addSql('ALTER TABLE tracklist_user DROP FOREIGN KEY FK_8542BE818C5F30E1');
+        $this->addSql('ALTER TABLE tracklist_user DROP FOREIGN KEY FK_8542BE81A76ED395');
+        $this->addSql('ALTER TABLE tracklist_episode DROP FOREIGN KEY FK_1EE6D8C78C5F30E1');
+        $this->addSql('ALTER TABLE tracklist_episode DROP FOREIGN KEY FK_1EE6D8C7362B62A0');
+        $this->addSql('DROP TABLE episode');
+        $this->addSql('DROP TABLE media');
+        $this->addSql('DROP TABLE season');
+        $this->addSql('DROP TABLE tmdbgenre');
+        $this->addSql('DROP TABLE tmdbgenre_media');
+        $this->addSql('DROP TABLE tracklist');
+        $this->addSql('DROP TABLE tracklist_media');
+        $this->addSql('DROP TABLE tracklist_user');
+        $this->addSql('DROP TABLE tracklist_episode');
+    }
+}
