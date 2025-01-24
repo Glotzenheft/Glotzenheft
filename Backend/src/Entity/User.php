@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -31,6 +33,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
      */
     #[ORM\Column]
     private ?string $password = null;
+
+    /**
+     * @var Collection<int, Tracklist>
+     */
+    #[ORM\ManyToMany(targetEntity: Tracklist::class, mappedBy: 'user')]
+    private Collection $tracklists;
+
+    public function __construct()
+    {
+        $this->tracklists = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -105,5 +118,32 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     {
         // If you store any temporary, sensitive data on the user, clear it here
         // $this->plainPassword = null;
+    }
+
+    /**
+     * @return Collection<int, Tracklist>
+     */
+    public function getTracklists(): Collection
+    {
+        return $this->tracklists;
+    }
+
+    public function addTracklist(Tracklist $tracklist): static
+    {
+        if (!$this->tracklists->contains($tracklist)) {
+            $this->tracklists->add($tracklist);
+            $tracklist->addUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTracklist(Tracklist $tracklist): static
+    {
+        if ($this->tracklists->removeElement($tracklist)) {
+            $tracklist->removeUser($this);
+        }
+
+        return $this;
     }
 }
