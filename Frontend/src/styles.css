@@ -30,3 +30,30 @@ input {
 h1 {
     font-size: x-large;
 }
+
+
+
+
+.sidebar {
+    background-color: black;
+    height: 100%;
+    width: calc(30% - 2 * var(--padding--left-right));
+    color: white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+
+}
+
+.content {
+    height: 100%;
+    width: calc(100% - 2 * var(--padding--left-right));
+    background: linear-gradient(var(--content-background-color), var(--content-background-color2));
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    color: white;
+}

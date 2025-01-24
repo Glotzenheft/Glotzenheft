@@ -11,6 +11,6 @@ export const routes: Routes = [{
     component: LoginComponent
 }, {
     path: "user",
-    component: UserStartComponent
+    loadChildren: () => import("../features/user/user.module").then(module => module.UserModule)
 }
 ];
