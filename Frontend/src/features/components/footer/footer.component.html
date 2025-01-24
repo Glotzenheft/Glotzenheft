@@ -1,0 +1,13 @@
+<div class="footer">
+  <h1>Weiterführende Links</h1>
+  <div class="footerContent">
+    <ul>
+      <li
+        *ngFor="let route of footerLinkList"
+        (click)="navigateToRoute(route.fullUrl)"
+      >
+        {{ route.description }}
+      </li>
+    </ul>
+  </div>
+</div>
