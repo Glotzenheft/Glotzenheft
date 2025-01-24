@@ -1,19 +1,34 @@
 <div class="startPage">
   <h1>Glotzenheft</h1>
 
-  <div>
+  <p>
+    Willkommen, <br />
+    magst du es, in die Glotze zu schauen und liebst es, deine Serien und Filme
+    geordnet zu dokumentieren? - Dann bist du hier genau richtig. Hier beim
+    Glotzenheft kannst du deine liebsten Filme und Serien bewerten und
+    organisieren - und das alles ganz einfach und schnell. <br />
+    Du musst nur ein Konto anlegen und schon kannst du loslegen. Unsere
+    Datenbank enthält eine Vielzahl von Serien und Filmen.
+  </p>
+
+  <div class="button">
     <p-button
       label="Registrieren"
       pTooltip="Hier klicken, um sich mit einem neuen Account zu registrieren. Beim Klicken wird man auf die Register-Seite geleitet."
       tooltipPosition="right"
+      (onClick)="navigateToRegister()"
+      icon="pi pi-user-plus"
     />
   </div>
-  <div>
+  <div class="button">
     <p-button
+      icon="pi-sign-in"
+      class="button2"
       label="Einloggen"
       pTooltip="Hier klicken, um sich in einen bestehenden Account einzuloggen. Beim Klicken wird man auf die Login-Seite geleitet."
       tooltipPosition="right"
       (onClick)="navigateToLogin()"
+      icon="pi pi-sign-in"
     />
   </div>
 </div>

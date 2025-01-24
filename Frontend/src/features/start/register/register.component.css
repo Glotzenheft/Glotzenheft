@@ -1,0 +1,5 @@
+.register {
+    height: 100%;
+    width: 100%;
+    background: linear-gradient(var(--content-background-color), var(--content-background-color2));
+}

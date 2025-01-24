@@ -8,10 +8,15 @@ import { RouterOutlet } from '@angular/router';
 
 @Component({
   selector: 'app-user-start',
-  imports: [InputTextModule, IconFieldModule, InputIconModule, InputIcon, TooltipModule, RouterOutlet],
+  imports: [
+    InputTextModule,
+    IconFieldModule,
+    InputIconModule,
+    InputIcon,
+    TooltipModule,
+    RouterOutlet,
+  ],
   templateUrl: './user-start.component.html',
-  styleUrl: './user-start.component.css'
+  styleUrl: './user-start.component.css',
 })
-export class UserStartComponent {
-
-}
+export class UserStartComponent {}
