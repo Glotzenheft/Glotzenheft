@@ -1,0 +1,30 @@
+.appwrapper {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+
+.sidebar {
+    background-color: black;
+    height: calc(100% - 2 * var(--padding--top-bottom));
+    width: calc(20% - 2 * var(--padding--left-right));
+    color: white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+
+}
+
+.content {
+    height: calc(100% - 2 * var(--padding--top-bottom));
+    width: calc(80% - 2 * var(--padding--left-right));
+    background: linear-gradient(var(--content-background-color), var(--content-background-color2));
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    color: white;
+}
