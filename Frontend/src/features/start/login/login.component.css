@@ -20,9 +20,17 @@
     align-items: center;
     justify-content: space-between;
 
+    border-radius: var(--border--radius);
+    box-shadow: var(--box--shadow);
+
 }
 
 .userInput {
     width: 100%;
     margin-bottom: 1rem;
+}
+
+.loginWindow div,
+.p-password {
+    width: 100%;
 }
