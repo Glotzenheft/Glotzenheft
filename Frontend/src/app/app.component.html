@@ -1,10 +1,13 @@
 <div class="appwrapper">
     <div class="sidebar">
-        Seitenleiste
+        <app-header-main />
     </div>
     <div class="content">
-        app
-        <input type="text" pInputText />
+        
+        <p-iconfield>
+            <p-inputicon styleClass="pi pi-search" />
+            <input type="text" pInputText placeholder="Suche ..." />
+        </p-iconfield>
         <router-outlet></router-outlet>
     </div>
 </div>
