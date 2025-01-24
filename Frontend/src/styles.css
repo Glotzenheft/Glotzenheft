@@ -1,9 +1,17 @@
+@import url('https://fonts.googleapis.com/css2?family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap');
+@import "primeicons/primeicons.css";
+
 html,
 body {
     margin: 0;
     padding: 0;
     height: 100%;
     width: 100%;
+
+    font-family: "Open Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
 }
 
 :root {
@@ -11,4 +19,14 @@ body {
     --content-background-color2: rgba(0, 0, 0, 0.8);
     --padding--left-right: 1.2rem;
     --padding--top-bottom: 0.8rem;
+    --border--radius: 0.6rem;
+    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+}
+
+input {
+    width: 100%;
+}
+
+h1 {
+    font-size: x-large;
 }
