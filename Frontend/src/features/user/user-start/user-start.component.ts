@@ -4,13 +4,14 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
 import { InputIcon } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
+import { RouterOutlet } from '@angular/router';
 
 @Component({
-  selector: 'app-start-main',
-  imports: [InputTextModule, IconFieldModule, InputIconModule, InputIcon, TooltipModule],
-  templateUrl: './start-main.component.html',
-  styleUrl: './start-main.component.css'
+  selector: 'app-user-start',
+  imports: [InputTextModule, IconFieldModule, InputIconModule, InputIcon, TooltipModule, RouterOutlet],
+  templateUrl: './user-start.component.html',
+  styleUrl: './user-start.component.css'
 })
-export class StartMainComponent {
+export class UserStartComponent {
 
 }

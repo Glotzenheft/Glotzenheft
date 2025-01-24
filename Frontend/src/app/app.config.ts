@@ -17,4 +17,3 @@ export const appConfig: ApplicationConfig = {
     })
   ]
 };
-7
