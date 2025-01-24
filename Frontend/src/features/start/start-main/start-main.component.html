@@ -1,6 +1,19 @@
-<div class="sidebar">
-    <app-header-main />
-</div>
-<div class="content">
-    <router-outlet></router-outlet>
+<div class="startPage">
+  <h1>Glotzenheft</h1>
+
+  <div>
+    <p-button
+      label="Registrieren"
+      pTooltip="Hier klicken, um sich mit einem neuen Account zu registrieren. Beim Klicken wird man auf die Register-Seite geleitet."
+      tooltipPosition="right"
+    />
+  </div>
+  <div>
+    <p-button
+      label="Einloggen"
+      pTooltip="Hier klicken, um sich in einen bestehenden Account einzuloggen. Beim Klicken wird man auf die Login-Seite geleitet."
+      tooltipPosition="right"
+      (onClick)="navigateToLogin()"
+    />
+  </div>
 </div>

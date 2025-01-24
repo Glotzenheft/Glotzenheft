@@ -12,6 +12,8 @@ body {
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
+
+    color: white;
 }
 
 :root {
@@ -21,6 +23,7 @@ body {
     --padding--top-bottom: 0.8rem;
     --border--radius: 0.6rem;
     --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 }
 
 input {
@@ -31,6 +34,11 @@ h1 {
     font-size: x-large;
 }
 
+
+button {
+    box-shadow: var(--box--shadow-button);
+    margin: 0.5rem;
+}
 
 
 
