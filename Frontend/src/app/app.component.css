@@ -1,32 +1,36 @@
 .appwrapper {
-    display: flex;
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
+  height: 100%;
+  width: 100%;
+  margin: 0;
+  padding: 0;
+  /* overflow: hidden; */
+
+  background: linear-gradient(
+    var(--content-background-color),
+    var(--content-background-color2)
+  );
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-
-.sidebar {
-    background-color: black;
-    height: 100%;
-    width: calc(30% - 2 * var(--padding--left-right));
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
-
+.appHeading {
+  width: 100%;
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
 }
 
-.content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(var(--content-background-color), var(--content-background-color2));
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+.appHeading h1 {
+  width: 8rem;
+}
+
+.appHeading h1:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.appHeading h1 a {
+  text-decoration: none;
+  color: white;
 }

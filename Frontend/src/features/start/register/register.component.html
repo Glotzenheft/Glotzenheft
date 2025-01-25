@@ -11,20 +11,34 @@
         id="password"
         class="passInput"
         fluid
-        [feedback]="false"
       ></p-password>
       <label for="password">Passwort</label>
     </p-floatlabel>
 
+    <p-floatlabel class="userInput" variant="in">
+      <p-password
+        type="password"
+        id="passwordConfirm"
+        class="passInput"
+        fluid
+      ></p-password>
+      <label for="passwordConfirm">Passwort bestätigen</label>
+    </p-floatlabel>
+
     <div class="loginActions">
-      <p-button fluid icon="pi pi-sign-in" label="Einloggen" class="button2" />
       <p-button
         fluid
-        label="Abbrechen"
+        label="Registrieren"
+        icon="pi pi-user-plus"
+        class="button2"
+      />
+      <p-button
+        fluid
         class="button2"
         severity="secondary"
-        icon="pi pi-times"
         (onClick)="navigationService.navigateToStartPage()"
+        label="Abbrechen"
+        icon="pi pi-times"
       />
     </div>
   </div>

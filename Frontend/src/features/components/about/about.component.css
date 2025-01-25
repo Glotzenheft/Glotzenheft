@@ -1,6 +1,4 @@
-.startPage {
-  height: 100%;
-  width: 100%;
+.about {
   padding-left: var(--padding--left-right);
   padding-right: var(--padding--left-right);
   padding-top: var(--padding--top-bottom);
