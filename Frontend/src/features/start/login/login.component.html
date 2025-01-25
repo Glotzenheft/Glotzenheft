@@ -9,7 +9,6 @@
             pInputText
             formControlName="username"
             name="username"
-            (input)="changeInput()"
           />
           <label for="userName">Nutzername</label>
         </p-floatlabel>
@@ -17,7 +16,10 @@
           severity="error"
           variant="simple"
           size="small"
-          *ngIf="hasError('username', 'minLength')"
+          *ngIf="
+            loginGroup.get('username')?.invalid &&
+            hasError('username', 'minLength')
+          "
           >Nutzername ist Pflicht</p-message
         >
       </div>
@@ -40,7 +42,10 @@
           severity="error"
           variant="simple"
           size="small"
-          *ngIf="hasError('password', 'minLength')"
+          *ngIf="
+            loginGroup.get('password')?.invalid &&
+            hasError('password', 'minLength')
+          "
           >Passwort ist Pflicht und muss mindestens 8 Zeichen lang
           sein.</p-message
         >
