@@ -5,12 +5,11 @@
         <p-floatlabel class="userInput" variant="in">
           <input
             type="text"
-            id="userName"
+            id="username"
             pInputText
             formControlName="username"
             name="username"
-            #userNameInp
-            (input)="changeInput(userNameInp.name)"
+            (input)="changeInput()"
           />
           <label for="userName">Nutzername</label>
         </p-floatlabel>
@@ -18,7 +17,7 @@
           severity="error"
           variant="simple"
           size="small"
-          *ngIf="!isUserNameValid"
+          *ngIf="hasError('username', 'minLength')"
           >Nutzername ist Pflicht</p-message
         >
       </div>
@@ -41,7 +40,7 @@
           severity="error"
           variant="simple"
           size="small"
-          *ngIf="!isPasswordValid"
+          *ngIf="hasError('password', 'minLength')"
           >Passwort ist Pflicht und muss mindestens 8 Zeichen lang
           sein.</p-message
         >

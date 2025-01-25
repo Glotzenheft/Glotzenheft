@@ -35,8 +35,7 @@ import { Message } from 'primeng/message';
 })
 export class LoginComponent implements OnInit {
   loginGroup!: FormGroup;
-  isUserNameValid: boolean = true;
-  isPasswordValid: boolean = true;
+  isFormSubmitted: boolean = false;
 
   constructor(
     public navigationService: NavigationService,
@@ -52,31 +51,30 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser = () => {
+    this.isFormSubmitted = true;
     if (this.loginGroup.invalid) {
-      this.isUserNameValid = this.loginGroup.get('username')?.invalid
-        ? false
-        : true;
-      this.isPasswordValid = this.loginGroup.get('password')?.invalid
-        ? false
-        : true;
-      console.log('daa');
+      return;
     }
-
-    this.isUserNameValid = true;
-    this.isPasswordValid = true;
 
     const loginData: LoginCredentials = {
       username: this.loginGroup.get('username')?.value,
       password: this.loginGroup.get('password')?.value,
     };
 
+    console.log(loginData);
+
     this.userService.loginIntoAccount(loginData);
   };
 
-  changeInput = (inputName: string) => {
-    console.log(inputName);
-    if (inputName === 'username') {
-      this.isUserNameValid = true;
-    }
+  hasError = (field: string, error: string): boolean => {
+    const control = this.loginGroup.get(field);
+
+    return (
+      control! && (control.dirty || control.touched || this.isFormSubmitted)
+    );
+  };
+
+  changeInput = () => {
+    this.isFormSubmitted = false;
   };
 }
