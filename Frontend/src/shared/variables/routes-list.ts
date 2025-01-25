@@ -3,8 +3,8 @@ import { RoutesListItem, VisibleRoute } from '../interfaces/route-list-item';
 export const ROUTES_LIST: RoutesListItem[] = [
   {
     description: 'Impressum',
-    fullUrl: 'impressum',
-    shortUrl: 'impressum',
+    fullUrl: 'imprint',
+    shortUrl: 'imprint',
     showInLinkList: true,
   },
   {

@@ -3,13 +3,34 @@
   width: 100%;
   margin: 0;
   padding: 0;
+  /* overflow: hidden; */
+
   background: linear-gradient(
     var(--content-background-color),
     var(--content-background-color2)
   );
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 
-.app-content {
+.appHeading {
   width: 100%;
-  height: 80%;
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
+}
+
+.appHeading h1 {
+  width: 8rem;
+}
+
+.appHeading h1:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+.appHeading h1 a {
+  text-decoration: none;
+  color: white;
 }

@@ -24,6 +24,9 @@ body {
   --border--radius: 0.6rem;
   --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
   --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+
+  --link--color: rgb(5, 150, 105);
+  --link--color--hover: rgb(26, 109, 83);
 }
 
 input {
@@ -36,7 +39,19 @@ h1 {
 
 ul {
   list-style: none;
-  display: flex;
+  width: 100%;
+  height: 100%;
+  padding: 0;
+}
+
+a {
+  color: var(--link--color);
+  text-decoration: none;
+  font-weight: bolder;
+}
+
+a:hover {
+  text-decoration: underline;
 }
 
 button {
@@ -52,16 +67,44 @@ button {
   width: 16rem;
 }
 
+/* customizing scrollbar */
+
+/* Für Webkit-basierte Browser (z. B. Chrome, Edge, Safari) */
+::-webkit-scrollbar {
+  width: 1rem; /* Breite der Scrollbar */
+  height: 12px; /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
+}
+
+::-webkit-scrollbar-track {
+  background: black; /* Hintergrund der Scrollbar-Spur */
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--link--color); /* Farbe des Scrollbalkens */
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(
+    --link--color--hover
+  ); /* Farbe des Scrollbalkens beim Hover */
+  cursor: pointer;
+}
+
 .sidebar {
   background-color: black;
   height: 100%;
-  width: calc(30% - 2 * var(--padding--left-right));
+  width: 25%;
+  left: 0;
   color: white;
   padding-left: var(--padding--left-right);
   padding-right: var(--padding--left-right);
   padding-top: var(--padding--top-bottom);
   padding-bottom: var(--padding--top-bottom);
   box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
 }
 
 .content {
@@ -76,6 +119,9 @@ button {
   padding-top: var(--padding--top-bottom);
   padding-bottom: var(--padding--top-bottom);
   color: white;
+
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 .login {

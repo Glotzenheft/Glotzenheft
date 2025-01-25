@@ -1,0 +1,6 @@
+.impressum {
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
+  padding-top: var(--padding--top-bottom);
+  padding-bottom: var(--padding--top-bottom);
+}
