@@ -19,6 +19,18 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'privacy-policy',
     showInLinkList: true,
   },
+  {
+    description: 'season',
+    fullUrl: 'media/season/:id',
+    shortUrl: 'season/:id',
+    showInLinkList: false,
+  },
+  {
+    description: 'film',
+    fullUrl: 'media/film/:id',
+    shortUrl: 'film/:id',
+    showInLinkList: false,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {
