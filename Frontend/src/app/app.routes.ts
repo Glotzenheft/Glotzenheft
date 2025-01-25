@@ -23,4 +23,8 @@ export const routes: Routes = [
         (module) => module.UserModule
       ),
   },
+  {
+    path: "imprint", 
+    
+  }
 ];
