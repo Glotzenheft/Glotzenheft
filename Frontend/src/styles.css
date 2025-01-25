@@ -58,7 +58,7 @@ a:hover {
 
 button {
   box-shadow: var(--box--shadow-button);
-  width: 14rem;
+  width: 10rem;
 }
 
 .button {
@@ -66,7 +66,7 @@ button {
 }
 
 .button2 {
-  width: 16rem;
+  width: 12rem;
 }
 
 /* customizing scrollbar */
@@ -153,19 +153,23 @@ button {
 
 .loginWindow {
   background-color: black;
-  width: 50%;
-  height: 55%;
+  width: 60%;
+  height: 60%;
   padding-left: var(--padding--left-right);
   padding-right: var(--padding--left-right);
   padding-top: var(--padding--top-bottom);
   padding-bottom: var(--padding--top-bottom);
 
-  display: flex;
-  flex-direction: column;
-  justify-content: space-around;
-
   border-radius: var(--border--radius);
   box-shadow: var(--box--shadow);
+}
+
+.loginWindow form {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-evenly;
+  width: 100%;
+  height: 100%;
 }
 
 .loginTall {

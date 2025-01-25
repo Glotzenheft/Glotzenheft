@@ -3,7 +3,7 @@ import { FloatLabel } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
-import { NavigationService } from '../../../service/navigation.service';
+import { NavigationService } from '../../../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-register',

@@ -14,14 +14,12 @@
   </div>
 
   <div class="closedSidebar" *ngIf="!isSidebarOpen">
-    <div>
-      <p-button
-        icon="pi pi-bars"
-        pTooltip="Klicken zum Öffnen des Menüs."
-        tooltipPosition="right"
-        (onClick)="toggleSidebar(true)"
-      />
-    </div>
+    <p-button
+      icon="pi pi-bars"
+      pTooltip="Klicken zum Öffnen des Menüs."
+      tooltipPosition="right"
+      (onClick)="toggleSidebar(true)"
+    />
   </div>
   <div class="content">
     <router-outlet></router-outlet>

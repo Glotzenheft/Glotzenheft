@@ -15,7 +15,7 @@ const mediaRoutes: Routes = [
     path: 'film/:id',
     component: FilmPageComponent,
   },
-  {
+  { 
     path: 'tv/:id',
     component: TvPageComponent,
   },
