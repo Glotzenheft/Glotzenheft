@@ -6,7 +6,11 @@
         *ngFor="let route of footerLinkList"
         (click)="navigateToRoute(route.fullUrl)"
       >
-        {{ route.description }}
+        <p-button
+          class="button2"
+          [label]="route.description"
+          [link]="route.fullUrl"
+        />
       </li>
     </ul>
   </div>

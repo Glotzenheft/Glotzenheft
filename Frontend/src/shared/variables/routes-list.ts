@@ -13,6 +13,12 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'about',
     showInLinkList: true,
   },
+  {
+    description: 'Datenschutzerklärung',
+    fullUrl: 'privacy-policy',
+    shortUrl: 'privacy-policy',
+    showInLinkList: true,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {

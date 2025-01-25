@@ -3,10 +3,11 @@ import { getVisibleRoutes } from '../../../shared/variables/routes-list';
 import { VisibleRoute } from '../../../shared/interfaces/route-list-item';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule],
+  imports: [CommonModule, ButtonModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css',
 })

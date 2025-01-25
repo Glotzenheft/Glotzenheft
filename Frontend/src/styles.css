@@ -34,9 +34,14 @@ h1 {
   font-size: x-large;
 }
 
+ul {
+  list-style: none;
+  display: flex;
+}
+
 button {
   box-shadow: var(--box--shadow-button);
-  width: 10rem;
+  width: 14rem;
 }
 
 .button {
