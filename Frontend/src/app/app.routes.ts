@@ -30,6 +30,13 @@ export const routes: Routes = [
       ),
   },
   {
+    path: 'media',
+    loadChildren: () =>
+      import('../features/media/media.module').then(
+        (module) => module.MediaModule
+      ),
+  },
+  {
     path: 'imprint',
     component: ImpressumComponent,
   },
@@ -40,13 +47,5 @@ export const routes: Routes = [
   {
     path: 'privacy-policy',
     component: PrivacyPolicyComponent,
-  },
-  {
-    path: ROUTES_LIST[3].fullUrl,
-    component: SeasonMainComponent,
-  },
-  {
-    path: ROUTES_LIST[4].fullUrl,
-    component: FilmMainComponent,
   },
 ];
