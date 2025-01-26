@@ -10,6 +10,7 @@
       var(--content-background-color),
       var(--content-background-color2)
     );
+    overflow: hidden;
   }
 }
 
