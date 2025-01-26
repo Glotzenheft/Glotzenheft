@@ -1,18 +1,35 @@
-.appwrapper {
-  height: 100%;
-  width: 100%;
-  margin: 0;
-  padding: 0;
-  /* overflow: hidden; */
+@media (max-width: 500px) {
+  .appwrapper {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden; */
 
-  background: linear-gradient(
-    var(--content-background-color),
-    var(--content-background-color2)
-  );
+    background: linear-gradient(
+      var(--content-background-color),
+      var(--content-background-color2)
+    );
+  }
+}
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+@media (min-width: 500px) {
+  .appwrapper {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden; */
+
+    background: linear-gradient(
+      var(--content-background-color),
+      var(--content-background-color2)
+    );
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 }
 
 .appHeading {
