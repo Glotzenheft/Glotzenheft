@@ -1,8 +1,13 @@
-<div class="userLayout">
-    <div class="sidebar">
-        <app-header-main></app-header-main>
-    </div>
-    <div class="content">
-        <router-outlet />
-    </div>
+<div class="userLayout">    
+  <p-iconfield>
+    <p-inputicon styleClass="pi pi-search" />
+    <input
+      type="text"
+      pInputText
+      pTooltip="Hier etwas zur Suche eingeben. Dabei werden alle Serien durchsucht."
+      tooltipPosition="bottom"
+      placeholder="Suche ..."
+    />
+  </p-iconfield>
+  <router-outlet />
 </div>

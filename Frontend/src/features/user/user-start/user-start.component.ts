@@ -5,6 +5,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { InputIcon } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
 import { RouterOutlet } from '@angular/router';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-user-start',
@@ -12,9 +13,9 @@ import { RouterOutlet } from '@angular/router';
     InputTextModule,
     IconFieldModule,
     InputIconModule,
-    InputIcon,
     TooltipModule,
     RouterOutlet,
+    PanelModule,
   ],
   templateUrl: './user-start.component.html',
   styleUrl: './user-start.component.css',

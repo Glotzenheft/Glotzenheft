@@ -57,11 +57,11 @@ a:hover {
 }
 
 button {
-  box-shadow: var(--box--shadow-button);
   width: 10rem;
 }
 
 .button {
+  box-shadow: var(--box--shadow-button);
   margin: 1rem;
 }
 
@@ -189,4 +189,14 @@ button {
 .loginWindow div,
 .p-password {
   width: 100%;
+}
+
+.p-panel-content {
+  border: 0.1rem solid white;
+}
+
+.p-panel {
+  box-shadow: var(--box--shadow);
+  margin-top: 1rem;
+  margin-bottom: 1rem;
 }
