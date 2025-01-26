@@ -64,6 +64,7 @@ export class LoginComponent implements OnInit {
     console.log(loginData);
 
     this.userService.loginIntoAccount(loginData);
+    this.navigationService.navigateToUserStart();
   };
 
   hasError = (field: string, error: string): boolean => {

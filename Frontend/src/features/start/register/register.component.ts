@@ -72,6 +72,7 @@ export class RegisterComponent implements OnInit {
 
     console.log(registerData);
     this.userService.registerAccount(registerData);
+    this.navigationService.navigateToUserStart();
   };
 
   hasError = (field: string): boolean => {
