@@ -1,0 +1,23 @@
+.seasonMeta {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seasonMetaPicture {
+  width: 13rem;
+  height: 13rem;
+  border: 0.4rem solid white;
+  margin-right: 1rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seasonMetaContent {
+  width: calc(100% - 13rem);
+  padding-left: var(--padding--left-right);
+  border-left: 0.1rem solid white;
+}

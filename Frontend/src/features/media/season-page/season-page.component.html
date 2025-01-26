@@ -1,1 +1,75 @@
-<p>tv {{ tvSeriesID }}, season: {{ seasonID }}</p>
+<div *ngIf="hasError; hasNoErrorBlock">
+  <p-panel header="Fehler beim Laden der Seite" class="error">
+    <p>
+      Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte versuchen
+      Sie es erneut durch ein erneutes Laden der Seite.
+    </p>
+  </p-panel>
+</div>
+
+<div #hasNoErrorBlock *ngIf="seasonData$ | async as seasonData">
+  <div class="heading">
+    <h1>{{ seasonData.name }} - Staffel {{ seasonData.seasonNumber }}</h1>
+    <p *ngIf="seasonData.mediaID">GESPEICHERT</p>
+  </div>
+  <div class="seasonMeta">
+    <div class="seasonMetaPicture">
+      <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
+      <img
+        *ngIf="seasonData.posterPath !== null"
+        [src]="seasonData.posterPath"
+        [alt]="
+          'Dies ist das Bild für die ' +
+          seasonData.seasonNumber +
+          '. Staffel von ' +
+          seasonData.name
+        "
+      />
+    </div>
+    <div class="seasonMetaContent">
+      <h2>Beschreibung</h2>
+      <p>{{ seasonData.overview }}</p>
+      <p>Ausstrahlung am {{ seasonData.airDate.toLocaleDateString() }}</p>
+      <p *ngIf="seasonData.episodeCount">
+        Anzahl der Episoden: {{ seasonData.episodeCount }}
+      </p>
+    </div>
+  </div>
+
+  <div class="mainDIV">
+    <h2>Episoden</h2>
+    <div
+      *ngFor="let episode of seasonData.episodes"
+      class="card"
+      (click)="showEpisodeDialog(episode)"
+    >
+      <h3>{{ episode.name }}</h3>
+      <p>{{ stringService.shortenString(episode.description) }}</p>
+    </div>
+  </div>
+</div>
+
+<p-dialog
+  *ngIf="visibleEpisode && isDialogVisible"
+  [(visible)]="isDialogVisible"
+  [header]="visibleEpisode.name"
+  class="dialog"
+>
+  <div>
+    <p>{{ visibleEpisode.description }}</p>
+    <p-rating stars="10" [(ngModel)]="episodeRating" />
+    <p>{{ episodeRating }}</p>
+    <div class="dialogActions">
+      <p-button
+        label="speichern"
+        class="marginRight"
+        (onClick)="saveEpisode(visibleEpisode)"
+      />
+      <p-button
+        label="abbrechen"
+        severity="secondary"
+        (onClick)="closeEpisodeDialog()"
+      />
+    </div>
+  </div>
+</p-dialog>
