@@ -303,7 +303,7 @@ button {
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
-    width: 40%;
+    width: 10rem;
     display: flex;
     justify-content: center;
     align-items: center;
