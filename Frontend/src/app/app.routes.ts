@@ -8,6 +8,7 @@ import { PrivacyPolicyComponent } from '../features/components/privacy-policy/pr
 import { ROUTES_LIST } from '../shared/variables/routes-list';
 import { SeasonMainComponent } from '../features/components/media/season/season-main/season-main.component';
 import { FilmMainComponent } from '../features/components/media/film/film-main/film-main.component';
+import {MultiSearchComponent} from '../features/components/search/multi-search.component';
 
 export const routes: Routes = [
   {
@@ -47,5 +48,9 @@ export const routes: Routes = [
   {
     path: 'privacy-policy',
     component: PrivacyPolicyComponent,
+  },
+  {
+    path: 'test-search', // Route für die Multi-Suche
+    component: MultiSearchComponent
   },
 ];

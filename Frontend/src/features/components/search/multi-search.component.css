@@ -1,0 +1,30 @@
+.search-container {
+  margin: 20px;
+  display: flex;
+  gap: 10px;
+}
+
+.search-input {
+  flex: 1;
+  padding: 8px;
+  font-size: 16px;
+}
+
+.search-button {
+  padding: 8px 16px;
+  font-size: 16px;
+  cursor: pointer;
+}
+
+.results-container {
+  margin-top: 20px;
+  background-color: rgba(255, 0, 0, 0);
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.error-container {
+  margin-top: 20px;
+  color: red;
+  font-weight: bold;
+}
