@@ -1,13 +1,13 @@
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { HeaderMainComponent } from '../../header/header-main/header-main.component';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIcon, InputIconModule } from 'primeng/inputicon';
+import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
   selector: 'app-user-layout',
-  imports: [RouterModule, HeaderMainComponent],
+  imports: [RouterModule, IconFieldModule, InputIconModule, InputTextModule],
   templateUrl: './user-layout.component.html',
-  styleUrl: './user-layout.component.css'
+  styleUrl: './user-layout.component.css',
 })
-export class UserLayoutComponent {
-
-}
+export class UserLayoutComponent {}

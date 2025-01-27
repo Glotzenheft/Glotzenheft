@@ -10,4 +10,8 @@ export class NavigationService {
   navigateToStartPage = () => {
     this.router.navigateByUrl('');
   };
+
+  navigateToUserStart = () => {
+    this.router.navigateByUrl('user');
+  };
 }
