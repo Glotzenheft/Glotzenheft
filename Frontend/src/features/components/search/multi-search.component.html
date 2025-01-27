@@ -9,9 +9,16 @@
 </div>
 
 <!-- Ergebnisse -->
-<div *ngIf="results" class="results-container">
+<div *ngIf="results$ && results$ | async as res" class="results-container">
   <h3>Suchergebnisse:</h3>
-  <pre>{{ results | json }}</pre> <!-- JSON-Ausgabe -->
+
+  <div *ngFor="let resItem of res.results" class="resCard">
+    <p>Name: {{ resItem.name }}</p>
+    <br />
+    <p>{{ resItem.overview }}</p>
+  </div>
+
+  <!-- JSON-Ausgabe -->
 </div>
 
 <!-- Fehlermeldung -->

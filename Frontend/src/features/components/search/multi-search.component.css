@@ -28,3 +28,9 @@
   color: red;
   font-weight: bold;
 }
+
+.resCard {
+  margin-bottom: 2rem;
+  border: 0.1rem solid white;
+  padding: 1rem;
+}
