@@ -133,7 +133,7 @@ button {
   }
 
   button {
-    width: 8rem;
+    width: 6rem;
   }
 
   .button {
@@ -141,7 +141,7 @@ button {
   }
 
   .button2 {
-    width: 12rem;
+    width: 8rem;
   }
 
   .buttonShadow {
@@ -198,13 +198,13 @@ button {
   }
 
   .loginWindow {
-    width: 96%;
+    width: 90%;
     height: 60%;
     padding-left: 0.5rem;
     padding-right: 0.5rem;
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
-    background-color: white;
+    background-color: rgba(255, 255, 255, 0.8);
     box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
     border-radius: 0.6rem;
   }
@@ -415,8 +415,8 @@ button {
   }
 
   .loginWindow {
-    background-color: black;
-    width: 60%;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 80%;
     height: 60%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
@@ -624,9 +624,13 @@ button {
     height: 100%;
   }
 
+  .p-message {
+    background-color: white;
+  }
+
   .loginWindow {
-    background-color: black;
-    width: 60%;
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 80%;
     height: 60%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
