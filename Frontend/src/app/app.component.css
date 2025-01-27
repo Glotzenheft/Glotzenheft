@@ -1,4 +1,4 @@
-@media (max-width: 500px) {
+@media (max-width: 850px) {
   .appwrapper {
     height: 100%;
     width: 100%;
@@ -12,9 +12,30 @@
     );
     overflow: hidden;
   }
+  .appHeading {
+    width: 100%;
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .appHeading h1 {
+    /* width: 8rem; */
+  }
+
+  .appHeading h1:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .appHeading h1 a {
+    text-decoration: none;
+    color: white;
+  }
 }
 
-@media (min-width: 500px) {
+@media (min-width: 850px) and (max-width: 940px) {
   .appwrapper {
     height: 100%;
     width: 100%;
@@ -31,26 +52,62 @@
     justify-content: space-between;
     align-items: center;
   }
+  .appHeading {
+    width: 100%;
+    font-size: 1.2rem;
+  }
+
+  .appHeading h1 {
+    /* width: 8rem; */
+  }
+
+  .appHeading h1:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .appHeading h1 a {
+    text-decoration: none;
+    color: white;
+  }
 }
 
-.appHeading {
-  width: 100%;
+@media (min-width: 940px) {
+  .appwrapper {
+    height: 100%;
+    width: 100%;
+    margin: 0;
+    padding: 0;
+    /* overflow: hidden; */
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
+    background: linear-gradient(
+      var(--content-background-color),
+      var(--content-background-color2)
+    );
 
-.appHeading h1 {
-  /* width: 8rem; */
-}
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .appHeading {
+    width: 100%;
 
-.appHeading h1:hover {
-  text-decoration: underline;
-  cursor: pointer;
-}
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
 
-.appHeading h1 a {
-  text-decoration: none;
-  color: white;
+  .appHeading h1 {
+    /* width: 8rem; */
+  }
+
+  .appHeading h1:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  .appHeading h1 a {
+    text-decoration: none;
+    color: white;
+  }
 }

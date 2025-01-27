@@ -70,7 +70,7 @@ button {
 }
 
 /* media query for smart phones and tablets */
-@media (max-width: 500px) {
+@media (max-width: 850px) {
   html,
   body {
     margin: 0;
@@ -316,7 +316,217 @@ button {
   }
 }
 
-@media (min-width: 500px) {
+@media (min-width: 850px) and (max-width: 940px) {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+
+    font-family: "Open Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+
+    color: white;
+  }
+
+  :root {
+    --transition--duration: 0.3s;
+
+    --content-background-color: rgba(38, 148, 141, 0.655);
+    --content-background-color2: rgba(0, 0, 0, 0.8);
+    --padding--left-right: 1.2rem;
+    --padding--top-bottom: 0.8rem;
+    --border--radius: 0.6rem;
+    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+
+    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+
+    --link--color: rgb(5, 150, 105);
+    --link--color--hover: rgb(26, 109, 83);
+  }
+  .sidebar {
+    background-color: black;
+    height: 100%;
+    width: 25%;
+    left: 0;
+    color: white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--sidebar--box--shadow);
+  }
+
+  .closedSidebar {
+    width: 4rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    background-color: black;
+    box-shadow: var(--sidebar--box--shadow);
+
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+  }
+
+  .content {
+    height: 100%;
+    width: calc(100% - 2 * var(--padding--left-right));
+    background: linear-gradient(
+      var(--content-background-color),
+      var(--content-background-color2)
+    );
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    color: white;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .mainDIV {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .marginRight {
+    margin-right: 1rem;
+  }
+
+  /* specific classes */
+
+  .login {
+    padding-top: var(--padding--top-bottom);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loginWindow {
+    background-color: black;
+    width: 60%;
+    height: 60%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    border-radius: var(--border--radius);
+    box-shadow: var(--box--shadow);
+  }
+
+  .loginWindow form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loginTall {
+    height: 60%;
+  }
+
+  .loginSmall {
+    height: 50%;
+  }
+
+  .loginActions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+  }
+
+  .userInput {
+    width: 100%;
+  }
+
+  .loginWindow div,
+  .p-password {
+    width: 100%;
+  }
+
+  .p-panel {
+    box-shadow: var(--box--shadow);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .error .p-panel {
+    background-color: rgba(227, 17, 63, 0.655);
+    color: white;
+  }
+
+  .error .p-panel-header {
+    color: white;
+  }
+
+  .card {
+    width: 100%;
+    height: 5rem;
+    margin-bottom: 1rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 0.1rem solid white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    transition-duration: var(--transition--duration);
+
+    border-radius: var(--border--radius);
+  }
+
+  .card:hover {
+    background-color: var(--link--color);
+    cursor: pointer;
+  }
+
+  .dialog .p-dialog {
+    width: 80%;
+    height: auto;
+  }
+
+  .dialogActions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    bottom: 0;
+  }
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .heading p {
+    background-color: var(--link--color);
+    box-shadow: var(--box--shadow-button);
+    height: 100%;
+
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+  }
+}
+
+@media (min-width: 940px) {
   html,
   body {
     margin: 0;
