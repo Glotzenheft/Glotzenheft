@@ -1,8 +1,8 @@
 <div class="appwrapper">
   <div class="sidebar" *ngIf="isSidebarOpen">
     <div class="appHeading">
-      <p-button 
-      class="toggleButton"
+      <p-button
+        class="toggleButton"
         icon="pi pi-times"
         pTooltip="Klicken zum Schließen des Menüs."
         tooltipPosition="right"
@@ -11,7 +11,7 @@
 
       <h1><a href="/">Glotzenheft</a></h1>
     </div>
-    <app-footer />
+    <app-footer (sideBarOpenEvent)="toggleSidebar(false)" />
   </div>
 
   <div class="closedSidebar" *ngIf="!isSidebarOpen">
@@ -25,6 +25,7 @@
     </div>
   </div>
   <div class="content">
+    <app-search-bar />
     <router-outlet></router-outlet>
   </div>
 </div>
