@@ -56,6 +56,9 @@
     width: 100%;
     font-size: 1.2rem;
   }
+  .toggleButton {
+    display: none;
+  }
 
   .appHeading h1 {
     /* width: 8rem; */
@@ -88,6 +91,9 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
+  }
+  .toggleButton {
+    display: none;
   }
   .appHeading {
     width: 100%;
