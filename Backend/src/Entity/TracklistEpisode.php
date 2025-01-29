@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TracklistEpisodeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class TracklistEpisode
 {
     use TimestampsTrait;

@@ -8,6 +8,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: EpisodeRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Episode
 {
     use TimestampsTrait;
@@ -32,14 +33,14 @@ class Episode
     #[ORM\Column]
     private ?int $runtime = null;
 
-    #[ORM\Column(length: 255)]
-    private ?string $posterPath = null;
-
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $airDate = null;
 
     #[ORM\OneToOne(mappedBy: 'episode', cascade: ['persist', 'remove'])]
     private ?TracklistEpisode $tracklistEpisode = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $stillPath = null;
 
     public function getId(): ?int
     {
@@ -106,18 +107,6 @@ class Episode
         return $this;
     }
 
-    public function getPosterPath(): ?string
-    {
-        return $this->posterPath;
-    }
-
-    public function setPosterPath(string $posterPath): static
-    {
-        $this->posterPath = $posterPath;
-
-        return $this;
-    }
-
     public function getAirDate(): ?\DateTimeInterface
     {
         return $this->airDate;
@@ -143,6 +132,18 @@ class Episode
         }
 
         $this->tracklistEpisode = $tracklistEpisode;
+
+        return $this;
+    }
+
+    public function getStillPath(): ?string
+    {
+        return $this->stillPath;
+    }
+
+    public function setStillPath(string $stillPath): static
+    {
+        $this->stillPath = $stillPath;
 
         return $this;
     }

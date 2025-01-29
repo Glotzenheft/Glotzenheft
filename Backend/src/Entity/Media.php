@@ -10,8 +10,10 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Media
 {
     use TimestampsTrait;
@@ -19,39 +21,48 @@ class Media
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $id = null;
 
     #[ORM\Column(nullable: true)]
+    #[Groups(['media_details'])]
     private ?int $tmdbID = null;
 
     #[ORM\Column(nullable: true)]
     private ?int $malID = null;
 
     #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['media_details'])]
     private ?string $imdbID = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
     private ?string $originalName = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['media_details'])]
     private ?string $description = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['media_details'])]
     private ?DateTimeInterface $firstAirDate = null;
 
     /**
      * @var Collection<int, TMDBGenre>
      */
-    #[ORM\ManyToMany(targetEntity: TMDBGenre::class, mappedBy: 'mediaID')]
+    #[ORM\ManyToMany(targetEntity: TMDBGenre::class, inversedBy: 'media')]
+    #[Groups(['media_details'])]
     private Collection $tmdbGenres;
 
     /**
      * @var Collection<int, Season>
      */
     #[ORM\OneToMany(targetEntity: Season::class, mappedBy: 'media', orphanRemoval: true)]
+    #[Groups(['media_details'])]
     private Collection $seasons;
 
     /**
@@ -61,7 +72,16 @@ class Media
     private Collection $tracklists;
 
     #[ORM\Column(enumType: MediaType::class)]
+    #[Groups(['media_details'])]
     private ?MediaType $type = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['media_details'])]
+    private ?string $posterPath = null;
+
+    #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
+    private ?string $backdropPath = null;
 
     public function __construct()
     {
@@ -169,9 +189,9 @@ class Media
 
     public function addTmdbGenre(TMDBGenre $tmdbGenre): static
     {
-        if (!$this->tmdbGenres->contains($tmdbGenre)) {
+        if (!$this->tmdbGenres->contains($tmdbGenre))
+        {
             $this->tmdbGenres->add($tmdbGenre);
-            $tmdbGenre->addMediaID($this);
         }
 
         return $this;
@@ -179,9 +199,7 @@ class Media
 
     public function removeTmdbGenre(TMDBGenre $tmdbGenre): static
     {
-        if ($this->tmdbGenres->removeElement($tmdbGenre)) {
-            $tmdbGenre->removeMediaID($this);
-        }
+        $this->tmdbGenres->removeElement($tmdbGenre);
 
         return $this;
     }
@@ -251,6 +269,30 @@ class Media
     public function setType(MediaType $type): static
     {
         $this->type = $type;
+
+        return $this;
+    }
+
+    public function getPosterPath(): ?string
+    {
+        return $this->posterPath;
+    }
+
+    public function setPosterPath(?string $posterPath): static
+    {
+        $this->posterPath = $posterPath;
+
+        return $this;
+    }
+
+    public function getBackdropPath(): ?string
+    {
+        return $this->backdropPath;
+    }
+
+    public function setBackdropPath(string $backdropPath): static
+    {
+        $this->backdropPath = $backdropPath;
 
         return $this;
     }
