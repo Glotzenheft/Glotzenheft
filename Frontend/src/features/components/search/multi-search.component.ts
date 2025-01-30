@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule, JsonPipe, NgIf } from '@angular/common';
@@ -6,31 +6,11 @@ import { ROUTE_MULTI_SEARCH } from '../../../shared/variables/api-routes';
 import { MediaService } from '../../../service/media/media.service';
 import { Observable } from 'rxjs';
 import { Card } from 'primeng/card';
-
-interface MultiResult {
-  backdrop_path: string;
-  id: number;
-  name: string;
-  original_name: string;
-  overview: string;
-  poster_path: string;
-  media_type: string;
-  adult: boolean;
-  original_language: string;
-  genre_ids: number[];
-  popularity: number;
-  first_air_date: string;
-  vote_average: number;
-  vote_count: number;
-  origin_country: string[];
-}
-
-interface MultiResponse {
-  page: number;
-  results: MultiResult[];
-  total_results: 3;
-  total_pages: 1;
-}
+import { ActivatedRoute } from '@angular/router';
+import {
+  MediaResult,
+  MultiSearchResponse,
+} from '../../../shared/interfaces/media-interfaces';
 
 @Component({
   selector: 'app-multi-search',
@@ -38,13 +18,32 @@ interface MultiResponse {
   imports: [FormsModule, CommonModule, AsyncPipe],
   styleUrls: ['./multi-search.component.css'],
 })
-export class MultiSearchComponent {
+export class MultiSearchComponent implements OnInit {
   searchQuery: string = ''; // Suchtext aus der Eingabe
   results: any = null; // JSON-Ergebnisse
-  results$: Observable<MultiResponse> | null = null;
+  results$: Observable<MultiSearchResponse> | null = null;
+  item: MediaResult[] = [];
   error: string | null = null; // Fehleranzeige
+  userSearchQuery: string = '';
 
-  constructor(private http: HttpClient, private mediaService: MediaService) {}
+  constructor(
+    private http: HttpClient,
+    private mediaService: MediaService,
+    private route: ActivatedRoute
+  ) {}
+
+  ngOnInit(): void {
+    this.route.queryParams.subscribe((params) => {
+      this.searchQuery = params['query'] ?? '';
+      console.log('neue Anfrage: ', this.searchQuery);
+      this.results$ = this.mediaService.getMultiSearchResults(this.searchQuery);
+      this.results$.subscribe((ress) => {
+        this.item = ress.results.filter(
+          (r) => r.media_type === 'tv' || r.media_type === 'movie'
+        );
+      });
+    });
+  }
 
   // Funktion zum Aufruf der API
   onSearch(): void {
@@ -53,6 +52,12 @@ export class MultiSearchComponent {
       this.results = null;
       return;
     }
+
+    this.route.queryParams.subscribe((params) => {
+      this.searchQuery = params['query'] ?? '';
+      console.log('neue Anfrage: ', this.searchQuery);
+      this.results$ = this.mediaService.getMultiSearchResults(this.searchQuery);
+    });
 
     this.error = null; // Zurücksetzen von Fehlern
     const apiUrl = `${ROUTE_MULTI_SEARCH}${encodeURIComponent(

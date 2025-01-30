@@ -7,7 +7,8 @@
       pTooltip="Hier etwas zur Suche eingeben. Dabei werden alle Serien durchsucht."
       tooltipPosition="bottom"
       placeholder="Suche ..."
+      (input)="handleInput($event)"
     />
   </p-iconfield>
-  <p-button label="Suche" />
+  <p-button label="Suche" (onClick)="navigateToSearch()" />
 </div>

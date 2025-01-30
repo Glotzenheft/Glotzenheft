@@ -1,21 +1,20 @@
-<div class="search-container">
-  <input
-    type="text"
-    [(ngModel)]="searchQuery"
-    placeholder="Suchbegriff eingeben"
-    class="search-input"
-  />
-  <button (click)="onSearch()" class="search-button">Suchen</button>
-</div>
-
 <!-- Ergebnisse -->
 <div *ngIf="results$ && results$ | async as res" class="results-container">
   <h3>Suchergebnisse:</h3>
 
-  <div *ngFor="let resItem of res.results" class="resCard">
-    <p>Name: {{ resItem.name }}</p>
+  <div *ngFor="let resItem of item" class="resCard">
+    <p *ngIf="resItem.media_type === 'tv'">
+      Name für Season: {{ resItem.name }}
+    </p>
+    <p *ngIf="resItem.media_type === 'movie'">
+      {{ resItem.title }}
+    </p>
     <br />
-    <p>{{ resItem.overview }}</p>
+    <p>{{ resItem.media_type }}</p>
+    <img
+      [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
+      alt=""
+    />
   </div>
 
   <!-- JSON-Ausgabe -->
