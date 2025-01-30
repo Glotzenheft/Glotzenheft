@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectionStrategy, Component, OnInit } from '@angular/core';
 import { HttpClient } from '@angular/common/http';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule, JsonPipe, NgIf } from '@angular/common';
@@ -17,6 +17,7 @@ import {
   templateUrl: './multi-search.component.html',
   imports: [FormsModule, CommonModule, AsyncPipe],
   styleUrls: ['./multi-search.component.css'],
+  //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit {
   searchQuery: string = ''; // Suchtext aus der Eingabe
