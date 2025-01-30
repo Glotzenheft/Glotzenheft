@@ -7,8 +7,10 @@ use App\Repository\TMDBGenreRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TMDBGenreRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class TMDBGenre
 {
     use TimestampsTrait;
@@ -16,18 +18,21 @@ class TMDBGenre
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $id = null;
 
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $tmdbGenreID = null;
 
     /**
      * @var Collection<int, Media>
      */
-    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'tmdbGenres')]
+    #[ORM\ManyToMany(targetEntity: Media::class, mappedBy: 'tmdbGenres')]
     private Collection $media;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
     private ?string $name = null;
 
     public function __construct()
@@ -55,24 +60,28 @@ class TMDBGenre
     /**
      * @return Collection<int, Media>
      */
-    public function getMediaID(): Collection
+    public function getMedia(): Collection
     {
         return $this->media;
     }
 
-    public function addMediaID(Media $mediaID): static
+    public function addMedia(Media $media): static
     {
-        if (!$this->media->contains($mediaID))
+        if (!$this->media->contains($media))
         {
-            $this->media->add($mediaID);
+            $this->media->add($media);
+            $media->addTmdbGenre($this);
         }
 
         return $this;
     }
 
-    public function removeMediaID(Media $mediaID): static
+    public function removeMedia(Media $media): static
     {
-        $this->media->removeElement($mediaID);
+        if ($this->media->removeElement($media))
+        {
+            $media->removeTmdbGenre($this);
+        }
 
         return $this;
     }
