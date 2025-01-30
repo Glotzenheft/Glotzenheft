@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, Output, EventEmitter } from '@angular/core';
 import { getVisibleRoutes } from '../../../shared/variables/routes-list';
 import { VisibleRoute } from '../../../shared/interfaces/route-list-item';
 import { CommonModule } from '@angular/common';
@@ -18,5 +18,12 @@ export class FooterComponent {
 
   navigateToRoute = (selectedRoute: string) => {
     this.router.navigateByUrl(selectedRoute);
+  };
+
+  @Output() sideBarOpenEvent: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
+
+  closeSidebar = () => {
+    this.sideBarOpenEvent.emit(false);
   };
 }
