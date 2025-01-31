@@ -1,3 +1,5 @@
+<h1>Suche</h1>
+
 <!-- Ergebnisse -->
 <div *ngIf="results$ && results$ | async as res" class="results-container">
   <h3>Suchergebnisse:</h3>
@@ -24,3 +26,11 @@
 <div *ngIf="error" class="error-container">
   <p class="error">{{ error }}</p>
 </div>
+
+<p-dialog
+  header="Fehler"
+  [(visible)]="isErrorDialogVisible"
+  (onHide)="closeErrorDialog()"
+>
+  <p>Der Suchbegriff muss mindestens ein Zeichen enthalten.</p>
+</p-dialog>

@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { SearchService } from '../../../service/search/search.service';
 
 @Component({
   selector: 'app-search-bar',
@@ -14,13 +15,19 @@ import { InputTextModule } from 'primeng/inputtext';
 export class SearchBarComponent {
   searchQuery: string = '';
 
-  constructor(private router: Router) {}
+  @Output() emitSearchQuery: EventEmitter<string> = new EventEmitter<string>();
+
+  constructor(private router: Router, private searchService: SearchService) {}
 
   navigateToSearch = () => {
+    this.emitSearchQuery.emit(this.searchQuery);
+    this.searchService.updateSearchTerm(this.searchQuery);
+
     console.log('Nutzeranfrage: ', this.searchQuery);
-    this.router.navigate(['/test-search'], {
-      queryParams: { query: this.searchQuery },
-    });
+    this.router.navigateByUrl('test-search');
+    // this.router.navigate(['/test-search'], {
+    //   queryParams: { query: this.searchQuery },
+    // });
   };
 
   handleInput = (event: Event) => {
