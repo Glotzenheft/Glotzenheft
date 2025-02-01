@@ -9,11 +9,20 @@ import {
 } from '../../../shared/interfaces/media-interfaces';
 import { SearchService } from '../../../service/search/search.service';
 import { DialogModule } from 'primeng/dialog';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { CardModule } from 'primeng/card';
 
 @Component({
   selector: 'app-multi-search',
   templateUrl: './multi-search.component.html',
-  imports: [FormsModule, CommonModule, AsyncPipe, DialogModule],
+  imports: [
+    FormsModule,
+    CommonModule,
+    AsyncPipe,
+    DialogModule,
+    ProgressSpinnerModule,
+    CardModule,
+  ],
   styleUrls: ['./multi-search.component.css'],
   //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
@@ -26,6 +35,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   public userSearchQuery: string = '';
   private searchSubscription!: Subscription;
   public isErrorDialogVisible: boolean = false;
+  public isLoading: boolean = false;
 
   constructor(
     private mediaService: MediaService,
@@ -34,6 +44,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     console.log('[MULTI SEARCH NGONINIT] search query: ', this.searchQuery);
+
     this.searchSubscription = this.searchService.searchTerm$.subscribe(
       (searchTerm) => {
         console.log('on init multisearch -> query:', searchTerm);
@@ -49,6 +60,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
           return;
         }
 
+        this.isLoading = true;
         this.results$ = this.mediaService.getMultiSearchResults(searchTerm);
 
         this.results$.subscribe((ress) => {
@@ -58,15 +70,9 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
           );
         });
         this.searchQuery = searchTerm;
+        this.isLoading = false;
       }
     );
-
-    if (!this.searchQuery.trim()) {
-      // no search query given
-      console.log('< 0');
-      //   alert('> 0');
-      return;
-    }
   }
 
   ngOnDestroy(): void {

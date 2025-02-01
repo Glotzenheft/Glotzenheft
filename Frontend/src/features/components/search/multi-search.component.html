@@ -1,22 +1,21 @@
+<p-progress-spinner ariaLabel="loading" *ngIf="isLoading" />
+
 <h1>Suche</h1>
 
 <!-- Ergebnisse -->
 <div *ngIf="results$ && results$ | async as res" class="results-container">
   <h3>Suchergebnisse:</h3>
 
-  <div *ngFor="let resItem of item" class="resCard">
-    <p *ngIf="resItem.media_type === 'tv'">
-      Name für Season: {{ resItem.name }}
-    </p>
-    <p *ngIf="resItem.media_type === 'movie'">
-      {{ resItem.title }}
-    </p>
-    <br />
-    <p>{{ resItem.media_type }}</p>
-    <img
-      [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
-      [alt]="'Posterbild für ' + resItem.title"
-    />
+  <div class="cardContainer">
+    <div *ngFor="let resItem of item" class="multisearchCard">
+      <p *ngIf="resItem.media_type === 'tv'">{{ resItem.name }}</p>
+      <p *ngIf="resItem.media_type === 'movie'">{{ resItem.title }}</p>
+      <img
+        [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
+        [alt]="'Posterbild für ' + resItem.title"
+      />
+      <p>{{ resItem.media_type === "tv" ? "Serie" : "Film" }}</p>
+    </div>
   </div>
 
   <!-- JSON-Ausgabe -->

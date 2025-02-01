@@ -29,13 +29,84 @@
   font-weight: bold;
 }
 
-.resCard {
-  margin-bottom: 2rem;
-  border: 0.1rem solid white;
-  padding: 1rem;
+@media (max-width: 400px) {
+  .cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  img {
+    width: 90%;
+    border-radius: 0.4rem;
+  }
+  .multisearchCard {
+    color: black;
+    height: 30% ;
+    width: 20rem;
+    border: 0.1rem solid white;
+    background-color: white;
+    border-radius: 0.6rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    transition-duration: var(--transition--duration);
+  }
 }
 
-img {
-  height: 30rem;
-  width: 20rem;
+@media (min-width: 400px) and (max-width: 840px) {
+  .cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+  }
+  img {
+    width: 90%;
+    border-radius: 0.4rem;
+  }
+  .multisearchCard {
+    color: black;
+    height: 32rem;
+    width: 20rem;
+    border: 0.1rem solid white;
+    background-color: white;
+    border-radius: 0.6rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    transition-duration: var(--transition--duration);
+  }
+}
+
+@media (min-width: 840px) {
+  .cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+  }
+  img {
+    width: 90%;
+    border-radius: 0.4rem;
+  }
+
+  .multisearchCard {
+    color: black;
+    height: 32rem;
+    width: 20rem;
+    border: 0.1rem solid white;
+    background-color: white;
+    border-radius: 0.6rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    transition-duration: var(--transition--duration);
+  }
+}
+
+.multisearchCard:hover {
+  cursor: pointer;
+  background-color: var(--link--color);
+  color: white;
 }

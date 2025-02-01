@@ -255,6 +255,11 @@ button {
     color: white;
   }
 
+  .resCard .p-card {
+    height: 5rem;
+    width: 5rem;
+    margin-bottom: 2rem;
+  }
   .card {
     width: 100%;
     height: 5rem;
