@@ -16,10 +16,6 @@ export class MediaService {
     this.showToast$.next(true);
   };
 
-  resetToast = () => {
-    this.showToast$.next(false);
-  };
-
   getAllFilms = (): Observable<Film[]> => {
     return this.http.get<Film[]>('');
   };
