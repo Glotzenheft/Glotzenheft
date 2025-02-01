@@ -50,7 +50,7 @@ export const routes: Routes = [
     component: PrivacyPolicyComponent,
   },
   {
-    path: 'test-search', // Route für die Multi-Suche
+    path: 'multi-search', // Route für die Multi-Suche
     component: MultiSearchComponent
   },
 ];

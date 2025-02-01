@@ -24,7 +24,7 @@ export class SearchBarComponent {
     this.searchService.updateSearchTerm(this.searchQuery);
 
     console.log('Nutzeranfrage: ', this.searchQuery);
-    this.router.navigateByUrl('test-search');
+    this.router.navigateByUrl('multi-search');
     // this.router.navigate(['/test-search'], {
     //   queryParams: { query: this.searchQuery },
     // });
