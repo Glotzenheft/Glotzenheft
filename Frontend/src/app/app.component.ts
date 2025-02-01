@@ -47,7 +47,6 @@ export class AppComponent implements OnInit {
   }
 
   toggleSidebar = (newValue: boolean) => {
-    console.log('new sidebar visible value: ', newValue);
     this.isSidebarOpen = newValue;
   };
 

@@ -5,6 +5,7 @@ import { IconFieldModule } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { SearchService } from '../../../service/search/search.service';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-search-bar',
@@ -23,8 +24,11 @@ export class SearchBarComponent {
     this.emitSearchQuery.emit(this.searchQuery);
     this.searchService.updateSearchTerm(this.searchQuery);
 
-    console.log('Nutzeranfrage: ', this.searchQuery);
-    this.router.navigateByUrl('multi-search');
+    if (this.router.url !== `/${ROUTES_LIST[5].fullUrl}`) {
+      // checking if user is already on multi search route
+      this.router.navigateByUrl(ROUTES_LIST[5].fullUrl);
+    }
+
     // this.router.navigate(['/test-search'], {
     //   queryParams: { query: this.searchQuery },
     // });

@@ -7,7 +7,16 @@
   <h3>Suchergebnisse:</h3>
 
   <div class="cardContainer">
-    <div *ngFor="let resItem of item" class="multisearchCard">
+    <div
+      *ngFor="let resItem of item"
+      class="multisearchCard"
+      (click)="
+        navigateToMediaPage(
+          resItem.id,
+          resItem.media_type === 'movie' ? true : false
+        )
+      "
+    >
       <p *ngIf="resItem.media_type === 'tv'" [pTooltip]="resItem.name">
         {{
           resItem.name.length > MAX_STRING_LENGTH
@@ -24,9 +33,11 @@
       </p>
       <div class="multisearchCardImg">
         <img
+          *ngIf="resItem.poster_path"
           [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
           [alt]="'Posterbild für ' + resItem.title"
         />
+        <p *ngIf="!resItem.poster_path"><i>Kein Bild vorhanden</i></p>
       </div>
       <p>{{ resItem.media_type === "tv" ? "Serie" : "Film" }}</p>
     </div>

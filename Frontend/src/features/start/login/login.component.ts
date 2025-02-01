@@ -61,8 +61,6 @@ export class LoginComponent implements OnInit {
       password: this.loginGroup.get('password')?.value,
     };
 
-    console.log(loginData);
-
     this.userService.loginIntoAccount(loginData);
     this.navigationService.navigateToUserStart();
   };

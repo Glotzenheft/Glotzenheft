@@ -1,3 +1,4 @@
+import { Route, Routes } from '@angular/router';
 import { RoutesListItem, VisibleRoute } from '../interfaces/route-list-item';
 
 export const ROUTES_LIST: RoutesListItem[] = [
@@ -29,6 +30,24 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'film',
     fullUrl: 'media/film/:id',
     shortUrl: 'film/:id',
+    showInLinkList: false,
+  },
+  {
+    description: 'Multisuche',
+    fullUrl: 'multi-search',
+    shortUrl: 'multi-search',
+    showInLinkList: false,
+  },
+  {
+    description: 'Filmübersicht',
+    fullUrl: 'media/movie', // /:id
+    shortUrl: 'movie', // /:id,
+    showInLinkList: false,
+  },
+  {
+    description: 'Serienübersicht',
+    fullUrl: 'media/tv', // /:id,
+    shortUrl: 'tv', // /:id
     showInLinkList: false,
   },
 ];

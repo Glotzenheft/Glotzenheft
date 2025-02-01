@@ -12,6 +12,8 @@ import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-multi-search',
@@ -42,19 +44,15 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
   constructor(
     private mediaService: MediaService,
-    private searchService: SearchService
+    private searchService: SearchService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
-    console.log('[MULTI SEARCH NGONINIT] search query: ', this.searchQuery);
-
     this.searchSubscription = this.searchService.searchTerm$.subscribe(
       (searchTerm) => {
-        console.log('on init multisearch -> query:', searchTerm);
-
         if (!searchTerm.trim()) {
           this.showErrorDialog();
-          console.log('condition');
           return;
         }
 
@@ -67,7 +65,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         this.results$ = this.mediaService.getMultiSearchResults(searchTerm);
 
         this.results$.subscribe((ress) => {
-          console.log('dd');
           this.item = ress.results.filter(
             (r) => r.media_type === 'tv' || r.media_type === 'movie'
           );
@@ -90,5 +87,14 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
   closeErrorDialog = () => {
     this.isErrorDialogVisible = false;
+  };
+
+  navigateToMediaPage = (id: number, isMovie: boolean) => {
+    if (isMovie) {
+      this.router.navigateByUrl(ROUTES_LIST[6].fullUrl + `/${id}`);
+      return;
+    }
+
+    this.router.navigateByUrl(ROUTES_LIST[7].fullUrl + `/${id}`);
   };
 }

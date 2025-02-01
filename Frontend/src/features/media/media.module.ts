@@ -5,6 +5,7 @@ import { MediaPageComponent } from './media-page/media-page.component';
 import { FilmPageComponent } from './film-page/film-page.component';
 import { TvPageComponent } from './tv-page/tv-page.component';
 import { SeasonPageComponent } from './season-page/season-page.component';
+import { ROUTES_LIST } from '../../shared/variables/routes-list';
 
 const mediaRoutes: Routes = [
   {
@@ -12,11 +13,11 @@ const mediaRoutes: Routes = [
     component: MediaPageComponent,
   },
   {
-    path: 'film/:id',
+    path: ROUTES_LIST[6].shortUrl + '/:id',
     component: FilmPageComponent,
   },
-  { 
-    path: 'tv/:id',
+  {
+    path: ROUTES_LIST[7].shortUrl + '/:id',
     component: TvPageComponent,
   },
   {
