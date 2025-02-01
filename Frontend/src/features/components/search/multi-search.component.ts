@@ -11,6 +11,7 @@ import { SearchService } from '../../../service/search/search.service';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-multi-search',
@@ -22,6 +23,7 @@ import { CardModule } from 'primeng/card';
     DialogModule,
     ProgressSpinnerModule,
     CardModule,
+    TooltipModule,
   ],
   styleUrls: ['./multi-search.component.css'],
   //   changeDetection: ChangeDetectionStrategy.OnPush,
@@ -36,6 +38,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   private searchSubscription!: Subscription;
   public isErrorDialogVisible: boolean = false;
   public isLoading: boolean = false;
+  public MAX_STRING_LENGTH: number = 25;
 
   constructor(
     private mediaService: MediaService,

@@ -41,7 +41,7 @@
   }
   .multisearchCard {
     color: black;
-    height: 30% ;
+    height: 30%;
     width: 20rem;
     border: 0.1rem solid white;
     background-color: white;
@@ -89,6 +89,7 @@
   img {
     width: 90%;
     border-radius: 0.4rem;
+    border: 0.1rem solid black;
   }
 
   .multisearchCard {
@@ -102,6 +103,7 @@
     padding-right: 1rem;
     box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
     transition-duration: var(--transition--duration);
+    align-items: center;
   }
 }
 
@@ -109,4 +111,10 @@
   cursor: pointer;
   background-color: var(--link--color);
   color: white;
+}
+.multisearchCardImg {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
