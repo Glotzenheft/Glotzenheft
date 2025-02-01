@@ -9,6 +9,7 @@ import { ROUTES_LIST } from '../shared/variables/routes-list';
 import { SeasonMainComponent } from '../features/components/media/season/season-main/season-main.component';
 import { FilmMainComponent } from '../features/components/media/film/film-main/film-main.component';
 import { MultiSearchComponent } from '../features/components/search/multi-search.component';
+import { authGuard } from '../guards/auth.guard';
 
 export const routes: Routes = [
   {
@@ -29,6 +30,7 @@ export const routes: Routes = [
       import('../features/user/user.module').then(
         (module) => module.UserModule
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'media',
@@ -36,6 +38,7 @@ export const routes: Routes = [
       import('../features/media/media.module').then(
         (module) => module.MediaModule
       ),
+    canActivate: [authGuard],
   },
   {
     path: 'imprint',
@@ -52,5 +55,11 @@ export const routes: Routes = [
   {
     path: ROUTES_LIST[5].fullUrl, // Route für die Multi-Suche
     component: MultiSearchComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: '**',
+    redirectTo: '/',
+    pathMatch: 'full',
   },
 ];

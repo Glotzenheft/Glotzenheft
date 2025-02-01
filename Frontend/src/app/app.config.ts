@@ -14,7 +14,7 @@ import {
   withEventReplay,
 } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
-import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { MessageService } from 'primeng/api';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -28,5 +28,6 @@ export const appConfig: ApplicationConfig = {
       },
     }),
     provideHttpClient(),
+    MessageService,
   ],
 };

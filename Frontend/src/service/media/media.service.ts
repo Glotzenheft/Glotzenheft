@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Film, Season } from '../../shared/interfaces/media-interfaces';
-import { Observable, shareReplay } from 'rxjs';
+import { BehaviorSubject, Observable, shareReplay } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ROUTE_MULTI_SEARCH } from '../../shared/variables/api-routes';
 
@@ -8,7 +8,17 @@ import { ROUTE_MULTI_SEARCH } from '../../shared/variables/api-routes';
   providedIn: 'root',
 })
 export class MediaService {
+  public showToast$ = new BehaviorSubject<boolean>(false);
+
   constructor(private http: HttpClient) {}
+
+  triggerToast = () => {
+    this.showToast$.next(true);
+  };
+
+  resetToast = () => {
+    this.showToast$.next(false);
+  };
 
   getAllFilms = (): Observable<Film[]> => {
     return this.http.get<Film[]>('');

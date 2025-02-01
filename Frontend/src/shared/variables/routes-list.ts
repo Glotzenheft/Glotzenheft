@@ -34,7 +34,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
   },
   {
     description: 'Multisuche',
-    fullUrl: 'multi-search',
+    fullUrl: 'media/multi-search',
     shortUrl: 'multi-search',
     showInLinkList: false,
   },
