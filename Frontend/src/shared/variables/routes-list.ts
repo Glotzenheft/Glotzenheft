@@ -36,7 +36,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Multisuche',
     fullUrl: 'media/multi-search',
     shortUrl: 'multi-search',
-    showInLinkList: false,
+    showInLinkList: true,
   },
   {
     description: 'Filmübersicht',

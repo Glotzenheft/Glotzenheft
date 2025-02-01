@@ -8,13 +8,7 @@ import { ROUTE_MULTI_SEARCH } from '../../shared/variables/api-routes';
   providedIn: 'root',
 })
 export class MediaService {
-  public showToast$ = new BehaviorSubject<boolean>(false);
-
   constructor(private http: HttpClient) {}
-
-  triggerToast = () => {
-    this.showToast$.next(true);
-  };
 
   getAllFilms = (): Observable<Film[]> => {
     return this.http.get<Film[]>('');

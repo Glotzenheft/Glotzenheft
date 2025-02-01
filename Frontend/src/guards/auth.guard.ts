@@ -3,16 +3,16 @@ import { Inject, inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { MediaService } from '../service/media/media.service';
+import { AuthService } from '../service/auth/auth.service';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
-  const messageService = inject(MessageService);
-  const mediaService = inject(MediaService)
+  const authService = inject(AuthService);
 
   if (isUserLoggedIn()) {
     return true;
   } else {
-    mediaService.triggerToast()
+    authService.triggerToast();
 
     // redirect to login route if not logged in
     return router.createUrlTree(['/login']);

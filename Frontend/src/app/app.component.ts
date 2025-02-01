@@ -8,13 +8,12 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { SearchBarComponent } from '../features/components/search-bar/search-bar.component';
-import { MediaService } from '../service/media/media.service';
 import { Observable, Subscription } from 'rxjs';
-import { MultiSearchResponse } from '../shared/interfaces/media-interfaces';
-import { MultiSearchComponent } from '../features/components/search/multi-search.component';
 import { SearchService } from '../service/search/search.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
+import { AuthService } from '../service/auth/auth.service';
+import { UserLinksComponent } from "../features/components/user-links/user-links.component";
 
 @Component({
   selector: 'app-root',
@@ -29,7 +28,8 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     SearchBarComponent,
     ToastModule,
-  ],
+    UserLinksComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MessageService],
@@ -41,9 +41,9 @@ export class AppComponent implements OnInit, OnDestroy {
   private toastSubscription!: Subscription;
 
   constructor(
-    private mediaService: MediaService,
     public searchService: SearchService,
-    public messageService: MessageService
+    public messageService: MessageService,
+    private authService: AuthService
   ) {}
 
   ngOnInit(): void {
@@ -51,7 +51,7 @@ export class AppComponent implements OnInit, OnDestroy {
       this.isMultiSearchResponseVisible = !searchTerm.trim() ? false : true;
     });
 
-    this.toastSubscription = this.mediaService.showToast$.subscribe(
+    this.toastSubscription = this.authService.showToast$.subscribe(
       (show: boolean) => {
         if (show) {
           this.messageService.add({
