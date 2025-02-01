@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -34,7 +34,7 @@ import { MessageService } from 'primeng/api';
   styleUrl: './app.component.css',
   providers: [MessageService],
 })
-export class AppComponent implements OnInit {
+export class AppComponent implements OnInit, OnDestroy {
   isSidebarOpen: boolean = window.innerWidth <= 850 ? false : true; // sidebar should be open by default
   isMultiSearchResponseVisible: boolean = false;
   userQuery: string = '';
@@ -64,6 +64,10 @@ export class AppComponent implements OnInit {
         }
       }
     );
+  }
+
+  ngOnDestroy(): void {
+    this.toastSubscription.unsubscribe();
   }
 
   toggleSidebar = (newValue: boolean) => {
