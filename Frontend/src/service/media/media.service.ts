@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 import { Film, Season } from '../../shared/interfaces/media-interfaces';
-import { Observable } from 'rxjs';
+import { Observable, shareReplay } from 'rxjs';
 import { HttpClient } from '@angular/common/http';
 import { ROUTE_MULTI_SEARCH } from '../../shared/variables/api-routes';
 
@@ -19,8 +19,8 @@ export class MediaService {
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {
-    return this.http.get(
-      `${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`
-    );
+    return this.http
+      .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
+      .pipe(shareReplay(1));
   };
 }

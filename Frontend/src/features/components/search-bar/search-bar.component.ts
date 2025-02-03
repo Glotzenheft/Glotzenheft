@@ -1,9 +1,11 @@
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
+import { SearchService } from '../../../service/search/search.service';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-search-bar',
@@ -14,13 +16,22 @@ import { InputTextModule } from 'primeng/inputtext';
 export class SearchBarComponent {
   searchQuery: string = '';
 
-  constructor(private router: Router) {}
+  @Output() emitSearchQuery: EventEmitter<string> = new EventEmitter<string>();
+
+  constructor(private router: Router, private searchService: SearchService) {}
 
   navigateToSearch = () => {
-    console.log('Nutzeranfrage: ', this.searchQuery);
-    this.router.navigate(['/test-search'], {
-      queryParams: { query: this.searchQuery },
-    });
+    this.emitSearchQuery.emit(this.searchQuery);
+    this.searchService.updateSearchTerm(this.searchQuery);
+
+    if (this.router.url !== `/${ROUTES_LIST[5].fullUrl}`) {
+      // checking if user is already on multi search route
+      this.router.navigateByUrl(ROUTES_LIST[5].fullUrl);
+    }
+
+    // this.router.navigate(['/test-search'], {
+    //   queryParams: { query: this.searchQuery },
+    // });
   };
 
   handleInput = (event: Event) => {

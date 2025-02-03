@@ -70,7 +70,6 @@ export class RegisterComponent implements OnInit {
       password: this.registerGroup.get('password')?.value,
     };
 
-    console.log(registerData);
     this.userService.registerAccount(registerData);
     this.navigationService.navigateToUserStart();
   };
