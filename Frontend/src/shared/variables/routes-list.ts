@@ -44,6 +44,12 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'tv', // /:id
     showInLinkList: false,
   },
+  {
+    description: 'Details',
+    fullUrl: 'media', // /:id
+    shortUrl: '', // /:id
+    showInLinkList: false,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {

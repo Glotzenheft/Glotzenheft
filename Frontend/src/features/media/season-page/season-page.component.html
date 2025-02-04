@@ -1,4 +1,4 @@
-<div *ngIf="hasError; hasNoErrorBlock">
+<div *ngIf="hasError">
   <p-panel header="Fehler beim Laden der Seite" class="error">
     <p>
       Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte versuchen
@@ -7,7 +7,7 @@
   </p-panel>
 </div>
 
-<div #hasNoErrorBlock *ngIf="seasonData$ | async as seasonData">
+<div *ngIf="seasonData$ | async as seasonData">
   <div class="heading">
     <h1>{{ seasonData.name }}</h1>
     <p *ngIf="seasonData.mediaID">GESPEICHERT</p>

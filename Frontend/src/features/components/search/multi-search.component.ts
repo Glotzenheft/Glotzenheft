@@ -89,12 +89,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     this.isErrorDialogVisible = false;
   };
 
-  navigateToMediaPage = (id: number, isMovie: boolean) => {
-    if (isMovie) {
-      this.router.navigateByUrl(ROUTES_LIST[5].fullUrl + `/${id}`);
-      return;
-    }
-
-    this.router.navigateByUrl(ROUTES_LIST[6].fullUrl + `/${id}`);
+  navigateToMediaPage = (id: number) => {
+    this.router.navigateByUrl(ROUTES_LIST[7].fullUrl + `/${id}`);
   };
 }

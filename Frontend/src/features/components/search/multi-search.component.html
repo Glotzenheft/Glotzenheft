@@ -10,12 +10,7 @@
     <div
       *ngFor="let resItem of item"
       class="multisearchCard"
-      (click)="
-        navigateToMediaPage(
-          resItem.id,
-          resItem.media_type === 'movie' ? true : false
-        )
-      "
+      (click)="navigateToMediaPage(resItem.id)"
     >
       <p *ngIf="resItem.media_type === 'tv'" [pTooltip]="resItem.name">
         {{

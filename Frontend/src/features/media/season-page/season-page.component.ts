@@ -44,23 +44,16 @@ export class SeasonPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.seasonID = this.route.snapshot.paramMap.get('seasonID');
     this.tvSeriesID = this.route.snapshot.paramMap.get('id');
 
-    if (!this.seasonID || !this.tvSeriesID) {
+    if (!this.tvSeriesID) {
       this.hasError = true;
       if (!this.seasonID) {
-      } else if (!this.tvSeriesID) {
       }
-
       return;
     }
 
-    this.seasonData$ = this.mediaService.getSeasonForTV(
-      this.tvSeriesID,
-      this.seasonID
-    );
-    // this.seasonData$ = of(TEST_SEASON);
+    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
 
     if (!this.seasonData$) {
       this.hasError = true;

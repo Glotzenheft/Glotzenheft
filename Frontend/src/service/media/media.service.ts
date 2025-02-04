@@ -17,10 +17,10 @@ export class MediaService {
     return this.http.get<Film[]>('');
   };
 
-  getSeasonForTV = (mediaID: string, seasonID: string): Observable<Season> => {
+  getSeasonForTV = (mediaID: string): Observable<Season> => {
     return this.http.post<Season>(
       ROUTE_MEDIA_DETAILS_SEARCH + mediaID,
-      JSON.stringify({ mediaID, seasonID })
+      JSON.stringify({ mediaID })
     );
   };
 
