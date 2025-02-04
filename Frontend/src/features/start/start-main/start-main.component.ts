@@ -5,6 +5,7 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-start-main',
@@ -19,13 +20,19 @@ import { Router } from '@angular/router';
   styleUrl: './start-main.component.css',
 })
 export class StartMainComponent {
-  constructor(private router: Router) {}
+  constructor(private router: Router, private m: MessageService) {}
 
   navigateToLogin = () => {
     this.router.navigateByUrl('/login');
   };
 
   navigateToRegister = () => {
+    this.m.add({
+      severity: 'info',
+      summary: 'Works',
+    });
     this.router.navigateByUrl('/register');
   };
+
+  
 }

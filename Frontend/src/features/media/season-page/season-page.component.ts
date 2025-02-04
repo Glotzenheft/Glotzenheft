@@ -56,11 +56,11 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    // this.seasonData$ = this.mediaService.getSeasonForTV(
-    //   this.tvSeriesID,
-    //   this.seasonID
-    // );
-    this.seasonData$ = of(TEST_SEASON);
+    this.seasonData$ = this.mediaService.getSeasonForTV(
+      this.tvSeriesID,
+      this.seasonID
+    );
+    // this.seasonData$ = of(TEST_SEASON);
 
     if (!this.seasonData$) {
       this.hasError = true;
