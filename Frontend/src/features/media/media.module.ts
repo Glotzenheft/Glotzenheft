@@ -14,11 +14,11 @@ const mediaRoutes: Routes = [
     component: MediaPageComponent,
   },
   {
-    path: ROUTES_LIST[6].shortUrl + '/:id',
+    path: ROUTES_LIST[5].shortUrl + '/:id',
     component: FilmPageComponent,
   },
   {
-    path: ROUTES_LIST[7].shortUrl + '/:id',
+    path: ROUTES_LIST[6].shortUrl + '/:id',
     component: TvPageComponent,
   },
   {
@@ -26,7 +26,7 @@ const mediaRoutes: Routes = [
     component: SeasonPageComponent,
   },
   {
-    path: ROUTES_LIST[5].shortUrl,
+    path: ROUTES_LIST[4].shortUrl,
     component: MultiSearchComponent,
   },
 ];

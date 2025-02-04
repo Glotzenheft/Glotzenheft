@@ -24,9 +24,9 @@ export class SearchBarComponent {
     this.emitSearchQuery.emit(this.searchQuery);
     this.searchService.updateSearchTerm(this.searchQuery);
 
-    if (this.router.url !== `/${ROUTES_LIST[5].fullUrl}`) {
+    if (this.router.url !== `/${ROUTES_LIST[4].fullUrl}`) {
       // checking if user is already on multi search route
-      this.router.navigateByUrl(ROUTES_LIST[5].fullUrl);
+      this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
     }
 
     // this.router.navigate(['/test-search'], {

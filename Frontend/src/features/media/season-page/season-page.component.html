@@ -9,7 +9,7 @@
 
 <div #hasNoErrorBlock *ngIf="seasonData$ | async as seasonData">
   <div class="heading">
-    <h1>{{ seasonData.name }} - Staffel {{ seasonData.seasonNumber }}</h1>
+    <h1>{{ seasonData.name }}</h1>
     <p *ngIf="seasonData.mediaID">GESPEICHERT</p>
   </div>
   <div class="seasonMeta">
@@ -17,21 +17,16 @@
       <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
       <img
         *ngIf="seasonData.posterPath !== null"
-        [src]="seasonData.posterPath"
-        [alt]="
-          'Dies ist das Bild für die ' +
-          seasonData.seasonNumber +
-          '. Staffel von ' +
-          seasonData.name
-        "
+        [src]="'https://image.tmdb.org/t/p/w500' + seasonData.posterPath"
+        [alt]="'Dies ist das Bild für von ' + seasonData.name"
       />
     </div>
     <div class="seasonMetaContent">
       <h2>Beschreibung</h2>
-      <p>{{ seasonData.overview }}</p>
-      <p>Ausstrahlung am {{ seasonData.airDate.toLocaleDateString() }}</p>
-      <p *ngIf="seasonData.episodeCount">
-        Anzahl der Episoden: {{ seasonData.episodeCount }}
+      <p>{{ seasonData.description }}</p>
+      <p>Ausstrahlung am {{ seasonData.firstAirDate }}</p>
+      <p *ngIf="seasonData.seasons.length">
+        Anzahl der Episoden: {{ seasonData.seasons.length }}
       </p>
     </div>
   </div>
@@ -39,7 +34,7 @@
   <div class="mainDIV episodes">
     <h2>Episoden</h2>
     <div
-      *ngFor="let episode of seasonData.episodes"
+      *ngFor="let episode of seasonData.seasons"
       class="card"
       (click)="showEpisodeDialog(episode)"
     >

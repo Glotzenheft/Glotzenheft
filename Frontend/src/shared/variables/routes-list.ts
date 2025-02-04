@@ -21,15 +21,9 @@ export const ROUTES_LIST: RoutesListItem[] = [
     showInLinkList: true,
   },
   {
-    description: 'season',
-    fullUrl: 'media/season/:id',
+    description: 'Details',
+    fullUrl: 'media/:id',
     shortUrl: 'season/:id',
-    showInLinkList: false,
-  },
-  {
-    description: 'film',
-    fullUrl: 'media/film/:id',
-    shortUrl: 'film/:id',
     showInLinkList: false,
   },
   {
