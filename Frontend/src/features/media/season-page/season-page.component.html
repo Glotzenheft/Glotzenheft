@@ -7,6 +7,13 @@
   </p-panel>
 </div>
 
+<div class="backButtonDIV">
+  <p-button
+    label="zurück"
+    (onClick)="navigateToMultiSearch()"
+    severity="secondary"
+  />
+</div>
 <div *ngIf="seasonData$ | async as seasonData">
   <div class="heading">
     <h1>{{ seasonData.name }}</h1>

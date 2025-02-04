@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { TEST_SEASON } from '../../../test-data/test-season';
 import { StringService } from '../../../service/string/string.service';
 import { FormsModule } from '@angular/forms';
+import { NavigationService } from '../../../service/navigation/navigation.service';
 
 @Component({
   selector: 'app-season-page',
@@ -38,9 +39,10 @@ export class SeasonPageComponent implements OnInit {
   visibleEpisode: Episode | null = null;
 
   constructor(
+    public stringService: StringService,
     private route: ActivatedRoute,
     private mediaService: MediaService,
-    public stringService: StringService
+    private navigationService: NavigationService
   ) {}
 
   ngOnInit(): void {
@@ -72,5 +74,9 @@ export class SeasonPageComponent implements OnInit {
 
   closeEpisodeDialog = () => {
     this.isDialogVisible = false;
+  };
+
+  navigateToMultiSearch = () => {
+    this.navigationService.navigateToMultiSearch();
   };
 }

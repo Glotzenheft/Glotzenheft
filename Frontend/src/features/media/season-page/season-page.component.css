@@ -57,3 +57,7 @@
     border-left: 0.1rem solid white;
   }
 }
+
+.backButtonDIV {
+  height: 4rem;
+}
