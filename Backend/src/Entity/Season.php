@@ -7,8 +7,10 @@ use App\Repository\SeasonRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class Season
 {
     use TimestampsTrait;
@@ -16,6 +18,7 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]
@@ -23,24 +26,31 @@ class Season
     private ?Media $media = null;
 
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $tmdbSeasonID = null;
 
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $seasonNumber = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['media_details'])]
     private ?string $overview = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['media_details'])]
     private ?DateTimeInterface $airDate = null;
 
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $episodeCount = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
     private ?string $posterPath = null;
 
     public function getId(): ?int
