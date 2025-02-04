@@ -33,4 +33,6 @@ export class StartMainComponent {
     });
     this.router.navigateByUrl('/register');
   };
+
+  
 }
