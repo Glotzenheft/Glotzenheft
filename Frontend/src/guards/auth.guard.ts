@@ -20,5 +20,5 @@ export const authGuard: CanActivateFn = (route, state) => {
 };
 
 const isUserLoggedIn = (): boolean => {
-  return !!localStorage.getItem('authToken');
+  return !!localStorage.getItem('token');
 };

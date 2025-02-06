@@ -1,6 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import {
+  LoginAndMessageResponse,
   LoginCredentials,
   RegisterCredentials,
 } from '../../shared/interfaces/login';
@@ -14,13 +15,19 @@ export class UserService {
 
   loginIntoAccount = (
     loginData: LoginCredentials
-  ): Observable<{ token: string }> => {
-    return this.http.post<{ token: string }>('', JSON.stringify(loginData));
+  ): Observable<LoginAndMessageResponse> => {
+    return this.http.post<LoginAndMessageResponse>(
+      'https://127.0.0.1:8000/api/login',
+      JSON.stringify(loginData)
+    );
   };
 
   registerAccount = (
     registerData: RegisterCredentials
-  ): Observable<{ token: string }> => {
-    return this.http.post<{ token: string }>('', JSON.stringify(registerData));
+  ): Observable<LoginAndMessageResponse> => {
+    return this.http.post<LoginAndMessageResponse>(
+      'https://127.0.0.1:8000/api/register',
+      JSON.stringify(registerData)
+    );
   };
 }
