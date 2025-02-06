@@ -12,15 +12,17 @@ import { Observable } from 'rxjs';
 export class UserService {
   constructor(private http: HttpClient) {}
 
-  loginIntoAccount = (
-    loginData: LoginCredentials
-  ): Observable<{ token: string }> => {
-    return this.http.post<{ token: string }>('', JSON.stringify(loginData));
+  loginIntoAccount = (loginData: LoginCredentials): Observable<any> => {
+    return this.http.post<any>(
+      'https://127.0.0.1:8000/api/login',
+      JSON.stringify(loginData)
+    );
   };
 
-  registerAccount = (
-    registerData: RegisterCredentials
-  ): Observable<{ token: string }> => {
-    return this.http.post<{ token: string }>('', JSON.stringify(registerData));
+  registerAccount = (registerData: RegisterCredentials): Observable<any> => {
+    return this.http.post<any>(
+      'https://127.0.0.1:8000/api/register',
+      JSON.stringify(registerData)
+    );
   };
 }

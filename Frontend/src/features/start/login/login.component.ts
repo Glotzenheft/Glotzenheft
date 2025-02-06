@@ -45,7 +45,7 @@ export class LoginComponent implements OnInit {
 
   ngOnInit(): void {
     this.loginGroup = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(8)]],
+      username: ['', [Validators.required, Validators.minLength(2)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
@@ -61,7 +61,7 @@ export class LoginComponent implements OnInit {
       password: this.loginGroup.get('password')?.value,
     };
 
-    this.userService.loginIntoAccount(loginData);
+    this.userService.loginIntoAccount(loginData).subscribe();
     this.navigationService.navigateToUserStart();
   };
 
