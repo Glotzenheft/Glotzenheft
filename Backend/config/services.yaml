@@ -20,5 +20,10 @@ services:
             - '../src/Entity/'
             - '../src/Kernel.php'
 
+    App\Security\JwtAuthenticator:
+        tags:
+            - { name: kernel.event_listener, event: kernel.controller, priority: 10 }
+
+
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
