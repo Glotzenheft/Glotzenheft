@@ -14,7 +14,10 @@ import { CommonModule } from '@angular/common';
 import { Message } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { UserService } from '../../../service/user/user.service';
-import { RegisterCredentials } from '../../../shared/interfaces/login';
+import {
+  LoginAndMessageResponse,
+  RegisterCredentials,
+} from '../../../shared/interfaces/login';
 
 @Component({
   selector: 'app-register',
@@ -35,6 +38,7 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
+  private userName: string = '';
 
   constructor(
     public navigationService: NavigationService,
@@ -65,12 +69,19 @@ export class RegisterComponent implements OnInit {
       return;
     }
 
+    this.userName = this.registerGroup.get('username')?.value;
+
     const registerData: RegisterCredentials = {
       username: this.registerGroup.get('username')?.value,
       password: this.registerGroup.get('password')?.value,
     };
 
-    this.userService.registerAccount(registerData).subscribe();
+    this.userService
+      .registerAccount(registerData)
+      .subscribe((res: LoginAndMessageResponse) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('username', this.userName);
+      });
     this.navigationService.navigateToUserStart();
   };
 

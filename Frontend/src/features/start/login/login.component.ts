@@ -14,7 +14,10 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserService } from '../../../service/user/user.service';
-import { LoginCredentials } from '../../../shared/interfaces/login';
+import {
+  LoginAndMessageResponse,
+  LoginCredentials,
+} from '../../../shared/interfaces/login';
 import { Message } from 'primeng/message';
 
 @Component({
@@ -36,6 +39,7 @@ import { Message } from 'primeng/message';
 export class LoginComponent implements OnInit {
   loginGroup!: FormGroup;
   isFormSubmitted: boolean = false;
+  private userName: string = '';
 
   constructor(
     public navigationService: NavigationService,
@@ -56,13 +60,20 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    this.userName = this.loginGroup.get('username')?.value;
+
     const loginData: LoginCredentials = {
       username: this.loginGroup.get('username')?.value,
       password: this.loginGroup.get('password')?.value,
     };
 
-    this.userService.loginIntoAccount(loginData).subscribe();
-    this.navigationService.navigateToUserStart();
+    this.userService
+      .loginIntoAccount(loginData)
+      .subscribe((res: LoginAndMessageResponse) => {
+        localStorage.setItem('token', res.token);
+        localStorage.setItem('username', this.userName);
+        this.navigationService.navigateToUserStart();
+      });
   };
 
   hasError = (field: string, error: string): boolean => {
