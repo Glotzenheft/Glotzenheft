@@ -1,7 +1,6 @@
 @media (max-width: 500px) {
   img {
-    width: 90%;
-    border-radius: 0.4rem;
+    height: 100%;
   }
   .seasonMeta {
     width: 100%;
@@ -26,6 +25,11 @@
     width: 100%;
     padding-left: var(--padding--left-right);
     border-left: 0.1rem solid white;
+  }
+
+  .seasonMetaPicture {
+    background-color: red;
+    width: auto;
   }
 }
 
