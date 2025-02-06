@@ -2,6 +2,7 @@
 
 namespace App\API\TheMovieDB\Traits;
 
+use App\API\TheMovieDB\Movies\Details\TMDBMovieDetailsService;
 use App\API\TheMovieDB\TVSeries\Details\TMDBTVSeriesDetailsService;
 use App\Entity\Media;
 use App\Entity\TMDBGenre;
@@ -14,14 +15,15 @@ trait MediaDetailTrait
 {
     public function __construct
     (
-        private readonly TMDBTVSeriesDetailsService $service,
+        private readonly TMDBTVSeriesDetailsService $tvService,
+        private readonly TMDBMovieDetailsService $movieService,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager
     )
     {
     }
 
-    public function handleTMDBMediaDetail(int $tmdbID, MediaType $type): Media
+    public function handleTMDBMediaDetail(int $tmdbID, MediaType $type): ?Media
     {
         $media = $this->entityManager->getRepository(Media::class)->findOneBy([
             'tmdbID' => $tmdbID,
@@ -33,19 +35,34 @@ trait MediaDetailTrait
             $media = new Media();
         }
 
-
-        $result = $this->service->getTVSeriesDetails($tmdbID);
+        switch ($type)
+        {
+            case MediaType::TV:
+                $result = $this->tvService->getTVSeriesDetails($tmdbID);
+                $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
+                $name = $result['name'];
+                $originalName = $result['original_name'];
+                break;
+            case MediaType::Movie:
+                $result = $this->movieService->getMovieDetails($tmdbID);
+                $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
+                $name = $result['title'];
+                $originalName = $result['original_title'];
+                break;
+            case MediaType::ANIME:
+                return null;
+        }
 
         $genreArray = $result['genres'] ?? null;
-        $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
+
         $media
-            ->setName($result['name'] ?? null)
-            ->setOriginalName($result['original_name'] ?? null)
-            ->setDescription($result['overview'] ?? null)
-            ->setFirstAirDate($firstAirDate)
+            ->setName($name ?? '')
+            ->setOriginalName($originalName ?? '')
+            ->setDescription($result['overview'] ?? '')
+            ->setFirstAirDate($firstAirDate ?? null)
             ->setImdbID($result['external_ids']['imdb_id'] ?? null)
             ->setPosterPath($result['poster_path'] ?? null)
-            ->setBackdropPath($result['backdrop_path'] ?? null)
+            ->setBackdropPath($result['backdrop_path'] ?? '')
             ->setType($type)
             ->setTmdbID($tmdbID)
         ;
@@ -55,8 +72,6 @@ trait MediaDetailTrait
             $id = $genre['id'];
             $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy(['tmdbGenreID' => $id]);
             $media->addTmdbGenre($tmdbGenre);
-            $this->entityManager->persist($media);
-            $this->entityManager->flush();
         }
 
         $this->entityManager->persist($media);
