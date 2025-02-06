@@ -53,7 +53,7 @@ export const routes: Routes = [
     component: PrivacyPolicyComponent,
   },
   {
-    path: ROUTES_LIST[5].fullUrl, // Route für die Multi-Suche
+    path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
     component: MultiSearchComponent,
     canActivate: [authGuard],
   },

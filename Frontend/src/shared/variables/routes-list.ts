@@ -21,15 +21,9 @@ export const ROUTES_LIST: RoutesListItem[] = [
     showInLinkList: true,
   },
   {
-    description: 'season',
-    fullUrl: 'media/season/:id',
+    description: 'Details',
+    fullUrl: 'media/:id',
     shortUrl: 'season/:id',
-    showInLinkList: false,
-  },
-  {
-    description: 'film',
-    fullUrl: 'media/film/:id',
-    shortUrl: 'film/:id',
     showInLinkList: false,
   },
   {
@@ -48,6 +42,12 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Serienübersicht',
     fullUrl: 'media/tv', // /:id,
     shortUrl: 'tv', // /:id
+    showInLinkList: false,
+  },
+  {
+    description: 'Details',
+    fullUrl: 'media', // /:id
+    shortUrl: '', // /:id
     showInLinkList: false,
   },
 ];

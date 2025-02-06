@@ -36,8 +36,10 @@
     gap: 1rem;
   }
   img {
-    width: 90%;
+    height: auto;
+    width: 60%;
     border-radius: 0.4rem;
+    border: 0.1rem solid black;
   }
   .multisearchCard {
     color: black;
@@ -55,6 +57,13 @@
     align-items: center;
     justify-content: center;
   }
+  .multisearchCardImg {
+    width: auto;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 @media (min-width: 400px) and (max-width: 840px) {
@@ -64,8 +73,10 @@
     gap: 1rem;
   }
   img {
-    width: 90%;
+    height: 90%;
+    width: auto;
     border-radius: 0.4rem;
+    border: 0.1rem solid black;
   }
   .multisearchCard {
     color: black;
@@ -83,6 +94,13 @@
     align-items: center;
     justify-content: center;
   }
+  .multisearchCardImg {
+    width: auto;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 @media (min-width: 840px) {
@@ -95,7 +113,8 @@
     gap: 2rem;
   }
   img {
-    width: 90%;
+    height: 90%;
+    width: auto;
     border-radius: 0.4rem;
     border: 0.1rem solid black;
   }
@@ -117,6 +136,13 @@
     align-items: center;
     justify-content: center;
   }
+  .multisearchCardImg {
+    width: auto;
+    height: 80%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
 }
 
 .multisearchCard:hover {
@@ -125,7 +151,8 @@
   color: white;
 }
 .multisearchCardImg {
-  width: 100%;
+  width: auto;
+  height: 80%;
   display: flex;
   justify-content: center;
   align-items: center;

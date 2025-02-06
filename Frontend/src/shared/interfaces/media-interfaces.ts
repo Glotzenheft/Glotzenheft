@@ -12,14 +12,18 @@ export interface Episode {
 }
 
 export interface Season {
-  episodes: Episode[];
-  tmdbSeasonID: string;
-  seasonNumber: number;
+  id: number;
+  tmdbID: number;
+  imdbID: string;
+  originalName: string;
   name: string;
-  overview: string; // description text
-  airDate: Date;
-  episodeCount: number | null;
-  posterPath: string | null;
+  description: string;
+  firstAirDate: string;
+  tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
+  seasons: any[];
+  type: string;
+  posterPath: string;
+  backdropPath: string;
   mediaID: string | null;
 }
 
