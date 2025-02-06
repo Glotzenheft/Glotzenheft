@@ -1,7 +1,13 @@
 import { Injectable } from '@angular/core';
 import { Film, Season } from '../../shared/interfaces/media-interfaces';
-import { BehaviorSubject, Observable, shareReplay } from 'rxjs';
-import { HttpClient } from '@angular/common/http';
+import {
+  BehaviorSubject,
+  catchError,
+  Observable,
+  shareReplay,
+  throwError,
+} from 'rxjs';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import {
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
@@ -18,10 +24,17 @@ export class MediaService {
   };
 
   getSeasonForTV = (mediaID: string): Observable<Season> => {
-    return this.http.post<Season>(
-      ROUTE_MEDIA_DETAILS_SEARCH + mediaID,
-      JSON.stringify({ mediaID })
-    );
+    return this.http
+      .post<Season>(
+        ROUTE_MEDIA_DETAILS_SEARCH + mediaID,
+        JSON.stringify({ mediaID })
+      )
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {

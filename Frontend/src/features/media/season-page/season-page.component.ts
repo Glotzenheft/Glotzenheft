@@ -25,7 +25,7 @@ import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatti
     RatingModule,
     FormsModule,
     ButtonModule,
-    DateFormattingPipe
+    DateFormattingPipe,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -62,6 +62,12 @@ export class SeasonPageComponent implements OnInit {
     if (!this.seasonData$) {
       this.hasError = true;
     }
+
+    this.seasonData$.subscribe({
+      error: (err) => {
+        this.hasError = true;
+      },
+    });
   }
 
   showEpisodeDialog = (episode: Episode) => {
