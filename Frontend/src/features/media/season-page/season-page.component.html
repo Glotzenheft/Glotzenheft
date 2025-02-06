@@ -31,7 +31,7 @@
     <div class="seasonMetaContent">
       <h2>Beschreibung</h2>
       <p>{{ seasonData.description }}</p>
-      <p>Ausstrahlung am {{ seasonData.firstAirDate }}</p>
+      <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
       <p *ngIf="seasonData.seasons.length">
         Anzahl der Episoden: {{ seasonData.seasons.length }}
       </p>

@@ -13,6 +13,7 @@ import { TEST_SEASON } from '../../../test-data/test-season';
 import { StringService } from '../../../service/string/string.service';
 import { FormsModule } from '@angular/forms';
 import { NavigationService } from '../../../service/navigation/navigation.service';
+import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 
 @Component({
   selector: 'app-season-page',
@@ -24,6 +25,7 @@ import { NavigationService } from '../../../service/navigation/navigation.servic
     RatingModule,
     FormsModule,
     ButtonModule,
+    DateFormattingPipe
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
