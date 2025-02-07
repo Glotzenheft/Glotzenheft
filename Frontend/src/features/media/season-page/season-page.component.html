@@ -20,25 +20,31 @@
     <p *ngIf="seasonData.mediaID">GESPEICHERT</p>
   </div>
   <div class="seasonMeta">
-    <div class="seasonMetaPicture">
-      <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
-      <img
-        *ngIf="seasonData.posterPath !== null"
-        [src]="'https://image.tmdb.org/t/p/w500' + seasonData.posterPath"
-        [alt]="'Dies ist das Bild für von ' + seasonData.name"
-      />
+    <div class="seasonPictureWrapper">
+      <div class="seasonMetaPicture">
+        <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
+        <img
+          *ngIf="seasonData.posterPath !== null"
+          [src]="'https://image.tmdb.org/t/p/w500' + seasonData.posterPath"
+          [alt]="'Dies ist das Bild für von ' + seasonData.name"
+        />
+      </div>
     </div>
     <div class="seasonMetaContent">
-      <h2>Beschreibung</h2>
-      <p>{{ seasonData.description }}</p>
-      <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
-      <p *ngIf="seasonData.seasons.length">
-        Anzahl der Episoden: {{ seasonData.seasons.length }}
-      </p>
+      <div>
+        <h2>Beschreibung</h2>
+        <p class="descriptionP">{{ seasonData.description }}</p>
+        <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
+        <ng-template *ngIf="seasonData.seasons.length > 0">
+          <p *ngIf="seasonData.seasons.length">
+            Anzahl der Episoden: {{ seasonData.seasons.length }}
+          </p>
+        </ng-template>
+      </div>
     </div>
   </div>
 
-  <div class="mainDIV episodes">
+  <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
     <h2>Episoden</h2>
     <div
       *ngFor="let episode of seasonData.seasons"
