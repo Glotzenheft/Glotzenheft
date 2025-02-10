@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampsTrait;
 use App\Repository\EpisodeRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: EpisodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,45 +18,57 @@ class Episode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    private ?int $tmdbSeasonID = null;
+    #[Groups(['media_details'])]
+    private ?int $tmdbEpisodeID = null;
 
     #[ORM\Column(length: 255)]
+    #[Groups(['media_details'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Groups(['media_details'])]
     private ?string $overview = null;
 
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $episodeNumber = null;
 
     #[ORM\Column]
+    #[Groups(['media_details'])]
     private ?int $runtime = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $airDate = null;
+    #[Groups(['media_details'])]
+    private ?DateTimeInterface $airDate = null;
 
     #[ORM\OneToOne(mappedBy: 'episode', cascade: ['persist', 'remove'])]
     private ?TracklistEpisode $tracklistEpisode = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
+    #[Groups(['media_details'])]
     private ?string $stillPath = null;
+
+    #[ORM\ManyToOne(inversedBy: 'episodes')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Season $Season = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTmdbSeasonID(): ?int
+    public function getTmdbEpisodeID(): ?int
     {
-        return $this->tmdbSeasonID;
+        return $this->tmdbEpisodeID;
     }
 
-    public function setTmdbSeasonID(int $tmdbSeasonID): static
+    public function setTmdbEpisodeID(int $tmdbEpisodeID): static
     {
-        $this->tmdbSeasonID = $tmdbSeasonID;
+        $this->tmdbEpisodeID = $tmdbEpisodeID;
 
         return $this;
     }
@@ -107,12 +121,12 @@ class Episode
         return $this;
     }
 
-    public function getAirDate(): ?\DateTimeInterface
+    public function getAirDate(): ?DateTimeInterface
     {
         return $this->airDate;
     }
 
-    public function setAirDate(?\DateTimeInterface $airDate): static
+    public function setAirDate(?DateTimeInterface $airDate): static
     {
         $this->airDate = $airDate;
 
@@ -141,9 +155,21 @@ class Episode
         return $this->stillPath;
     }
 
-    public function setStillPath(string $stillPath): static
+    public function setStillPath(?string $stillPath): static
     {
         $this->stillPath = $stillPath;
+
+        return $this;
+    }
+
+    public function getSeason(): ?Season
+    {
+        return $this->Season;
+    }
+
+    public function setSeason(?Season $Season): static
+    {
+        $this->Season = $Season;
 
         return $this;
     }

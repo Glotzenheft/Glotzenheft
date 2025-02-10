@@ -4,6 +4,7 @@ namespace App\API\TheMovieDB\Traits;
 
 use App\API\TheMovieDB\Movies\Details\TMDBMovieDetailsService;
 use App\API\TheMovieDB\TVSeries\Details\TMDBTVSeriesDetailsService;
+use App\API\TheMovieDB\TVSeries\SeasonDetails\TMDBTVSeasonDetailsService;
 use App\Entity\Media;
 use App\Entity\TMDBGenre;
 use App\Enum\MediaType;
@@ -17,13 +18,14 @@ trait MediaDetailTrait
     (
         private readonly TMDBTVSeriesDetailsService $tvService,
         private readonly TMDBMovieDetailsService $movieService,
+        private readonly TMDBTVSeasonDetailsService $seasonService,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager
     )
     {
     }
 
-    public function handleTMDBMediaDetail(int $tmdbID, MediaType $type): ?Media
+    public function handleTMDBMediaDetail(int $tmdbID, MediaType $type, string $language = 'de-DE'): ?Media
     {
         $media = $this->entityManager->getRepository(Media::class)->findOneBy([
             'tmdbID' => $tmdbID,
@@ -35,16 +37,18 @@ trait MediaDetailTrait
             $media = new Media();
         }
 
+        $numberOfSeasons = 0;
         switch ($type)
         {
             case MediaType::TV:
-                $result = $this->tvService->getTVSeriesDetails($tmdbID);
+                $result = $this->tvService->getTVSeriesDetails($tmdbID, $language);
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
                 $name = $result['name'];
                 $originalName = $result['original_name'];
+                $numberOfSeasons = $result['number_of_seasons'];
                 break;
             case MediaType::Movie:
-                $result = $this->movieService->getMovieDetails($tmdbID);
+                $result = $this->movieService->getMovieDetails($tmdbID, $language);
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
                 $name = $result['title'];
                 $originalName = $result['original_title'];
@@ -75,6 +79,18 @@ trait MediaDetailTrait
         }
 
         $this->entityManager->persist($media);
+
+        if ($type === MediaType::TV && $numberOfSeasons > 0)
+        {
+            $seasonNumber = 1;
+            do
+            {
+                $this->seasonService->handleSeasonDetails($tmdbID, $seasonNumber, $media, $language);
+                $seasonNumber++;
+            }
+            while($seasonNumber <= $numberOfSeasons);
+        }
+
         $this->entityManager->flush();
 
         return $media;
