@@ -1,10 +1,10 @@
-@media (max-width: 500px) {
+@media (max-width: 600px) {
   img {
     height: 100%;
   }
   .seasonMeta {
     width: 100%;
-    height: 100%;
+    height: auto;
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -25,6 +25,7 @@
     width: 100%;
     padding-left: var(--padding--left-right);
     border-left: 0.1rem solid white;
+    height: 35rem;
   }
 
   .seasonMetaPicture {
@@ -33,7 +34,7 @@
   }
 }
 
-@media (min-width: 500px) {
+@media (min-width: 600px) {
   img {
     height: 100%;
   }
@@ -44,6 +45,11 @@
     justify-content: center;
     align-items: center;
   }
+
+  .seasonPictureWrapper {
+    height: 30rem;
+  }
+
   .seasonMetaPicture {
     /* width: 13rem; */
     width: auto;
@@ -57,11 +63,23 @@
 
   .seasonMetaContent {
     width: calc(100% - 13rem);
-    padding-left: var(--padding--left-right);
+
+    height: 40rem;
+  }
+  .seasonMetaContent div {
     border-left: 0.1rem solid white;
+    padding-left: var(--padding--left-right);
   }
 }
 
 .backButtonDIV {
   height: 4rem;
+}
+
+.descriptionP {
+  overflow-y: auto;
+  height: 20rem;
+}
+
+.heading {
 }
