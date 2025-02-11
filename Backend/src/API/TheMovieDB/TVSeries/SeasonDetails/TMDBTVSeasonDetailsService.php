@@ -111,7 +111,7 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
                 ->setRuntime($runtime)
                 ->setStillPath($stillPath)
                 ->setAirDate($airDate)
-                ->setTmdbSeasonID($tmdbEpisodeID)
+                ->setTmdbEpisodeID($tmdbEpisodeID)
             ;
 
             $this->entityManager->persist($episode);
