@@ -49,8 +49,6 @@ export class AppComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    this.detectDevToolsResize();
-
     this.searchService.searchTerm$.subscribe((searchTerm: string) => {
       this.isMultiSearchResponseVisible = !searchTerm.trim() ? false : true;
     });
@@ -97,25 +95,5 @@ export class AppComponent implements OnInit, OnDestroy {
           'Sie haben keinen Zugriff auf die Entwicklungswerkzeuge in dieser Applikation.',
       });
     }
-  };
-
-  private detectDevToolsResize = () => {
-    window.addEventListener('resize', () => {
-      const isDevToolsOpen =
-        window.innerHeight < this.lastWindowHeight ||
-        window.innerWidth < this.lastWindowWidth;
-
-      if (isDevToolsOpen) {
-        this.messageService.add({
-          severity: 'warn',
-          detail:
-            'Sie greifen auf die Dev-Tools zu. Sie können alle Fehler ignorieren.',
-          summary: 'Zugriff auf die Dev-Tools',
-        });
-      }
-
-      this.lastWindowHeight = window.innerHeight;
-      this.lastWindowWidth = window.innerWidth;
-    });
   };
 }

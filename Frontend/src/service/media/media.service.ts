@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { Film, Season } from '../../shared/interfaces/media-interfaces';
 import {
   BehaviorSubject,
@@ -7,17 +7,42 @@ import {
   shareReplay,
   throwError,
 } from 'rxjs';
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
+import {
+  HttpClient,
+  HttpErrorResponse,
+  HttpHeaders,
+} from '@angular/common/http';
 import {
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
+import { isPlatformBrowser } from '@angular/common';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaService {
-  constructor(private http: HttpClient) {}
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object
+  ) {}
+
+  private getHeader = (): HttpHeaders | null => {
+    let userToken: string = '';
+
+    if (isPlatformBrowser(this.platformId)) {
+      userToken = localStorage.getItem('token') ?? '';
+    }
+
+    if (!userToken.trim()) {
+      return null;
+    }
+
+    return new HttpHeaders({
+      Authorization: `Bearer ${userToken}`,
+      'Content-Type': 'application/json',
+    });
+  };
 
   getAllFilms = (): Observable<Film[]> => {
     return this.http.get<Film[]>('');
@@ -38,8 +63,14 @@ export class MediaService {
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {
+    const headers: HttpHeaders | null = this.getHeader();
+
+    console.log('multisearch headers: ', headers?.get('Authorization'));
+
     return this.http
-      .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
+      .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`, {
+        headers: headers ? headers : undefined,
+      })
       .pipe(shareReplay(1));
   };
 }
