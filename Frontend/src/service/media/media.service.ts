@@ -63,14 +63,20 @@ export class MediaService {
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {
-    const headers: HttpHeaders | null = this.getHeader();
+    // const hheaders: HttpHeaders | null = this.getHeader();
 
-    console.log('multisearch headers: ', headers?.get('Authorization'));
+    // console.log('multisearch headers: ', hheaders?.get('Authorization'));
+
+    // if (hheaders !== null) {
+    //   return this.http
+    //     .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`, {
+    //       headers: hheaders,
+    //     })
+    //     .pipe(shareReplay(1));
+    // }
 
     return this.http
-      .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`, {
-        headers: headers ? headers : undefined,
-      })
+      .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
       .pipe(shareReplay(1));
   };
 }
