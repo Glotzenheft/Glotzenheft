@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -6,19 +6,39 @@ import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 import { SearchService } from '../../../service/search/search.service';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { isUserLoggedIn } from '../../../guards/auth.guard';
+import { CommonModule } from '@angular/common';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-search-bar',
-  imports: [InputTextModule, InputIcon, IconFieldModule, ButtonModule],
+  imports: [
+    InputTextModule,
+    InputIcon,
+    IconFieldModule,
+    ButtonModule,
+    CommonModule,
+  ],
   templateUrl: './search-bar.component.html',
   styleUrl: './search-bar.component.css',
 })
-export class SearchBarComponent {
+export class SearchBarComponent implements OnInit {
   searchQuery: string = '';
+  public isVisible: boolean = isUserLoggedIn();
 
   @Output() emitSearchQuery: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(private router: Router, private searchService: SearchService) {}
+  constructor(
+    private router: Router,
+    private searchService: SearchService,
+    private userService: UserService
+  ) {}
+
+  ngOnInit(): void {
+    this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
+      this.isVisible = status;
+    });
+  }
 
   navigateToSearch = () => {
     this.emitSearchQuery.emit(this.searchQuery);
