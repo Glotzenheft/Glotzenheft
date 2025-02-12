@@ -10,6 +10,7 @@ import { SeasonMainComponent } from '../features/components/media/season/season-
 import { FilmMainComponent } from '../features/components/media/film/film-main/film-main.component';
 import { MultiSearchComponent } from '../features/components/search/multi-search.component';
 import { authGuard } from '../guards/auth.guard';
+import { ResetPasswordComponent } from '../features/start/reset-password/reset-password.component';
 
 export const routes: Routes = [
   {
@@ -23,6 +24,10 @@ export const routes: Routes = [
   {
     path: 'register',
     component: RegisterComponent,
+  },
+  {
+    path: 'reset-password',
+    component: ResetPasswordComponent,
   },
   {
     path: 'user',
