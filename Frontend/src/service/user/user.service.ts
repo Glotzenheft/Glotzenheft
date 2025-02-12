@@ -1,11 +1,11 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
   LoginAndMessageResponse,
   LoginCredentials,
   RegisterCredentials,
 } from '../../shared/interfaces/login';
-import { BehaviorSubject, Observable, tap } from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { isUserLoggedIn } from '../../guards/auth.guard';
 import { isPlatformBrowser } from '@angular/common';
 
@@ -31,7 +31,12 @@ export class UserService {
         'https://127.0.0.1:8000/api/login',
         JSON.stringify(loginData)
       )
-      .pipe(tap(() => this.isSearchBarVisible.next(true)));
+      .pipe(
+        tap(() => this.isSearchBarVisible.next(true)),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   };
 
   registerAccount = (

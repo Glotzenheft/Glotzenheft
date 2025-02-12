@@ -19,6 +19,7 @@ import {
   LoginCredentials,
 } from '../../../shared/interfaces/login';
 import { Message } from 'primeng/message';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-login',
@@ -40,11 +41,13 @@ export class LoginComponent implements OnInit {
   loginGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   private userName: string = '';
+  public hasLoginError: boolean = false;
 
   constructor(
     public navigationService: NavigationService,
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -67,13 +70,22 @@ export class LoginComponent implements OnInit {
       password: this.loginGroup.get('password')?.value,
     };
 
-    this.userService
-      .loginIntoAccount(loginData)
-      .subscribe((res: LoginAndMessageResponse) => {
+    this.userService.loginIntoAccount(loginData).subscribe({
+      next: (res: LoginAndMessageResponse) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userName);
         this.navigationService.navigateToUserStart();
-      });
+      },
+      error: () => {
+        this.hasLoginError = true;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Loginversuch fehlgeschlagen',
+          detail:
+            'Die eingegebenen Nutzerdaten (Nutername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
+        });
+      },
+    });
   };
 
   hasError = (field: string, error: string): boolean => {
