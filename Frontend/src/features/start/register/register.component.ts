@@ -18,6 +18,8 @@ import {
   LoginAndMessageResponse,
   RegisterCredentials,
 } from '../../../shared/interfaces/login';
+import { MessageService } from 'primeng/api';
+import { SecurityService } from '../../../service/security/security.service';
 
 @Component({
   selector: 'app-register',
@@ -43,7 +45,9 @@ export class RegisterComponent implements OnInit {
   constructor(
     public navigationService: NavigationService,
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private messageService: MessageService,
+    private securityService: SecurityService
   ) {}
 
   ngOnInit(): void {
@@ -70,6 +74,17 @@ export class RegisterComponent implements OnInit {
     }
 
     this.userName = this.registerGroup.get('username')?.value;
+
+    if (!this.securityService.isValidUsername(this.userName)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ungültiger Nutzername',
+        detail: `Nutzernamen dürfen keines der folgenden Zeichen aufweisen: ${this.securityService.INVALID_CHARS.join(
+          ', '
+        )}`,
+      });
+      return;
+    }
 
     const registerData: RegisterCredentials = {
       username: this.registerGroup.get('username')?.value,

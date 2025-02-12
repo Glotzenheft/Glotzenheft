@@ -4,7 +4,8 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SecurityService {
-  private INVALID_CHARS: string[] = [
+  public INVALID_CHARS: string[] = [
+    // forbidden characters for username
     '!',
     '§',
     '$',
