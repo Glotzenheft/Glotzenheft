@@ -14,6 +14,7 @@ import {
 } from '@angular/common/http';
 import {
   ROUTE_MEDIA_DETAILS_SEARCH,
+  ROUTE_MOVIE_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
@@ -48,7 +49,21 @@ export class MediaService {
     return this.http.get<Film[]>('');
   };
 
-  getSeasonForTV = (mediaID: string): Observable<Season> => {
+  getSeasonForTV = (mediaID: string, isMovie: boolean): Observable<Season> => {
+    if (isMovie) {
+      return this.http
+        .post<any>(
+          ROUTE_MOVIE_DETAILS_SEARCH + mediaID,
+          JSON.stringify({ mediaID })
+        )
+        .pipe(
+          shareReplay(1),
+          catchError((error: HttpErrorResponse) => {
+            return throwError(() => error);
+          })
+        );
+    }
+
     return this.http
       .post<Season>(
         ROUTE_MEDIA_DETAILS_SEARCH + mediaID,

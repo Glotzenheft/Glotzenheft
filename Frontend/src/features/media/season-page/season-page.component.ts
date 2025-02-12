@@ -14,6 +14,7 @@ import { StringService } from '../../../service/string/string.service';
 import { FormsModule } from '@angular/forms';
 import { NavigationService } from '../../../service/navigation/navigation.service';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
+import { SecurityService } from '../../../service/security/security.service';
 
 @Component({
   selector: 'app-season-page',
@@ -37,6 +38,7 @@ export class SeasonPageComponent implements OnInit {
   episodeRating: number = 0;
 
   hasError: boolean = false;
+  public isInvalidID: boolean = false;
   isDialogVisible: boolean = false;
   visibleEpisode: Episode | null = null;
 
@@ -44,7 +46,8 @@ export class SeasonPageComponent implements OnInit {
     public stringService: StringService,
     private route: ActivatedRoute,
     private mediaService: MediaService,
-    private navigationService: NavigationService
+    private navigationService: NavigationService,
+    private securityService: SecurityService
   ) {}
 
   ngOnInit(): void {
@@ -57,7 +60,17 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
+    if (!this.securityService.validateMediaURL(this.tvSeriesID)) {
+      this.isInvalidID = true;
+      return;
+    }
+
+    const isMovie: boolean = this.tvSeriesID.split('_')[1].trim() === 'movie';
+
+    this.seasonData$ = this.mediaService.getSeasonForTV(
+      this.tvSeriesID,
+      isMovie
+    );
 
     if (!this.seasonData$) {
       this.hasError = true;

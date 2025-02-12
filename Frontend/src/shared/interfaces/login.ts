@@ -6,9 +6,18 @@ export interface LoginCredentials {
 export interface RegisterCredentials {
   username: string;
   password: string;
+  validationQuestion: string;
+  validationAnswer: string;
 }
 
 export interface LoginAndMessageResponse {
   message: string;
   token: string;
+}
+
+export interface ResetPasswordCredentials {
+  username: string;
+  validationQuestion: string;
+  validationAnswer: string;
+  newPassword: string;
 }
