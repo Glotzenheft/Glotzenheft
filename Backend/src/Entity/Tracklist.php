@@ -5,10 +5,12 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampsTrait;
 use App\Enum\TracklistStatus;
 use App\Repository\TracklistRepository;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TracklistRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -19,6 +21,7 @@ class Tracklist
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tracklist_details'])]
     private ?int $id = null;
 
     /**
@@ -27,6 +30,7 @@ class Tracklist
     #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'tracklists')]
     private Collection $media;
 
+    #[Groups(['tracklist_details'])]
     #[ORM\Column(nullable: true)]
     private ?int $rating = null;
 
@@ -39,17 +43,25 @@ class Tracklist
     /**
      * @var Collection<int, TracklistEpisode>
      */
+    #[Groups(['tracklist_details'])]
     #[ORM\OneToMany(targetEntity: TracklistEpisode::class, mappedBy: 'tracklist', orphanRemoval: true)]
     private Collection $tracklistEpisodes;
 
+    #[Groups(['tracklist_details'])]
     #[ORM\Column(enumType: TracklistStatus::class)]
     private ?TracklistStatus $status = null;
 
+    #[Groups(['tracklist_details'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $startDate = null;
+    private ?DateTimeInterface $startDate = null;
 
+    #[Groups(['tracklist_details'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    private ?\DateTimeInterface $finishDate = null;
+    private ?DateTimeInterface $finishDate = null;
+
+    #[Groups(['tracklist_details'])]
+    #[ORM\Column(length: 255)]
+    private ?string $tracklistName = null;
 
     public function __construct()
     {
@@ -165,26 +177,38 @@ class Tracklist
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getStartDate(): ?DateTimeInterface
     {
         return $this->startDate;
     }
 
-    public function setStartDate(?\DateTimeInterface $startDate): static
+    public function setStartDate(?DateTimeInterface $startDate): static
     {
         $this->startDate = $startDate;
 
         return $this;
     }
 
-    public function getFinishDate(): ?\DateTimeInterface
+    public function getFinishDate(): ?DateTimeInterface
     {
         return $this->finishDate;
     }
 
-    public function setFinishDate(?\DateTimeInterface $finishDate): static
+    public function setFinishDate(?DateTimeInterface $finishDate): static
     {
         $this->finishDate = $finishDate;
+
+        return $this;
+    }
+
+    public function getTracklistName(): ?string
+    {
+        return $this->tracklistName;
+    }
+
+    public function setTracklistName(string $tracklistName): static
+    {
+        $this->tracklistName = $tracklistName;
 
         return $this;
     }

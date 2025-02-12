@@ -18,15 +18,15 @@ class Episode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $tmdbEpisodeID = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
@@ -34,7 +34,7 @@ class Episode
     private ?string $overview = null;
 
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $episodeNumber = null;
 
     #[ORM\Column]
