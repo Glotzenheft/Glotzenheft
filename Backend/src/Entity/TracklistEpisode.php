@@ -4,8 +4,10 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampsTrait;
 use App\Repository\TracklistEpisodeRepository;
+use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Entity(repositoryClass: TracklistEpisodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -16,6 +18,7 @@ class TracklistEpisode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
+    #[Groups(['tracklist_details'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistEpisodes')]
@@ -24,10 +27,12 @@ class TracklistEpisode
 
     #[ORM\OneToOne(inversedBy: 'tracklistEpisode', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['tracklist_details'])]
     private ?Episode $episode = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $watchDate = null;
+    #[Groups(['tracklist_details'])]
+    private ?DateTimeInterface $watchDate = null;
 
     public function getId(): ?int
     {
@@ -58,12 +63,12 @@ class TracklistEpisode
         return $this;
     }
 
-    public function getWatchDate(): ?\DateTimeInterface
+    public function getWatchDate(): ?DateTimeInterface
     {
         return $this->watchDate;
     }
 
-    public function setWatchDate(\DateTimeInterface $watchDate): static
+    public function setWatchDate(DateTimeInterface $watchDate): static
     {
         $this->watchDate = $watchDate;
 
