@@ -50,6 +50,12 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: '', // /:id
     showInLinkList: false,
   },
+  {
+    description: 'User Start',
+    fullUrl: 'user',
+    shortUrl: 'user',
+    showInLinkList: false,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {
