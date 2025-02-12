@@ -14,6 +14,16 @@
   </p-panel>
 </div>
 
+<div *ngIf="isInvalidID">
+  <p-panel header="Fehler beim Laden der Seite" class="error">
+    <p>
+      Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es erneut
+      durch ein Zurückgehen zur letzten Seite und ein erneutes Laden dieser
+      Seite.
+    </p>
+  </p-panel>
+</div>
+
 <div *ngIf="seasonData$ | async as seasonData">
   <div class="heading">
     <h1>{{ seasonData.name }}</h1>
