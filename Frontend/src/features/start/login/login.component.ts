@@ -20,6 +20,8 @@ import {
 } from '../../../shared/interfaces/login';
 import { Message } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { SecurityService } from '../../../service/security/security.service';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-login',
@@ -33,6 +35,7 @@ import { MessageService } from 'primeng/api';
     CommonModule,
     ReactiveFormsModule,
     Message,
+    PanelModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -42,12 +45,14 @@ export class LoginComponent implements OnInit {
   isFormSubmitted: boolean = false;
   private userName: string = '';
   public hasLoginError: boolean = false;
+  public isInvalidUsername: boolean = false;
 
   constructor(
     public navigationService: NavigationService,
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private securityService: SecurityService
   ) {}
 
   ngOnInit(): void {
@@ -58,12 +63,25 @@ export class LoginComponent implements OnInit {
   }
 
   loginUser = () => {
+    this.isInvalidUsername = false;
     this.isFormSubmitted = true;
     if (this.loginGroup.invalid) {
       return;
     }
 
     this.userName = this.loginGroup.get('username')?.value;
+
+    if (
+      !this.securityService.isValidUsername(
+        this.loginGroup.get('username')?.value
+      )
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ungültiger Nutzername',
+      });
+      return;
+    }
 
     const loginData: LoginCredentials = {
       username: this.loginGroup.get('username')?.value,

@@ -4,6 +4,32 @@ import { Injectable } from '@angular/core';
   providedIn: 'root',
 })
 export class SecurityService {
+  private INVALID_CHARS: string[] = [
+    '!',
+    '§',
+    '$',
+    '%',
+    '&',
+    '/',
+    '(',
+    ')',
+    '=',
+    '?',
+    '<',
+    '>',
+    '|',
+    '.',
+    ',',
+    ';',
+    '-',
+    '#',
+    '+',
+    '*',
+    '~',
+    '^',
+    '°',
+    ' ',
+  ];
   constructor() {}
 
   public validateMediaURL = (mediaURL: string): boolean => {
@@ -25,9 +51,23 @@ export class SecurityService {
       return false;
     }
 
-    if (!Number.isNaN(splittedURL[0].trim())) {
-      // valid is a number = id of media
-      return false;
+    // if (!Number.isNaN(splittedURL[0].trim())) {
+    //   // valid is a number = id of media
+    //   return false;
+    // }
+
+    return true;
+  };
+
+  public isValidUsername = (username: string): boolean => {
+    console.log(username);
+
+    for (const char of this.INVALID_CHARS) {
+      console.log('char', char);
+      if (username.trim().includes(char)) {
+        console.log('Char in if: ', char);
+        return false;
+      }
     }
 
     return true;

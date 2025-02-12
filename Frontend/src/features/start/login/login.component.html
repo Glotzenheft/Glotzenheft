@@ -1,3 +1,12 @@
+<div *ngIf="isInvalidUsername">
+  <p-panel header="Ungültiger Nutzername" class="error">
+    <p>
+      Der eingegebene Nutzername enthält ungültige Zeichen. Bitte geben Sie
+      einen gültigen Namen ein.
+    </p>
+  </p-panel>
+</div>
+
 <div class="login">
   <div class="loginWindow">
     <form action="submit" [formGroup]="loginGroup" (ngSubmit)="loginUser()">
