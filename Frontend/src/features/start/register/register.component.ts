@@ -20,6 +20,8 @@ import {
 } from '../../../shared/interfaces/login';
 import { MessageService } from 'primeng/api';
 import { SecurityService } from '../../../service/security/security.service';
+import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-register',
@@ -32,6 +34,7 @@ import { SecurityService } from '../../../service/security/security.service';
     CommonModule,
     Message,
     DialogModule,
+    SelectModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -40,6 +43,11 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
+  public questionList: { name: string; code: string }[] =
+    VALIDATION_QUESTIONS.map((question) => ({
+      name: question,
+      code: question,
+    }));
   private userName: string = '';
 
   constructor(
@@ -55,6 +63,8 @@ export class RegisterComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(2)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
+      validationQuestion: [{ name: '', code: '' }, [Validators.required]],
+      validationAnswer: ['', [Validators.required]],
     });
   }
 
@@ -89,6 +99,9 @@ export class RegisterComponent implements OnInit {
     const registerData: RegisterCredentials = {
       username: this.registerGroup.get('username')?.value,
       password: this.registerGroup.get('password')?.value,
+      validationQuestion:
+        this.registerGroup.get('validationQuestion')?.value.name,
+      validationAnswer: this.registerGroup.get('validationAnswer')?.value,
     };
 
     this.userService

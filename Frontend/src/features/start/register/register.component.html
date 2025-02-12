@@ -1,5 +1,5 @@
 <div class="login">
-  <div class="loginWindow">
+  <div class="register">
     <form
       action="submit"
       [formGroup]="registerGroup"
@@ -71,6 +71,48 @@
           "
           >Das Passwort muss bestätigt werden und mit dem eingegebenen Passwort
           übereinstimmen.</p-message
+        >
+      </div>
+
+      <div>
+        <p-select
+          formControlName="validationQuestion"
+          [options]="questionList"
+          optionLabel="name"
+          placeholder="Eine Frage auswählen ..."
+        />
+        <p-message
+          severity="error"
+          variant="simple"
+          size="small"
+          *ngIf="
+            registerGroup.get('validationQuestion')?.invalid &&
+            hasError('validationQuestion')
+          "
+          >Es muss eine Frage ausgewählt werden.</p-message
+        >
+      </div>
+
+      <div>
+        <p-floatlabel class="userInput" variant="in">
+          <input
+            type="text"
+            id="answer"
+            pInputText
+            formControlName="validationAnswer"
+            name="answer"
+          />
+          <label for="answer">Antwort</label>
+        </p-floatlabel>
+        <p-message
+          severity="error"
+          variant="simple"
+          size="small"
+          *ngIf="
+            registerGroup.get('validationAnswer')?.invalid &&
+            hasError('validationAnswer')
+          "
+          >Antwort ist Pflicht</p-message
         >
       </div>
 
