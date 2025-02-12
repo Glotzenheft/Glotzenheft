@@ -30,7 +30,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Multisuche',
     fullUrl: 'media/multi-search',
     shortUrl: 'multi-search',
-    showInLinkList: true,
+    showInLinkList: false,
   },
   {
     description: 'Filmübersicht',
@@ -55,6 +55,12 @@ export const ROUTES_LIST: RoutesListItem[] = [
     fullUrl: 'user',
     shortUrl: 'user',
     showInLinkList: false,
+  },
+  {
+    description: 'Passwort zurücksetzen',
+    fullUrl: 'reset-password',
+    shortUrl: 'reset-password',
+    showInLinkList: true,
   },
 ];
 
