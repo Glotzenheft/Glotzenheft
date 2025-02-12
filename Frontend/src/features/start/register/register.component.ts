@@ -22,6 +22,7 @@ import { MessageService } from 'primeng/api';
 import { SecurityService } from '../../../service/security/security.service';
 import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
 import { SelectModule } from 'primeng/select';
+import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 
 @Component({
   selector: 'app-register',
@@ -43,7 +44,7 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
-  public questionList: { name: string; code: string }[] =
+  public questionList: ValidationQuestion[] =
     VALIDATION_QUESTIONS.map((question) => ({
       name: question,
       code: question,

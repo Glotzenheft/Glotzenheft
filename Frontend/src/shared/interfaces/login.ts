@@ -14,3 +14,10 @@ export interface LoginAndMessageResponse {
   message: string;
   token: string;
 }
+
+export interface ResetPasswordCredentials {
+  username: string;
+  validationQuestion: string;
+  validationAnswer: string;
+  newPassword: string;
+}
