@@ -57,7 +57,12 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
+    const isMovie: boolean = this.tvSeriesID.split('_')[1].trim() === 'movie';
+
+    this.seasonData$ = this.mediaService.getSeasonForTV(
+      this.tvSeriesID,
+      isMovie
+    );
 
     if (!this.seasonData$) {
       this.hasError = true;
