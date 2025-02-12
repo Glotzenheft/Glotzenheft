@@ -1,5 +1,9 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import { Film, Season } from '../../shared/interfaces/media-interfaces';
+import {
+  Film,
+  Season,
+  TrackListCreation,
+} from '../../shared/interfaces/media-interfaces';
 import {
   BehaviorSubject,
   catchError,
@@ -13,6 +17,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import {
+  ROUTE_CREATE_NEW_TRACKLIST,
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MOVIE_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
@@ -93,5 +98,18 @@ export class MediaService {
     return this.http
       .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
       .pipe(shareReplay(1));
+  };
+
+  public createNewTracklist = (
+    tracklist: TrackListCreation
+  ): Observable<any> => {
+    return this.http
+      .post<any>(ROUTE_CREATE_NEW_TRACKLIST, JSON.stringify(tracklist))
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   };
 }

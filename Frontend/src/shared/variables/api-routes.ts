@@ -13,3 +13,5 @@ export const ROUTE_SEASON_DETAILS: string =
 export const ROUTE_RESET_PASSWORD: string = '';
 
 export const ROUTE_LOGIN: string = 'https://127.0.0.1:8000/api/login';
+
+export const ROUTE_CREATE_NEW_TRACKLIST: string = '';
