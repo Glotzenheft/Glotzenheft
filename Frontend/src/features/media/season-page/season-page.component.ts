@@ -6,7 +6,7 @@ import {
 } from '../../../shared/interfaces/media-interfaces';
 import { Observable, of } from 'rxjs';
 import { MediaService } from '../../../service/media/media.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -68,7 +68,8 @@ export class SeasonPageComponent implements OnInit {
     private navigationService: NavigationService,
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -86,7 +87,8 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    const isMovie: boolean = this.tvSeriesID.split('_')[1].trim() === 'movie';
+    const splittedURL: string[] = this.tvSeriesID.split('_');
+    const isMovie: boolean = splittedURL[1].trim() === 'movie';
 
     this.seasonData$ = this.mediaService.getSeasonForTV(
       this.tvSeriesID,
@@ -98,6 +100,13 @@ export class SeasonPageComponent implements OnInit {
     }
 
     this.seasonData$.subscribe({
+      next: (res: Season) => {
+        if (res.id && res.id.toString() !== splittedURL[1].trim()) {
+          this.location.replaceState(
+            `/media/${res.id}_${splittedURL[1].trim()}`
+          );
+        }
+      },
       error: (err) => {
         this.hasError = true;
       },
