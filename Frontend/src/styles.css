@@ -132,9 +132,9 @@ button {
     text-align: justify;
   }
 
-  button {
+  /* button {
     width: 6rem;
-  }
+  } */
 
   .button {
     margin: 1rem;
@@ -272,7 +272,7 @@ button {
   }
   .card {
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     margin-bottom: 1rem;
     background-color: rgba(0, 0, 0, 0.3);
     border: 0.1rem solid white;
@@ -288,7 +288,8 @@ button {
   }
 
   .card:hover {
-    background-color: var(--link--color);
+    background-color: white;
+    color: black;
     cursor: pointer;
   }
 
@@ -489,7 +490,7 @@ button {
 
   .card {
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     margin-bottom: 1rem;
     background-color: rgba(0, 0, 0, 0.3);
     border: 0.1rem solid white;
@@ -505,7 +506,8 @@ button {
   }
 
   .card:hover {
-    background-color: var(--link--color);
+    background-color: white;
+    color: black;
     cursor: pointer;
   }
 
@@ -703,7 +705,7 @@ button {
 
   .card {
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     margin-bottom: 1rem;
     background-color: rgba(0, 0, 0, 0.3);
     border: 0.1rem solid white;
@@ -719,7 +721,8 @@ button {
   }
 
   .card:hover {
-    background-color: var(--link--color);
+    background-color: white;
+    color: black;
     cursor: pointer;
   }
 

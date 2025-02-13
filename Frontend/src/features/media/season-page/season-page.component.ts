@@ -27,6 +27,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
+import { CreateNewTracklistComponent } from "../../components/create-new-tracklist/create-new-tracklist.component";
 
 @Component({
   selector: 'app-season-page',
@@ -43,7 +44,8 @@ import { MessageService } from 'primeng/api';
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-  ],
+    CreateNewTracklistComponent
+],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
 })
@@ -60,6 +62,8 @@ export class SeasonPageComponent implements OnInit {
   public isTracklistDialogVisible: boolean = false;
 
   public trackListForm!: FormGroup;
+  public isTracklistSubmitted: boolean = false;
+
 
   constructor(
     public stringService: StringService,
@@ -91,7 +95,7 @@ export class SeasonPageComponent implements OnInit {
     const isMovie: boolean = splittedURL[1].trim() === 'movie';
 
     this.seasonData$ = this.mediaService.getSeasonForTV(
-      this.tvSeriesID,
+      splittedURL[0],
       isMovie
     );
 
@@ -106,14 +110,14 @@ export class SeasonPageComponent implements OnInit {
             `/media/${res.id}_${splittedURL[1].trim()}`
           );
         }
+
+        this.trackListForm = this.formBuilder.group({
+          trackListName: [res.name, Validators.required],
+        });
       },
       error: (err) => {
         this.hasError = true;
       },
-    });
-
-    this.trackListForm = this.formBuilder.group({
-      trackListName: ['', Validators.required],
     });
   }
 
@@ -139,19 +143,16 @@ export class SeasonPageComponent implements OnInit {
     this.navigationService.navigateToMultiSearch();
   };
 
-  public createNewTrackList = (id: number, name: string) => {
-    if (this.trackListForm.invalid) {
-      this.messageService.add({
-        life: 7000,
-        summary: 'Ungültiger Name',
-        detail: 'Der Name der Tracklist darf nicht leer sein.',
-        severity: 'error',
-      });
-    }
+  
 
-    this.mediaService.createNewTracklist({
-      name,
-      tmdbId: id,
-    });
+  public hasErrorField = (field: string) => {
+    const fieldControl = this.trackListForm.get(field);
+
+    return (
+      fieldControl! &&
+      (fieldControl!.dirty ||
+        fieldControl!.touched ||
+        this.isTracklistSubmitted)
+    );
   };
 }

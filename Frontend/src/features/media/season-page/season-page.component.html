@@ -56,6 +56,8 @@
     <p-button
       label="neue Watchlist anlegen"
       (onClick)="openTracklistDialog()"
+      class="bigButton"
+      icon="pi pi-plus"
     />
   </div>
 
@@ -63,10 +65,17 @@
     <h2>Staffeln</h2>
     <div *ngFor="let season of seasonData.seasons" class="card">
       <h3>{{ season.name }}</h3>
-      <p>{{ season.overview }}</p>
+      <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+      <p>Episodenanzahl: {{ season.episodeCount }}</p>
     </div>
   </div>
 </div>
+
+<app-create-new-tracklist
+  *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
+  [mediaInput]="seasonData"
+  
+/>
 
 <p-dialog
   *ngIf="visibleSeason && isDialogVisible"
@@ -91,29 +100,4 @@
       />
     </div>
   </div>
-</p-dialog>
-
-<p-dialog
-  class="dialog"
-  [(visible)]="isTracklistDialogVisible"
-  *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
->
-  <h2>{{ seasonData.name }}</h2>
-
-  <form
-    action="submit"
-    (ngSubmit)="
-      createNewTrackList(
-        seasonData.id,
-        trackListForm.get('trackListName')?.value ?? ''
-      )
-    "
-    [formGroup]="trackListForm"
-  >
-    <p-float-label variant="on">
-      <input type="text" pInputText formControlName="trackListName" />
-    </p-float-label>
-    <p-message></p-message>
-    <p-button label="Speichern" type="submit" />
-  </form>
 </p-dialog>

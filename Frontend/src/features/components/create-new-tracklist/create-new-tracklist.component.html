@@ -1,0 +1,37 @@
+<p-dialog
+  class="dialog"
+  [(visible)]="isDialogVisible"
+  [header]="mediaInput.name"
+>
+  <h2>{{ mediaInput.name }}</h2>
+
+  <form
+    action="submit"
+    (ngSubmit)="
+      createNewTrackList(
+        mediaInput.id,
+        trackListForm.get('trackListName')?.value ?? ''
+      )
+    "
+    [formGroup]="trackListForm"
+  >
+    <p-float-label variant="on">
+      <input
+        type="text"
+        pInputText
+        formControlName="trackListName"
+        [value]="mediaInput.name"
+      />
+    </p-float-label>
+    <p-message
+      *ngIf="
+        hasErrorField('trackListName') &&
+        trackListForm.get('trackListName')?.invalid
+      "
+      severity="error"
+    >
+      Der Name für die Tracklist ist Pflicht.
+    </p-message>
+    <p-button label="Speichern" type="submit" />
+  </form>
+</p-dialog>
