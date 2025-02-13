@@ -52,9 +52,8 @@ export class MediaService {
   getSeasonForTV = (mediaID: string, isMovie: boolean): Observable<Season> => {
     if (isMovie) {
       return this.http
-        .post<any>(
+        .get<any>(
           ROUTE_MOVIE_DETAILS_SEARCH + mediaID,
-          JSON.stringify({ mediaID })
         )
         .pipe(
           shareReplay(1),
@@ -65,9 +64,8 @@ export class MediaService {
     }
 
     return this.http
-      .post<Season>(
+      .get<Season>(
         ROUTE_MEDIA_DETAILS_SEARCH + mediaID,
-        JSON.stringify({ mediaID })
       )
       .pipe(
         shareReplay(1),

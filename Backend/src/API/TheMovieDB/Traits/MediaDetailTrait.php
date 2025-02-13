@@ -11,6 +11,7 @@ use App\Enum\MediaType;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 trait MediaDetailTrait
 {
@@ -25,12 +26,30 @@ trait MediaDetailTrait
     {
     }
 
-    public function handleTMDBMediaDetail(int $tmdbID, MediaType $type, string $language = 'de-DE'): ?Media
+    public function handleTMDBMediaDetail(array $requestData, MediaType $type, string $language = 'de-DE'): array
     {
-        $media = $this->entityManager->getRepository(Media::class)->findOneBy([
-            'tmdbID' => $tmdbID,
-            'type' => $type,
-        ]);
+        if (isset($requestData['mediaID']))
+        {
+            $mediaID = $requestData['mediaID'];
+            $media = $this->entityManager->getRepository(Media::class)->find($mediaID);
+            if (!$media instanceof Media || $media->getType() !== $type)
+            {
+                return [
+                    'error' => 'Media not found',
+                    'code' => 404,
+                ];
+            }
+            $tmdbID = $media->getTMDBId();
+        }
+        else
+        {
+            $tmdbID = $requestData['tmdbID'];
+            $media = $this->entityManager->getRepository(Media::class)->findOneBy([
+                'tmdbID' => $tmdbID,
+                'type' => $type,
+            ]);
+        }
+
 
         if (!$media instanceof Media)
         {
@@ -54,7 +73,10 @@ trait MediaDetailTrait
                 $originalName = $result['original_title'];
                 break;
             case MediaType::ANIME:
-                return null;
+                return [
+                    'error' => 'Not supported media type',
+                    'code' => 404,
+                ];
         }
 
         $genreArray = $result['genres'] ?? null;
@@ -93,6 +115,29 @@ trait MediaDetailTrait
 
         $this->entityManager->flush();
 
-        return $media;
+        return [
+            'media' => $media
+        ];
+    }
+
+    private function handleRequest(Request $request): array
+    {
+        $mediaID = $request->query->get('media_id');
+        $mediaID = $mediaID !== null ? (int) $mediaID : null;
+        $tmdbID = $request->query->get('tmdb_id');
+        $tmdbID = $tmdbID !== null ? (int) $tmdbID : null;
+
+        if (!isset($mediaID) && !isset($tmdbID))
+        {
+            return [
+                'error' => 'Atleast one query parameter ("media_id" or "tmdb_id") is required.',
+                'code' => 400
+            ];
+        }
+
+        return [
+            'mediaID' => $mediaID,
+            'tmdbID' => $tmdbID,
+        ];
     }
 }
