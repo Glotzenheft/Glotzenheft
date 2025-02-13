@@ -8,6 +8,7 @@
       tooltipPosition="bottom"
       placeholder="Suche ..."
       (input)="handleInput($event)"
+      (keyup.enter)="navigateToSearch()"
     />
   </p-iconfield>
   <p-button label="Suche" (onClick)="navigateToSearch()" class="buttonShadow" />

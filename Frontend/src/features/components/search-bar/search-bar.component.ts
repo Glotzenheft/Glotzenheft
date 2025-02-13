@@ -23,6 +23,9 @@ import { UserService } from '../../../service/user/user.service';
   styleUrl: './search-bar.component.css',
 })
 export class SearchBarComponent implements OnInit {
+  bla(arg0: string) {
+    throw new Error('Method not implemented.');
+  }
   searchQuery: string = '';
   public isVisible: boolean = isUserLoggedIn();
 
