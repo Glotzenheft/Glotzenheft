@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, input, Input, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -35,7 +35,6 @@ export class CreateNewTracklistComponent implements OnInit {
 
   public isTracklistSubmitted: boolean = false;
   public trackListForm!: FormGroup;
-  public isDialogVisible: boolean = true;
 
   constructor(
     private messageService: MessageService,

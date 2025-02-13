@@ -71,11 +71,14 @@
   </div>
 </div>
 
-<app-create-new-tracklist
+<p-dialog
+  class="dialog"
   *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
-  [mediaInput]="seasonData"
-  
-/>
+  [(visible)]="isTracklistDialogVisible"
+  [header]="seasonData.name"
+>
+  <app-create-new-tracklist [mediaInput]="seasonData" />
+</p-dialog>
 
 <p-dialog
   *ngIf="visibleSeason && isDialogVisible"
