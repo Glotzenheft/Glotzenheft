@@ -45,43 +45,58 @@
         <h2>Beschreibung</h2>
         <p class="descriptionP">{{ seasonData.description }}</p>
         <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
-        <ng-template *ngIf="seasonData.seasons.length > 0">
-          <p *ngIf="seasonData.seasons.length">
-            Anzahl der Episoden: {{ seasonData.seasons.length }}
-          </p>
-        </ng-template>
+        <p *ngIf="seasonData.seasons.length > 0">
+          Anzahl der Staffeln: {{ seasonData.seasons.length }}
+        </p>
       </div>
     </div>
   </div>
 
+  <div class="newWatchlistButton">
+    <p-button
+      label="neue Watchlist anlegen"
+      (onClick)="openTracklistDialog()"
+      class="bigButton"
+      icon="pi pi-plus"
+    />
+  </div>
+
   <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
-    <h2>Episoden</h2>
-    <div
-      *ngFor="let episode of seasonData.seasons"
-      class="card"
-      (click)="showEpisodeDialog(episode)"
-    >
-      <h3>{{ episode.name }}</h3>
-      <p>{{ episode.description }}</p>
+    <h2>Staffeln</h2>
+    <div *ngFor="let season of seasonData.seasons" class="card">
+      <h3>{{ season.name }}</h3>
+      <p>Episodenanzahl: {{ season.episodeCount }}</p>
     </div>
   </div>
 </div>
 
 <p-dialog
-  *ngIf="visibleEpisode && isDialogVisible"
+  class="dialog"
+  *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
+  [(visible)]="isTracklistDialogVisible"
+  [header]="seasonData.name"
+>
+  <app-create-new-tracklist
+    [mediaName]="seasonData.name"
+    [mediaID]="seasonData.id"
+  />
+</p-dialog>
+
+<p-dialog
+  *ngIf="visibleSeason && isDialogVisible"
   [(visible)]="isDialogVisible"
-  [header]="visibleEpisode.name"
+  [header]="visibleSeason.name"
   class="dialog"
 >
   <div>
-    <p>{{ visibleEpisode.description }}</p>
+    <p>{{ visibleSeason.overview }}</p>
     <p-rating stars="10" [(ngModel)]="episodeRating" />
     <p>{{ episodeRating }}</p>
     <div class="dialogActions">
       <p-button
         label="speichern"
         class="marginRight"
-        (onClick)="saveEpisode(visibleEpisode)"
+        (onClick)="saveEpisode(visibleSeason)"
       />
       <p-button
         label="abbrechen"

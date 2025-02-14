@@ -25,12 +25,16 @@
     width: 100%;
     padding-left: var(--padding--left-right);
     border-left: 0.1rem solid white;
-    height: 35rem;
+    height: 30rem;
   }
 
   .seasonMetaPicture {
     background-color: red;
     width: auto;
+  }
+
+  .newWatchlistButton {
+    margin-top: 2rem;
   }
 }
 
@@ -40,7 +44,7 @@
   }
   .seasonMeta {
     width: 100%;
-    height: 100%;
+    height: 26rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -70,6 +74,10 @@
     border-left: 0.1rem solid white;
     padding-left: var(--padding--left-right);
   }
+
+  .bigButton .p-button {
+    width: 10rem;
+  }
 }
 
 .backButtonDIV {
@@ -79,7 +87,4 @@
 .descriptionP {
   overflow-y: auto;
   height: 20rem;
-}
-
-.heading {
 }

@@ -100,9 +100,9 @@ export class RegisterComponent implements OnInit {
     const registerData: RegisterCredentials = {
       username: this.registerGroup.get('username')?.value,
       password: this.registerGroup.get('password')?.value,
-      validationQuestion:
+      security_question:
         this.registerGroup.get('validationQuestion')?.value.name,
-      validationAnswer: this.registerGroup.get('validationAnswer')?.value,
+      security_answer: this.registerGroup.get('validationAnswer')?.value,
     };
 
     this.userService

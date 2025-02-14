@@ -19,6 +19,5 @@ export class UserLinksComponent {
 
   constructor(public authService: AuthService) {
     this.isLoggedIn = authService.isUserLoggedIn();
-    console.log(getVisibleRoutes());
   }
 }

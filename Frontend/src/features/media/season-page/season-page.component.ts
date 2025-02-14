@@ -1,20 +1,33 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
-import { Episode, Season } from '../../../shared/interfaces/media-interfaces';
+import {
+  Season,
+  SeasonWithEpisodes,
+} from '../../../shared/interfaces/media-interfaces';
 import { Observable, of } from 'rxjs';
 import { MediaService } from '../../../service/media/media.service';
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
-import { TEST_SEASON } from '../../../test-data/test-season';
 import { StringService } from '../../../service/string/string.service';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators,
+} from '@angular/forms';
 import { NavigationService } from '../../../service/navigation/navigation.service';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { SecurityService } from '../../../service/security/security.service';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
+import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
 
 @Component({
   selector: 'app-season-page',
@@ -27,27 +40,38 @@ import { SecurityService } from '../../../service/security/security.service';
     FormsModule,
     ButtonModule,
     DateFormattingPipe,
+    FloatLabelModule,
+    InputTextModule,
+    MessageModule,
+    ReactiveFormsModule,
+    CreateNewTracklistComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
 })
 export class SeasonPageComponent implements OnInit {
-  seasonID: string | null = null;
-  tvSeriesID: string | null = null;
-  seasonData$: Observable<Season> | null = null;
-  episodeRating: number = 0;
+  public tvSeriesID: string | null = null;
+  public seasonData$: Observable<Season> | null = null;
+  public episodeRating: number = 0;
 
-  hasError: boolean = false;
+  public hasError: boolean = false;
   public isInvalidID: boolean = false;
-  isDialogVisible: boolean = false;
-  visibleEpisode: Episode | null = null;
+  public isDialogVisible: boolean = false;
+  public visibleSeason: SeasonWithEpisodes | null = null;
+  public isTracklistDialogVisible: boolean = false;
+
+  public trackListForm!: FormGroup;
+  public isTracklistSubmitted: boolean = false;
 
   constructor(
     public stringService: StringService,
     private route: ActivatedRoute,
     private mediaService: MediaService,
     private navigationService: NavigationService,
-    private securityService: SecurityService
+    private securityService: SecurityService,
+    private formBuilder: FormBuilder,
+    private messageService: MessageService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -55,8 +79,7 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.tvSeriesID) {
       this.hasError = true;
-      if (!this.seasonID) {
-      }
+
       return;
     }
 
@@ -65,39 +88,60 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    const isMovie: boolean = this.tvSeriesID.split('_')[1].trim() === 'movie';
-
-    this.seasonData$ = this.mediaService.getSeasonForTV(
-      this.tvSeriesID,
-      isMovie
-    );
+    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
 
     if (!this.seasonData$) {
       this.hasError = true;
     }
 
     this.seasonData$.subscribe({
+      next: (res: Season) => {
+        // if (res.id && res.id.toString() !== splittedURL[1].trim()) {
+        //   this.location.replaceState(
+        //     `/media/${res.id}_${splittedURL[1].trim()}`
+        //   );
+        // }
+
+        this.trackListForm = this.formBuilder.group({
+          trackListName: [res.name, Validators.required],
+        });
+      },
       error: (err) => {
         this.hasError = true;
       },
     });
   }
 
-  showEpisodeDialog = (episode: Episode) => {
+  public showEpisodeDialog = (season: SeasonWithEpisodes) => {
     this.isDialogVisible = true;
 
-    this.visibleEpisode = episode;
+    this.visibleSeason = season;
   };
 
-  saveEpisode = (episode: Episode) => {
+  public saveEpisode = (season: SeasonWithEpisodes) => {
     this.isDialogVisible = false;
   };
 
-  closeEpisodeDialog = () => {
+  public closeEpisodeDialog = () => {
     this.isDialogVisible = false;
   };
 
-  navigateToMultiSearch = () => {
+  public openTracklistDialog = () => {
+    this.isTracklistDialogVisible = true;
+  };
+
+  public navigateToMultiSearch = () => {
     this.navigationService.navigateToMultiSearch();
+  };
+
+  public hasErrorField = (field: string) => {
+    const fieldControl = this.trackListForm.get(field);
+
+    return (
+      fieldControl! &&
+      (fieldControl!.dirty ||
+        fieldControl!.touched ||
+        this.isTracklistSubmitted)
+    );
   };
 }

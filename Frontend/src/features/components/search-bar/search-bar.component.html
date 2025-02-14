@@ -6,9 +6,15 @@
       pInputText
       pTooltip="Hier etwas zur Suche eingeben. Dabei werden alle Serien durchsucht."
       tooltipPosition="bottom"
-      placeholder="Suche ..."
+      placeholder="Suchen ..."
       (input)="handleInput($event)"
+      (keyup.enter)="navigateToSearch()"
     />
   </p-iconfield>
-  <p-button label="Suche" (onClick)="navigateToSearch()" class="buttonShadow" />
+  <p-button
+    label="Suche"
+    (onClick)="navigateToSearch()"
+    class="buttonShadow"
+    icon="pi pi-search"
+  />
 </div>

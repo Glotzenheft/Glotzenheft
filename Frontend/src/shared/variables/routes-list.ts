@@ -22,7 +22,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
   },
   {
     description: 'Details',
-    fullUrl: 'media/:id',
+    fullUrl: 'media/BLOCKED',
     shortUrl: 'season/:id',
     showInLinkList: false,
   },

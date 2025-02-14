@@ -18,12 +18,12 @@ const mediaRoutes: Routes = [
     component: FilmPageComponent,
   },
   {
-    path: ROUTES_LIST[4].shortUrl,
-    component: MultiSearchComponent,
+    path: ROUTES_LIST[6].shortUrl + '/:id',
+    component: SeasonPageComponent,
   },
   {
-    path: ':id',
-    component: SeasonPageComponent,
+    path: ROUTES_LIST[4].shortUrl,
+    component: MultiSearchComponent,
   },
 ];
 
