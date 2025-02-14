@@ -78,6 +78,8 @@ export class CreateNewTracklistComponent implements OnInit {
       });
   };
 
+  public cancelNewTracklist = () => {};
+
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);
 

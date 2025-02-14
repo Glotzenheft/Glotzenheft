@@ -27,6 +27,14 @@
     >
       Der Name für die Tracklist ist Pflicht.
     </p-message>
-    <p-button label="Speichern" type="submit" />
+    <div class="loginActions">
+      <p-button label="Speichern" type="submit" />
+      <p-button
+        label="Abbrechen"
+        severity="secondary"
+        icon="pi pi-times"
+        (onClick)="cancelNewTracklist()"
+      />
+    </div>
   </form>
 </div>
