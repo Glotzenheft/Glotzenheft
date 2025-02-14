@@ -24,7 +24,7 @@ class Media
     #[Groups(['media_details'])]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     #[Groups(['media_details'])]
     private ?int $tmdbID = null;
 
@@ -68,7 +68,7 @@ class Media
     /**
      * @var Collection<int, Tracklist>
      */
-    #[ORM\ManyToMany(targetEntity: Tracklist::class, mappedBy: 'media')]
+    #[ORM\OneToMany(targetEntity: Tracklist::class, mappedBy: 'media', orphanRemoval: true)]
     private Collection $tracklists;
 
     #[ORM\Column(enumType: MediaType::class)]
@@ -240,25 +240,6 @@ class Media
     public function getTracklists(): Collection
     {
         return $this->tracklists;
-    }
-
-    public function addTracklist(Tracklist $tracklist): static
-    {
-        if (!$this->tracklists->contains($tracklist)) {
-            $this->tracklists->add($tracklist);
-            $tracklist->addMedium($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTracklist(Tracklist $tracklist): static
-    {
-        if ($this->tracklists->removeElement($tracklist)) {
-            $tracklist->removeMedium($this);
-        }
-
-        return $this;
     }
 
     public function getType(): ?MediaType

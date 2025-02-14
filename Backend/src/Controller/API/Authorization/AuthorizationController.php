@@ -5,6 +5,7 @@ declare(strict_types=1);
 namespace App\Controller\API\Authorization;
 
 use App\Entity\User;
+use App\Enum\SecurityQuestions;
 use Doctrine\ORM\EntityManagerInterface;
 use Firebase\JWT\JWT;
 use Psr\Container\ContainerExceptionInterface;
@@ -35,10 +36,12 @@ class AuthorizationController extends AbstractController
         $data = json_decode($request->getContent(), true);
         $username = $data['username'] ?? '';
         $password = $data['password'] ?? '';
+        $securityQuestion = $data['security_question'] ?? '';
+        $securityAnswer = $data['security_answer'] ?? '';
 
-        if (!$username || !$password)
+        if (!$username || !$password || !$securityQuestion || !$securityAnswer)
         {
-            return new JsonResponse(['error' => 'Username and password are required'], 400);
+            return new JsonResponse(['error' => 'Missing parameters.'], 400);
         }
 
         // Prüfen, ob der User bereits existiert
@@ -49,11 +52,28 @@ class AuthorizationController extends AbstractController
             return new JsonResponse(['error' => 'User already exists'], 409);
         }
 
+
+        // Prüfen, ob die Sicherheitsfrage gültig ist
+        $securityQuestionEnum = SecurityQuestions::tryFrom($securityQuestion);
+        if (!$securityQuestionEnum)
+        {
+            return new JsonResponse(['error' => 'Invalid security question.'], 400);
+        }
+
         // Neuen User anlegen
         $user = new User();
         $user->setUsername($username);
+
+        // Passwort hashen
         $hashedPassword = $passwordHasher->hashPassword($user, $password);
         $user->setPassword($hashedPassword);
+
+        // Sicherheitsfrage setzen
+        $user->setSecurityQuestion($securityQuestionEnum);
+
+        // Sicherheitsantwort hashen
+        $hashedAnswer = $passwordHasher->hashPassword($user, $securityAnswer);
+        $user->setSecurityAnswer($hashedAnswer);
 
         $entityManager->persist($user);
         $entityManager->flush();

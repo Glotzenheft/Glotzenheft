@@ -24,28 +24,17 @@ class Tracklist
     #[Groups(['tracklist_details'])]
     private ?int $id = null;
 
-    /**
-     * @var Collection<int, Media>
-     */
-    #[ORM\ManyToMany(targetEntity: Media::class, inversedBy: 'tracklists')]
-    private Collection $media;
+    #[ORM\ManyToOne(targetEntity: Media::class, inversedBy: 'tracklists')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?Media $media = null;
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(nullable: true)]
     private ?int $rating = null;
 
-    /**
-     * @var Collection<int, User>
-     */
-    #[ORM\ManyToMany(targetEntity: User::class, inversedBy: 'tracklists')]
-    private Collection $user;
-
-    /**
-     * @var Collection<int, TracklistEpisode>
-     */
-    #[Groups(['tracklist_details'])]
-    #[ORM\OneToMany(targetEntity: TracklistEpisode::class, mappedBy: 'tracklist', orphanRemoval: true)]
-    private Collection $tracklistEpisodes;
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'tracklists')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(enumType: TracklistStatus::class)]
@@ -63,11 +52,15 @@ class Tracklist
     #[ORM\Column(length: 255)]
     private ?string $tracklistName = null;
 
+    /**
+     * @var Collection<int, TracklistSeason>
+     */
+    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', orphanRemoval: true)]
+    private Collection $tracklistSeasons;
+
     public function __construct()
     {
-        $this->media = new ArrayCollection();
-        $this->user = new ArrayCollection();
-        $this->tracklistEpisodes = new ArrayCollection();
+        $this->tracklistSeasons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -75,27 +68,25 @@ class Tracklist
         return $this->id;
     }
 
-    /**
-     * @return Collection<int, Media>
-     */
-    public function getMedia(): Collection
+    public function getMedia(): ?Media
     {
         return $this->media;
     }
 
-    public function addMedium(Media $medium): static
+    public function setMedia(?Media $media): static
     {
-        if (!$this->media->contains($medium)) {
-            $this->media->add($medium);
-        }
-
+        $this->media = $media;
         return $this;
     }
 
-    public function removeMedium(Media $medium): static
+    public function getUser(): ?User
     {
-        $this->media->removeElement($medium);
+        return $this->user;
+    }
 
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
         return $this;
     }
 
@@ -107,60 +98,6 @@ class Tracklist
     public function setRating(?int $rating): static
     {
         $this->rating = $rating;
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, User>
-     */
-    public function getUser(): Collection
-    {
-        return $this->user;
-    }
-
-    public function addUser(User $user): static
-    {
-        if (!$this->user->contains($user)) {
-            $this->user->add($user);
-        }
-
-        return $this;
-    }
-
-    public function removeUser(User $user): static
-    {
-        $this->user->removeElement($user);
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, TracklistEpisode>
-     */
-    public function getTracklistEpisodes(): Collection
-    {
-        return $this->tracklistEpisodes;
-    }
-
-    public function addTracklistEpisode(TracklistEpisode $tracklistEpisode): static
-    {
-        if (!$this->tracklistEpisodes->contains($tracklistEpisode)) {
-            $this->tracklistEpisodes->add($tracklistEpisode);
-            $tracklistEpisode->setTracklist($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTracklistEpisode(TracklistEpisode $tracklistEpisode): static
-    {
-        if ($this->tracklistEpisodes->removeElement($tracklistEpisode)) {
-            // set the owning side to null (unless already changed)
-            if ($tracklistEpisode->getTracklist() === $this) {
-                $tracklistEpisode->setTracklist(null);
-            }
-        }
 
         return $this;
     }
@@ -209,6 +146,36 @@ class Tracklist
     public function setTracklistName(string $tracklistName): static
     {
         $this->tracklistName = $tracklistName;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TracklistSeason>
+     */
+    public function getTracklistSeasons(): Collection
+    {
+        return $this->tracklistSeasons;
+    }
+
+    public function addTracklistSeason(TracklistSeason $tracklistSeason): static
+    {
+        if (!$this->tracklistSeasons->contains($tracklistSeason)) {
+            $this->tracklistSeasons->add($tracklistSeason);
+            $tracklistSeason->setTracklist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTracklistSeason(TracklistSeason $tracklistSeason): static
+    {
+        if ($this->tracklistSeasons->removeElement($tracklistSeason)) {
+            // set the owning side to null (unless already changed)
+            if ($tracklistSeason->getTracklist() === $this) {
+                $tracklistSeason->setTracklist(null);
+            }
+        }
 
         return $this;
     }
