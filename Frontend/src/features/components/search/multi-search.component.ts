@@ -4,6 +4,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { MediaService } from '../../../service/media/media.service';
 import { Observable, Subscription } from 'rxjs';
 import {
+  MediaIDResponse,
   MediaResult,
   MultiSearchResponse,
 } from '../../../shared/interfaces/media-interfaces';
@@ -14,6 +15,7 @@ import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { MessageService } from 'primeng/api';
 
 @Component({
   selector: 'app-multi-search',
@@ -45,7 +47,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   constructor(
     private mediaService: MediaService,
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService
   ) {}
 
   ngOnInit(): void {
@@ -90,6 +93,33 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   };
 
   navigateToMediaPage = (id: number, mediaGenre: string) => {
-    this.router.navigateByUrl(ROUTES_LIST[7].fullUrl + `/${id}_${mediaGenre}`);
+    this.mediaService
+      .getMediaIdForMedia(id, mediaGenre === 'movie' ? true : false)
+      .subscribe({
+        next: (res: MediaIDResponse) => {
+          if (mediaGenre === 'movie') {
+            this.router.navigateByUrl(
+              ROUTES_LIST[5].fullUrl + `/${res.mediaID}`
+            );
+          } else {
+            this.router.navigateByUrl(
+              ROUTES_LIST[6].fullUrl + `/${res.mediaID}_${mediaGenre}`
+            );
+          }
+        },
+        error: () => {
+          const message: string = `Fehler beim Weiterleiten ${
+            mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
+          }`;
+
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: message,
+            detail:
+              'Beim Weiterleiten ist ein Fehler aufgetreten. Bitte lade die Seite und versuche es erneut.',
+          });
+        },
+      });
   };
 }

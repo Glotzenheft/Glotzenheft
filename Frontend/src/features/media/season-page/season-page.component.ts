@@ -50,7 +50,6 @@ import { CreateNewTracklistComponent } from '../../components/create-new-trackli
   styleUrl: './season-page.component.css',
 })
 export class SeasonPageComponent implements OnInit {
-  public seasonID: string | null = null;
   public tvSeriesID: string | null = null;
   public seasonData$: Observable<Season> | null = null;
   public episodeRating: number = 0;
@@ -80,8 +79,7 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.tvSeriesID) {
       this.hasError = true;
-      if (!this.seasonID) {
-      }
+
       return;
     }
 
@@ -90,13 +88,7 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    const splittedURL: string[] = this.tvSeriesID.split('_');
-    const isMovie: boolean = splittedURL[1].trim() === 'movie';
-
-    this.seasonData$ = this.mediaService.getSeasonForTV(
-      splittedURL[0],
-      isMovie
-    );
+    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
 
     if (!this.seasonData$) {
       this.hasError = true;
@@ -120,17 +112,17 @@ export class SeasonPageComponent implements OnInit {
     });
   }
 
-  showEpisodeDialog = (season: SeasonWithEpisodes) => {
+  public showEpisodeDialog = (season: SeasonWithEpisodes) => {
     this.isDialogVisible = true;
 
     this.visibleSeason = season;
   };
 
-  saveEpisode = (season: SeasonWithEpisodes) => {
+  public saveEpisode = (season: SeasonWithEpisodes) => {
     this.isDialogVisible = false;
   };
 
-  closeEpisodeDialog = () => {
+  public closeEpisodeDialog = () => {
     this.isDialogVisible = false;
   };
 
@@ -138,7 +130,7 @@ export class SeasonPageComponent implements OnInit {
     this.isTracklistDialogVisible = true;
   };
 
-  navigateToMultiSearch = () => {
+  public navigateToMultiSearch = () => {
     this.navigationService.navigateToMultiSearch();
   };
 

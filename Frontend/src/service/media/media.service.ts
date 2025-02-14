@@ -1,6 +1,7 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
   Film,
+  MediaIDResponse,
   Season,
   TrackListCreation,
 } from '../../shared/interfaces/media-interfaces';
@@ -19,6 +20,7 @@ import {
 import {
   ROUTE_CREATE_NEW_TRACKLIST,
   ROUTE_MEDIA_DETAILS_SEARCH,
+  ROUTE_MEDIA_ID_FOR_MEDIA,
   ROUTE_MOVIE_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
@@ -54,24 +56,54 @@ export class MediaService {
     return this.http.get<Film[]>('');
   };
 
-  getSeasonForTV = (mediaID: string, isMovie: boolean): Observable<Season> => {
-    if (isMovie) {
-      return this.http
-        .get<any>(
-          ROUTE_MOVIE_DETAILS_SEARCH + mediaID,
-        )
-        .pipe(
-          shareReplay(1),
-          catchError((error: HttpErrorResponse) => {
-            return throwError(() => error);
-          })
-        );
-    }
+  /**
+   * For getting the mediaID from the database.
+   
+   *
+   * @param tmdbID string
+   * @param isMovie boolean
+   * @returns
+   */
+  public getMediaIdForMedia = (
+    /* 
+    Function in the app: on multi search, the user clicks on the media (movie or tv) but there is only tmdb id available at this moment
+    -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
+    */
+    tmdbID: number,
+    isMovie: boolean
+  ): Observable<MediaIDResponse> => {
+    const isMovieType: string = isMovie === true ? 'movie' : 'tv';
 
     return this.http
-      .get<Season>(
-        ROUTE_MEDIA_DETAILS_SEARCH + mediaID,
+      .post<MediaIDResponse>(
+        ROUTE_MEDIA_ID_FOR_MEDIA,
+        JSON.stringify({
+          tmdbID,
+          media: isMovieType,
+        })
       )
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
+  };
+
+  getSeasonForTV = (mediaID: string): Observable<Season> => {
+    return this.http
+      .get<Season>(ROUTE_MEDIA_DETAILS_SEARCH + mediaID + 'tmdb_id='    )
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
+  };
+
+  public getFilmDetails = (tmdbMovieID: string): Observable<Film> => {
+    return this.http
+      .get<Film>(ROUTE_MOVIE_DETAILS_SEARCH + tmdbMovieID + 'tmdb_id=')
       .pipe(
         shareReplay(1),
         catchError((error: HttpErrorResponse) => {
