@@ -16,7 +16,9 @@ class MovieDetailsController extends AbstractController
     use MediaDetailTrait;
 
     /**
-     * @example https://127.0.0.1:8000/api/movie?tmdbID=372058
+     * API endpoint to retrieve movie details from the TMDB API.
+     * Requires either a `tmdb_id` or a `media_id` as query parameter.
+     * @example https://127.0.0.1:8000/api/movie?tmdb_id=372058&media_id=6
      * @param Request $request
      * @return JsonResponse
      */

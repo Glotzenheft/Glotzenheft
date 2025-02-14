@@ -16,7 +16,9 @@ class TVSeriesDetailsController extends AbstractController
     use MediaDetailTrait;
 
     /**
-     * @example https://127.0.0.1:8000/api/tv?tmdbID=205366
+     * API endpoint to retrieve tv series details (includes seasons and episodes) from the TMDB API.
+     * Requires either a `tmdb_id` or a `media_id` as query parameter.
+     * @example https://127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
      * @param Request $request
      * @return JsonResponse
      */
