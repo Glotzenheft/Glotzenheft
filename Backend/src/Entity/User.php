@@ -2,6 +2,7 @@
 
 namespace App\Entity;
 
+use App\Enum\SecurityQuestions;
 use App\Repository\UserRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -29,7 +30,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private array $roles = [];
 
     /**
-     * @var string The hashed password
+     * @var string|null The hashed password
      */
     #[ORM\Column]
     private ?string $password = null;
@@ -37,8 +38,14 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     /**
      * @var Collection<int, Tracklist>
      */
-    #[ORM\ManyToMany(targetEntity: Tracklist::class, mappedBy: 'user')]
+    #[ORM\OneToMany(targetEntity: Tracklist::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $tracklists;
+
+    #[ORM\Column(enumType: SecurityQuestions::class)]
+    private ?SecurityQuestions $securityQuestion = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $securityAnswer = null;
 
     public function __construct()
     {
@@ -128,21 +135,26 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->tracklists;
     }
 
-    public function addTracklist(Tracklist $tracklist): static
+    public function getSecurityQuestion(): ?SecurityQuestions
     {
-        if (!$this->tracklists->contains($tracklist)) {
-            $this->tracklists->add($tracklist);
-            $tracklist->addUser($this);
-        }
+        return $this->securityQuestion;
+    }
+
+    public function setSecurityQuestion(SecurityQuestions $securityQuestion): static
+    {
+        $this->securityQuestion = $securityQuestion;
 
         return $this;
     }
 
-    public function removeTracklist(Tracklist $tracklist): static
+    public function getSecurityAnswer(): ?string
     {
-        if ($this->tracklists->removeElement($tracklist)) {
-            $tracklist->removeUser($this);
-        }
+        return $this->securityAnswer;
+    }
+
+    public function setSecurityAnswer(string $securityAnswer): static
+    {
+        $this->securityAnswer = $securityAnswer;
 
         return $this;
     }
