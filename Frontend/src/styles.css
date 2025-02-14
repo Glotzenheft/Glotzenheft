@@ -30,10 +30,6 @@ p {
   text-align: justify;
 }
 
-button {
-  width: 10rem;
-}
-
 .button {
   margin: 1rem;
 }
@@ -307,7 +303,7 @@ button {
   }
 
   .heading {
-    margin-bottom: 2rem;
+    height: 4rem;
   }
 
   .heading p {
@@ -743,6 +739,8 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 4rem;
+    margin-bottom: 8rem;
   }
 
   .heading p {

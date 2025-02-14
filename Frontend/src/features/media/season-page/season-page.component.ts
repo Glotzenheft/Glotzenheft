@@ -27,7 +27,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { CreateNewTracklistComponent } from "../../components/create-new-tracklist/create-new-tracklist.component";
+import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
 
 @Component({
   selector: 'app-season-page',
@@ -44,8 +44,8 @@ import { CreateNewTracklistComponent } from "../../components/create-new-trackli
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-    CreateNewTracklistComponent
-],
+    CreateNewTracklistComponent,
+  ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
 })
@@ -63,7 +63,6 @@ export class SeasonPageComponent implements OnInit {
 
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
-
 
   constructor(
     public stringService: StringService,
@@ -105,11 +104,11 @@ export class SeasonPageComponent implements OnInit {
 
     this.seasonData$.subscribe({
       next: (res: Season) => {
-        if (res.id && res.id.toString() !== splittedURL[1].trim()) {
-          this.location.replaceState(
-            `/media/${res.id}_${splittedURL[1].trim()}`
-          );
-        }
+        // if (res.id && res.id.toString() !== splittedURL[1].trim()) {
+        //   this.location.replaceState(
+        //     `/media/${res.id}_${splittedURL[1].trim()}`
+        //   );
+        // }
 
         this.trackListForm = this.formBuilder.group({
           trackListName: [res.name, Validators.required],
@@ -142,8 +141,6 @@ export class SeasonPageComponent implements OnInit {
   navigateToMultiSearch = () => {
     this.navigationService.navigateToMultiSearch();
   };
-
-  
 
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);
