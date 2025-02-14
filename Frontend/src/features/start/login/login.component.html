@@ -14,7 +14,6 @@
         </p-floatlabel>
         <p-message
           severity="error"
-          variant="simple"
           size="small"
           *ngIf="
             loginGroup.get('username')?.invalid &&
@@ -40,7 +39,6 @@
         </p-floatlabel>
         <p-message
           severity="error"
-          variant="simple"
           size="small"
           *ngIf="
             loginGroup.get('password')?.invalid &&
@@ -52,21 +50,25 @@
       </div>
 
       <div class="loginActions">
-        <p-button
-          fluid
-          icon="pi pi-sign-in"
-          label="Einloggen"
-          class="button2"
-          type="submit"
-        />
-        <p-button
-          fluid
-          label="Abbrechen"
-          class="button2"
-          severity="secondary"
-          icon="pi pi-times"
-          (onClick)="navigationService.navigateToStartPage()"
-        />
+        <div class="marginBottom">
+          <p-button
+            fluid
+            icon="pi pi-sign-in"
+            label="Einloggen"
+            class="button2"
+            type="submit"
+          />
+        </div>
+        <div>
+          <p-button
+            fluid
+            label="Abbrechen"
+            class="button2"
+            severity="secondary"
+            icon="pi pi-times"
+            (onClick)="navigationService.navigateToStartPage()"
+          />
+        </div>
       </div>
     </form>
   </div>

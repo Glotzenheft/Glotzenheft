@@ -185,17 +185,41 @@ p {
   }
 
   .login {
-    height: 100%;
+    height: 110%;
     width: 100%;
 
     display: flex;
     justify-content: center;
-    align-items: center;
+  }
+
+  .loginWindow {
+    width: 100%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .loginWindow form .loginActions {
+    display: block;
+  }
+
+  .loginWindow form .loginActions .marginBottom {
+    margin-bottom: 0.5rem;
   }
 
   .register {
     width: 100%;
-    height: 80%;
+    height: 90%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
     padding-top: 0.5rem;
@@ -236,11 +260,11 @@ p {
     height: 50%;
   }
 
-  .loginActions {
+  /* .loginActions {
     display: flex;
     justify-content: space-around;
     align-items: center;
-  }
+  } */
 
   .userInput {
     width: 100%;
@@ -426,10 +450,27 @@ p {
     height: 100%;
   }
 
+  .loginWindow {
+    width: 70%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
   .register {
     background-color: rgba(255, 255, 255, 0.8);
     width: 80%;
-    height: 90%;
+    height: 98%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
@@ -463,6 +504,7 @@ p {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    gap: 0.5rem;
   }
 
   .userInput {
@@ -640,10 +682,27 @@ p {
     background-color: white;
   }
 
+  .loginWindow {
+    width: 50%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
   .register {
     background-color: rgba(255, 255, 255, 0.8);
     width: 80%;
-    height: 90%;
+    height: 98%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);

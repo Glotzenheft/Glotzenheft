@@ -1,29 +1,32 @@
-<form
-  action="submit"
-  (ngSubmit)="
-    createNewTrackList(
-      mediaInput.id,
-      trackListForm.get('trackListName')?.value ?? ''
-    )
-  "
-  [formGroup]="trackListForm"
->
-  <p-float-label variant="on">
-    <input
-      type="text"
-      pInputText
-      formControlName="trackListName"
-      [value]="mediaInput.name"
-    />
-  </p-float-label>
-  <p-message
-    *ngIf="
-      hasErrorField('trackListName') &&
-      trackListForm.get('trackListName')?.invalid
+<div class="createNewTracklist">
+  <form
+    action="submit"
+    (ngSubmit)="
+      createNewTrackList(
+        mediaInput.id,
+        trackListForm.get('trackListName')?.value ?? ''
+      )
     "
-    severity="error"
+    [formGroup]="trackListForm"
   >
-    Der Name für die Tracklist ist Pflicht.
-  </p-message>
-  <p-button label="Speichern" type="submit" />
-</form>
+    <p-float-label variant="on">
+      <input
+        type="text"
+        pInputText
+        formControlName="trackListName"
+        [value]="mediaInput.name"
+      />
+    </p-float-label>
+    <p-message
+      *ngIf="
+        hasErrorField('trackListName') &&
+        trackListForm.get('trackListName')?.invalid
+      "
+      severity="error"
+      size="small"
+    >
+      Der Name für die Tracklist ist Pflicht.
+    </p-message>
+    <p-button label="Speichern" type="submit" />
+  </form>
+</div>
