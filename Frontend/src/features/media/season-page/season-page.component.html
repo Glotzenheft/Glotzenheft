@@ -76,7 +76,10 @@
   [(visible)]="isTracklistDialogVisible"
   [header]="seasonData.name"
 >
-  <app-create-new-tracklist [mediaInput]="seasonData" />
+  <app-create-new-tracklist
+    [mediaName]="seasonData.name"
+    [mediaID]="seasonData.id"
+  />
 </p-dialog>
 
 <p-dialog

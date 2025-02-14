@@ -54,6 +54,7 @@ export class FilmPageComponent implements OnInit {
   public filmData$: Observable<Film> | null = null;
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
+  public isTracklistDialogVisible: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -105,5 +106,15 @@ export class FilmPageComponent implements OnInit {
         fieldControl!.touched ||
         this.isTracklistSubmitted)
     );
+  };
+
+  // navigation
+  public navigateToMultiSearch = () => {
+    this.navigationService.navigateToMultiSearch();
+  };
+
+  // dialog
+  public openTracklistDialog = () => {
+    this.isTracklistDialogVisible = true;
   };
 }

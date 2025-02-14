@@ -3,7 +3,7 @@
     action="submit"
     (ngSubmit)="
       createNewTrackList(
-        mediaInput.id,
+        mediaID(),
         trackListForm.get('trackListName')?.value ?? ''
       )
     "
@@ -14,7 +14,7 @@
         type="text"
         pInputText
         formControlName="trackListName"
-        [value]="mediaInput.name"
+        [value]="mediaName()"
       />
     </p-float-label>
     <p-message

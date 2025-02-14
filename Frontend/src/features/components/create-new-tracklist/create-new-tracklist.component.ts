@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, Input, OnInit } from '@angular/core';
+import { Component, input, Input, InputSignal, OnInit } from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -31,7 +31,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
   styleUrl: './create-new-tracklist.component.css',
 })
 export class CreateNewTracklistComponent implements OnInit {
-  @Input() mediaInput!: Season;
+  public mediaName: InputSignal<string> = input.required<string>();
+  public mediaID: InputSignal<number> = input.required<number>();
 
   public isTracklistSubmitted: boolean = false;
   public trackListForm!: FormGroup;
@@ -44,7 +45,7 @@ export class CreateNewTracklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.trackListForm = this.formBuilder.group({
-      trackListName: [this.mediaInput.name, Validators.required],
+      trackListName: [this.mediaName.name, Validators.required],
     });
   }
 
