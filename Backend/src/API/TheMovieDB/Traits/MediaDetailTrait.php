@@ -26,6 +26,12 @@ trait MediaDetailTrait
     {
     }
 
+    /**
+     * @param array $requestData
+     * @param MediaType $type
+     * @param string $language
+     * @return array{error: string, code: int} | array{media: Media}
+     */
     public function handleTMDBMediaDetail(array $requestData, MediaType $type, string $language = 'de-DE'): array
     {
         if (isset($requestData['mediaID']))
@@ -120,6 +126,10 @@ trait MediaDetailTrait
         ];
     }
 
+    /**
+     * @param Request $request
+     * @return array{mediaID: int|null, tmdbID: int|null}
+     */
     private function handleRequest(Request $request): array
     {
         $mediaID = $request->query->get('media_id');
