@@ -150,4 +150,26 @@ trait MediaDetailTrait
             'tmdbID' => $tmdbID,
         ];
     }
+
+    public function searchMediaID(array $data): array
+    {
+        $tmdbID = $data['tmdb_id'];
+        $type = MediaType::tryFrom($data['media_type']);
+        $media = $this->entityManager->getRepository(Media::class)->findOneBy([
+            'tmdbID' => $tmdbID,
+            'type' => $type,
+        ]);
+
+        if (!$media instanceof Media)
+        {
+            return [
+                'error' => 'Media ID not found.',
+                'code' => 404,
+            ];
+        }
+
+        return [
+            'media_id' => $media->getId(),
+        ];
+    }
 }
