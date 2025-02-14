@@ -16,22 +16,29 @@ class TVSeriesDetailsController extends AbstractController
     use MediaDetailTrait;
 
     /**
-     * @example https://127.0.0.1:8000/api/tv?tmdbID=205366
+     * API endpoint to retrieve tv series details (includes seasons and episodes) from the TMDB API.
+     * Requires either a `tmdb_id` or a `media_id` as query parameter.
+     * @example https://127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/api/tv')]
+    #[Route('/api/tv', name: 'get_tv_series_details', methods: ['GET'])]
     public function getTVSeriesDetails(Request $request): JsonResponse
     {
-        $tmdbID = (int)$request->query->get('tmdbID');
+        $requestData = $this->handleRequest($request);
 
-        if (empty($tmdbID))
+        if (isset($response['error']))
         {
-            return $this->json(['error' => 'Query parameter "tmdbID" is required.'], 400);
+            return $this->json($response['error'], $response['code']);
         }
 
-        $media = $this->handleTMDBMediaDetail($tmdbID, MediaType::TV);
+        $media = $this->handleTMDBMediaDetail($requestData, MediaType::TV);
 
-        return $this->json($media, context: ['groups' => ['media_details']]);
+        if (isset($media['error']))
+        {
+            return $this->json($media['error'], $media['code']);
+        }
+
+        return $this->json($media['media'], context: ['groups' => ['media_details']]);
     }
 }
