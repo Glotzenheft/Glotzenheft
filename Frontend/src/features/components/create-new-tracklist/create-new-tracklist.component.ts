@@ -45,7 +45,7 @@ export class CreateNewTracklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.trackListForm = this.formBuilder.group({
-      trackListName: [this.mediaName.name, Validators.required],
+      trackListName: [this.mediaName(), Validators.required],
     });
   }
 

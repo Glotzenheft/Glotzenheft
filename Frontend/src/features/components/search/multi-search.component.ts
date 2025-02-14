@@ -85,7 +85,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   }
 
   showErrorDialog = () => {
-    this.isErrorDialogVisible = true;
+    this.messageService.add({
+      severity: 'warn',
+      life: 7000,
+      summary: 'Das Suchfeld darf nicht leer sein',
+      detail:
+        'Das Suchfeld muss mindestens ein Zeichen enthalten, um eine Suche durchführen zu können.',
+    });
   };
 
   closeErrorDialog = () => {

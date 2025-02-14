@@ -1,0 +1,90 @@
+@media (max-width: 600px) {
+  img {
+    height: 100%;
+  }
+  .seasonMeta {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+  }
+  .seasonMetaPicture {
+    width: 13rem;
+    height: 13rem;
+    border: 0.4rem solid white;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .seasonMetaContent {
+    width: 100%;
+    padding-left: var(--padding--left-right);
+    border-left: 0.1rem solid white;
+    height: 30rem;
+  }
+
+  .seasonMetaPicture {
+    background-color: red;
+    width: auto;
+  }
+
+  .newWatchlistButton {
+    margin-top: 2rem;
+  }
+}
+
+@media (min-width: 600px) {
+  img {
+    height: 100%;
+  }
+  .seasonMeta {
+    width: 100%;
+    height: 26rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .seasonPictureWrapper {
+    height: 30rem;
+  }
+
+  .seasonMetaPicture {
+    /* width: 13rem; */
+    width: auto;
+    height: 13rem;
+    border: 0.2rem solid white;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .seasonMetaContent {
+    width: calc(100% - 13rem);
+
+    height: 40rem;
+  }
+  .seasonMetaContent div {
+    border-left: 0.1rem solid white;
+    padding-left: var(--padding--left-right);
+  }
+
+  .bigButton .p-button {
+    width: 10rem;
+  }
+}
+
+.backButtonDIV {
+  height: 4rem;
+}
+
+.descriptionP {
+  overflow-y: auto;
+  height: 20rem;
+}
