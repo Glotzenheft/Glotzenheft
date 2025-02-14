@@ -29,7 +29,7 @@ class MediaIDController extends AbstractController
         if ($tmdbID === null || $mediaType === null)
         {
             return new JsonResponse([
-                'error' => 'Media ID is required.',
+                'error' => 'TMDB ID is required.',
                 'code' => 400,
             ]);
         }
