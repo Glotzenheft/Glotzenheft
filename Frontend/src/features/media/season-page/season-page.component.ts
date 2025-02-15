@@ -28,6 +28,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
+import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
+import { EpisodeListComponent } from '../../components/episode-list/episode-list.component';
+import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 
 @Component({
   selector: 'app-season-page',
@@ -45,6 +48,7 @@ import { CreateNewTracklistComponent } from '../../components/create-new-trackli
     MessageModule,
     ReactiveFormsModule,
     CreateNewTracklistComponent,
+    EpisodeListComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -53,6 +57,7 @@ export class SeasonPageComponent implements OnInit {
   public tvSeriesID: string | null = null;
   public seasonData$: Observable<Season> | null = null;
   public episodeRating: number = 0;
+  public posterPath: string = TMDB_POSTER_PATH;
 
   public hasError: boolean = false;
   public isInvalidID: boolean = false;
@@ -79,7 +84,6 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.tvSeriesID) {
       this.hasError = true;
-
       return;
     }
 
@@ -88,7 +92,13 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
+    // checking if "media_id" already exists:
+    this.seasonData$ = this.mediaService.getSeasonForTV(
+      this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS)
+        ? this.tvSeriesID.split('_')[0]
+        : this.tvSeriesID,
+      this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS) ? false : true
+    );
 
     if (!this.seasonData$) {
       this.hasError = true;
@@ -105,6 +115,11 @@ export class SeasonPageComponent implements OnInit {
         this.trackListForm = this.formBuilder.group({
           trackListName: [res.name, Validators.required],
         });
+
+        if (this.tvSeriesID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
+          // replacing the url with "media_id" if necessary
+          this.location.replaceState(`/media/tv/${res.id}`);
+        }
       },
       error: (err) => {
         this.hasError = true;

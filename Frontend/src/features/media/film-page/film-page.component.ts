@@ -1,4 +1,4 @@
-import { CommonModule } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
   FormBuilder,
@@ -25,6 +25,7 @@ import { SecurityService } from '../../../service/security/security.service';
 import { Observable } from 'rxjs';
 import { Film } from '../../../shared/interfaces/media-interfaces';
 import { MediaService } from '../../../service/media/media.service';
+import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 
 @Component({
   selector: 'app-film-page',
@@ -63,7 +64,8 @@ export class FilmPageComponent implements OnInit {
     private navigationService: NavigationService,
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
-    private mediaService: MediaService
+    private mediaService: MediaService,
+    private location: Location
   ) {}
 
   ngOnInit(): void {
@@ -79,7 +81,16 @@ export class FilmPageComponent implements OnInit {
       return;
     }
 
-    this.filmData$ = this.mediaService.getFilmDetails(this.movieID);
+    // checking if "media_id" already exists:
+    if (this.movieID.includes(MEDIA_ID_NOT_EXISTS)) {
+    }
+
+    this.filmData$ = this.mediaService.getFilmDetails(
+      this.movieID.includes(MEDIA_ID_NOT_EXISTS)
+        ? this.movieID.split('_')[0]
+        : this.movieID,
+      this.movieID.includes(MEDIA_ID_NOT_EXISTS) ? false : true
+    );
 
     if (!this.filmData$) {
       this.hasError = true;
@@ -90,6 +101,11 @@ export class FilmPageComponent implements OnInit {
         this.trackListForm = this.formBuilder.group({
           trackListName: [res.name, Validators.required],
         });
+
+        if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
+          // replacing the url with "media_id" if necessary
+          this.location.replaceState(`/media/movie/${res.id}`);
+        }
       },
       error: (err) => {
         this.hasError = true;

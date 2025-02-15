@@ -16,6 +16,7 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { MessageService } from 'primeng/api';
+import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 
 @Component({
   selector: 'app-multi-search',
@@ -103,15 +104,23 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
       .getMediaIdForMedia(id, mediaGenre === 'movie' ? true : false)
       .subscribe({
         next: (res: MediaIDResponse) => {
-          if (mediaGenre === 'movie') {
-            this.router.navigateByUrl(
-              ROUTES_LIST[5].fullUrl + `/${res.media_id}`
-            );
+          let url: string = '';
+
+          if (res.media_id === undefined || res.media_id === null) {
+            // if no media_id exists in the db -> because media is not already saved
+            url =
+              mediaGenre === 'movie'
+                ? ROUTES_LIST[5].fullUrl + `/${id}${MEDIA_ID_NOT_EXISTS}`
+                : ROUTES_LIST[6].fullUrl + `/${id}${MEDIA_ID_NOT_EXISTS}`;
           } else {
-            this.router.navigateByUrl(
-              ROUTES_LIST[6].fullUrl + `/${res.media_id}`
-            );
+            // media_id already exists
+            url =
+              mediaGenre === 'movie'
+                ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
+                : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
           }
+
+          this.router.navigateByUrl(url);
         },
         error: () => {
           const message: string = `Fehler beim Weiterleiten ${
