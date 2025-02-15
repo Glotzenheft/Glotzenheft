@@ -72,15 +72,11 @@ export class MediaService {
     tmdbID: number,
     isMovie: boolean
   ): Observable<MediaIDResponse> => {
-    const isMovieType: string = isMovie === true ? 'movie' : 'tv';
+    const movieType: string = isMovie === true ? 'movie' : 'tv';
 
     return this.http
-      .post<MediaIDResponse>(
-        ROUTE_MEDIA_ID_FOR_MEDIA,
-        JSON.stringify({
-          tmdbID,
-          media: isMovieType,
-        })
+      .get<MediaIDResponse>(
+        `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`
       )
       .pipe(
         shareReplay(1),
@@ -92,7 +88,7 @@ export class MediaService {
 
   getSeasonForTV = (mediaID: string): Observable<Season> => {
     return this.http
-      .get<Season>(ROUTE_MEDIA_DETAILS_SEARCH + mediaID + 'tmdb_id='    )
+      .get<Season>(ROUTE_MEDIA_DETAILS_SEARCH + mediaID + 'tmdb_id=')
       .pipe(
         shareReplay(1),
         catchError((error: HttpErrorResponse) => {
