@@ -87,20 +87,8 @@ export class MediaService {
     );
   };
 
-  getSeasonForTV = (
-    mediaID: string,
-    isMediaID: boolean
-  ): Observable<Season> => {
-    let url: string = '';
-
-    if (isMediaID) {
-      // if given id === "media_id"
-      url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
-    } else {
-      url = ROUTE_MEDIA_DETAILS_SEARCH_ONLY_TMDB + mediaID;
-    }
-
-    console.log('url in season:', url);
+  getSeasonForTV = (mediaID: string): Observable<Season> => {
+    let url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
 
     return this.http.get<Season>(url).pipe(
       shareReplay(1),
@@ -110,17 +98,8 @@ export class MediaService {
     );
   };
 
-  public getFilmDetails = (
-    movieID: string,
-    isMediaID: boolean
-  ): Observable<Film> => {
-    let url: string = '';
-
-    if (isMediaID) {
-      url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
-    } else {
-      url = ROUTE_MOVIE_DETAILS_SEARCH_ONLY_TMDB + movieID;
-    }
+  public getFilmDetails = (movieID: string): Observable<Film> => {
+    let url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
 
     return this.http.get<Film>(url).pipe(
       shareReplay(1),
