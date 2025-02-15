@@ -23,6 +23,7 @@ import {
   ROUTE_MEDIA_DETAILS_SEARCH_ONLY_TMDB,
   ROUTE_MEDIA_ID_FOR_MEDIA,
   ROUTE_MOVIE_DETAILS_SEARCH,
+  ROUTE_MOVIE_DETAILS_SEARCH_ONLY_TMDB,
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
@@ -90,8 +91,6 @@ export class MediaService {
     mediaID: string,
     isMediaID: boolean
   ): Observable<Season> => {
-    console.log('mediaID:', mediaID, ', is Media id:', isMediaID);
-
     let url: string = '';
 
     if (isMediaID) {
@@ -111,19 +110,24 @@ export class MediaService {
     );
   };
 
-  public getFilmDetails = (tmdbMovieID: string): Observable<Film> => {
-    return this.http
-      .get<Film>(
-        ROUTE_MOVIE_DETAILS_SEARCH[0] +
-          tmdbMovieID +
-          ROUTE_MOVIE_DETAILS_SEARCH[1]
-      )
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
+  public getFilmDetails = (
+    movieID: string,
+    isMediaID: boolean
+  ): Observable<Film> => {
+    let url: string = '';
+
+    if (isMediaID) {
+      url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
+    } else {
+      url = ROUTE_MOVIE_DETAILS_SEARCH_ONLY_TMDB + movieID;
+    }
+
+    return this.http.get<Film>(url).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {

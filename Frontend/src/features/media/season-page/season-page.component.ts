@@ -89,10 +89,6 @@ export class SeasonPageComponent implements OnInit {
     }
 
     // checking if "media_id" already exists:
-    if (this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS)) {
-      // "media_id" does not exist (because url contains "MEDIA_ID_NOT_EXISTS" string)
-    }
-
     this.seasonData$ = this.mediaService.getSeasonForTV(
       this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS)
         ? this.tvSeriesID.split('_')[0]

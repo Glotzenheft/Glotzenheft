@@ -16,6 +16,9 @@ export const ROUTE_MOVIE_DETAILS_SEARCH: string[] = [
 ];
 // example: https://127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
 
+export const ROUTE_MOVIE_DETAILS_SEARCH_ONLY_TMDB: string =
+  'https://127.0.0.1:8000/api/movie?tmdb_id=';
+
 export const ROUTE_MEDIA_ID_FOR_MEDIA: string[] = [
   'https://127.0.0.1:8000/api/media?tmdb_id=',
   '&media_type=',
