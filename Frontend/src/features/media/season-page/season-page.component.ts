@@ -28,6 +28,7 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
+import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 
 @Component({
   selector: 'app-season-page',
@@ -79,7 +80,6 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.tvSeriesID) {
       this.hasError = true;
-
       return;
     }
 
@@ -88,7 +88,17 @@ export class SeasonPageComponent implements OnInit {
       return;
     }
 
-    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
+    // checking if "media_id" already exists:
+    if (this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS)) {
+      // "media_id" does not exist (because url contains "MEDIA_ID_NOT_EXISTS" string)
+    }
+
+    this.seasonData$ = this.mediaService.getSeasonForTV(
+      this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS)
+        ? this.tvSeriesID.split('_')[0]
+        : this.tvSeriesID,
+      this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS) ? false : true
+    );
 
     if (!this.seasonData$) {
       this.hasError = true;
@@ -105,6 +115,11 @@ export class SeasonPageComponent implements OnInit {
         this.trackListForm = this.formBuilder.group({
           trackListName: [res.name, Validators.required],
         });
+
+        if (this.tvSeriesID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
+          // replacing the url with "media_id" if necessary
+          this.location.replaceState(`/media/tv/${res.id}`);
+        }
       },
       error: (err) => {
         this.hasError = true;

@@ -20,6 +20,7 @@ import {
 import {
   ROUTE_CREATE_NEW_TRACKLIST,
   ROUTE_MEDIA_DETAILS_SEARCH,
+  ROUTE_MEDIA_DETAILS_SEARCH_ONLY_TMDB,
   ROUTE_MEDIA_ID_FOR_MEDIA,
   ROUTE_MOVIE_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
@@ -73,33 +74,50 @@ export class MediaService {
     isMovie: boolean
   ): Observable<MediaIDResponse> => {
     const movieType: string = isMovie === true ? 'movie' : 'tv';
+    const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
-    return this.http
-      .get<MediaIDResponse>(
-        `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`
-      )
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
+    console.log(url);
+
+    return this.http.get<MediaIDResponse>(url).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
   };
 
-  getSeasonForTV = (mediaID: string): Observable<Season> => {
-    return this.http
-      .get<Season>(ROUTE_MEDIA_DETAILS_SEARCH + mediaID + 'tmdb_id=')
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
+  getSeasonForTV = (
+    mediaID: string,
+    isMediaID: boolean
+  ): Observable<Season> => {
+    console.log('mediaID:', mediaID, ', is Media id:', isMediaID);
+
+    let url: string = '';
+
+    if (isMediaID) {
+      // if given id === "media_id"
+      url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
+    } else {
+      url = ROUTE_MEDIA_DETAILS_SEARCH_ONLY_TMDB + mediaID;
+    }
+
+    console.log('url in season:', url);
+
+    return this.http.get<Season>(url).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
   };
 
   public getFilmDetails = (tmdbMovieID: string): Observable<Film> => {
     return this.http
-      .get<Film>(ROUTE_MOVIE_DETAILS_SEARCH + tmdbMovieID + 'tmdb_id=')
+      .get<Film>(
+        ROUTE_MOVIE_DETAILS_SEARCH[0] +
+          tmdbMovieID +
+          ROUTE_MOVIE_DETAILS_SEARCH[1]
+      )
       .pipe(
         shareReplay(1),
         catchError((error: HttpErrorResponse) => {

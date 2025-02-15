@@ -1,15 +1,20 @@
 export const ROUTE_MULTI_SEARCH: string =
   'https://127.0.0.1:8000/api/multi-search?q=';
 
-export const ROUTE_MEDIA_DETAILS_SEARCH: string =
-  'https://127.0.0.1:8000/api/tv?media_id=';
+export const ROUTE_MEDIA_DETAILS_SEARCH: string[] = [
+  'https://127.0.0.1:8000/api/tv?media_id=',
+  '&tmdb_id=',
+];
+// example: 127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
 
-//127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
+export const ROUTE_MEDIA_DETAILS_SEARCH_ONLY_TMDB: string =
+  'https://127.0.0.1:8000/api/tv?tmdb_id=';
 
-export const ROUTE_MOVIE_DETAILS_SEARCH: string =
-  'https://127.0.0.1:8000/api/movie?media_id=';
-
-// https://127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
+export const ROUTE_MOVIE_DETAILS_SEARCH: string[] = [
+  'https://127.0.0.1:8000/api/movie?media_id=',
+  '&tmdb_id=',
+];
+// example: https://127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
 
 export const ROUTE_MEDIA_ID_FOR_MEDIA: string[] = [
   'https://127.0.0.1:8000/api/media?tmdb_id=',

@@ -40,6 +40,14 @@ export class SecurityService {
       return false;
     }
 
+    const splittedURL: string[] = shortenedURL.split('_');
+
+    if (splittedURL.length > 3 || splittedURL.length < 1) {
+      return false;
+    }
+
+
+    if (splittedURL.length > 1 && splittedURL[2] === "") {}
     // if (!Number.isNaN(splittedURL[0].trim())) {
     //   // valid is a number = id of media
     //   return false;
