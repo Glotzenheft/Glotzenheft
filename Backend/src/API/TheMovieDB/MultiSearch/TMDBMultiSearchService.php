@@ -25,7 +25,7 @@ readonly class TMDBMultiSearchService implements TMDBMultiSearchInterface
     {
     }
 
-    public function multiSearch(string $q, int $page = 1): array
+    public function multiSearch(string $q, int $page = 1, $language = 'de-DE'): array
     {
         try
         {
@@ -33,6 +33,7 @@ readonly class TMDBMultiSearchService implements TMDBMultiSearchInterface
                 'query' => [
                     'query' => $q,
                     'page' => $page,
+                    'language' => $language,
                 ],
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->tmdbToken,

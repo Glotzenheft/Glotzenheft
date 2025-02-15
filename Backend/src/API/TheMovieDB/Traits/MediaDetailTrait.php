@@ -67,6 +67,10 @@ trait MediaDetailTrait
         {
             case MediaType::TV:
                 $result = $this->tvService->getTVSeriesDetails($tmdbID, $language);
+                if (isset($result['error']))
+                {
+                    return $result;
+                }
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
                 $name = $result['name'];
                 $originalName = $result['original_name'];
@@ -74,6 +78,10 @@ trait MediaDetailTrait
                 break;
             case MediaType::Movie:
                 $result = $this->movieService->getMovieDetails($tmdbID, $language);
+                if (isset($result['error']))
+                {
+                    return $result;
+                }
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
                 $name = $result['title'];
                 $originalName = $result['original_title'];
@@ -94,7 +102,7 @@ trait MediaDetailTrait
             ->setFirstAirDate($firstAirDate ?? null)
             ->setImdbID($result['external_ids']['imdb_id'] ?? null)
             ->setPosterPath($result['poster_path'] ?? null)
-            ->setBackdropPath($result['backdrop_path'] ?? '')
+            ->setBackdropPath($result['backdrop_path'] ?? null)
             ->setType($type)
             ->setTmdbID($tmdbID)
         ;
@@ -157,10 +165,19 @@ trait MediaDetailTrait
         $type = MediaType::tryFrom($data['media_type']);
         $media = $this->entityManager->getRepository(Media::class)->findOneBy([
             'tmdbID' => $tmdbID,
-            'type' => $type,
         ]);
 
         if (!$media instanceof Media)
+        {
+            $data = ['tmdbID' => $tmdbID];
+            $media = $this->handleTMDBMediaDetail($data, $type);
+            if (isset($result['error']))
+            {
+                return $result;
+            }
+            $media = $media['media'];
+        }
+        elseif ($media->getType() !== $type)
         {
             return [
                 'error' => 'Media ID not found.',

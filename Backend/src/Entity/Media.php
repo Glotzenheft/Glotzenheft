@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -49,6 +50,7 @@ class Media
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['media_details'])]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $firstAirDate = null;
 
     /**
@@ -79,7 +81,7 @@ class Media
     #[Groups(['media_details'])]
     private ?string $posterPath = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['media_details'])]
     private ?string $backdropPath = null;
 
@@ -271,7 +273,7 @@ class Media
         return $this->backdropPath;
     }
 
-    public function setBackdropPath(string $backdropPath): static
+    public function setBackdropPath(?string $backdropPath): static
     {
         $this->backdropPath = $backdropPath;
 
