@@ -108,17 +108,25 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
           if (res.media_id === undefined || res.media_id === null) {
             // if no media_id exists in the db -> because media is not already saved
-            url =
-              mediaGenre === 'movie'
-                ? ROUTES_LIST[5].fullUrl + `/${id}${MEDIA_ID_NOT_EXISTS}`
-                : ROUTES_LIST[6].fullUrl + `/${id}${MEDIA_ID_NOT_EXISTS}`;
-          } else {
-            // media_id already exists
-            url =
-              mediaGenre === 'movie'
-                ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
-                : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
+            const summaryMessage: string = `Fehler beim Weiterleiten ${
+              mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie'
+            }`;
+
+            this.messageService.add({
+              life: 7000,
+              severity: 'error',
+              summary: summaryMessage,
+              detail:
+                'Es ist ein Fehler beim Weiterleiten zum Medium passiert. Bitte lade die Seite erneut und versuche es noch einmal.',
+            });
+            return;
           }
+
+          // media_id already exists
+          url =
+            mediaGenre === 'movie'
+              ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
+              : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
 
           this.router.navigateByUrl(url);
         },

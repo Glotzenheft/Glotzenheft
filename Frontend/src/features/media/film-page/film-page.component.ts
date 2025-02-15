@@ -81,16 +81,7 @@ export class FilmPageComponent implements OnInit {
       return;
     }
 
-    // checking if "media_id" already exists:
-    if (this.movieID.includes(MEDIA_ID_NOT_EXISTS)) {
-    }
-
-    this.filmData$ = this.mediaService.getFilmDetails(
-      this.movieID.includes(MEDIA_ID_NOT_EXISTS)
-        ? this.movieID.split('_')[0]
-        : this.movieID,
-      this.movieID.includes(MEDIA_ID_NOT_EXISTS) ? false : true
-    );
+    this.filmData$ = this.mediaService.getFilmDetails(this.movieID);
 
     if (!this.filmData$) {
       this.hasError = true;

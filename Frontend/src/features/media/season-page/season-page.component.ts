@@ -93,12 +93,7 @@ export class SeasonPageComponent implements OnInit {
     }
 
     // checking if "media_id" already exists:
-    this.seasonData$ = this.mediaService.getSeasonForTV(
-      this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS)
-        ? this.tvSeriesID.split('_')[0]
-        : this.tvSeriesID,
-      this.tvSeriesID.includes(MEDIA_ID_NOT_EXISTS) ? false : true
-    );
+    this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
 
     if (!this.seasonData$) {
       this.hasError = true;
