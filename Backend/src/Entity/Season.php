@@ -10,6 +10,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -45,6 +46,7 @@ class Season
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['media_details'])]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $airDate = null;
 
     #[ORM\Column]
@@ -161,7 +163,7 @@ class Season
         return $this->posterPath;
     }
 
-    public function setPosterPath(string $posterPath): static
+    public function setPosterPath(?string $posterPath): static
     {
         $this->posterPath = $posterPath;
 
@@ -178,7 +180,8 @@ class Season
 
     public function addEpisode(Episode $episode): static
     {
-        if (!$this->episodes->contains($episode)) {
+        if (!$this->episodes->contains($episode))
+        {
             $this->episodes->add($episode);
             $episode->setSeason($this);
         }
@@ -188,9 +191,11 @@ class Season
 
     public function removeEpisode(Episode $episode): static
     {
-        if ($this->episodes->removeElement($episode)) {
+        if ($this->episodes->removeElement($episode))
+        {
             // set the owning side to null (unless already changed)
-            if ($episode->getSeason() === $this) {
+            if ($episode->getSeason() === $this)
+            {
                 $episode->setSeason(null);
             }
         }

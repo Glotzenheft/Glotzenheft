@@ -43,10 +43,37 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
 
             return json_decode($response->getContent(), true);
         }
-        catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e)
+        catch (TransportExceptionInterface $e) // API nicht erreichbar
         {
-            $this->logger->error($e->getMessage());
-            return [];
+            $this->logger->error('TMDB API not reachable: ' . $e->getMessage());
+            return [
+                'error' => 'The TMDB API is currently unavailable. Please try again later.',
+                'code' => 503,
+            ];
+        }
+        catch (ClientExceptionInterface $e) // Client-Fehler (400er-Statuscodes)
+        {
+            $this->logger->error('Client error with TMDB API: ' . $e->getMessage());
+            return [
+                'error' => 'Invalid request to TMDB API.',
+                'code' => 400,
+            ];
+        }
+        catch (ServerExceptionInterface $e) // Server-Fehler bei TMDB (500er-Statuscodes)
+        {
+            $this->logger->error('TMDB API server error: ' . $e->getMessage());
+            return [
+                'error' => 'TMDB API is currently experiencing issues. Please try again later.',
+                'code' => 502,
+            ];
+        }
+        catch (RedirectionExceptionInterface $e) // Unerwartete Weiterleitung
+        {
+            $this->logger->error('Unexpected TMDB API redirection: ' . $e->getMessage());
+            return [
+                'error' => 'Unexpected response from TMDB API.',
+                'code' => 502,
+            ];
         }
     }
 
@@ -57,7 +84,9 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
         $name = $response['name'];
         $overview = $response['overview'];
         $seasonNumber = $response['season_number'];
-        $airDate = DateTime::createFromFormat('Y-m-d', $response['air_date']);
+        $airDate = $response['air_date'] !== null
+            ? DateTime::createFromFormat('Y-m-d', $response['air_date'])
+            : null;
         $episodeCount = count($response['episodes']);
         $postPath = $response['poster_path'];
         $episodes = $response['episodes'];
@@ -90,7 +119,10 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
             $episodeNumber = (int) $singleEpisode['episode_number'];
             $runtime = (int) $singleEpisode['runtime'];
             $stillPath = $singleEpisode['still_path'];
-            $airDate = DateTime::createFromFormat('Y-m-d', $singleEpisode['air_date']);
+            $airDate = $singleEpisode['air_date'] !== null
+                ? DateTime::createFromFormat('Y-m-d', $singleEpisode['air_date'])
+                : null;
+
 
             $episode = $this->entityManager->getRepository(Episode::class)->findOneBy([
                 'tmdbEpisodeID' => $tmdbEpisodeID,

@@ -37,10 +37,37 @@ readonly class TMDBMovieDetailsService implements TMDBMovieDetailsInterface
 
             return json_decode($response->getContent(), true);
         }
-        catch (TransportExceptionInterface|ClientExceptionInterface|RedirectionExceptionInterface|ServerExceptionInterface $e)
+        catch (TransportExceptionInterface $e) // API nicht erreichbar
         {
-            $this->logger->error('Exception occured while TMDBMovieDetailsService: ' . $e->getMessage());
-            return [];
+            $this->logger->error('TMDB API not reachable: ' . $e->getMessage());
+            return [
+                'error' => 'The TMDB API is currently unavailable. Please try again later.',
+                'code' => 503,
+            ];
+        }
+        catch (ClientExceptionInterface $e) // Client-Fehler (400er-Statuscodes)
+        {
+            $this->logger->error('Client error with TMDB API: ' . $e->getMessage());
+            return [
+                'error' => 'Invalid request to TMDB API.',
+                'code' => 400,
+            ];
+        }
+        catch (ServerExceptionInterface $e) // Server-Fehler bei TMDB (500er-Statuscodes)
+        {
+            $this->logger->error('TMDB API server error: ' . $e->getMessage());
+            return [
+                'error' => 'TMDB API is currently experiencing issues. Please try again later.',
+                'code' => 502,
+            ];
+        }
+        catch (RedirectionExceptionInterface $e) // Unerwartete Weiterleitung
+        {
+            $this->logger->error('Unexpected TMDB API redirection: ' . $e->getMessage());
+            return [
+                'error' => 'Unexpected response from TMDB API.',
+                'code' => 502,
+            ];
         }
     }
 }
