@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: EpisodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -43,6 +44,7 @@ class Episode
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['media_details'])]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $airDate = null;
 
     #[ORM\OneToOne(mappedBy: 'episode', cascade: ['persist', 'remove'])]
