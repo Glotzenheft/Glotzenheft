@@ -105,11 +105,11 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         next: (res: MediaIDResponse) => {
           if (mediaGenre === 'movie') {
             this.router.navigateByUrl(
-              ROUTES_LIST[5].fullUrl + `/${res.mediaID}`
+              ROUTES_LIST[5].fullUrl + `/${res.media_id}`
             );
           } else {
             this.router.navigateByUrl(
-              ROUTES_LIST[6].fullUrl + `/${res.mediaID}_${mediaGenre}`
+              ROUTES_LIST[6].fullUrl + `/${res.media_id}`
             );
           }
         },
