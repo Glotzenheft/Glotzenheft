@@ -88,3 +88,30 @@
   overflow-y: auto;
   height: 20rem;
 }
+
+.seasonWrapper {
+  width: 100%;
+  height: 14rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.seasonWrapper .seasonMeta {
+  height: 100%;
+  width: 70%;
+}
+
+.seasonWrapper .seasonMeta div {
+  width: 100%;
+}
+
+.seasonWrapper .seasonPoster {
+  width: 30%;
+  height: 90%;
+}
+
+.seasonWrapper .seasonPoster img {
+  height: 100%;
+  border: 0.1rem solid black;
+}

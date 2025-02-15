@@ -29,6 +29,8 @@ import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
+import { EpisodeListComponent } from '../../components/episode-list/episode-list.component';
+import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 
 @Component({
   selector: 'app-season-page',
@@ -46,6 +48,7 @@ import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
     MessageModule,
     ReactiveFormsModule,
     CreateNewTracklistComponent,
+    EpisodeListComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -54,6 +57,7 @@ export class SeasonPageComponent implements OnInit {
   public tvSeriesID: string | null = null;
   public seasonData$: Observable<Season> | null = null;
   public episodeRating: number = 0;
+  public posterPath: string = TMDB_POSTER_PATH;
 
   public hasError: boolean = false;
   public isInvalidID: boolean = false;
