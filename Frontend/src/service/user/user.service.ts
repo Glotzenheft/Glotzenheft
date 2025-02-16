@@ -13,6 +13,9 @@ import {
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
 } from '../../shared/variables/api-routes';
+import { MessageService } from 'primeng/api';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../shared/variables/routes-list';
 
 @Injectable({
   providedIn: 'root',
@@ -25,7 +28,9 @@ export class UserService {
 
   constructor(
     private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
+    @Inject(PLATFORM_ID) private platformId: Object,
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   loginIntoAccount = (
@@ -75,5 +80,33 @@ export class UserService {
           return throwError(() => error);
         })
       );
+  };
+
+  public showLoginMessage = () => {
+    this.messageService.add({
+      life: 7000,
+      severity: 'error',
+      summary: 'Ungültige Anfrage',
+      detail:
+        'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
+    });
+
+    if (isPlatformBrowser(this.platformId)) {
+      // clear localStorage
+      localStorage.clear();
+    }
+
+    // navigate to login page
+    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+  };
+
+  public showNoAccessMessage = () => {
+    this.messageService.add({
+      severity: 'error',
+      summary: 'Kein Zugriff',
+      detail:
+        'Sie haben zur Zeit keinen Zugriff auf diese Seite. Bitte melden Sie sich an, um Zugriff zu erhalten.',
+      life: 7000,
+    });
   };
 }

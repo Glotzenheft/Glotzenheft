@@ -14,6 +14,7 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
 import { UserLinksComponent } from '../features/components/user-links/user-links.component';
+import { UserService } from '../service/user/user.service';
 
 @Component({
   selector: 'app-root',
@@ -45,7 +46,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public searchService: SearchService,
     public messageService: MessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -56,13 +58,7 @@ export class AppComponent implements OnInit, OnDestroy {
     this.toastSubscription = this.authService.showToast$.subscribe(
       (show: boolean) => {
         if (show) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Kein Zugriff',
-            detail:
-              'Sie haben zur Zeit keinen Zugriff auf diese Seite. Bitte melden Sie sich an, um Zugriff zu erhalten.',
-            life: 7000,
-          });
+          this.userService.showNoAccessMessage();
         }
       }
     );

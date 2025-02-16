@@ -17,6 +17,7 @@ import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { MessageService } from 'primeng/api';
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-multi-search',
@@ -49,12 +50,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     private mediaService: MediaService,
     private searchService: SearchService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.searchSubscription = this.searchService.searchTerm$.subscribe(
-      (searchTerm) => {
+    this.searchSubscription = this.searchService.searchTerm$.subscribe({
+      next: (searchTerm) => {
         if (!searchTerm.trim()) {
           this.showErrorDialog();
           return;
@@ -75,8 +77,16 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         });
         this.searchQuery = searchTerm;
         this.isLoading = false;
-      }
-    );
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          // 401 = user token not valid anymore -> navigate to login page
+          this.userService.showLoginMessage();
+
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -130,7 +140,14 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
           this.router.navigateByUrl(url);
         },
-        error: () => {
+        error: (err) => {
+          if (err.status === 401) {
+            // 401 = user token is not logged in anymore -> navigate to login page
+            this.userService.showLoginMessage();
+            this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+            return;
+          }
+
           const message: string = `Fehler beim Weiterleiten ${
             mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
           }`;

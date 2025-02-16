@@ -31,6 +31,7 @@ import { CreateNewTracklistComponent } from '../../components/create-new-trackli
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 import { EpisodeListComponent } from '../../components/episode-list/episode-list.component';
 import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-season-page',
@@ -76,7 +77,8 @@ export class SeasonPageComponent implements OnInit {
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private location: Location
+    private location: Location,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -117,6 +119,10 @@ export class SeasonPageComponent implements OnInit {
         }
       },
       error: (err) => {
+        if (err.status === 401) {
+          this.userService.showLoginMessage();
+        }
+
         this.hasError = true;
       },
     });

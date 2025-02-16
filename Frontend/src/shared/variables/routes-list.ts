@@ -62,6 +62,18 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'reset-password',
     showInLinkList: true,
   },
+  {
+    description: 'Login',
+    fullUrl: 'login',
+    shortUrl: 'login',
+    showInLinkList: false,
+  },
+  {
+    description: 'Registrieren',
+    fullUrl: 'register',
+    shortUrl: 'register',
+    showInLinkList: false,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {

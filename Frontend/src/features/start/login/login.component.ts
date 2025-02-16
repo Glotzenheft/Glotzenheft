@@ -94,7 +94,11 @@ export class LoginComponent implements OnInit {
         localStorage.setItem('username', this.userName);
         this.navigationService.navigateToUserStart();
       },
-      error: () => {
+      error: (err) => {
+        if (err.status === 401) {
+          this.userService.showLoginMessage();
+        }
+
         this.hasLoginError = true;
         this.messageService.add({
           severity: 'error',
