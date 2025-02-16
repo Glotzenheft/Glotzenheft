@@ -15,6 +15,7 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
 import { UserLinksComponent } from '../features/components/user-links/user-links.component';
 import { UserService } from '../service/user/user.service';
+import { UserMenuComponent } from "../features/components/user-menu/user-menu.component";
 
 @Component({
   selector: 'app-root',
@@ -30,7 +31,8 @@ import { UserService } from '../service/user/user.service';
     SearchBarComponent,
     ToastModule,
     UserLinksComponent,
-  ],
+    UserMenuComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MessageService],
