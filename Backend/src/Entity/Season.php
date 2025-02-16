@@ -21,7 +21,7 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]
@@ -33,7 +33,7 @@ class Season
     private ?int $tmdbSeasonID = null;
 
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $seasonNumber = null;
 
     #[ORM\Column(length: 255)]
@@ -61,12 +61,19 @@ class Season
      * @var Collection<int, Episode>
      */
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: 'Season', orphanRemoval: true)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
     private Collection $episodes;
+
+    /**
+     * @var Collection<int, TracklistSeason>
+     */
+    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'season', orphanRemoval: true)]
+    private Collection $tracklistSeasons;
 
     public function __construct()
     {
         $this->episodes = new ArrayCollection();
+        $this->tracklistSeasons = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -197,6 +204,36 @@ class Season
             if ($episode->getSeason() === $this)
             {
                 $episode->setSeason(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TracklistSeason>
+     */
+    public function getTracklistSeasons(): Collection
+    {
+        return $this->tracklistSeasons;
+    }
+
+    public function addTracklistSeason(TracklistSeason $tracklistSeason): static
+    {
+        if (!$this->tracklistSeasons->contains($tracklistSeason)) {
+            $this->tracklistSeasons->add($tracklistSeason);
+            $tracklistSeason->setSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTracklistSeason(TracklistSeason $tracklistSeason): static
+    {
+        if ($this->tracklistSeasons->removeElement($tracklistSeason)) {
+            // set the owning side to null (unless already changed)
+            if ($tracklistSeason->getSeason() === $this) {
+                $tracklistSeason->setSeason(null);
             }
         }
 
