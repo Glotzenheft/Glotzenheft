@@ -98,3 +98,5 @@ export interface TrackListCreation {
 export interface MediaIDResponse {
   media_id: string;
 }
+
+export interface Tracklist {}

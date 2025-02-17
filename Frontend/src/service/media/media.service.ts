@@ -3,6 +3,7 @@ import {
   Film,
   MediaIDResponse,
   Season,
+  Tracklist,
   TrackListCreation,
 } from '../../shared/interfaces/media-interfaces';
 import { catchError, Observable, shareReplay, throwError } from 'rxjs';
@@ -20,6 +21,7 @@ import {
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
+import { log } from 'console';
 
 @Injectable({
   providedIn: 'root',
@@ -41,9 +43,10 @@ export class MediaService {
       return null;
     }
 
+    console.log(userToken);
+
     return new HttpHeaders({
       Authorization: `Bearer ${userToken}`,
-      'Content-Type': 'application/json',
     });
   };
 
@@ -133,15 +136,18 @@ export class MediaService {
       );
   };
 
-  public getAllUserTracklists = (): Observable<any> | null => {
+  public getAllUserTracklists = (): Observable<Tracklist> | null => {
     const header = this.getHeader();
+
 
     if (!header) {
       return null;
     }
 
+    console.log('header', header);
+
     return this.http
-      .get<any>(ROUTE_GET_ALL_USER_TRACKLISTS, {
+      .get<Tracklist>(ROUTE_GET_ALL_USER_TRACKLISTS, {
         headers: header,
       })
       .pipe(

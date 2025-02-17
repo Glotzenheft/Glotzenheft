@@ -9,6 +9,6 @@ nelmio_cors:
     paths:
         '^/api/': # CORS-Regeln nur für API-Routen
             allow_origin: [ 'http://localhost:4200' ]
-            allow_methods: [ 'GET' ]
-            allow_headers: [ 'Content-Type' ]
+            allow_methods: ['GET', 'OPTIONS', 'POST', 'PUT', 'PATCH', 'DELETE']
+            allow_headers: ['Content-Type', 'Authorization']
             max_age: 3600

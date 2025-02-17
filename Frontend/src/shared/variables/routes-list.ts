@@ -74,6 +74,12 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'register',
     showInLinkList: false,
   },
+  {
+    description: 'Alle Tracklisten',
+    fullUrl: 'user/tracklists',
+    shortUrl: 'tracklists',
+    showInLinkList: false,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {
