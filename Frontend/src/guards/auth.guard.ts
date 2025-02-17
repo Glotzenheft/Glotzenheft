@@ -24,29 +24,9 @@ export const authGuard: CanActivateFn = (route, state) => {
     if (isUserLoggedIn()) {
       return true;
     }
-    messageService.add({
-      life: 7000,
-      severity: 'error',
-      summary: 'Kein Zugriff',
-      detail:
-        'Du hast keinen Zugriff auf diese Seite. Bitte melde dich an, um Zugriff zu erhalten.',
-    });
+    authService.triggerToast();
     return router.createUrlTree([`/${ROUTES_LIST[10].fullUrl}`]);
   }
-
-  //   if (isUserLoggedIn()) {
-  //     // // user is logged in
-  //     // if (state.url === '/login' || state.url === '/register') {
-  //     //   router.navigateByUrl(ROUTES_LIST[8].fullUrl);
-  //     // }
-
-  //     return true;
-  //   } else {
-  //     authService.triggerToast();
-
-  //     // redirect to login route if not logged in
-  //     return router.createUrlTree([`/${ROUTES_LIST[10].fullUrl}`]);
-  //   }
 };
 
 export const isUserLoggedIn = (): boolean => {
