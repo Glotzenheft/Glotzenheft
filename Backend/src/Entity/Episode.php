@@ -19,31 +19,31 @@ class Episode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
     private ?int $id = null;
 
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details'])]
+    #[Groups(['media_details'])]
     private ?int $tmdbEpisodeID = null;
 
     #[ORM\Column(length: 255)]
-    #[Groups(['media_details', 'tracklist_details'])]
+    #[Groups(['media_details', 'tracklist_episodes'])]
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_episodes'])]
     private ?string $overview = null;
 
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
     private ?int $episodeNumber = null;
 
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_episodes'])]
     private ?int $runtime = null;
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_episodes'])]
     #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $airDate = null;
 
@@ -51,7 +51,7 @@ class Episode
     private ?TracklistEpisode $tracklistEpisode = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_episodes'])]
     private ?string $stillPath = null;
 
     #[ORM\ManyToOne(inversedBy: 'episodes')]

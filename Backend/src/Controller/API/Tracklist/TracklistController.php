@@ -20,6 +20,38 @@ class TracklistController extends AbstractController
     {
     }
 
+    /**
+     * Retrieve all tracklists from a user.
+     * User identification by the bearer token.
+     * @example https://127.0.0.1:8000/api/user-tracklists
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[IsAuthenticated]
+    #[Route('/api/user-tracklists', name: 'get_tracklists', methods: ['GET'])]
+    public function getTracklists(Request $request): JsonResponse
+    {
+        $data = $this->handleRequest($request);
+
+        if (!isset($data['userID']))
+        {
+            return $this->json(['error' => 'User not found'], 404);
+        }
+
+        $response = $this->tracklistService->getUserTracklist($data);
+
+        if (isset($response['error']))
+        {
+            return $this->json(['error' => $response['error']], $response['code']);
+        }
+
+        return $this->json($response['tracklists'], context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
+    }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[IsAuthenticated]
     #[Route('/api/tracklist', name: 'get_tracklist', methods: ['GET'])]
     public function getTracklist(Request $request): JsonResponse
@@ -28,9 +60,7 @@ class TracklistController extends AbstractController
 
         if (!$data['tracklistID'])
         {
-            return $this->json([
-                'error' => 'TracklistID not provided.',
-            ], 400);
+            return $this->json(['error' => 'TracklistID not provided.'], 400);
         }
 
         $response = $this->tracklistService->getTracklist($data);
@@ -49,9 +79,19 @@ class TracklistController extends AbstractController
     {
         $data = $this->handleRequest($request);
 
-        if (!isset($data['tracklistName'], $data['userID'], $data['tracklistStatus'], $data['mediaID']))
+        if (!isset($data['tracklistName'], $data['userID'], $data['tracklistStatus'], $data['mediaID'], $data['mediaType']))
         {
             return $this->json(['error' => 'Invalid request data'], 400);
+        }
+
+        if (isset($data['tracklistID']))
+        {
+            return $this->json(['error' => 'Tracklist ID provided, even though create tracklist endpoint used!'], 400);
+        }
+
+        if ($data['mediaType'] === 'tv' && !isset($data['seasonID']))
+        {
+            return $this->json(['error' => 'Season ID not provided.'], 400);
         }
 
         $response = $this->tracklistService->createTracklist($data);
@@ -80,9 +120,19 @@ class TracklistController extends AbstractController
     private function handleRequest(Request $request): array
     {
         $tracklistName = $request->query->get('tracklist_name') ?? null;
-        $tracklistID = (int) $request->query->get('tracklist_id') ?? null;
-        $userID = $request->attributes->get('user_id') ?? null;
-        $mediaID = (int) $request->query->get('media_id') ?? null;
+        $tracklistID = $request->query->get('tracklist_id') !== null
+            ? (int) $request->query->get('tracklist_id')
+            : null;
+        $userID = $request->attributes->get('user_id') !== null
+            ? $request->attributes->get('user_id')
+            : null;
+        $mediaID = $request->query->get('media_id') !== null
+            ? (int) $request->query->get('media_id')
+            : null;
+        $mediaType = $request->query->get('media_type') ?? null;
+        $seasonID = $request->query->get('season_id') !== null
+            ? (int) $request->query->get('season_id')
+            : null;
         $tracklistStatus = $request->query->get('tracklist_status') ?? null;
         $tracklistRating = $request->query->get('tracklist_rating') ?? null;
         $tracklistStartDate = $request->query->get('tracklist_start_date') ?? null;
@@ -93,6 +143,8 @@ class TracklistController extends AbstractController
             'tracklistID' => $tracklistID,
             'userID' => $userID,
             'mediaID' => $mediaID,
+            'mediaType' => $mediaType,
+            'seasonID' => $seasonID,
             'tracklistStatus' => $tracklistStatus,
             'tracklistRating' => $tracklistRating,
             'tracklistStartDate' => $tracklistStartDate,
