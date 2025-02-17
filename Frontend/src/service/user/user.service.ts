@@ -67,6 +67,7 @@ export class UserService {
       if (isPlatformBrowser(this.platformId)) {
         localStorage.clear();
       }
+      this.isSearchBarVisible.next(false);
     }
   };
 
