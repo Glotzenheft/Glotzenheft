@@ -1,6 +1,6 @@
 <?php declare(strict_types=1);
 
-namespace App\Tracklist;
+namespace App\Service\Tracklist;
 
 use App\Entity\Media;
 use App\Entity\Season;
