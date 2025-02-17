@@ -48,8 +48,6 @@ export class SecurityService {
   };
 
   public isValidUsername = (username: string): boolean => {
-    console.log(username);
-
     for (const char of this.INVALID_CHARS) {
       if (username.trim().includes(char)) {
         return false;
