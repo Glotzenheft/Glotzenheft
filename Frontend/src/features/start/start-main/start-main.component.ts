@@ -37,10 +37,6 @@ export class StartMainComponent {
   };
 
   navigateToRegister = () => {
-    this.m.add({
-      severity: 'info',
-      summary: 'Works',
-    });
     this.router.navigateByUrl('/register');
   };
 }
