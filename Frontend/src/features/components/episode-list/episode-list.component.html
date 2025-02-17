@@ -1,10 +1,10 @@
 <div *ngIf="episodeList().length > 0" class="episodeDIVWrapper">
   <div
-    *ngFor="let episode of episodeList(); let i = index"
+    *ngFor="let episode of episodeList()"
     class="episodeDIV"
     (click)="openDialog(episode)"
   >
-    <p>E {{ i }}: {{ episode.name }}</p>
+    <p>E {{ episode.episodeNumber }}: {{ episode.name }}</p>
   </div>
 </div>
 
