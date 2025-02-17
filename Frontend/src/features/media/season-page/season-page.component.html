@@ -63,34 +63,41 @@
 
   <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
     <h2>Staffeln</h2>
-    <p-panel
-      *ngFor="let season of seasonData.seasons"
-      [header]="season.name + ' - ' + season.episodeCount + ' Episode/n'"
-      [toggleable]="true"
-      class="panel"
-    >
-      <div class="seasonWrapper">
-        <div class="seasonPoster">
-          <p *ngIf="season.posterPath === null">kein Bild vorhanden</p>
-          <img
-            *ngIf="seasonData.posterPath !== null"
-            [src]="posterPath + season.posterPath"
-            [alt]="'Dies ist das Bild für von ' + seasonData.name"
-          />
-        </div>
-        <div class="seasonMeta">
-          <div>
-            <p *ngIf="season.overview">Beschreibung: {{ season.overview }}</p>
-            <p *ngIf="!season.overview">
-              Beschreibung: <i>keine Beschreibung vorhanden</i>
-            </p>
-            <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
-          </div>
-        </div>
-      </div>
 
-      <app-episode-list [episodeList]="season.episodes" />
-    </p-panel>
+    <p-accordion>
+      <p-accordion-panel
+        [value]="i"
+        *ngFor="let season of seasonData.seasons; let i = index"
+        class="panel"
+      >
+        <p-accordion-header>{{ season.name }}</p-accordion-header>
+        <p-accordion-content>
+          <div class="seasonWrapper">
+            <div class="seasonPoster">
+              <p *ngIf="season.posterPath === null">kein Bild vorhanden</p>
+              <img
+                *ngIf="seasonData.posterPath !== null"
+                [src]="posterPath + season.posterPath"
+                [alt]="'Dies ist das Bild für von ' + seasonData.name"
+              />
+            </div>
+            <div class="seasonMeta">
+              <div>
+                <p *ngIf="season.overview">
+                  Beschreibung: {{ season.overview }}
+                </p>
+                <p *ngIf="!season.overview">
+                  Beschreibung: <i>keine Beschreibung vorhanden</i>
+                </p>
+                <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+              </div>
+            </div>
+          </div>
+
+          <app-episode-list [episodeList]="season.episodes" />
+        </p-accordion-content>
+      </p-accordion-panel>
+    </p-accordion>
   </div>
 </div>
 
