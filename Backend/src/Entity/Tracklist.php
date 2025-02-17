@@ -56,6 +56,7 @@ class Tracklist
      * @var Collection<int, TracklistSeason>
      */
     #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', orphanRemoval: true)]
+    #[Groups(['tracklist_details'])]
     private Collection $tracklistSeasons;
 
     public function __construct()

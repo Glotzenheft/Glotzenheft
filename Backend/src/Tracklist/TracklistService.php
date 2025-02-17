@@ -2,7 +2,10 @@
 
 namespace App\Tracklist;
 
+use App\Entity\Media;
+use App\Entity\Season;
 use App\Entity\Tracklist;
+use App\Entity\TracklistSeason;
 use App\Entity\User;
 use App\Enum\TracklistStatus;
 use DateTime;
@@ -18,6 +21,23 @@ readonly class TracklistService
     {
     }
 
+    public function getUserTracklist(array $tracklistData): array
+    {
+        $user = $this->entityManager->getRepository(User::class)->find($tracklistData['userID']);
+        if (!$user instanceof User)
+        {
+            return [
+                'error' => 'User not found',
+                'code' => 404
+            ];
+        }
+
+        $tracklists = $user->getTracklists();
+
+        return [
+            'tracklists' => $tracklists->toArray()
+        ];
+    }
     /**
      * Get tracklist entity based on its id.
      * Only returns the tracklist, if the request is from the creator of the tracklist.
@@ -38,7 +58,7 @@ readonly class TracklistService
 
         $tracklistID = $tracklistData['tracklistID'];
         $tracklist = $this->entityManager->getRepository(Tracklist::class)->find($tracklistID);
-        if (!$tracklist instanceof Tracklist || !$tracklist->getUser()->contains($user))
+        if (!$tracklist instanceof Tracklist || !$tracklist->getUser() === $user)
         {
             return [
                 'error' => 'Tracklist not found',
@@ -83,11 +103,21 @@ readonly class TracklistService
             ];
         }
 
+        $media = $this->entityManager->getRepository(Media::class)->find($tracklistData['mediaID']);
+        if (!$media instanceof Media)
+        {
+            return [
+                'error' => 'Media not found',
+                'code' => 404,
+            ];
+        }
+
         $tracklist = new Tracklist();
         $tracklist
             ->setTracklistName($tracklistName)
-            ->addUser($user)
-            ->setStatus($tracklistStatus);
+            ->setUser($user)
+            ->setStatus($tracklistStatus)
+            ->setMedia($media)
         ;
 
         if (isset($tracklistData['tracklistRating']))
@@ -108,6 +138,25 @@ readonly class TracklistService
         }
 
         $this->entityManager->persist($tracklist);
+
+        if ($tracklistData['mediaType'] === 'tv')
+        {
+            $season = $this->entityManager->getRepository(Season::class)->find($tracklistData['seasonID']);
+            if (!$season instanceof Season)
+            {
+                return [
+                    'error' => 'Season not found',
+                    'code' => 404,
+                ];
+            }
+
+            $tracklistSeason = new TracklistSeason();
+            $tracklistSeason
+                ->setSeason($season)
+                ->setTracklist($tracklist)
+            ;
+            $this->entityManager->persist($tracklistSeason);
+        }
         $this->entityManager->flush();
 
         return [
