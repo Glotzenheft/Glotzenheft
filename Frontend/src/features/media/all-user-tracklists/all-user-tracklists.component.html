@@ -1,1 +1,5 @@
-<p>all-user-tracklists works!</p>
+<div *ngIf="userTracklists$ | async as userTracklist">
+  <div *ngFor="let tracklist of userTracklist">
+    {{ tracklist.tracklistName }}
+  </div>
+</div>

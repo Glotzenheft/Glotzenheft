@@ -1,4 +1,4 @@
-export type TRACKLIST_STATUS =
+export type TracklistStatusType =
   | 'watching'
   | 'pausing'
   | 'dropped'

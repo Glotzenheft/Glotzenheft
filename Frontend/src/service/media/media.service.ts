@@ -136,9 +136,8 @@ export class MediaService {
       );
   };
 
-  public getAllUserTracklists = (): Observable<Tracklist> | null => {
+  public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
     const header = this.getHeader();
-
 
     if (!header) {
       return null;
@@ -147,7 +146,7 @@ export class MediaService {
     console.log('header', header);
 
     return this.http
-      .get<Tracklist>(ROUTE_GET_ALL_USER_TRACKLISTS, {
+      .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
         headers: header,
       })
       .pipe(
