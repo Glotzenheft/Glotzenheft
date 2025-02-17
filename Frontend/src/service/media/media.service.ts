@@ -5,13 +5,7 @@ import {
   Season,
   TrackListCreation,
 } from '../../shared/interfaces/media-interfaces';
-import {
-  BehaviorSubject,
-  catchError,
-  Observable,
-  shareReplay,
-  throwError,
-} from 'rxjs';
+import { catchError, Observable, shareReplay, throwError } from 'rxjs';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -19,11 +13,10 @@ import {
 } from '@angular/common/http';
 import {
   ROUTE_CREATE_NEW_TRACKLIST,
+  ROUTE_GET_ALL_USER_TRACKLISTS,
   ROUTE_MEDIA_DETAILS_SEARCH,
-  ROUTE_MEDIA_DETAILS_SEARCH_ONLY_TMDB,
   ROUTE_MEDIA_ID_FOR_MEDIA,
   ROUTE_MOVIE_DETAILS_SEARCH,
-  ROUTE_MOVIE_DETAILS_SEARCH_ONLY_TMDB,
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
@@ -132,6 +125,25 @@ export class MediaService {
   ): Observable<any> => {
     return this.http
       .post<any>(ROUTE_CREATE_NEW_TRACKLIST, JSON.stringify(tracklist))
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
+  };
+
+  public getAllUserTracklists = (): Observable<any> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    return this.http
+      .get<any>(ROUTE_GET_ALL_USER_TRACKLISTS, {
+        headers: header,
+      })
       .pipe(
         shareReplay(1),
         catchError((error: HttpErrorResponse) => {

@@ -33,3 +33,6 @@ export const ROUTE_RESET_PASSWORD: string = '';
 export const ROUTE_LOGIN: string = 'https://127.0.0.1:8000/api/login';
 
 export const ROUTE_CREATE_NEW_TRACKLIST: string = '';
+
+export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
+  'https://127.0.0.1:8000/api/user-tracklists';
