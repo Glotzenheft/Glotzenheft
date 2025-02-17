@@ -44,11 +44,12 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
-  public questionList: ValidationQuestion[] =
-    VALIDATION_QUESTIONS.map((question) => ({
+  public questionList: ValidationQuestion[] = VALIDATION_QUESTIONS.map(
+    (question) => ({
       name: question,
       code: question,
-    }));
+    })
+  );
   private userName: string = '';
 
   constructor(
@@ -105,12 +106,21 @@ export class RegisterComponent implements OnInit {
       security_answer: this.registerGroup.get('validationAnswer')?.value,
     };
 
-    this.userService
-      .registerAccount(registerData)
-      .subscribe((res: LoginAndMessageResponse) => {
+    this.userService.registerAccount(registerData).subscribe({
+      next: (res: LoginAndMessageResponse) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userName);
-      });
+      },
+      error: () => {
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: 'Fehler beim Registrieren',
+          detail:
+            'Beim Registrieren ist ein Fehler aufgetreten. Bitte versuche es erneut.',
+        });
+      },
+    });
     this.navigationService.navigateToUserStart();
   };
 

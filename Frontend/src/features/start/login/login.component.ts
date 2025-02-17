@@ -69,6 +69,20 @@ export class LoginComponent implements OnInit {
       return;
     }
 
+    console.log('is login valid  ?:', this.userService.isUserLoginValid());
+    if (!this.userService.isUserLoginValid()) {
+      // user login is blocked
+
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Ungültiger Loginversuch',
+        detail:
+          'Sie haben zu viele Anmeldeversuche unternommen und können sich daher in der nächsten Minute nicht anmelden.',
+      });
+      return;
+    }
+
     this.userName = this.loginGroup.get('username')?.value;
 
     if (
@@ -88,19 +102,26 @@ export class LoginComponent implements OnInit {
       password: this.loginGroup.get('password')?.value,
     };
 
+    this.userService.increaseLoginTries();
+
     this.userService.loginIntoAccount(loginData).subscribe({
       next: (res: LoginAndMessageResponse) => {
+        localStorage.clear();
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userName);
         this.navigationService.navigateToUserStart();
       },
-      error: () => {
+      error: (err) => {
+        if (err.status === 401) {
+          this.userService.showLoginMessage();
+        }
+
         this.hasLoginError = true;
         this.messageService.add({
           severity: 'error',
           summary: 'Loginversuch fehlgeschlagen',
           detail:
-            'Die eingegebenen Nutzerdaten (Nutername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
+            'Die eingegebenen Nutzerdaten (Nutzername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
         });
       },
     });

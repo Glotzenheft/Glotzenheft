@@ -14,6 +14,8 @@ import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
 import { UserLinksComponent } from '../features/components/user-links/user-links.component';
+import { UserService } from '../service/user/user.service';
+import { UserMenuComponent } from '../features/components/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -29,6 +31,7 @@ import { UserLinksComponent } from '../features/components/user-links/user-links
     SearchBarComponent,
     ToastModule,
     UserLinksComponent,
+    UserMenuComponent,
   ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
@@ -45,7 +48,8 @@ export class AppComponent implements OnInit, OnDestroy {
   constructor(
     public searchService: SearchService,
     public messageService: MessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {

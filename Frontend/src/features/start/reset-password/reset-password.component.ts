@@ -100,7 +100,12 @@ export class ResetPasswordComponent implements OnInit {
           severity: 'success',
         });
       },
-      error: () => {
+      error: (err) => {
+        if (err.status === 401) {
+          this.userService.showLoginMessage();
+          return;
+        }
+
         this.messageService.add({
           life: 7000,
           summary: 'Fehler beim Ändern des Passwortes',

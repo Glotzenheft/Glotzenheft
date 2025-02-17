@@ -826,3 +826,7 @@ p {
 .panel .p-panel-header {
   background-color: white;
 }
+
+.userMenuButton .p-button {
+  background-color: transparent;
+}

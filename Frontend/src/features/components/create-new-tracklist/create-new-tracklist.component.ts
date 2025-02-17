@@ -15,6 +15,7 @@ import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { MediaService } from '../../../service/media/media.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-create-new-tracklist',
@@ -40,7 +41,8 @@ export class CreateNewTracklistComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private mediaService: MediaService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -67,7 +69,13 @@ export class CreateNewTracklistComponent implements OnInit {
       })
       .subscribe({
         next: (res) => {},
-        error: () => {
+        error: (err) => {
+          if (err.status === 401) {
+            // status 401 = user is not logged in anymore -> navigate to login page
+            this.userService.showNoAccessMessage();
+            return;
+          }
+
           this.messageService.add({
             life: 7000,
             summary: 'Fehler beim Anlegen der Trackliste',

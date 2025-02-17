@@ -26,6 +26,7 @@ import { Observable } from 'rxjs';
 import { Film } from '../../../shared/interfaces/media-interfaces';
 import { MediaService } from '../../../service/media/media.service';
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-film-page',
@@ -65,7 +66,8 @@ export class FilmPageComponent implements OnInit {
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
     private mediaService: MediaService,
-    private location: Location
+    private location: Location,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -99,6 +101,10 @@ export class FilmPageComponent implements OnInit {
         }
       },
       error: (err) => {
+        if (err.status === 401) {
+          this.userService.showLoginMessage();
+        }
+
         this.hasError = true;
       },
     });
