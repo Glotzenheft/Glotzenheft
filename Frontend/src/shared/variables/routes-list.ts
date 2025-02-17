@@ -60,7 +60,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Passwort zurücksetzen',
     fullUrl: 'reset-password',
     shortUrl: 'reset-password',
-    showInLinkList: true,
+    showInLinkList: false,
   },
   {
     description: 'Login',

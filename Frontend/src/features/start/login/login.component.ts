@@ -104,7 +104,7 @@ export class LoginComponent implements OnInit {
           severity: 'error',
           summary: 'Loginversuch fehlgeschlagen',
           detail:
-            'Die eingegebenen Nutzerdaten (Nutername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
+            'Die eingegebenen Nutzerdaten (Nutzername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
         });
       },
     });
