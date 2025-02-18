@@ -70,8 +70,10 @@
   [(visible)]="isTracklistDialogVisible"
   [header]="filmData.name"
 >
-  <app-create-new-tracklist
-    [mediaName]="filmData.name"
+  <app-create-movie-tracklist
+    *ngIf="filmData"
     [mediaID]="filmData.id"
+    [mediaName]="filmData.name"
+    (cancelTracklistCreation)="closeTracklistDialog()"
   />
 </p-dialog>

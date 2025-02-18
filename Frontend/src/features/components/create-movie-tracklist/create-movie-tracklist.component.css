@@ -1,0 +1,23 @@
+.createNewTracklist {
+  width: 100%;
+  height: 100%;
+  overflow-y: auto;
+
+  /* padding-top: var(--padding--top-bottom);
+  padding-bottom: var(--padding--top-bottom); */
+}
+
+.createNewTracklist form {
+  height: 30rem;
+  width: 100%;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+}
+
+.startDateDIV {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+}

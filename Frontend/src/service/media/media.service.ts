@@ -13,6 +13,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import {
+  ROUTE_CREATE_NEW_MOVIE_TRACKLIST,
   ROUTE_CREATE_NEW_SEASON_TRACKLIST,
   ROUTE_GET_ALL_USER_TRACKLISTS,
   ROUTE_MEDIA_DETAILS_SEARCH,
@@ -44,8 +45,6 @@ export class MediaService {
       return null;
     }
 
-    console.log(userToken);
-
     return new HttpHeaders({
       Authorization: `Bearer ${userToken}`,
     });
@@ -73,8 +72,6 @@ export class MediaService {
   ): Observable<MediaIDResponse> => {
     const movieType: string = isMovie === true ? 'movie' : 'tv';
     const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
-
-    console.log(url);
 
     return this.http.get<MediaIDResponse>(url).pipe(
       shareReplay(1),
@@ -149,10 +146,19 @@ export class MediaService {
     name: string,
     mediaID: number,
     startDate: string
-  ): Observable<any> => {
-    const url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}${startDate}`;
+  ): Observable<any> | null => {
+    const header = this.getHeader();
 
-    return this.http.post<any>(url, {}).pipe(
+    if (!header) {
+      return null;
+    }
+    const formattedDate: string = new Date(startDate)
+      .toISOString()
+      .split('T')[0];
+
+    const url: string = `${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[4]}${formattedDate}`;
+
+    return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => error);
@@ -166,8 +172,6 @@ export class MediaService {
     if (!header) {
       return null;
     }
-
-    console.log('header', header);
 
     return this.http
       .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {

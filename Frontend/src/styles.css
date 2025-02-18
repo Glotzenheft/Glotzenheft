@@ -784,8 +784,13 @@ p {
 
   .dialog .p-dialog {
     width: 80%;
-    height: auto;
+    height: 100%;
   }
+
+  /* .dialog .p-dialog .p-datepicker-calendar {
+    font-size: 0.8rem;
+    height: 40rem;
+  } */
 
   .dialogActions {
     width: 100%;

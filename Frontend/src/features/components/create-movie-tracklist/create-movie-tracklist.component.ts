@@ -1,43 +1,56 @@
-import { CommonModule } from '@angular/common';
-import { Component, input, Input, InputSignal, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  input,
+  InputSignal,
+  OnInit,
+  Output,
+} from '@angular/core';
+import { MessageService } from 'primeng/api';
+import { MediaService } from '../../../service/media/media.service';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { ButtonModule } from 'primeng/button';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
-import { DialogModule } from 'primeng/dialog';
-import { MessageService } from 'primeng/api';
-import { MediaService } from '../../../service/media/media.service';
-import { FloatLabelModule } from 'primeng/floatlabel';
 import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
+import { CommonModule } from '@angular/common';
+import { ButtonModule } from 'primeng/button';
+import { MessageModule } from 'primeng/message';
+import { InputTextModule } from 'primeng/inputtext';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { DialogModule } from 'primeng/dialog';
+import { DatePickerModule } from 'primeng/datepicker';
 
 @Component({
-  selector: 'app-create-new-tracklist',
+  selector: 'app-create-movie-tracklist',
   imports: [
-    ReactiveFormsModule,
     CommonModule,
+    ReactiveFormsModule,
     ButtonModule,
     MessageModule,
     InputTextModule,
-    DialogModule,
     FloatLabelModule,
+    DialogModule,
+    DatePickerModule,
   ],
-  templateUrl: './create-new-tracklist.component.html',
-  styleUrl: './create-new-tracklist.component.css',
+  templateUrl: './create-movie-tracklist.component.html',
+  styleUrl: './create-movie-tracklist.component.css',
 })
-export class CreateNewTracklistComponent implements OnInit {
+export class CreateMovieTracklistComponent implements OnInit {
   // input variables
   public mediaName: InputSignal<string> = input.required<string>();
   public mediaID: InputSignal<number> = input.required<number>();
-  public seasonID: InputSignal<number> = input.required<number>();
 
+  // output variables
+  @Output() cancelTracklistCreation: EventEmitter<boolean> =
+    new EventEmitter<boolean>(false);
+
+  // variables for submitting the form
   public isTracklistSubmitted: boolean = false;
-  public trackListForm!: FormGroup;
+  public tracklistForm!: FormGroup;
   public createNewTracklist$: Observable<any> | null = null;
 
   constructor(
@@ -48,17 +61,16 @@ export class CreateNewTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.trackListForm = this.formBuilder.group({
-      trackListName: [
-        `${this.mediaName()} - Staffel ${this.seasonID()}`,
-        Validators.required,
-      ],
+    this.tracklistForm = this.formBuilder.group({
+      trackListName: [this.mediaName(), Validators.required],
+      startDate: [new Date(), Validators.required],
     });
   }
 
-  public createNewTrackList = (id: number, name: string) => {
+  public createNewTracklist = () => {
     this.isTracklistSubmitted = true;
-    if (this.trackListForm.invalid) {
+
+    if (this.tracklistForm.invalid) {
       this.messageService.add({
         life: 7000,
         summary: 'Ungültiger Name',
@@ -67,10 +79,12 @@ export class CreateNewTracklistComponent implements OnInit {
       });
     }
 
-    this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
-      this.trackListForm.get('trackListName')?.value,
+    console.log('startdate', this.tracklistForm.get('startDate')?.value);
+
+    this.createNewTracklist$ = this.mediaService.createNewMovieTracklist(
+      this.tracklistForm.get('trackListName')?.value,
       this.mediaID(),
-      this.seasonID()
+      this.tracklistForm.get('startDate')?.value
     );
 
     if (!this.createNewTracklist$) {
@@ -110,10 +124,8 @@ export class CreateNewTracklistComponent implements OnInit {
     });
   };
 
-  public cancelNewTracklist = () => {};
-
-  public hasErrorField = (field: string) => {
-    const fieldControl = this.trackListForm.get(field);
+  public hasErrorField = (fieldName: string): boolean => {
+    const fieldControl = this.tracklistForm.get(fieldName);
 
     return (
       fieldControl! &&
@@ -121,5 +133,9 @@ export class CreateNewTracklistComponent implements OnInit {
         fieldControl!.touched ||
         this.isTracklistSubmitted)
     );
+  };
+
+  public cancelNewTracklist = () => {
+    this.cancelTracklistCreation.emit(false);
   };
 }

@@ -41,9 +41,7 @@ export class AllUserTracklistsComponent implements OnInit {
     }
 
     this.userTracklists$.subscribe({
-      next: () => {
-        console.log('works');
-      },
+      next: () => {},
       error: (err) => {
         if (err.status === 401) {
           this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);

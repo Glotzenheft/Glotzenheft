@@ -27,6 +27,7 @@ import { Film } from '../../../shared/interfaces/media-interfaces';
 import { MediaService } from '../../../service/media/media.service';
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 import { UserService } from '../../../service/user/user.service';
+import { CreateMovieTracklistComponent } from '../../components/create-movie-tracklist/create-movie-tracklist.component';
 
 @Component({
   selector: 'app-film-page',
@@ -43,7 +44,7 @@ import { UserService } from '../../../service/user/user.service';
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-    CreateNewTracklistComponent,
+    CreateMovieTracklistComponent,
   ],
   templateUrl: './film-page.component.html',
   styleUrl: './film-page.component.css',
@@ -129,5 +130,9 @@ export class FilmPageComponent implements OnInit {
   // dialog
   public openTracklistDialog = () => {
     this.isTracklistDialogVisible = true;
+  };
+
+  public closeTracklistDialog = () => {
+    this.isTracklistDialogVisible = false;
   };
 }

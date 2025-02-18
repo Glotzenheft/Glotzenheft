@@ -9,9 +9,6 @@ import { ROUTES_LIST } from '../shared/variables/routes-list';
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
-  const messageService = inject(MessageService);
-
-  console.log('route', state.url);
 
   if (state.url === '/login' || state.url === '/register') {
     if (isUserLoggedIn()) {
