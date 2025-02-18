@@ -35,6 +35,13 @@ export class UserMenuComponent {
           },
         },
         {
+          label: 'Meine Tracklisten',
+          icon: 'pi pi-list',
+          command: () => {
+            this.router.navigateByUrl(ROUTES_LIST[12].fullUrl);
+          },
+        },
+        {
           label: 'Ausloggen',
           icon: 'pi pi-sign-out',
           command: () => {

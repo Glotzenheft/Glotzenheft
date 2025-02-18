@@ -783,8 +783,8 @@ p {
   }
 
   .dialog .p-dialog {
-    width: 80%;
-    height: auto;
+    width: 90%;
+    height: 100%;
   }
 
   .dialogActions {
@@ -812,6 +812,11 @@ p {
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
+  }
+
+  .tracklistDialog .p-dialog {
+    width: 90%;
+    height: 90%;
   }
 }
 

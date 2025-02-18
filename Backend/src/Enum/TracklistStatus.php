@@ -11,3 +11,4 @@ enum TracklistStatus: string
     case PLAN_TO_WATCH = 'plan to watch';
     case COMPLETED = 'completed';
 }
+

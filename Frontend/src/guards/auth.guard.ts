@@ -1,17 +1,12 @@
 import { CanActivateFn } from '@angular/router';
-import { Inject, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { MediaService } from '../service/media/media.service';
 import { AuthService } from '../service/auth/auth.service';
 import { ROUTES_LIST } from '../shared/variables/routes-list';
 
 export const authGuard: CanActivateFn = (route, state) => {
   const router = inject(Router);
   const authService = inject(AuthService);
-  const messageService = inject(MessageService);
-
-  console.log('route', state.url);
 
   if (state.url === '/login' || state.url === '/register') {
     if (isUserLoggedIn()) {

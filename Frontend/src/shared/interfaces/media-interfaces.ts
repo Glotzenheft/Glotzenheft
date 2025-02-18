@@ -1,3 +1,5 @@
+import { TracklistStatusType } from '../variables/tracklist';
+
 export interface TMDBGenre {
   id: number;
   tmdbGenreID: number;
@@ -97,4 +99,38 @@ export interface TrackListCreation {
 
 export interface MediaIDResponse {
   media_id: string;
+}
+
+export interface TracklistSeasonEpisode {
+  id: number;
+  name: string;
+  overview: string;
+  episodeNumber: number;
+  runtime: number; // in minutes
+  airDate: string;
+  stillPath: string;
+}
+
+export interface TracklistSeason {
+  id: number;
+  tracklistEpisodes: any[];
+  season: {
+    id: 1;
+    seasonNumber: 1;
+    episodes: TracklistSeason[];
+  };
+}
+
+export interface Tracklist {
+  id: number;
+  rating: null | number;
+  status: TracklistStatusType;
+  startDate: null | string;
+  finishDate: null | string;
+  tracklistName: string;
+  media: {
+    id: number;
+    type: string;
+  };
+  tracklistSeasons: TracklistSeason[];
 }

@@ -1,8 +1,8 @@
 <div class="createNewTracklist">
   <form
     action="submit"
-    (ngSubmit)="createNewTrackList()"
-    [formGroup]="trackListForm"
+    (ngSubmit)="createNewTracklist()"
+    [formGroup]="tracklistForm"
   >
     <div>
       <p-float-label variant="on">
@@ -18,7 +18,7 @@
       <p-message
         *ngIf="
           hasErrorField('trackListName') &&
-          trackListForm.get('trackListName')?.invalid
+          tracklistForm.get('trackListName')?.invalid
         "
         severity="error"
         size="small"
@@ -36,7 +36,7 @@
         placeholder="Status auswählen ..."
       />
       <p-message
-        *ngIf="hasErrorField('status') && trackListForm.get('status')?.invalid"
+        *ngIf="hasErrorField('status') && tracklistForm.get('status')?.invalid"
         severity="error"
         size="small"
       >
@@ -55,8 +55,9 @@
           <p-date-picker formControlName="startDate" dateFormat="dd.mm.yy" />
         </div>
       </div>
+
       <div class="loginActions">
-        <p-button label="Speichern" type="submit" />
+        <p-button label="Speichern" type="submit" icon="pi pi-save" />
         <p-button
           label="Abbrechen"
           severity="secondary"

@@ -11,6 +11,7 @@ import { FilmMainComponent } from '../features/components/media/film/film-main/f
 import { MultiSearchComponent } from '../features/components/search/multi-search.component';
 import { authGuard, isUserLoggedIn } from '../guards/auth.guard';
 import { ResetPasswordComponent } from '../features/start/reset-password/reset-password.component';
+import { AllUserTracklistsComponent } from '../features/media/all-user-tracklists/all-user-tracklists.component';
 
 export const routes: Routes = [
   {
@@ -63,6 +64,11 @@ export const routes: Routes = [
   {
     path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
     component: MultiSearchComponent,
+    canActivate: [authGuard],
+  },
+  {
+    path: ROUTES_LIST[12].fullUrl,
+    component: AllUserTracklistsComponent,
     canActivate: [authGuard],
   },
   {
