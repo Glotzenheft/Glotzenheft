@@ -13,11 +13,21 @@
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  justify-content: space-around;
+  justify-content: space-evenly;
 }
 
 .startDateDIV {
   display: flex;
   align-items: center;
   justify-content: flex-start;
+}
+
+.movieListDIV {
+  display: flex;
+  width: 100%;
+  align-items: center;
+  justify-content: space-evenly;
+
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
 }

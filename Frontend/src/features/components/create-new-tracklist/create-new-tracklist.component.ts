@@ -15,6 +15,9 @@ import { MediaService } from '../../../service/media/media.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
+import { DatePickerModule } from 'primeng/datepicker';
+import { SelectModule } from 'primeng/select';
+import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
 
 @Component({
   selector: 'app-create-new-tracklist',
@@ -26,6 +29,8 @@ import { Observable } from 'rxjs';
     InputTextModule,
     DialogModule,
     FloatLabelModule,
+    DatePickerModule,
+    SelectModule,
   ],
   templateUrl: './create-new-tracklist.component.html',
   styleUrl: './create-new-tracklist.component.css',
@@ -36,9 +41,15 @@ export class CreateNewTracklistComponent implements OnInit {
   public mediaID: InputSignal<number> = input.required<number>();
   public seasonID: InputSignal<number> = input.required<number>();
 
+  // variables for tracklist submitting
   public isTracklistSubmitted: boolean = false;
   public trackListForm!: FormGroup;
   public createNewTracklist$: Observable<any> | null = null;
+  public tracklistSelectionList: { name: string; value: string }[] =
+    TRACK_LIST_STATUS_LIST.map((selection: string) => ({
+      name: selection,
+      value: selection,
+    }));
 
   constructor(
     private messageService: MessageService,
@@ -53,10 +64,13 @@ export class CreateNewTracklistComponent implements OnInit {
         `${this.mediaName()} - Staffel ${this.seasonID()}`,
         Validators.required,
       ],
+      status: ['', Validators.required],
+      startDate: [''],
+      endDate: [''],
     });
   }
 
-  public createNewTrackList = (id: number, name: string) => {
+  public createNewTrackList = () => {
     this.isTracklistSubmitted = true;
     if (this.trackListForm.invalid) {
       this.messageService.add({
@@ -67,10 +81,38 @@ export class CreateNewTracklistComponent implements OnInit {
       });
     }
 
+    let formattedStartDate: string = '';
+    let formattedEndDate: string = '';
+
+    if (this.trackListForm.get('startDate')?.value) {
+      formattedStartDate = new Date(this.trackListForm.get('startDate')?.value)
+        .toISOString()
+        .split('T')[0];
+
+      console.log('start date if:', formattedStartDate);
+    }
+
+    if (this.trackListForm.get('endDate')?.value) {
+      formattedEndDate = new Date(this.trackListForm.get('endDate')?.value)
+        .toISOString()
+        .split('T')[0];
+      console.log('end date if', formattedEndDate);
+    }
+
+    console.log(
+      'start date:',
+      formattedStartDate,
+      'end date:',
+      formattedEndDate
+    );
+
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
       this.trackListForm.get('trackListName')?.value,
       this.mediaID(),
-      this.seasonID()
+      this.seasonID(),
+      formattedStartDate,
+      formattedEndDate,
+      this.trackListForm.get('status')?.value.name
     );
 
     if (!this.createNewTracklist$) {

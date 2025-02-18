@@ -1,40 +1,69 @@
 <div class="createNewTracklist">
   <form
     action="submit"
-    (ngSubmit)="
-      createNewTrackList(
-        mediaID(),
-        trackListForm.get('trackListName')?.value ?? ''
-      )
-    "
+    (ngSubmit)="createNewTrackList()"
     [formGroup]="trackListForm"
   >
-    <p-float-label variant="on">
-      <input
-        type="text"
-        pInputText
-        formControlName="trackListName"
-        [value]="mediaName()"
+    <div>
+      <p-float-label variant="on">
+        <input
+          type="text"
+          pInputText
+          formControlName="trackListName"
+          [value]="mediaName()"
+          id="listName"
+        />
+        <label for="listName">Name der Tracklist</label>
+      </p-float-label>
+      <p-message
+        *ngIf="
+          hasErrorField('trackListName') &&
+          trackListForm.get('trackListName')?.invalid
+        "
+        severity="error"
+        size="small"
+      >
+        Der Name für die Tracklist ist Pflicht.
+      </p-message>
+    </div>
+    <div>
+      <p>Status der Trackliste:</p>
+      <p-select
+        [options]="tracklistSelectionList"
+        [checkmark]="true"
+        formControlName="status"
+        optionLabel="name"
+        placeholder="Status auswählen ..."
       />
-    </p-float-label>
-    <p-message
-      *ngIf="
-        hasErrorField('trackListName') &&
-        trackListForm.get('trackListName')?.invalid
-      "
-      severity="error"
-      size="small"
-    >
-      Der Name für die Tracklist ist Pflicht.
-    </p-message>
-    <div class="loginActions">
-      <p-button label="Speichern" type="submit" />
-      <p-button
-        label="Abbrechen"
-        severity="secondary"
-        icon="pi pi-times"
-        (onClick)="cancelNewTracklist()"
-      />
+      <p-message
+        *ngIf="hasErrorField('status') && trackListForm.get('status')?.invalid"
+        severity="error"
+        size="small"
+      >
+        Der Status ist Pflicht.
+      </p-message>
+    </div>
+
+    <div>
+      <div class="movieListDIV">
+        <div class="startDateDIV">
+          <p>Enddatum:</p>
+          <p-date-picker formControlName="endDate" dateFormat="dd.mm.yy" />
+        </div>
+        <div class="startDateDIV">
+          <p>Startdatum:</p>
+          <p-date-picker formControlName="startDate" dateFormat="dd.mm.yy" />
+        </div>
+      </div>
+      <div class="loginActions">
+        <p-button label="Speichern" type="submit" />
+        <p-button
+          label="Abbrechen"
+          severity="secondary"
+          icon="pi pi-times"
+          (onClick)="cancelNewTracklist()"
+        />
+      </div>
     </div>
   </form>
 </div>

@@ -39,6 +39,8 @@ export const ROUTE_CREATE_NEW_SEASON_TRACKLIST: string[] = [
   '&media_id=',
   '&season_id=',
   '&media_type=',
+  '&tracklist_start_date=',
+  '&tracklist_finish_date=',
 ];
 
 // example: https://127.0.0.1:8000/api/tracklist?tracklist_name=Filmliste 1&tracklist_status=watching&media_id=57&media_type=movie&tracklist_start_date=2025-02-16
@@ -48,6 +50,7 @@ export const ROUTE_CREATE_NEW_MOVIE_TRACKLIST: string[] = [
   '&media_id=',
   '&media_type=',
   '&tracklist_start_date=',
+  '&tracklist_finish_date=',
 ];
 
 export const ROUTE_GET_ALL_USER_TRACKLISTS: string =

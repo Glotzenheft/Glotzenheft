@@ -23,6 +23,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
+import { DropdownModule } from 'primeng/dropdown';
+import { SelectModule } from 'primeng/select';
+import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
 
 @Component({
   selector: 'app-create-movie-tracklist',
@@ -35,6 +38,7 @@ import { DatePickerModule } from 'primeng/datepicker';
     FloatLabelModule,
     DialogModule,
     DatePickerModule,
+    SelectModule,
   ],
   templateUrl: './create-movie-tracklist.component.html',
   styleUrl: './create-movie-tracklist.component.css',
@@ -52,6 +56,11 @@ export class CreateMovieTracklistComponent implements OnInit {
   public isTracklistSubmitted: boolean = false;
   public tracklistForm!: FormGroup;
   public createNewTracklist$: Observable<any> | null = null;
+  public tracklistSelectionList: { name: string; value: string }[] =
+    TRACK_LIST_STATUS_LIST.map((selection: string) => ({
+      name: selection,
+      value: selection,
+    }));
 
   constructor(
     private messageService: MessageService,
@@ -64,6 +73,8 @@ export class CreateMovieTracklistComponent implements OnInit {
     this.tracklistForm = this.formBuilder.group({
       trackListName: [this.mediaName(), Validators.required],
       startDate: [new Date(), Validators.required],
+      endDate: [new Date(), Validators.required],
+      status: ['', Validators.required],
     });
   }
 
@@ -77,14 +88,17 @@ export class CreateMovieTracklistComponent implements OnInit {
         detail: 'Der Name der Tracklist darf nicht leer sein.',
         severity: 'error',
       });
+      return;
     }
 
-    console.log('startdate', this.tracklistForm.get('startDate')?.value);
+    console.log('status: ', this.tracklistForm.get('status')?.value.name);
 
     this.createNewTracklist$ = this.mediaService.createNewMovieTracklist(
       this.tracklistForm.get('trackListName')?.value,
       this.mediaID(),
-      this.tracklistForm.get('startDate')?.value
+      this.tracklistForm.get('startDate')?.value,
+      this.tracklistForm.get('endDate')?.value,
+      this.tracklistForm.get('status')?.value.name
     );
 
     if (!this.createNewTracklist$) {

@@ -22,8 +22,6 @@ import {
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
-import { log } from 'console';
-import { TracklistStatusType } from '../../shared/variables/tracklist';
 
 @Injectable({
   providedIn: 'root',
@@ -124,7 +122,10 @@ export class MediaService {
   public createNewSeasonTracklist = (
     name: string,
     mediaID: number,
-    seasonID: number
+    seasonID: number,
+    startDate: string,
+    endDate: string,
+    status: string
   ): Observable<any> | null => {
     const header = this.getHeader();
 
@@ -132,7 +133,17 @@ export class MediaService {
       return null;
     }
 
-    const url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv`;
+    let url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[5]}${startDate}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
+
+    // if (!startDate.trim()) {
+    //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
+    // } else if (!endDate.trim()) {
+    //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[5]}${startDate}`;
+    // }
+
+    // if (!startDate.trim() && !endDate.trim()) {
+    //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv`;
+    // }
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
@@ -145,7 +156,9 @@ export class MediaService {
   public createNewMovieTracklist = (
     name: string,
     mediaID: number,
-    startDate: string
+    startDate: string,
+    endDate: string,
+    status: string
   ): Observable<any> | null => {
     const header = this.getHeader();
 
@@ -156,7 +169,11 @@ export class MediaService {
       .toISOString()
       .split('T')[0];
 
-    const url: string = `${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[4]}${formattedDate}`;
+    const formattedEndDate: string = new Date(endDate)
+      .toISOString()
+      .split('T')[0];
+
+    const url: string = `${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[4]}${formattedDate}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[5]}${formattedEndDate}`;
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
