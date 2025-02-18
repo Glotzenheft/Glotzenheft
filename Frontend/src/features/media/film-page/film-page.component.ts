@@ -88,6 +88,16 @@ export class FilmPageComponent implements OnInit {
 
     if (!this.filmData$) {
       this.hasError = true;
+
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Laden der Seite',
+        detail:
+          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
+      });
+
+      return;
     }
 
     this.filmData$.subscribe({

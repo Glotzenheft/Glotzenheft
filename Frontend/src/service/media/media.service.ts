@@ -79,10 +79,16 @@ export class MediaService {
     );
   };
 
-  getSeasonForTV = (mediaID: string): Observable<Season> => {
+  getSeasonForTV = (mediaID: string): Observable<Season> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
     let url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
 
-    return this.http.get<Season>(url).pipe(
+    return this.http.get<Season>(url, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => error);
@@ -90,10 +96,16 @@ export class MediaService {
     );
   };
 
-  public getFilmDetails = (movieID: string): Observable<Film> => {
+  public getFilmDetails = (movieID: string): Observable<Film> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
     let url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
 
-    return this.http.get<Film>(url).pipe(
+    return this.http.get<Film>(url, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => error);

@@ -103,6 +103,15 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.seasonData$) {
       this.hasError = true;
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Laden der Seite',
+        detail:
+          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
+      });
+
+      return;
     }
 
     this.seasonData$.subscribe({
