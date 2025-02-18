@@ -26,6 +26,7 @@ class Tracklist
 
     #[ORM\ManyToOne(targetEntity: Media::class, inversedBy: 'tracklists')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['tracklist_details'])]
     private ?Media $media = null;
 
     #[Groups(['tracklist_details'])]

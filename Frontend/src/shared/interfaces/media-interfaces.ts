@@ -128,5 +128,9 @@ export interface Tracklist {
   startDate: null | string;
   finishDate: null | string;
   tracklistName: string;
+  media: {
+    id: number;
+    type: string;
+  };
   tracklistSeasons: TracklistSeason[];
 }

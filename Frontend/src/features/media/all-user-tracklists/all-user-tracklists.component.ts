@@ -52,8 +52,12 @@ export class AllUserTracklistsComponent implements OnInit {
     });
   }
 
-  public onClickTracklist = (selectedTracklist: Tracklist) => {
-    this.currentTracklist = selectedTracklist;
-    this.isDialogVisible = true;
+  public navigateToDetailspage = (mediaID: number, mediaType: string) => {
+    let url: string =
+      mediaType.trim() === 'movie'
+        ? `${ROUTES_LIST[5].fullUrl}/${mediaID}`
+        : `${ROUTES_LIST[6].fullUrl}/${mediaID}`;
+
+    this.router.navigateByUrl(url);
   };
 }

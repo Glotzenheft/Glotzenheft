@@ -2,18 +2,18 @@
   <div
     *ngFor="let tracklist of userTracklist"
     class="tracklistDIV"
-    (click)="onClickTracklist(tracklist)"
+    (click)="navigateToDetailspage(tracklist.media.id, tracklist.media.type)"
   >
-    <p>{{ tracklist.tracklistName }}</p>
-    <p *ngIf="tracklist.id">Serie: {{ tracklist.id }}</p>
-
+    <p>
+      <b>{{ tracklist.tracklistName }}</b>
+    </p>
     <p *ngIf="tracklist.startDate">
       Startdatum: {{ tracklist.startDate | dateFormatting }}
     </p>
     <p *ngIf="!tracklist.startDate">
       <i>kein Startdatum vorhanden</i>
     </p>
-    <p>{{ tracklist.tracklistSeasons }}</p>
+    <p>{{ tracklist.media.type === "movie" ? "Film" : "Serie" }}</p>
   </div>
 </ng-container>
 

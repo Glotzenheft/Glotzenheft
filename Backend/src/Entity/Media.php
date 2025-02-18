@@ -22,7 +22,7 @@ class Media
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -74,7 +74,7 @@ class Media
     private Collection $tracklists;
 
     #[ORM\Column(enumType: MediaType::class)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?MediaType $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
