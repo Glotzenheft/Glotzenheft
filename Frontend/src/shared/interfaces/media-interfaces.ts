@@ -7,18 +7,22 @@ export interface TMDBGenre {
 }
 
 export interface Film {
-  id: number; // media id from own db
-  tmdbID: number; // tmdb id from external api
-  imdbID: string;
-  originalName: string;
-  name: string;
-  description: string;
-  firstAirDate: string;
-  tmdbGenres: TMDBGenre[];
-  seasons: [];
-  type: string;
-  posterPath: string;
-  backdropPath: string;
+  media: {
+    id: number; // media id from own db
+    tmdbID: number; // tmdb id from external api
+    imdbID: string;
+    originalName: string;
+    name: string;
+    description: string;
+    firstAirDate: string;
+    tmdbGenres: TMDBGenre[];
+    seasons: any[];
+    type: string;
+    posterPath: string;
+    backdropPath: string;
+  };
+
+  tracklists: SeasonTracklist[];
 }
 
 export interface SeasonEpisode {
@@ -90,19 +94,17 @@ export interface SeasonTracklist {
       name: string;
     }[];
 
-    seasons: [
-      {
-        id: 1;
-        tmdbSeasonID: 199167;
-        seasonNumber: 1;
-        name: 'Staffel 1';
-        overview: '';
-        airDate: '2024-01-07';
-        episodeCount: 25;
-        posterPath: '/451lpwzbSKClDUHmKxOcBboBf7E.jpg';
-        episodes: SeasonTracklistEpisode[];
-      }
-    ];
+    seasons: {
+      id: number;
+      tmdbSeasonID: number;
+      seasonNumber: number;
+      name: string;
+      overview: string;
+      airDate: string;
+      episodeCount: number;
+      posterPath: string;
+      episodes: SeasonTracklistEpisode[];
+    }[];
     type: 'tv';
     posterPath: '/1KRSR1dUAOpUv3mxHU5W3QWo2og.jpg';
     backdropPath: '/odVlTMqPPiMksmxpN9cCbPCjUPP.jpg';
