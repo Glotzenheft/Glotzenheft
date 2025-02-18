@@ -19,6 +19,9 @@ import {
   LoginCredentials,
 } from '../../../shared/interfaces/login';
 import { Message } from 'primeng/message';
+import { MessageService } from 'primeng/api';
+import { SecurityService } from '../../../service/security/security.service';
+import { PanelModule } from 'primeng/panel';
 
 @Component({
   selector: 'app-login',
@@ -32,6 +35,7 @@ import { Message } from 'primeng/message';
     CommonModule,
     ReactiveFormsModule,
     Message,
+    PanelModule,
   ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css',
@@ -40,40 +44,87 @@ export class LoginComponent implements OnInit {
   loginGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   private userName: string = '';
+  public hasLoginError: boolean = false;
+  public isInvalidUsername: boolean = false;
 
   constructor(
     public navigationService: NavigationService,
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private messageService: MessageService,
+    private securityService: SecurityService
   ) {}
 
   ngOnInit(): void {
     this.loginGroup = this.formBuilder.group({
-      username: ['', [Validators.required, Validators.minLength(2)]],
+      username: ['', [Validators.required]],
       password: ['', [Validators.required, Validators.minLength(8)]],
     });
   }
 
   loginUser = () => {
+    this.isInvalidUsername = false;
     this.isFormSubmitted = true;
     if (this.loginGroup.invalid) {
       return;
     }
 
+    console.log('is login valid  ?:', this.userService.isUserLoginValid());
+    if (!this.userService.isUserLoginValid()) {
+      // user login is blocked
+
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Ungültiger Loginversuch',
+        detail:
+          'Sie haben zu viele Anmeldeversuche unternommen und können sich daher in der nächsten Minute nicht anmelden.',
+      });
+      return;
+    }
+
     this.userName = this.loginGroup.get('username')?.value;
+
+    if (
+      !this.securityService.isValidUsername(
+        this.loginGroup.get('username')?.value
+      )
+    ) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ungültiger Nutzername',
+      });
+      return;
+    }
 
     const loginData: LoginCredentials = {
       username: this.loginGroup.get('username')?.value,
       password: this.loginGroup.get('password')?.value,
     };
 
-    this.userService
-      .loginIntoAccount(loginData)
-      .subscribe((res: LoginAndMessageResponse) => {
+    this.userService.increaseLoginTries();
+
+    this.userService.loginIntoAccount(loginData).subscribe({
+      next: (res: LoginAndMessageResponse) => {
+        localStorage.clear();
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userName);
         this.navigationService.navigateToUserStart();
-      });
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.userService.showLoginMessage();
+        }
+
+        this.hasLoginError = true;
+        this.messageService.add({
+          severity: 'error',
+          summary: 'Loginversuch fehlgeschlagen',
+          detail:
+            'Die eingegebenen Nutzerdaten (Nutzername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
+        });
+      },
+    });
   };
 
   hasError = (field: string, error: string): boolean => {

@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: MediaRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -24,7 +25,7 @@ class Media
     #[Groups(['media_details'])]
     private ?int $id = null;
 
-    #[ORM\Column(nullable: true)]
+    #[ORM\Column]
     #[Groups(['media_details'])]
     private ?int $tmdbID = null;
 
@@ -49,6 +50,7 @@ class Media
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['media_details'])]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $firstAirDate = null;
 
     /**
@@ -68,7 +70,7 @@ class Media
     /**
      * @var Collection<int, Tracklist>
      */
-    #[ORM\ManyToMany(targetEntity: Tracklist::class, mappedBy: 'media')]
+    #[ORM\OneToMany(targetEntity: Tracklist::class, mappedBy: 'media', orphanRemoval: true)]
     private Collection $tracklists;
 
     #[ORM\Column(enumType: MediaType::class)]
@@ -79,7 +81,7 @@ class Media
     #[Groups(['media_details'])]
     private ?string $posterPath = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['media_details'])]
     private ?string $backdropPath = null;
 
@@ -242,25 +244,6 @@ class Media
         return $this->tracklists;
     }
 
-    public function addTracklist(Tracklist $tracklist): static
-    {
-        if (!$this->tracklists->contains($tracklist)) {
-            $this->tracklists->add($tracklist);
-            $tracklist->addMedium($this);
-        }
-
-        return $this;
-    }
-
-    public function removeTracklist(Tracklist $tracklist): static
-    {
-        if ($this->tracklists->removeElement($tracklist)) {
-            $tracklist->removeMedium($this);
-        }
-
-        return $this;
-    }
-
     public function getType(): ?MediaType
     {
         return $this->type;
@@ -290,7 +273,7 @@ class Media
         return $this->backdropPath;
     }
 
-    public function setBackdropPath(string $backdropPath): static
+    public function setBackdropPath(?string $backdropPath): static
     {
         $this->backdropPath = $backdropPath;
 

@@ -1,14 +1,45 @@
-export interface Film {}
+export interface TMDBGenre {
+  id: number;
+  tmdbGenreID: number;
+  name: string;
+}
 
-export interface Episode {
-  mediaID: string;
-  seasonID: string;
+export interface Film {
+  id: number; // media id from own db
+  tmdbID: number; // tmdb id from external api
+  imdbID: string;
+  originalName: string;
   name: string;
   description: string;
+  firstAirDate: string;
+  tmdbGenres: TMDBGenre[];
+  seasons: [];
+  type: string;
+  posterPath: string;
+  backdropPath: string;
+}
+
+export interface SeasonEpisode {
+  id: number;
+  tmdbEpisodeID: number;
+  name: string;
+  overview: string;
   episodeNumber: number;
-  runtime: number | null;
-  posterPath: string | null;
-  airDate: Date | null;
+  runtime: number;
+  airDate: string;
+  stillPath: string;
+}
+
+export interface SeasonWithEpisodes {
+  id: number;
+  tmdbSeasonID: number;
+  seasonNumber: number;
+  name: string;
+  overview: string;
+  airDate: string;
+  episodeCount: number;
+  posterPath: string;
+  episodes: SeasonEpisode[];
 }
 
 export interface Season {
@@ -20,7 +51,7 @@ export interface Season {
   description: string;
   firstAirDate: string;
   tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
-  seasons: any[];
+  seasons: SeasonWithEpisodes[];
   type: string;
   posterPath: string;
   backdropPath: string;
@@ -57,4 +88,13 @@ export interface MultiSearchResponse {
   results: MediaResult[];
   total_results: 3;
   total_pages: 1;
+}
+
+export interface TrackListCreation {
+  name: string;
+  tmdbId: number;
+}
+
+export interface MediaIDResponse {
+  media_id: string;
 }

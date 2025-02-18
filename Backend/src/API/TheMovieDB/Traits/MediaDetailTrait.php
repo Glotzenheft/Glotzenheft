@@ -4,12 +4,14 @@ namespace App\API\TheMovieDB\Traits;
 
 use App\API\TheMovieDB\Movies\Details\TMDBMovieDetailsService;
 use App\API\TheMovieDB\TVSeries\Details\TMDBTVSeriesDetailsService;
+use App\API\TheMovieDB\TVSeries\SeasonDetails\TMDBTVSeasonDetailsService;
 use App\Entity\Media;
 use App\Entity\TMDBGenre;
 use App\Enum\MediaType;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\HttpFoundation\Request;
 
 trait MediaDetailTrait
 {
@@ -17,40 +19,78 @@ trait MediaDetailTrait
     (
         private readonly TMDBTVSeriesDetailsService $tvService,
         private readonly TMDBMovieDetailsService $movieService,
+        private readonly TMDBTVSeasonDetailsService $seasonService,
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager
     )
     {
     }
 
-    public function handleTMDBMediaDetail(int $tmdbID, MediaType $type): ?Media
+    /**
+     * @param array $requestData
+     * @param MediaType $type
+     * @param string $language
+     * @return array{error: string, code: int} | array{media: Media}
+     */
+    public function handleTMDBMediaDetail(array $requestData, MediaType $type, string $language = 'de-DE'): array
     {
-        $media = $this->entityManager->getRepository(Media::class)->findOneBy([
-            'tmdbID' => $tmdbID,
-            'type' => $type,
-        ]);
+        if (isset($requestData['mediaID']))
+        {
+            $mediaID = $requestData['mediaID'];
+            $media = $this->entityManager->getRepository(Media::class)->find($mediaID);
+            if (!$media instanceof Media || $media->getType() !== $type)
+            {
+                return [
+                    'error' => 'Media not found',
+                    'code' => 404,
+                ];
+            }
+            $tmdbID = $media->getTMDBId();
+        }
+        else
+        {
+            $tmdbID = $requestData['tmdbID'];
+            $media = $this->entityManager->getRepository(Media::class)->findOneBy([
+                'tmdbID' => $tmdbID,
+                'type' => $type,
+            ]);
+        }
+
 
         if (!$media instanceof Media)
         {
             $media = new Media();
         }
 
+        $numberOfSeasons = 0;
         switch ($type)
         {
             case MediaType::TV:
-                $result = $this->tvService->getTVSeriesDetails($tmdbID);
+                $result = $this->tvService->getTVSeriesDetails($tmdbID, $language);
+                if (isset($result['error']))
+                {
+                    return $result;
+                }
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
                 $name = $result['name'];
                 $originalName = $result['original_name'];
+                $numberOfSeasons = $result['number_of_seasons'];
                 break;
             case MediaType::Movie:
-                $result = $this->movieService->getMovieDetails($tmdbID);
+                $result = $this->movieService->getMovieDetails($tmdbID, $language);
+                if (isset($result['error']))
+                {
+                    return $result;
+                }
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
                 $name = $result['title'];
                 $originalName = $result['original_title'];
                 break;
             case MediaType::ANIME:
-                return null;
+                return [
+                    'error' => 'Not supported media type',
+                    'code' => 404,
+                ];
         }
 
         $genreArray = $result['genres'] ?? null;
@@ -62,7 +102,7 @@ trait MediaDetailTrait
             ->setFirstAirDate($firstAirDate ?? null)
             ->setImdbID($result['external_ids']['imdb_id'] ?? null)
             ->setPosterPath($result['poster_path'] ?? null)
-            ->setBackdropPath($result['backdrop_path'] ?? '')
+            ->setBackdropPath($result['backdrop_path'] ?? null)
             ->setType($type)
             ->setTmdbID($tmdbID)
         ;
@@ -75,8 +115,78 @@ trait MediaDetailTrait
         }
 
         $this->entityManager->persist($media);
+
+        if ($type === MediaType::TV && $numberOfSeasons > 0)
+        {
+            $seasonNumber = 1;
+            do
+            {
+                $this->seasonService->handleSeasonDetails($tmdbID, $seasonNumber, $media, $language);
+                $seasonNumber++;
+            }
+            while($seasonNumber <= $numberOfSeasons);
+        }
+
         $this->entityManager->flush();
 
-        return $media;
+        return [
+            'media' => $media
+        ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array{mediaID: int|null, tmdbID: int|null}
+     */
+    private function handleRequest(Request $request): array
+    {
+        $mediaID = $request->query->get('media_id');
+        $mediaID = $mediaID !== null ? (int) $mediaID : null;
+        $tmdbID = $request->query->get('tmdb_id');
+        $tmdbID = $tmdbID !== null ? (int) $tmdbID : null;
+
+        if (!isset($mediaID) && !isset($tmdbID))
+        {
+            return [
+                'error' => 'Atleast one query parameter ("media_id" or "tmdb_id") is required.',
+                'code' => 400
+            ];
+        }
+
+        return [
+            'mediaID' => $mediaID,
+            'tmdbID' => $tmdbID,
+        ];
+    }
+
+    public function searchMediaID(array $data): array
+    {
+        $tmdbID = $data['tmdb_id'];
+        $type = MediaType::tryFrom($data['media_type']);
+        $media = $this->entityManager->getRepository(Media::class)->findOneBy([
+            'tmdbID' => $tmdbID,
+        ]);
+
+        if (!$media instanceof Media)
+        {
+            $data = ['tmdbID' => $tmdbID];
+            $media = $this->handleTMDBMediaDetail($data, $type);
+            if (isset($result['error']))
+            {
+                return $result;
+            }
+            $media = $media['media'];
+        }
+        elseif ($media->getType() !== $type)
+        {
+            return [
+                'error' => 'Media ID not found.',
+                'code' => 404,
+            ];
+        }
+
+        return [
+            'media_id' => $media->getId(),
+        ];
     }
 }

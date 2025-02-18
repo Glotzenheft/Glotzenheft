@@ -22,7 +22,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
   },
   {
     description: 'Details',
-    fullUrl: 'media/:id',
+    fullUrl: 'media/BLOCKED',
     shortUrl: 'season/:id',
     showInLinkList: false,
   },
@@ -30,7 +30,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Multisuche',
     fullUrl: 'media/multi-search',
     shortUrl: 'multi-search',
-    showInLinkList: true,
+    showInLinkList: false,
   },
   {
     description: 'Filmübersicht',
@@ -48,6 +48,30 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Details',
     fullUrl: 'media', // /:id
     shortUrl: '', // /:id
+    showInLinkList: false,
+  },
+  {
+    description: 'User Start',
+    fullUrl: 'user',
+    shortUrl: 'user',
+    showInLinkList: false,
+  },
+  {
+    description: 'Passwort zurücksetzen',
+    fullUrl: 'reset-password',
+    shortUrl: 'reset-password',
+    showInLinkList: false,
+  },
+  {
+    description: 'Login',
+    fullUrl: 'login',
+    shortUrl: 'login',
+    showInLinkList: false,
+  },
+  {
+    description: 'Registrieren',
+    fullUrl: 'register',
+    shortUrl: 'register',
     showInLinkList: false,
   },
 ];

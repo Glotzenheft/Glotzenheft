@@ -33,6 +33,7 @@ class TMDBMultiSearchController extends AbstractController
     {
         $q = $request->query->get('q', '');
         $page = (int) $request->query->get('page', 1);
+        $language = $request->query->get('language', 'de-DE');
 
         if (empty($q))
         {
@@ -41,7 +42,7 @@ class TMDBMultiSearchController extends AbstractController
 
         try
         {
-            $result = $this->multiSearchService->multiSearch($q, $page);
+            $result = $this->multiSearchService->multiSearch($q, $page, $language);
 
             return $this->json([
                 'page' => $page,

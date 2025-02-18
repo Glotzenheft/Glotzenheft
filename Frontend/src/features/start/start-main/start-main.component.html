@@ -11,7 +11,7 @@
     Datenbank enthält eine Vielzahl von Serien und Filmen.
   </p>
 
-  <div class="button">
+  <div class="button" *ngIf="areLoginButtonsVisible">
     <p-button
       label="Registrieren"
       pTooltip="Hier klicken, um sich mit einem neuen Account zu registrieren. Beim Klicken wird man auf die Register-Seite geleitet."
@@ -21,7 +21,7 @@
       class="buttonShadow"
     />
   </div>
-  <div class="button">
+  <div class="button" *ngIf="areLoginButtonsVisible">
     <p-button
       icon="pi-sign-in"
       class="buttonShadow"
@@ -29,6 +29,18 @@
       pTooltip="Hier klicken, um sich in einen bestehenden Account einzuloggen. Beim Klicken wird man auf die Login-Seite geleitet."
       tooltipPosition="right"
       (onClick)="navigateToLogin()"
+      icon="pi pi-sign-in"
+    />
+  </div>
+
+  <div class="button" *ngIf="!areLoginButtonsVisible">
+    <p-button
+      icon="pi-sign-in"
+      class="buttonShadow"
+      label="zu meiner Startseite"
+      pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden."
+      tooltipPosition="right"
+      (onClick)="navigateToStartPage()"
       icon="pi pi-sign-in"
     />
   </div>

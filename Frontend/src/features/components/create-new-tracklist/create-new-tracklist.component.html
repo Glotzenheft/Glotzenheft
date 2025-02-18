@@ -1,0 +1,40 @@
+<div class="createNewTracklist">
+  <form
+    action="submit"
+    (ngSubmit)="
+      createNewTrackList(
+        mediaID(),
+        trackListForm.get('trackListName')?.value ?? ''
+      )
+    "
+    [formGroup]="trackListForm"
+  >
+    <p-float-label variant="on">
+      <input
+        type="text"
+        pInputText
+        formControlName="trackListName"
+        [value]="mediaName()"
+      />
+    </p-float-label>
+    <p-message
+      *ngIf="
+        hasErrorField('trackListName') &&
+        trackListForm.get('trackListName')?.invalid
+      "
+      severity="error"
+      size="small"
+    >
+      Der Name für die Tracklist ist Pflicht.
+    </p-message>
+    <div class="loginActions">
+      <p-button label="Speichern" type="submit" />
+      <p-button
+        label="Abbrechen"
+        severity="secondary"
+        icon="pi pi-times"
+        (onClick)="cancelNewTracklist()"
+      />
+    </div>
+  </form>
+</div>

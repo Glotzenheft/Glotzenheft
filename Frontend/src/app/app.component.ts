@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -13,7 +13,9 @@ import { SearchService } from '../service/search/search.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
-import { UserLinksComponent } from "../features/components/user-links/user-links.component";
+import { UserLinksComponent } from '../features/components/user-links/user-links.component';
+import { UserService } from '../service/user/user.service';
+import { UserMenuComponent } from '../features/components/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-root',
@@ -28,22 +30,26 @@ import { UserLinksComponent } from "../features/components/user-links/user-links
     CommonModule,
     SearchBarComponent,
     ToastModule,
-    UserLinksComponent
-],
+    UserLinksComponent,
+    UserMenuComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MessageService],
 })
 export class AppComponent implements OnInit, OnDestroy {
-  isSidebarOpen: boolean = window.innerWidth <= 850 ? false : true; // sidebar should be open by default
-  isMultiSearchResponseVisible: boolean = false;
-  userQuery: string = '';
-  private toastSubscription!: Subscription;
+  public isSidebarOpen: boolean = window.innerWidth <= 850 ? false : true; // sidebar should be open by default
+  public isMultiSearchResponseVisible: boolean = false;
+  public userQuery: string = '';
+  public toastSubscription!: Subscription;
+  private lastWindowHeight: number = window.innerHeight;
+  private lastWindowWidth: number = window.innerWidth;
 
   constructor(
     public searchService: SearchService,
     public messageService: MessageService,
-    private authService: AuthService
+    private authService: AuthService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -77,4 +83,21 @@ export class AppComponent implements OnInit, OnDestroy {
   setUserQuery = (query: string) => {
     this.userQuery = query;
   };
+
+  //   @HostListener('window:keydown', ['$event'])
+  //   onKeyDown = (event: KeyboardEvent) => {
+  //     if (
+  //       (event.ctrlKey && event.shiftKey && event.key === 'I') ||
+  //       event.key === 'F12' ||
+  //       (event.ctrlKey && event.shiftKey && event.key === 'C')
+  //     ) {
+  //       event.preventDefault();
+  //       this.messageService.add({
+  //         severity: 'error',
+  //         summary: 'Kein Zugriff auf Dev-Tools',
+  //         detail:
+  //           'Sie haben keinen Zugriff auf die Entwicklungswerkzeuge in dieser Applikation.',
+  //       });
+  //     }
+  //   };
 }

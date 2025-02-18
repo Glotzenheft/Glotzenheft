@@ -10,7 +10,7 @@
     <div
       *ngFor="let resItem of item"
       class="multisearchCard"
-      (click)="navigateToMediaPage(resItem.id)"
+      (click)="navigateToMediaPage(resItem.id, resItem.media_type)"
     >
       <p *ngIf="resItem.media_type === 'tv'" [pTooltip]="resItem.name">
         {{
@@ -45,11 +45,3 @@
 <div *ngIf="error" class="error-container">
   <p class="error">{{ error }}</p>
 </div>
-
-<p-dialog
-  header="Fehler"
-  [(visible)]="isErrorDialogVisible"
-  (onHide)="closeErrorDialog()"
->
-  <p>Der Suchbegriff muss mindestens ein Zeichen enthalten.</p>
-</p-dialog>

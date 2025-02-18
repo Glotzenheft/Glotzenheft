@@ -16,22 +16,29 @@ class MovieDetailsController extends AbstractController
     use MediaDetailTrait;
 
     /**
-     * @example https://127.0.0.1:8000/api/movie?tmdbID=372058
+     * API endpoint to retrieve movie details from the TMDB API.
+     * Requires either a `tmdb_id` or a `media_id` as query parameter.
+     * @example https://127.0.0.1:8000/api/movie?tmdb_id=372058&media_id=6
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/api/movie')]
-    public function getTVSeriesDetails(Request $request): JsonResponse
+    #[Route('/api/movie', name: 'get_movie_details', methods: ['GET'])]
+    public function getMovieDetails(Request $request): JsonResponse
     {
-        $tmdbID = (int)$request->query->get('tmdbID');
+        $requestData = $this->handleRequest($request);
 
-        if (empty($tmdbID))
+        if (isset($response['error']))
         {
-            return $this->json(['error' => 'Query parameter "tmdbID" is required.'], 400);
+            return $this->json($response['error'], $response['code']);
         }
 
-        $media = $this->handleTMDBMediaDetail($tmdbID, MediaType::Movie);
+        $media = $this->handleTMDBMediaDetail($requestData, MediaType::Movie);
 
-        return $this->json($media, context: ['groups' => ['media_details']]);
+        if (isset($media['error']))
+        {
+            return $this->json($media['error'], $media['code']);
+        }
+
+        return $this->json($media['media'], context: ['groups' => ['media_details']]);
     }
 }

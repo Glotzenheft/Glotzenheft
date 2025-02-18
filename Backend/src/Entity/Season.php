@@ -5,9 +5,12 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampsTrait;
 use App\Repository\SeasonRepository;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: SeasonRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -18,7 +21,7 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]
@@ -30,7 +33,7 @@ class Season
     private ?int $tmdbSeasonID = null;
 
     #[ORM\Column]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?int $seasonNumber = null;
 
     #[ORM\Column(length: 255)]
@@ -43,15 +46,35 @@ class Season
 
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
     #[Groups(['media_details'])]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $airDate = null;
 
     #[ORM\Column]
     #[Groups(['media_details'])]
     private ?int $episodeCount = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['media_details'])]
     private ?string $posterPath = null;
+
+    /**
+     * @var Collection<int, Episode>
+     */
+    #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: 'Season', orphanRemoval: true)]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    private Collection $episodes;
+
+    /**
+     * @var Collection<int, TracklistSeason>
+     */
+    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'season', orphanRemoval: true)]
+    private Collection $tracklistSeasons;
+
+    public function __construct()
+    {
+        $this->episodes = new ArrayCollection();
+        $this->tracklistSeasons = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -147,9 +170,72 @@ class Season
         return $this->posterPath;
     }
 
-    public function setPosterPath(string $posterPath): static
+    public function setPosterPath(?string $posterPath): static
     {
         $this->posterPath = $posterPath;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Episode>
+     */
+    public function getEpisodes(): Collection
+    {
+        return $this->episodes;
+    }
+
+    public function addEpisode(Episode $episode): static
+    {
+        if (!$this->episodes->contains($episode))
+        {
+            $this->episodes->add($episode);
+            $episode->setSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeEpisode(Episode $episode): static
+    {
+        if ($this->episodes->removeElement($episode))
+        {
+            // set the owning side to null (unless already changed)
+            if ($episode->getSeason() === $this)
+            {
+                $episode->setSeason(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TracklistSeason>
+     */
+    public function getTracklistSeasons(): Collection
+    {
+        return $this->tracklistSeasons;
+    }
+
+    public function addTracklistSeason(TracklistSeason $tracklistSeason): static
+    {
+        if (!$this->tracklistSeasons->contains($tracklistSeason)) {
+            $this->tracklistSeasons->add($tracklistSeason);
+            $tracklistSeason->setSeason($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTracklistSeason(TracklistSeason $tracklistSeason): static
+    {
+        if ($this->tracklistSeasons->removeElement($tracklistSeason)) {
+            // set the owning side to null (unless already changed)
+            if ($tracklistSeason->getSeason() === $this) {
+                $tracklistSeason->setSeason(null);
+            }
+        }
 
         return $this;
     }

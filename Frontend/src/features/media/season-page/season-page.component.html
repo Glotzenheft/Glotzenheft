@@ -14,58 +14,121 @@
   </p-panel>
 </div>
 
+<div *ngIf="isInvalidID">
+  <p-panel header="Fehler beim Laden der Seite" class="error">
+    <p>
+      Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es erneut
+      durch ein Zurückgehen zur letzten Seite und ein erneutes Laden dieser
+      Seite.
+    </p>
+  </p-panel>
+</div>
+
 <div *ngIf="seasonData$ | async as seasonData">
   <div class="heading">
     <h1>{{ seasonData.name }}</h1>
     <p *ngIf="seasonData.mediaID">GESPEICHERT</p>
   </div>
   <div class="seasonMeta">
-    <div class="seasonMetaPicture">
-      <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
-      <img
-        *ngIf="seasonData.posterPath !== null"
-        [src]="'https://image.tmdb.org/t/p/w500' + seasonData.posterPath"
-        [alt]="'Dies ist das Bild für von ' + seasonData.name"
-      />
+    <div class="seasonPictureWrapper">
+      <div class="seasonMetaPicture">
+        <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
+        <img
+          *ngIf="seasonData.posterPath !== null"
+          [src]="posterPath + seasonData.posterPath"
+          [alt]="'Dies ist das Bild für von ' + seasonData.name"
+        />
+      </div>
     </div>
     <div class="seasonMetaContent">
-      <h2>Beschreibung</h2>
-      <p>{{ seasonData.description }}</p>
-      <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
-      <p *ngIf="seasonData.seasons.length">
-        Anzahl der Episoden: {{ seasonData.seasons.length }}
-      </p>
+      <div>
+        <h2>Beschreibung</h2>
+        <p class="descriptionP">{{ seasonData.description }}</p>
+        <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
+        <p *ngIf="seasonData.seasons.length > 0">
+          Anzahl der Staffeln: {{ seasonData.seasons.length }}
+        </p>
+      </div>
     </div>
   </div>
 
-  <div class="mainDIV episodes">
-    <h2>Episoden</h2>
-    <div
-      *ngFor="let episode of seasonData.seasons"
-      class="card"
-      (click)="showEpisodeDialog(episode)"
-    >
-      <h3>{{ episode.name }}</h3>
-      <p>{{ stringService.shortenString(episode.description) }}</p>
-    </div>
+  <div class="newWatchlistButton">
+    <p-button
+      label="neue Watchlist anlegen"
+      (onClick)="openTracklistDialog()"
+      class="bigButton"
+      icon="pi pi-plus"
+    />
+  </div>
+
+  <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
+    <h2>Staffeln</h2>
+
+    <p-accordion>
+      <p-accordion-panel
+        [value]="i"
+        *ngFor="let season of seasonData.seasons; let i = index"
+        class="panel"
+      >
+        <p-accordion-header>{{ season.name }}</p-accordion-header>
+        <p-accordion-content>
+          <div class="seasonWrapper">
+            <div class="seasonPoster">
+              <p *ngIf="season.posterPath === null">kein Bild vorhanden</p>
+              <img
+                *ngIf="seasonData.posterPath !== null"
+                [src]="posterPath + season.posterPath"
+                [alt]="'Dies ist das Bild für von ' + seasonData.name"
+              />
+            </div>
+            <div class="seasonMeta">
+              <div>
+                <p *ngIf="season.overview">
+                  Beschreibung: <br />
+                  {{ season.overview }}
+                </p>
+                <p *ngIf="!season.overview">
+                  Beschreibung: <i>keine Beschreibung vorhanden</i>
+                </p>
+                <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+              </div>
+            </div>
+          </div>
+
+          <app-episode-list [episodeList]="season.episodes" />
+        </p-accordion-content>
+      </p-accordion-panel>
+    </p-accordion>
   </div>
 </div>
 
 <p-dialog
-  *ngIf="visibleEpisode && isDialogVisible"
+  class="dialog"
+  *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
+  [(visible)]="isTracklistDialogVisible"
+  [header]="seasonData.name"
+>
+  <app-create-new-tracklist
+    [mediaName]="seasonData.name"
+    [mediaID]="seasonData.id"
+  />
+</p-dialog>
+
+<p-dialog
+  *ngIf="visibleSeason && isDialogVisible"
   [(visible)]="isDialogVisible"
-  [header]="visibleEpisode.name"
+  [header]="visibleSeason.name"
   class="dialog"
 >
   <div>
-    <p>{{ visibleEpisode.description }}</p>
+    <p>{{ visibleSeason.overview }}</p>
     <p-rating stars="10" [(ngModel)]="episodeRating" />
     <p>{{ episodeRating }}</p>
     <div class="dialogActions">
       <p-button
         label="speichern"
         class="marginRight"
-        (onClick)="saveEpisode(visibleEpisode)"
+        (onClick)="saveEpisode(visibleSeason)"
       />
       <p-button
         label="abbrechen"

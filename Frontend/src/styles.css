@@ -30,10 +30,6 @@ p {
   text-align: justify;
 }
 
-button {
-  width: 10rem;
-}
-
 .button {
   margin: 1rem;
 }
@@ -132,9 +128,9 @@ button {
     text-align: justify;
   }
 
-  button {
+  /* button {
     width: 6rem;
-  }
+  } */
 
   .button {
     margin: 1rem;
@@ -189,19 +185,43 @@ button {
   }
 
   .login {
-    height: 100%;
+    height: 110%;
     width: 100%;
 
     display: flex;
     justify-content: center;
-    align-items: center;
   }
 
   .loginWindow {
-    width: 90%;
-    height: 60%;
-    padding-left: 0.5rem;
-    padding-right: 0.5rem;
+    width: 100%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .loginWindow form .loginActions {
+    display: block;
+  }
+
+  .loginWindow form .loginActions .marginBottom {
+    margin-bottom: 0.5rem;
+  }
+
+  .register {
+    width: 100%;
+    height: 90%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
     padding-top: 0.5rem;
     padding-bottom: 0.5rem;
     background-color: rgba(255, 255, 255, 0.8);
@@ -209,12 +229,27 @@ button {
     border-radius: 0.6rem;
   }
 
-  .loginWindow form {
+  .register form {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     width: 100%;
     height: 100%;
+  }
+  .loginWindow div,
+  .p-password {
+    width: 100%;
+  }
+
+  .register .loginActions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 8rem;
+  }
+
+  .register .loginActions .button2 {
+    width: 100%;
   }
 
   .loginTall {
@@ -225,18 +260,13 @@ button {
     height: 50%;
   }
 
-  .loginActions {
+  /* .loginActions {
     display: flex;
     justify-content: space-around;
     align-items: center;
-  }
+  } */
 
   .userInput {
-    width: 100%;
-  }
-
-  .loginWindow div,
-  .p-password {
     width: 100%;
   }
 
@@ -262,7 +292,7 @@ button {
   }
   .card {
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     margin-bottom: 1rem;
     background-color: rgba(0, 0, 0, 0.3);
     border: 0.1rem solid white;
@@ -278,7 +308,8 @@ button {
   }
 
   .card:hover {
-    background-color: var(--link--color);
+    background-color: white;
+    color: black;
     cursor: pointer;
   }
 
@@ -296,7 +327,7 @@ button {
   }
 
   .heading {
-    margin-bottom: 2rem;
+    height: 4rem;
   }
 
   .heading p {
@@ -420,9 +451,26 @@ button {
   }
 
   .loginWindow {
+    width: 70%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .register {
     background-color: rgba(255, 255, 255, 0.8);
     width: 80%;
-    height: 60%;
+    height: 98%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
@@ -432,12 +480,16 @@ button {
     box-shadow: var(--box--shadow);
   }
 
-  .loginWindow form {
+  .register form {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
     width: 100%;
     height: 100%;
+  }
+  .loginWindow div,
+  .p-password {
+    width: 100%;
   }
 
   .loginTall {
@@ -452,14 +504,10 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    gap: 0.5rem;
   }
 
   .userInput {
-    width: 100%;
-  }
-
-  .loginWindow div,
-  .p-password {
     width: 100%;
   }
 
@@ -480,7 +528,7 @@ button {
 
   .card {
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     margin-bottom: 1rem;
     background-color: rgba(0, 0, 0, 0.3);
     border: 0.1rem solid white;
@@ -496,7 +544,8 @@ button {
   }
 
   .card:hover {
-    background-color: var(--link--color);
+    background-color: white;
+    color: black;
     cursor: pointer;
   }
 
@@ -566,7 +615,7 @@ button {
   .sidebar {
     background-color: black;
     height: 100%;
-    width: 25%;
+    width: 20%;
     left: 0;
     color: white;
     padding-left: var(--padding--left-right);
@@ -634,9 +683,26 @@ button {
   }
 
   .loginWindow {
+    width: 50%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .register {
     background-color: rgba(255, 255, 255, 0.8);
     width: 80%;
-    height: 60%;
+    height: 98%;
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
@@ -646,7 +712,7 @@ button {
     box-shadow: var(--box--shadow);
   }
 
-  .loginWindow form {
+  .register form {
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -666,6 +732,7 @@ button {
     display: flex;
     justify-content: space-around;
     align-items: center;
+    gap: 0.5rem;
   }
 
   .userInput {
@@ -694,7 +761,7 @@ button {
 
   .card {
     width: 100%;
-    height: 5rem;
+    height: 3rem;
     margin-bottom: 1rem;
     background-color: rgba(0, 0, 0, 0.3);
     border: 0.1rem solid white;
@@ -710,7 +777,8 @@ button {
   }
 
   .card:hover {
-    background-color: var(--link--color);
+    background-color: white;
+    color: black;
     cursor: pointer;
   }
 
@@ -731,6 +799,8 @@ button {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    height: 4rem;
+    margin-bottom: 8rem;
   }
 
   .heading p {
@@ -743,4 +813,20 @@ button {
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
   }
+}
+
+.p-select {
+  width: 100%;
+}
+
+.panel .p-accordionpanel {
+  background-color: rgba(255, 255, 255, 0.7);
+}
+
+.panel .p-panel-header {
+  background-color: white;
+}
+
+.userMenuButton .p-button {
+  background-color: transparent;
 }

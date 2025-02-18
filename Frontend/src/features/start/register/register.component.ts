@@ -18,6 +18,11 @@ import {
   LoginAndMessageResponse,
   RegisterCredentials,
 } from '../../../shared/interfaces/login';
+import { MessageService } from 'primeng/api';
+import { SecurityService } from '../../../service/security/security.service';
+import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
+import { SelectModule } from 'primeng/select';
+import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 
 @Component({
   selector: 'app-register',
@@ -30,6 +35,7 @@ import {
     CommonModule,
     Message,
     DialogModule,
+    SelectModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -38,12 +44,20 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
+  public questionList: ValidationQuestion[] = VALIDATION_QUESTIONS.map(
+    (question) => ({
+      name: question,
+      code: question,
+    })
+  );
   private userName: string = '';
 
   constructor(
     public navigationService: NavigationService,
     private formBuilder: FormBuilder,
-    private userService: UserService
+    private userService: UserService,
+    private messageService: MessageService,
+    private securityService: SecurityService
   ) {}
 
   ngOnInit(): void {
@@ -51,6 +65,8 @@ export class RegisterComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(2)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
+      validationQuestion: [{ name: '', code: '' }, [Validators.required]],
+      validationAnswer: ['', [Validators.required]],
     });
   }
 
@@ -71,17 +87,40 @@ export class RegisterComponent implements OnInit {
 
     this.userName = this.registerGroup.get('username')?.value;
 
+    if (!this.securityService.isValidUsername(this.userName)) {
+      this.messageService.add({
+        severity: 'error',
+        summary: 'Ungültiger Nutzername',
+        detail: `Nutzernamen dürfen keines der folgenden Zeichen aufweisen: ${this.securityService.INVALID_CHARS.join(
+          ', '
+        )}`,
+      });
+      return;
+    }
+
     const registerData: RegisterCredentials = {
       username: this.registerGroup.get('username')?.value,
       password: this.registerGroup.get('password')?.value,
+      security_question:
+        this.registerGroup.get('validationQuestion')?.value.name,
+      security_answer: this.registerGroup.get('validationAnswer')?.value,
     };
 
-    this.userService
-      .registerAccount(registerData)
-      .subscribe((res: LoginAndMessageResponse) => {
+    this.userService.registerAccount(registerData).subscribe({
+      next: (res: LoginAndMessageResponse) => {
         localStorage.setItem('token', res.token);
         localStorage.setItem('username', this.userName);
-      });
+      },
+      error: () => {
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: 'Fehler beim Registrieren',
+          detail:
+            'Beim Registrieren ist ein Fehler aufgetreten. Bitte versuche es erneut.',
+        });
+      },
+    });
     this.navigationService.navigateToUserStart();
   };
 

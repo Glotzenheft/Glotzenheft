@@ -4,6 +4,7 @@ import { AsyncPipe, CommonModule } from '@angular/common';
 import { MediaService } from '../../../service/media/media.service';
 import { Observable, Subscription } from 'rxjs';
 import {
+  MediaIDResponse,
   MediaResult,
   MultiSearchResponse,
 } from '../../../shared/interfaces/media-interfaces';
@@ -14,6 +15,9 @@ import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { MessageService } from 'primeng/api';
+import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-multi-search',
@@ -45,12 +49,14 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   constructor(
     private mediaService: MediaService,
     private searchService: SearchService,
-    private router: Router
+    private router: Router,
+    private messageService: MessageService,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
-    this.searchSubscription = this.searchService.searchTerm$.subscribe(
-      (searchTerm) => {
+    this.searchSubscription = this.searchService.searchTerm$.subscribe({
+      next: (searchTerm) => {
         if (!searchTerm.trim()) {
           this.showErrorDialog();
           return;
@@ -71,8 +77,16 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         });
         this.searchQuery = searchTerm;
         this.isLoading = false;
-      }
-    );
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          // 401 = user token not valid anymore -> navigate to login page
+          this.userService.showLoginMessage();
+
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+        }
+      },
+    });
   }
 
   ngOnDestroy(): void {
@@ -82,14 +96,70 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   }
 
   showErrorDialog = () => {
-    this.isErrorDialogVisible = true;
+    this.messageService.add({
+      severity: 'warn',
+      life: 7000,
+      summary: 'Das Suchfeld darf nicht leer sein',
+      detail:
+        'Das Suchfeld muss mindestens ein Zeichen enthalten, um eine Suche durchführen zu können.',
+    });
   };
 
   closeErrorDialog = () => {
     this.isErrorDialogVisible = false;
   };
 
-  navigateToMediaPage = (id: number) => {
-    this.router.navigateByUrl(ROUTES_LIST[7].fullUrl + `/${id}`);
+  navigateToMediaPage = (id: number, mediaGenre: string) => {
+    this.mediaService
+      .getMediaIdForMedia(id, mediaGenre === 'movie' ? true : false)
+      .subscribe({
+        next: (res: MediaIDResponse) => {
+          let url: string = '';
+
+          if (res.media_id === undefined || res.media_id === null) {
+            // if no media_id exists in the db -> because media is not already saved
+            const summaryMessage: string = `Fehler beim Weiterleiten ${
+              mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie'
+            }`;
+
+            this.messageService.add({
+              life: 7000,
+              severity: 'error',
+              summary: summaryMessage,
+              detail:
+                'Es ist ein Fehler beim Weiterleiten zum Medium passiert. Bitte lade die Seite erneut und versuche es noch einmal.',
+            });
+            return;
+          }
+
+          // media_id already exists
+          url =
+            mediaGenre === 'movie'
+              ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
+              : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
+
+          this.router.navigateByUrl(url);
+        },
+        error: (err) => {
+          if (err.status === 401) {
+            // 401 = user token is not logged in anymore -> navigate to login page
+            this.userService.showLoginMessage();
+            this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+            return;
+          }
+
+          const message: string = `Fehler beim Weiterleiten ${
+            mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
+          }`;
+
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: message,
+            detail:
+              'Beim Weiterleiten ist ein Fehler aufgetreten. Bitte lade die Seite und versuche es erneut.',
+          });
+        },
+      });
   };
 }
