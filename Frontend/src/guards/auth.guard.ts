@@ -1,8 +1,6 @@
 import { CanActivateFn } from '@angular/router';
-import { Inject, inject } from '@angular/core';
+import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { MediaService } from '../service/media/media.service';
 import { AuthService } from '../service/auth/auth.service';
 import { ROUTES_LIST } from '../shared/variables/routes-list';
 

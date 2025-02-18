@@ -2,9 +2,10 @@
 
 <div class="backButtonDIV">
   <p-button
-    label="zurück"
+    label="zurück zur Suche"
     (onClick)="navigateToMultiSearch()"
     severity="secondary"
+    icon="pi pi-arrow-left"
   />
 </div>
 <div *ngIf="hasError">
@@ -27,10 +28,6 @@
 </div>
 
 <div *ngIf="filmData$ | async as filmData">
-  <div class="heading">
-    <h1>{{ filmData.name }}</h1>
-    <p *ngIf="filmData.id">GESPEICHERT</p>
-  </div>
   <div class="seasonMeta">
     <div class="seasonPictureWrapper">
       <div class="seasonMetaPicture">
