@@ -123,12 +123,12 @@ export class SeasonPageComponent implements OnInit {
         // }
 
         this.trackListForm = this.formBuilder.group({
-          trackListName: [res.name, Validators.required],
+          trackListName: [res.media.name, Validators.required],
         });
 
-        if (this.tvSeriesID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
+        if (this.tvSeriesID?.includes(MEDIA_ID_NOT_EXISTS) && res.media.id) {
           // replacing the url with "media_id" if necessary
-          this.location.replaceState(`/media/tv/${res.id}`);
+          this.location.replaceState(`/media/tv/${res.media.id}`);
         }
       },
       error: (err) => {

@@ -45,19 +45,77 @@ export interface SeasonWithEpisodes {
 }
 
 export interface Season {
+  media: {
+    id: number;
+    tmdbID: number;
+    imdbID: string;
+    originalName: string;
+    name: string;
+    description: string;
+    firstAirDate: string;
+    tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
+    seasons: SeasonWithEpisodes[];
+    type: string;
+    posterPath: string;
+    backdropPath: string;
+    mediaID: string | null;
+  };
+  tracklists: SeasonTracklist[];
+}
+
+export interface SeasonTracklistEpisode {
   id: number;
-  tmdbID: number;
-  imdbID: string;
-  originalName: string;
+  tmdbEpisodeID: number;
   name: string;
-  description: string;
-  firstAirDate: string;
-  tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
-  seasons: SeasonWithEpisodes[];
-  type: string;
-  posterPath: string;
-  backdropPath: string;
-  mediaID: string | null;
+  overview: string;
+  episodeNumber: number;
+  runtime: number;
+  airDate: string;
+  stillPath: string;
+}
+
+export interface SeasonTracklist {
+  id: number;
+  media: {
+    id: number;
+    tmdbID: number;
+    imdbID: string;
+    originalName: string;
+    name: string;
+    description: string;
+    firstAirDate: string;
+    tmdbGenres: {
+      id: number;
+      tmdbGenreID: number;
+      name: string;
+    }[];
+
+    seasons: [
+      {
+        id: 1;
+        tmdbSeasonID: 199167;
+        seasonNumber: 1;
+        name: 'Staffel 1';
+        overview: '';
+        airDate: '2024-01-07';
+        episodeCount: 25;
+        posterPath: '/451lpwzbSKClDUHmKxOcBboBf7E.jpg';
+        episodes: SeasonTracklistEpisode[];
+      }
+    ];
+    type: 'tv';
+    posterPath: '/1KRSR1dUAOpUv3mxHU5W3QWo2og.jpg';
+    backdropPath: '/odVlTMqPPiMksmxpN9cCbPCjUPP.jpg';
+  };
+  rating: null | number;
+  status: string;
+  startDate: null | string;
+  finishDate: null | string;
+  tracklistName: string;
+  tracklistSeasons: {
+    id: number;
+    tracklistEpisodes: any[];
+  }[];
 }
 
 export interface TV {
