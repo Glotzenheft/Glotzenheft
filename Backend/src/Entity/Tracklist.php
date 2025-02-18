@@ -55,7 +55,7 @@ class Tracklist
     /**
      * @var Collection<int, TracklistSeason>
      */
-    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['tracklist_details'])]
     private Collection $tracklistSeasons;
 

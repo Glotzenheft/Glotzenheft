@@ -6,6 +6,7 @@ namespace App\Controller\API\Media;
 
 use App\API\TheMovieDB\Traits\MediaDetailTrait;
 use App\Enum\MediaType;
+use App\Security\IsAuthenticated;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +23,7 @@ class TVSeriesDetailsController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
+    #[IsAuthenticated]
     #[Route('/api/tv', name: 'get_tv_series_details', methods: ['GET'])]
     public function getTVSeriesDetails(Request $request): JsonResponse
     {
@@ -39,6 +41,6 @@ class TVSeriesDetailsController extends AbstractController
             return $this->json($media['error'], $media['code']);
         }
 
-        return $this->json($media['media'], context: ['groups' => ['media_details']]);
+        return $this->json($media, context: ['groups' => ['media_details', 'tracklist_details']]);
     }
 }

@@ -7,7 +7,10 @@ use App\API\TheMovieDB\TVSeries\Details\TMDBTVSeriesDetailsService;
 use App\API\TheMovieDB\TVSeries\SeasonDetails\TMDBTVSeasonDetailsService;
 use App\Entity\Media;
 use App\Entity\TMDBGenre;
+use App\Entity\User;
 use App\Enum\MediaType;
+use App\Repository\TracklistRepository;
+use App\Service\Tracklist\TracklistService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -21,7 +24,9 @@ trait MediaDetailTrait
         private readonly TMDBMovieDetailsService $movieService,
         private readonly TMDBTVSeasonDetailsService $seasonService,
         private readonly LoggerInterface $logger,
-        private readonly EntityManagerInterface $entityManager
+        private readonly EntityManagerInterface $entityManager,
+        private readonly TracklistService $tracklistService,
+        private readonly TracklistRepository $tracklistRepository
     )
     {
     }
@@ -129,8 +134,24 @@ trait MediaDetailTrait
 
         $this->entityManager->flush();
 
+        $tracklists = [];
+        if (isset($requestData['user_id']))
+        {
+            $user = $this->entityManager->getRepository(User::class)->find($requestData['user_id']);
+            if (!$user instanceof User)
+            {
+                return [
+                    'error' => 'User not found',
+                    'code' => 404,
+                ];
+            }
+            $tracklists = $this->tracklistRepository->findByUserAndMediaWithSeasonsAndEpisodes($user, $media);
+        }
+
+
         return [
-            'media' => $media
+            'media' => $media,
+            'tracklists' => $tracklists,
         ];
     }
 
@@ -140,10 +161,11 @@ trait MediaDetailTrait
      */
     private function handleRequest(Request $request): array
     {
-        $mediaID = $request->query->get('media_id');
+        $mediaID = $request->query->get('media_id') ?: null;
         $mediaID = $mediaID !== null ? (int) $mediaID : null;
-        $tmdbID = $request->query->get('tmdb_id');
+        $tmdbID = $request->query->get('tmdb_id') ?: null;
         $tmdbID = $tmdbID !== null ? (int) $tmdbID : null;
+        $userID = $request->attributes->get('user_id') ?: null;
 
         if (!isset($mediaID) && !isset($tmdbID))
         {
@@ -156,6 +178,7 @@ trait MediaDetailTrait
         return [
             'mediaID' => $mediaID,
             'tmdbID' => $tmdbID,
+            'user_id' => $userID,
         ];
     }
 
