@@ -52,14 +52,14 @@
     </div>
   </div>
 
-  <div class="newWatchlistButton">
+  <!-- <div class="newWatchlistButton">
     <p-button
       label="neue Watchlist anlegen"
       (onClick)="openTracklistDialog()"
       class="bigButton"
       icon="pi pi-plus"
     />
-  </div>
+  </div> -->
 
   <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
     <h2>Staffeln</h2>
@@ -95,6 +95,11 @@
             </div>
           </div>
 
+          <p-button
+            label="Neue Trackliste anlegen"
+            (onClick)="openTracklistDialog(season.seasonNumber, season.name)"
+          />
+
           <app-episode-list [episodeList]="season.episodes" />
         </p-accordion-content>
       </p-accordion-panel>
@@ -109,8 +114,10 @@
   [header]="seasonData.name"
 >
   <app-create-new-tracklist
+    *ngIf="currentSeasonID"
     [mediaName]="seasonData.name"
     [mediaID]="seasonData.id"
+    [seasonID]="currentSeasonID"
   />
 </p-dialog>
 

@@ -13,7 +13,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import {
-  ROUTE_CREATE_NEW_TRACKLIST,
+  ROUTE_CREATE_NEW_SEASON_TRACKLIST,
   ROUTE_GET_ALL_USER_TRACKLISTS,
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MEDIA_ID_FOR_MEDIA,
@@ -22,6 +22,7 @@ import {
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import { log } from 'console';
+import { TracklistStatusType } from '../../shared/variables/tracklist';
 
 @Injectable({
   providedIn: 'root',
@@ -123,17 +124,40 @@ export class MediaService {
       .pipe(shareReplay(1));
   };
 
-  public createNewTracklist = (
-    tracklist: TrackListCreation
+  public createNewSeasonTracklist = (
+    name: string,
+    mediaID: number,
+    seasonID: number
+  ): Observable<any> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    const url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv`;
+
+    return this.http.post<any>(url, {}, { headers: header }).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
+  };
+
+  public createNewMovieTracklist = (
+    name: string,
+    mediaID: number,
+    startDate: string
   ): Observable<any> => {
-    return this.http
-      .post<any>(ROUTE_CREATE_NEW_TRACKLIST, JSON.stringify(tracklist))
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
+    const url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}${startDate}`;
+
+    return this.http.post<any>(url, {}).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
   };
 
   public getAllUserTracklists = (): Observable<Tracklist[]> | null => {

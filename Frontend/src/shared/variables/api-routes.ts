@@ -32,7 +32,23 @@ export const ROUTE_RESET_PASSWORD: string = '';
 
 export const ROUTE_LOGIN: string = 'https://127.0.0.1:8000/api/login';
 
-export const ROUTE_CREATE_NEW_TRACKLIST: string = '';
+// example: https://127.0.0.1:8000/api/tracklist?tracklist_name=Solo Hannes Up&tracklist_status=watching&media_id=2&season_id=1&media_type=tv
+export const ROUTE_CREATE_NEW_SEASON_TRACKLIST: string[] = [
+  'https://127.0.0.1:8000/api/tracklist?tracklist_name=',
+  '&tracklist_status=',
+  '&media_id=',
+  '&season_id=',
+  '&media_type=',
+];
+
+// example: https://127.0.0.1:8000/api/tracklist?tracklist_name=Filmliste 1&tracklist_status=watching&media_id=57&media_type=movie&tracklist_start_date=2025-02-16
+export const ROUTE_CREATE_NEW_MOVIE_TRACKLIST: string[] = [
+  'https://127.0.0.1:8000/api/tracklist?tracklist_name=',
+  '&tracklist_status=',
+  '&media_id=',
+  '&media_type=',
+  '&tracklist_start_date=',
+];
 
 export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
   'https://127.0.0.1:8000/api/user-tracklists';

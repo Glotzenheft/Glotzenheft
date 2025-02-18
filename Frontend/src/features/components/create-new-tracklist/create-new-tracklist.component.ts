@@ -9,13 +9,12 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { Observable } from 'rxjs';
-import { Season } from '../../../shared/interfaces/media-interfaces';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { MediaService } from '../../../service/media/media.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { UserService } from '../../../service/user/user.service';
+import { Observable } from 'rxjs';
 
 @Component({
   selector: 'app-create-new-tracklist',
@@ -34,9 +33,11 @@ import { UserService } from '../../../service/user/user.service';
 export class CreateNewTracklistComponent implements OnInit {
   public mediaName: InputSignal<string> = input.required<string>();
   public mediaID: InputSignal<number> = input.required<number>();
+  public seasonID: InputSignal<number> = input.required<number>();
 
   public isTracklistSubmitted: boolean = false;
   public trackListForm!: FormGroup;
+  public createNewTracklist$: Observable<any> | null = null;
 
   constructor(
     private messageService: MessageService,
@@ -47,7 +48,10 @@ export class CreateNewTracklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.trackListForm = this.formBuilder.group({
-      trackListName: [this.mediaName(), Validators.required],
+      trackListName: [
+        `${this.mediaName()} - Staffel ${this.seasonID()}`,
+        Validators.required,
+      ],
     });
   }
 
@@ -62,29 +66,41 @@ export class CreateNewTracklistComponent implements OnInit {
       });
     }
 
-    this.mediaService
-      .createNewTracklist({
-        name,
-        tmdbId: id,
-      })
-      .subscribe({
-        next: (res) => {},
-        error: (err) => {
-          if (err.status === 401) {
-            // status 401 = user is not logged in anymore -> navigate to login page
-            this.userService.showNoAccessMessage();
-            return;
-          }
+    this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
+      this.trackListForm.get('trackListName')?.value,
+      this.mediaID(),
+      this.seasonID()
+    );
 
-          this.messageService.add({
-            life: 7000,
-            summary: 'Fehler beim Anlegen der Trackliste',
-            detail:
-              'Beim Anlegen der Trackliste ist leider ein Fehler aufgetreten. Bitte laden Sie die Seite und probieren Sie es erneut.',
-            severity: 'error',
-          });
-        },
+    if (!this.createNewTracklist$) {
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Anlegen der Trackliste',
+        detail:
+          'Beim Anlegen der Tracklist ist ein Fehler aufgetreten. Bitte lade die Seite neu und versuche es noch einmal.',
       });
+      return;
+    }
+
+    this.createNewTracklist$.subscribe({
+      next: (res) => {},
+      error: (err) => {
+        if (err.status === 401) {
+          // status 401 = user is not logged in anymore -> navigate to login page
+          this.userService.showNoAccessMessage();
+          return;
+        }
+
+        this.messageService.add({
+          life: 7000,
+          summary: 'Fehler beim Anlegen der Trackliste',
+          detail:
+            'Beim Anlegen der Trackliste ist leider ein Fehler aufgetreten. Bitte laden Sie die Seite und probieren Sie es erneut.',
+          severity: 'error',
+        });
+      },
+    });
   };
 
   public cancelNewTracklist = () => {};

@@ -67,6 +67,8 @@ export class SeasonPageComponent implements OnInit {
   public isDialogVisible: boolean = false;
   public visibleSeason: SeasonWithEpisodes | null = null;
   public isTracklistDialogVisible: boolean = false;
+  public currentSeasonID: number | null = null;
+  public currentSeasonName: string | null = null;
 
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
@@ -144,7 +146,9 @@ export class SeasonPageComponent implements OnInit {
     this.isDialogVisible = false;
   };
 
-  public openTracklistDialog = () => {
+  public openTracklistDialog = (seasonID: number, seasonName: string) => {
+    this.currentSeasonID = seasonID;
+    this.currentSeasonName = seasonName;
     this.isTracklistDialogVisible = true;
   };
 
