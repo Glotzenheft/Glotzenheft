@@ -47,4 +47,33 @@ class UserController extends AbstractController
 
         return $this->json($response['message']);
     }
+
+    /**
+     * @param Request $request
+     * @return JsonResponse
+     * @response 200 {"message": "Password successfully changed"}
+     * @response 401 {"error": "Invalid request"}
+     * @header Bearer Token
+     * @example POST /api/user
+     *           Header: Authorization: Bearer <JWT-TOKEN>
+     *           Body (JSON):
+     *           {
+     *               "security_question": "Was ist Ihre Lieblingsfilm bzw. Ihre Lieblingsserie?",
+     *               "security_answer": "Frieren",
+     *               "new_password": "newPassword123"
+     *           }
+     */
+    #[IsAuthenticated]
+    #[Route('/api/user', name: 'user_change_password', methods: ['POST'])]
+    public function changePassword(Request $request): JsonResponse
+    {
+        $response = $this->userService->changePassword($request);
+
+        if (isset($response['error']))
+        {
+            return $this->json($response['error'], $response['code']);
+        }
+
+        return $this->json($response['message']);
+    }
 }
