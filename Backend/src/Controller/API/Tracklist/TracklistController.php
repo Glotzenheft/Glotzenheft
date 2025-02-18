@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace App\Controller\API\Tracklist;
 
 use App\Security\IsAuthenticated;
-use App\Tracklist\TracklistService;
-use Symfony\Component\HttpFoundation\Request;
+use App\Service\Tracklist\TracklistService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistController extends AbstractController
