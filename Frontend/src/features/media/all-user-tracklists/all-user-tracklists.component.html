@@ -1,5 +1,43 @@
-<div *ngIf="userTracklists$ | async as userTracklist">
-  <div *ngFor="let tracklist of userTracklist">
-    {{ tracklist.tracklistName }}
+<ng-container *ngIf="userTracklists$ | async as userTracklist">
+  <div
+    *ngFor="let tracklist of userTracklist"
+    class="tracklistDIV"
+    (click)="onClickTracklist(tracklist)"
+  >
+    <p>{{ tracklist.tracklistName }}</p>
+    <p *ngIf="tracklist.id">Serie: {{ tracklist.id }}</p>
+
+    <p *ngIf="tracklist.startDate">
+      Startdatum: {{ tracklist.startDate | dateFormatting }}
+    </p>
+    <p *ngIf="!tracklist.startDate">
+      <i>kein Startdatum vorhanden</i>
+    </p>
+    <p>{{ tracklist.tracklistSeasons }}</p>
   </div>
-</div>
+</ng-container>
+
+<p-dialog
+  [(visible)]="isDialogVisible"
+  *ngIf="isDialogVisible && currentTracklist"
+  [header]="currentTracklist.tracklistName"
+  class="tracklistDialog"
+>
+  <p-accordion *ngIf="currentTracklist.tracklistSeasons.length > 0">
+    <p-accordion-panel
+      *ngFor="
+        let currentSeason of currentTracklist.tracklistSeasons;
+        let i = index
+      "
+      [value]="i"
+    >
+      <p-accordion-header>{{ currentSeason.id }}</p-accordion-header>
+    </p-accordion-panel>
+  </p-accordion>
+
+  <ul *ngIf="currentTracklist.tracklistSeasons.length > 0">
+    <li *ngFor="let currentSeason of currentTracklist.tracklistSeasons">
+      Anzahl der Episoden: {{ currentSeason.season.episodes.length }}
+    </li>
+  </ul>
+</p-dialog>

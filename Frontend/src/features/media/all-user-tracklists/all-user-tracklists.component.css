@@ -1,0 +1,21 @@
+.tracklistDIV {
+  width: 100%;
+  height: 4rem;
+  border: 0.1rem solid white;
+  border-radius: var(--border--radius);
+
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition-duration: var(--transition--duration);
+}
+
+.tracklistDIV:hover {
+  cursor: pointer;
+  background-color: white;
+  color: black;
+}

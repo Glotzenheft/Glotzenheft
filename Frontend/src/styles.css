@@ -813,6 +813,11 @@ p {
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
   }
+
+  .tracklistDialog .p-dialog {
+    width: 90%;
+    height: 90%;
+  }
 }
 
 .p-select {
