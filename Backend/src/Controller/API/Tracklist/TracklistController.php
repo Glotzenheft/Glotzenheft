@@ -70,7 +70,7 @@ class TracklistController extends AbstractController
             return $this->json($response['error'], $response['code']);
         }
 
-        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
+        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
     }
 
     #[IsAuthenticated]
@@ -119,24 +119,29 @@ class TracklistController extends AbstractController
 
     private function handleRequest(Request $request): array
     {
-        $tracklistName = $request->query->get('tracklist_name') ?? null;
-        $tracklistID = $request->query->get('tracklist_id') !== null
-            ? (int) $request->query->get('tracklist_id')
-            : null;
-        $userID = $request->attributes->get('user_id') !== null
-            ? $request->attributes->get('user_id')
-            : null;
-        $mediaID = $request->query->get('media_id') !== null
-            ? (int) $request->query->get('media_id')
-            : null;
-        $mediaType = $request->query->get('media_type') ?? null;
-        $seasonID = $request->query->get('season_id') !== null
-            ? (int) $request->query->get('season_id')
-            : null;
-        $tracklistStatus = $request->query->get('tracklist_status') ?? null;
-        $tracklistRating = $request->query->get('tracklist_rating') ?? null;
-        $tracklistStartDate = $request->query->get('tracklist_start_date') ?? null;
-        $tracklistFinishDate = $request->query->get('tracklist_finish_date') ?? null;
+        $tracklistName = $request->query->get('tracklist_name') ?: null;
+
+        $tracklistID = $request->query->get('tracklist_id') ?: null;
+        $tracklistID = $tracklistID !== null ? (int) $tracklistID : null;
+
+        $userID = $request->attributes->get('user_id') ?: null;
+
+        $mediaID = $request->query->get('media_id') ?: null;
+        $mediaID = $mediaID !== null ? (int) $mediaID : null;
+
+        $mediaType = $request->query->get('media_type') ?: null;
+
+        $seasonID = $request->query->get('season_id') ?: null;
+        $seasonID = $seasonID !== null ? (int) $seasonID : null;
+
+        $tracklistStatus = $request->query->get('tracklist_status') ?: null;
+
+        $tracklistRating = $request->query->get('tracklist_rating') ?: null;
+        $tracklistRating = $tracklistRating !== null ? (int) $tracklistRating : null;
+
+        $tracklistStartDate = $request->query->get('tracklist_start_date') ?: null;
+
+        $tracklistFinishDate = $request->query->get('tracklist_finish_date') ?: null;
 
         return [
             'tracklistName' => $tracklistName,

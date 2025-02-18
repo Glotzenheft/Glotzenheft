@@ -156,6 +156,7 @@ readonly class TracklistService
                 ->setTracklist($tracklist)
             ;
             $this->entityManager->persist($tracklistSeason);
+            $tracklist->addTracklistSeason($tracklistSeason);
         }
         $this->entityManager->flush();
 

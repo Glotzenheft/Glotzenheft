@@ -61,7 +61,7 @@ class Season
      * @var Collection<int, Episode>
      */
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: 'Season', orphanRemoval: true)]
-    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private Collection $episodes;
 
     /**

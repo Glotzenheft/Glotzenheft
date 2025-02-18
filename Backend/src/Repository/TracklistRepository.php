@@ -2,7 +2,9 @@
 
 namespace App\Repository;
 
+use App\Entity\Media;
 use App\Entity\Tracklist;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -15,6 +17,21 @@ class TracklistRepository extends ServiceEntityRepository
     {
         parent::__construct($registry, Tracklist::class);
     }
+
+    public function findByUserAndMediaWithSeasonsAndEpisodes(User $user, Media $media): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.tracklistSeasons', 's') // Verknüpfung zu TracklistSeason
+            ->leftJoin('s.tracklistEpisodes', 'e') // Verknüpfung zu TracklistEpisode
+            ->addSelect('s', 'e') // Sorgt dafür, dass die Objekte mitgeladen werden
+            ->where('t.user = :user')
+            ->andWhere('t.media = :media')
+            ->setParameter('user', $user)
+            ->setParameter('media', $media)
+            ->getQuery()
+            ->getResult();
+    }
+
 
     //    /**
     //     * @return Tracklist[] Returns an array of Tracklist objects

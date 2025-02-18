@@ -21,7 +21,7 @@ class TracklistEpisode
     #[Groups(['tracklist_details'])]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'tracklistEpisode', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Episode::class, cascade: ['persist'], inversedBy: 'tracklistEpisodes')]
     #[ORM\JoinColumn(nullable: false)]
     #[Groups(['tracklist_details'])]
     private ?Episode $episode = null;
@@ -31,7 +31,7 @@ class TracklistEpisode
     private ?DateTimeInterface $watchDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistEpisodes')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?TracklistSeason $TracklistSeason = null;
 
     public function getId(): ?int
