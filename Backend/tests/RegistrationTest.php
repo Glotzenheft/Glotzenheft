@@ -1,63 +1,39 @@
 <?php
+
 namespace App\Tests\Controller\API\Authorization;
 
-use Symfony\Component\Panther\PantherTestCase;
-use Facebook\WebDriver\WebDriverBy;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+use Doctrine\ORM\EntityManagerInterface;
+use App\Entity\User;
 
-class RegistrationTest extends PantherTestCase 
+class RegistrationTest extends WebTestCase
 {
-    public function testUserRegistration(): void 
+    public function testRegistration(): void
     {
-        // Erstellt virtuellen Browser
-        $client = static::createPantherClient(
-            ['external_base_uri' => 'http://localhost:4200'],
-            [],
-            ['browser' => PantherTestCase::CHROME]
-        );
-        
-        // Request an die Seite /register
-        $crawler = $client->request('GET', '/register');
-        
-        // Warten auf das Formular
-        $client->waitFor('form');
-        
-        // Überprüfen, ob die Formularfelder existieren
-        $this->assertSelectorExists('[name="username"]');
-        $this->assertSelectorExists('[name="password"]');
-        $this->assertSelectorExists('[name="passwordConfirm"]');
-        $this->assertSelectorExists('[name="answer"]');
-        
-        // Warten auf Dropdown "validationQuestion", falls benötigt
-        //$client->waitForVisibility('[formcontrolname="validationQuestion"]', 10);
-        
-        // Dropdown-Menü "validationQuestion" öffnen, falls es im Formular existiert
-        $client->executeScript("document.querySelector('[formcontrolname=\"validationQuestion\"]').scrollIntoView(true);");
-        $dropdown = $client->findElement(WebDriverBy::cssSelector('[formcontrolname="validationQuestion"]'));
-        $dropdown->click();
-        
-        // Warten auf das Öffnen des Dropdowns und Auswahl eines Werts
-        $client->waitFor('[role="option"]', 1);  
-        
-        // Wähle den ersten verfügbaren Wert im Dropdown
-        $client->executeScript("document.querySelector('[role=\"option\"]').click()");
-        
-        // Das Formular ausfüllen
-        $form = $crawler->selectButton('Registrieren')->form([
-            'username' => 'AutoTester',  // username
-            'password' => '12345678',  // Passwort
-            'passwordConfirm' => '12345678',  // Passwortbestätigung
-            'answer' => 'One Piece',  // Antwort auf Sicherheitsfrage
-        ]);
-        
-        // Formular absenden
-        $client->submit($form);
+        $client = static::createClient();
+        $entityManager = static::getContainer()->get(EntityManagerInterface::class);        
 
-        // Warte auf eine Weiterleitung zur Login-Seite
-        $client->waitFor('.login-page');  // Warten auf Login-Seite
-        $this->assertResponseRedirects('/login');  // Überprüfen, ob die Weiterleitung zur Login-Seite erfolgt
-        
-        // Debugging-Ausgabe, um zu sehen, ob das Formular korrekt gesendet wurde
-        $responseContent = $client->getResponse()->getContent();
-        $this->assertNotEmpty($responseContent, 'Antwortinhalt ist leer');
+        $userData = [
+            'username' => 'AutoTester4',
+            'password' => '12345678!',
+            'security_question' => 'Welche Serie haben Sie zuerst geschaut?',
+            'security_answer' => 'One Piece',
+        ];
+
+        // Registration Request
+        $client->request('POST', '/api/register', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($userData));
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User registration failed');
+        $registerResponse = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('token', $registerResponse, 'No token received after registration');
+        echo "User registration successful.\n";
+
+        // Cleanup: Delete test user
+        $user = $entityManager->getRepository(User::class)->findOneBy(['username' => $userData['username']]);
+        if ($user) {
+            $entityManager->remove($user);
+            $entityManager->flush();
+            echo "Test user deleted.\n";
+        }
     }
 }

@@ -1,28 +1,26 @@
 <?php
+
 namespace App\Tests\Controller\API\Authorization;
 
-use Symfony\Component\Panther\PantherTestCase;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
 
-class LoginTest extends PantherTestCase {
-    public function testUserLogin(): void {
-        // Erstellt virtuellen Browser
-        $client = static::createPantherClient(
-            ['external_base_uri' => 'http://localhost:4200'],
-            [],
-            ['browser' => PantherTestCase::CHROME]
-        );
-        $crawler = $client->request('GET', '/login');
+class LoginTest extends WebTestCase
+{
+    public function testLogin(): void
+    {
+        $client = static::createClient();
 
-        $this->assertStringContainsString('/login', $client->getCurrentURL());
+        // Login Request
+        $loginData = [
+            'username' => 'AutoTester2',
+            'password' => '12345678!',
+        ];
         
-        $client->executeScript('
-        document.getElementById("username").value = "Auto2Test";
-        document.getElementById("password").value = "12345678";
-        ');
-        
-        // Klicke auf den "Einloggen"-Button mit JavaScript
-        $client->executeScript('document.querySelector("button[type=\'submit\']").click();');
-        
-        //$this->assertStringContainsString('/user', $client->getCurrentURL());
+        $client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($loginData));
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User login failed');
+        $loginResponse = json_decode($client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('token', $loginResponse, 'No token received after login');
+        echo "User login successful.\n";
     }
 }

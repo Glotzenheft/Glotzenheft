@@ -1,5 +1,5 @@
 <?php
-namespace App\Tests\Controller\API\Authorization;
+
 
 use Symfony\Component\Panther\PantherTestCase;
 
@@ -13,7 +13,7 @@ public function testHomePage(): void
             ['browser' => PantherTestCase::CHROME]
         );
         $crawler = $client->request('GET', '/');
-        
+
         // Überprüfen, ob der Titel "Glotzenheft" vorhanden ist
         $this->assertSelectorTextContains('h1', 'Glotzenheft');
     
