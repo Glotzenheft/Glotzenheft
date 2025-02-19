@@ -21,7 +21,7 @@ class Episode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes', 'tracklist_episode'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -37,7 +37,7 @@ class Episode
     private ?string $overview = null;
 
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes', 'tracklist_episode'])]
     private ?int $episodeNumber = null;
 
     #[ORM\Column]
