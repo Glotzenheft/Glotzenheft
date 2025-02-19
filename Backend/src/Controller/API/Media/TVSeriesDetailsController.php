@@ -43,7 +43,6 @@ class TVSeriesDetailsController extends AbstractController
             return $this->json($media['error'], $media['code']);
         }
 
-        //return $this->json($media, context: ['groups' => ['media_details', 'tracklist_details']]);
         return new JsonResponse([
             'media' => $this->normalizer->normalize($media['media'], null, ['groups' => ['media_details']]),
             'tracklists' => $this->normalizer->normalize($media['tracklists'], null, ['groups' => ['tracklist_details']]),
