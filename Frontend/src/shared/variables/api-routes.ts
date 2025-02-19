@@ -55,3 +55,6 @@ export const ROUTE_CREATE_NEW_MOVIE_TRACKLIST: string[] = [
 
 export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
   'https://127.0.0.1:8000/api/user-tracklists';
+
+export const ROUTE_DELETE_USER_ACCOUNT: string =
+  'https://127.0.0.1:8000/api/user';

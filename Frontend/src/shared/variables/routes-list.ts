@@ -93,6 +93,13 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'tracklists',
     showInLinkList: false,
   },
+  {
+    // 13
+    description: 'Account löschen',
+    fullUrl: 'user/delete-user',
+    shortUrl: 'delete-user',
+    showInLinkList: false,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {
