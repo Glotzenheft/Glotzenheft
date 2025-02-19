@@ -18,7 +18,7 @@ class TracklistSeason
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['tracklist_details'])]
+    #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistSeasons')]
@@ -28,13 +28,13 @@ class TracklistSeason
     /**
      * @var Collection<int, TracklistEpisode>
      */
-    #[ORM\OneToMany(targetEntity: TracklistEpisode::class, mappedBy: 'TracklistSeason', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: TracklistEpisode::class, mappedBy: 'tracklistSeason', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['tracklist_details'])]
     private Collection $tracklistEpisodes;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistSeasons')]
     #[ORM\JoinColumn(nullable: false)]
-    //#[Groups(['tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?Season $season = null;
 
     public function __construct()

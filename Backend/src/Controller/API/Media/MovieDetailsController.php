@@ -11,6 +11,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Serializer\Exception\ExceptionInterface;
 
 class MovieDetailsController extends AbstractController
 {
@@ -22,6 +23,7 @@ class MovieDetailsController extends AbstractController
      * @example https://127.0.0.1:8000/api/movie?tmdb_id=372058&media_id=6
      * @param Request $request
      * @return JsonResponse
+     * @throws ExceptionInterface
      */
     #[IsAuthenticated]
     #[Route('/api/movie', name: 'get_movie_details', methods: ['GET'])]
@@ -41,6 +43,9 @@ class MovieDetailsController extends AbstractController
             return $this->json($media['error'], $media['code']);
         }
 
-        return $this->json($media, context: ['groups' => ['media_details', 'tracklist_details']]);
+        return new JsonResponse([
+            'media' => $this->normalizer->normalize($media['media'], null, ['groups' => ['media_details']]),
+            'tracklists' => $this->normalizer->normalize($media['tracklists'], null, ['groups' => ['tracklist_details']]),
+        ]);
     }
 }

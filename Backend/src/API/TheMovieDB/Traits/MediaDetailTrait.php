@@ -15,6 +15,7 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 trait MediaDetailTrait
 {
@@ -26,7 +27,8 @@ trait MediaDetailTrait
         private readonly LoggerInterface $logger,
         private readonly EntityManagerInterface $entityManager,
         private readonly TracklistService $tracklistService,
-        private readonly TracklistRepository $tracklistRepository
+        private readonly TracklistRepository $tracklistRepository,
+        private readonly NormalizerInterface $normalizer,
     )
     {
     }
