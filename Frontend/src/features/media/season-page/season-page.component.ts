@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   Season,
+  SeasonEpisode,
   SeasonWithEpisodes,
 } from '../../../shared/interfaces/media-interfaces';
 import { Observable, of } from 'rxjs';
@@ -33,6 +34,13 @@ import { EpisodeListComponent } from '../../components/episode-list/episode-list
 import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 import { UserService } from '../../../service/user/user.service';
 import { AccordionModule } from 'primeng/accordion';
+import {
+  SeasonTracklist,
+  Tracklist,
+  TVSeasonWithTracklist,
+  TVWithTracklist,
+} from '../../../shared/interfaces/tracklist-interfaces';
+import { joinTVWithTracklists } from '../../../shared/functions/tracklist-functions';
 
 @Component({
   selector: 'app-season-page',
@@ -59,6 +67,8 @@ import { AccordionModule } from 'primeng/accordion';
 export class SeasonPageComponent implements OnInit {
   public tvSeriesID: string | null = null;
   public seasonData$: Observable<Season> | null = null;
+  public tvDataWithTracklist: TVWithTracklist | null = null;
+  public currentTracklist: SeasonTracklist | null = null;
   public episodeRating: number = 0;
   public posterPath: string = TMDB_POSTER_PATH;
 
@@ -103,6 +113,15 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.seasonData$) {
       this.hasError = true;
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Laden der Seite',
+        detail:
+          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
+      });
+
+      return;
     }
 
     this.seasonData$.subscribe({
@@ -114,13 +133,13 @@ export class SeasonPageComponent implements OnInit {
         // }
 
         this.trackListForm = this.formBuilder.group({
-          trackListName: [res.name, Validators.required],
+          trackListName: [res.media.name, Validators.required],
         });
 
-        if (this.tvSeriesID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
-          // replacing the url with "media_id" if necessary
-          this.location.replaceState(`/media/tv/${res.id}`);
-        }
+        this.currentTracklist = res.tracklists[0];
+
+        // join seasondata with tracklists
+        this.tvDataWithTracklist = joinTVWithTracklists(res);
       },
       error: (err) => {
         if (err.status === 401) {

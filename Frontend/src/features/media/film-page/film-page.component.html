@@ -31,21 +31,23 @@
   <div class="seasonMeta">
     <div class="seasonPictureWrapper">
       <div class="seasonMetaPicture">
-        <p *ngIf="filmData.posterPath === null">kein Bild vorhanden</p>
+        <p *ngIf="filmData.media.posterPath === null">kein Bild vorhanden</p>
         <img
-          *ngIf="filmData.posterPath !== null"
-          [src]="'https://image.tmdb.org/t/p/w500' + filmData.posterPath"
-          [alt]="'Dies ist das Bild für von ' + filmData.name"
+          *ngIf="filmData.media.posterPath !== null"
+          [src]="'https://image.tmdb.org/t/p/w500' + filmData.media.posterPath"
+          [alt]="'Dies ist das Bild für von ' + filmData.media.name"
         />
       </div>
     </div>
     <div class="seasonMetaContent">
       <div>
         <h2>Beschreibung</h2>
-        <p class="descriptionP">{{ filmData.description }}</p>
-        <p>Ausstrahlung am {{ filmData.firstAirDate | dateFormatting }}</p>
-        <p *ngIf="filmData.seasons.length > 0">
-          Anzahl der Staffeln: {{ filmData.seasons.length }}
+        <p class="descriptionP">{{ filmData.media.description }}</p>
+        <p>
+          Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}
+        </p>
+        <p *ngIf="filmData.media.seasons.length > 0">
+          Anzahl der Staffeln: {{ filmData.media.seasons.length }}
         </p>
       </div>
     </div>
@@ -65,12 +67,12 @@
   class="dialog"
   *ngIf="isTracklistDialogVisible && (filmData$ | async) as filmData"
   [(visible)]="isTracklistDialogVisible"
-  [header]="filmData.name"
+  [header]="filmData.media.name"
 >
   <app-create-movie-tracklist
     *ngIf="filmData"
-    [mediaID]="filmData.id"
-    [mediaName]="filmData.name"
+    [mediaID]="filmData.media.id"
+    [mediaName]="filmData.media.name"
     (cancelTracklistCreation)="closeTracklistDialog()"
   />
 </p-dialog>

@@ -26,28 +26,26 @@
 </div>
 
 <div *ngIf="seasonData$ | async as seasonData">
-  <div class="heading">
-    <h1>{{ seasonData.name }}</h1>
-    <p *ngIf="seasonData.mediaID">GESPEICHERT</p>
-  </div>
   <div class="seasonMeta">
     <div class="seasonPictureWrapper">
       <div class="seasonMetaPicture">
-        <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
+        <p *ngIf="!seasonData.media.posterPath">kein Bild vorhanden</p>
         <img
-          *ngIf="seasonData.posterPath !== null"
-          [src]="posterPath + seasonData.posterPath"
-          [alt]="'Dies ist das Bild für von ' + seasonData.name"
+          *ngIf="seasonData.media.posterPath !== null"
+          [src]="posterPath + seasonData.media.posterPath"
+          [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
         />
       </div>
     </div>
     <div class="seasonMetaContent">
       <div>
         <h2>Beschreibung</h2>
-        <p class="descriptionP">{{ seasonData.description }}</p>
-        <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
-        <p *ngIf="seasonData.seasons.length > 0">
-          Anzahl der Staffeln: {{ seasonData.seasons.length }}
+        <p class="descriptionP">{{ seasonData.media.description }}</p>
+        <p>
+          Ausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}
+        </p>
+        <p *ngIf="seasonData.media.seasons.length > 0">
+          Anzahl der Staffeln: {{ seasonData.media.seasons.length }}
         </p>
       </div>
     </div>
@@ -62,13 +60,13 @@
     />
   </div> -->
 
-  <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
+  <div class="mainDIV episodes" *ngIf="seasonData.media.seasons.length > 0">
     <h2>Staffeln</h2>
 
     <p-accordion>
       <p-accordion-panel
         [value]="i"
-        *ngFor="let season of seasonData.seasons; let i = index"
+        *ngFor="let season of seasonData.media.seasons; let i = index"
         class="panel"
       >
         <p-accordion-header>{{ season.name }}</p-accordion-header>
@@ -77,9 +75,9 @@
             <div class="seasonPoster">
               <p *ngIf="season.posterPath === null">kein Bild vorhanden</p>
               <img
-                *ngIf="seasonData.posterPath !== null"
+                *ngIf="seasonData.media.posterPath !== null"
                 [src]="posterPath + season.posterPath"
-                [alt]="'Dies ist das Bild für von ' + seasonData.name"
+                [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
               />
             </div>
             <div class="seasonMeta">
@@ -112,12 +110,12 @@
   class="dialog"
   *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
   [(visible)]="isTracklistDialogVisible"
-  [header]="seasonData.name"
+  [header]="seasonData.media.name"
 >
   <app-create-new-tracklist
     *ngIf="currentSeasonID"
-    [mediaName]="seasonData.name"
-    [mediaID]="seasonData.id"
+    [mediaName]="seasonData.media.name"
+    [mediaID]="seasonData.media.id"
     [seasonID]="currentSeasonID"
   />
 </p-dialog>

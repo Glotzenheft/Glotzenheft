@@ -1,4 +1,4 @@
-import { TracklistStatusType } from '../variables/tracklist';
+import { SeasonTracklist } from "./tracklist-interfaces";
 
 export interface TMDBGenre {
   id: number;
@@ -7,18 +7,22 @@ export interface TMDBGenre {
 }
 
 export interface Film {
-  id: number; // media id from own db
-  tmdbID: number; // tmdb id from external api
-  imdbID: string;
-  originalName: string;
-  name: string;
-  description: string;
-  firstAirDate: string;
-  tmdbGenres: TMDBGenre[];
-  seasons: [];
-  type: string;
-  posterPath: string;
-  backdropPath: string;
+  media: {
+    id: number; // media id from own db
+    tmdbID: number; // tmdb id from external api
+    imdbID: string;
+    originalName: string;
+    name: string;
+    description: string;
+    firstAirDate: string;
+    tmdbGenres: TMDBGenre[];
+    seasons: any[];
+    type: string;
+    posterPath: string;
+    backdropPath: string;
+  };
+
+  tracklists: SeasonTracklist[];
 }
 
 export interface SeasonEpisode {
@@ -45,20 +49,25 @@ export interface SeasonWithEpisodes {
 }
 
 export interface Season {
-  id: number;
-  tmdbID: number;
-  imdbID: string;
-  originalName: string;
-  name: string;
-  description: string;
-  firstAirDate: string;
-  tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
-  seasons: SeasonWithEpisodes[];
-  type: string;
-  posterPath: string;
-  backdropPath: string;
-  mediaID: string | null;
+  media: {
+    id: number;
+    tmdbID: number;
+    imdbID: string;
+    originalName: string;
+    name: string;
+    description: string;
+    firstAirDate: string;
+    tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
+    seasons: SeasonWithEpisodes[];
+    type: string;
+    posterPath: string;
+    backdropPath: string;
+    mediaID: string | null;
+  };
+  tracklists: SeasonTracklist[];
 }
+
+
 
 export interface TV {
   // tv series
@@ -92,45 +101,9 @@ export interface MultiSearchResponse {
   total_pages: 1;
 }
 
-export interface TrackListCreation {
-  name: string;
-  tmdbId: number;
-}
+
 
 export interface MediaIDResponse {
   media_id: string;
 }
 
-export interface TracklistSeasonEpisode {
-  id: number;
-  name: string;
-  overview: string;
-  episodeNumber: number;
-  runtime: number; // in minutes
-  airDate: string;
-  stillPath: string;
-}
-
-export interface TracklistSeason {
-  id: number;
-  tracklistEpisodes: any[];
-  season: {
-    id: 1;
-    seasonNumber: 1;
-    episodes: TracklistSeason[];
-  };
-}
-
-export interface Tracklist {
-  id: number;
-  rating: null | number;
-  status: TracklistStatusType;
-  startDate: null | string;
-  finishDate: null | string;
-  tracklistName: string;
-  media: {
-    id: number;
-    type: string;
-  };
-  tracklistSeasons: TracklistSeason[];
-}

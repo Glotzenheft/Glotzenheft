@@ -16,7 +16,6 @@ import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatti
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
 import { StringService } from '../../../service/string/string.service';
@@ -88,17 +87,27 @@ export class FilmPageComponent implements OnInit {
 
     if (!this.filmData$) {
       this.hasError = true;
+
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Laden der Seite',
+        detail:
+          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
+      });
+
+      return;
     }
 
     this.filmData$.subscribe({
       next: (res: Film) => {
         this.trackListForm = this.formBuilder.group({
-          trackListName: [res.name, Validators.required],
+          trackListName: [res.media.name, Validators.required],
         });
 
-        if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
+        if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.media.id) {
           // replacing the url with "media_id" if necessary
-          this.location.replaceState(`/media/movie/${res.id}`);
+          this.location.replaceState(`/media/movie/${res.media.id}`);
         }
       },
       error: (err) => {
