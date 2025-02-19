@@ -6,14 +6,7 @@ import {
   RegisterCredentials,
   ResetPasswordCredentials,
 } from '../../shared/interfaces/login';
-import {
-  BehaviorSubject,
-  catchError,
-  last,
-  Observable,
-  tap,
-  throwError,
-} from 'rxjs';
+import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
 import { isUserLoggedIn } from '../../guards/auth.guard';
 import { isPlatformBrowser } from '@angular/common';
 import {
@@ -23,6 +16,7 @@ import {
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
+import { MediaService } from '../media/media.service';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +36,8 @@ export class UserService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private mediaService: MediaService
   ) {}
 
   loginIntoAccount = (
@@ -87,9 +82,19 @@ export class UserService {
 
   public resetPassword = (
     resetPasswordCredentials: ResetPasswordCredentials
-  ): Observable<any> => {
+  ): Observable<any> | null => {
+    const header = this.mediaService.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
     return this.http
-      .post<any>(ROUTE_RESET_PASSWORD, JSON.stringify(resetPasswordCredentials))
+      .post<any>(
+        ROUTE_RESET_PASSWORD,
+        JSON.stringify(resetPasswordCredentials),
+        { headers: header }
+      )
       .pipe(
         catchError((error: HttpErrorResponse) => {
           return throwError(() => error);

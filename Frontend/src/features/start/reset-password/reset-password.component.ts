@@ -19,6 +19,9 @@ import { NavigationService } from '../../../service/navigation/navigation.servic
 import { ResetPasswordCredentials } from '../../../shared/interfaces/login';
 import { PasswordModule } from 'primeng/password';
 import { UserService } from '../../../service/user/user.service';
+import { Observable } from 'rxjs';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-reset-password',
@@ -41,18 +44,19 @@ export class ResetPasswordComponent implements OnInit {
   public questionList: ValidationQuestion[] = VALIDATION_QUESTIONS.map(
     (question: string) => ({ name: question, code: question })
   );
+  public resetPasswordData$: Observable<any> | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
     private securityService: SecurityService,
     private messageService: MessageService,
     private userService: UserService,
-    public navigationService: NavigationService
+    public navigationService: NavigationService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
     this.resetPasswordGroup = this.formBuilder.group({
-      username: ['', [Validators.required]],
       validationQuestion: [{ name: '', code: '' }, Validators.required],
       validationAnswer: ['', Validators.required],
       newPassword: ['', [Validators.required, Validators.minLength(8)]],
@@ -66,39 +70,40 @@ export class ResetPasswordComponent implements OnInit {
       return;
     }
 
-    if (
-      !this.securityService.isValidUsername(
-        this.resetPasswordGroup.get('username')?.value
-      )
-    ) {
-      this.messageService.add({
-        life: 7000,
-        summary: 'Ungültiger Nutzername',
-        detail: `Der Nutzername darf keines der folgenden Zeichen enthalten: ${this.securityService.INVALID_CHARS.join(
-          ', '
-        )}`,
-      });
-    }
-
     const newPasswordData: ResetPasswordCredentials = {
-      username: this.resetPasswordGroup.get('username')?.value,
-      validationQuestion:
+      security_question:
         this.resetPasswordGroup.get('validationQuestion')?.value.name,
-      validationAnswer: this.resetPasswordGroup.get('validationAnswer')?.value,
-      newPassword: this.resetPasswordGroup.get('newPassword')?.value,
+      security_answer: this.resetPasswordGroup.get('validationAnswer')?.value,
+      new_password: this.resetPasswordGroup.get('newPassword')?.value,
     };
 
     console.log(newPasswordData);
 
-    this.userService.resetPassword(newPasswordData).subscribe({
+    this.resetPasswordData$ = this.userService.resetPassword(newPasswordData);
+
+    if (!this.resetPasswordData$) {
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Ändern des Passwortes',
+        detail:
+          'Beim Ändern des Passwortes ist ein Fehler aufgetreten. Bitte versuche es erneut.',
+      });
+      return;
+    }
+
+    this.resetPasswordData$.subscribe({
       next: (res) => {
         this.messageService.add({
           life: 7000,
           summary: 'Passwort erfolgreich geändert',
           detail:
-            'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit diesem anmelden.',
+            'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit diesem anmelden. Sie werden automatisch ausgeloggt',
           severity: 'success',
         });
+
+        this.userService.logoutOfAccount();
+        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
       },
       error: (err) => {
         if (err.status === 401) {
