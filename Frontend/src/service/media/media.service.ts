@@ -31,7 +31,7 @@ export class MediaService {
     @Inject(PLATFORM_ID) private platformId: Object
   ) {}
 
-  private getHeader = (): HttpHeaders | null => {
+  public getHeader = (): HttpHeaders | null => {
     let userToken: string = '';
 
     if (isPlatformBrowser(this.platformId)) {

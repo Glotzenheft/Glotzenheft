@@ -11,18 +11,22 @@ import {
   catchError,
   last,
   Observable,
+  shareReplay,
   tap,
   throwError,
 } from 'rxjs';
 import { isUserLoggedIn } from '../../guards/auth.guard';
 import { isPlatformBrowser } from '@angular/common';
 import {
+  ROUTE_DELETE_USER_ACCOUNT,
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
 } from '../../shared/variables/api-routes';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
+import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
+import { MediaService } from '../media/media.service';
 
 @Injectable({
   providedIn: 'root',
@@ -42,7 +46,8 @@ export class UserService {
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object,
     private messageService: MessageService,
-    private router: Router
+    private router: Router,
+    private mediaService: MediaService
   ) {}
 
   loginIntoAccount = (
@@ -188,5 +193,30 @@ export class UserService {
         `${Number(loginTries) + 1}`
       );
     }
+  };
+
+  public deleteUserAccount = (
+    userData: DeleteUserRequest
+  ): Observable<any> | null => {
+    const header = this.mediaService.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    return this.http
+      .delete<any>(ROUTE_DELETE_USER_ACCOUNT, {
+        body: JSON.stringify({
+          security_question: userData.security_question,
+          security_answer: userData.security_answer,
+        }),
+        headers: header,
+      })
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   };
 }

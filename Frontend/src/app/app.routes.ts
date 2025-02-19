@@ -15,25 +15,30 @@ import { AllUserTracklistsComponent } from '../features/media/all-user-tracklist
 
 export const routes: Routes = [
   {
+    // 0
     path: '',
     component: StartMainComponent,
   },
   {
+    // 1
     path: 'login',
     component: LoginComponent,
     canActivate: [authGuard],
   },
   {
+    // 2
     path: 'register',
     component: RegisterComponent,
     canActivate: [authGuard],
   },
   {
+    // 3
     path: 'reset-password',
     component: ResetPasswordComponent,
     canActivate: [authGuard],
   },
   {
+    // 4
     path: 'user',
     loadChildren: () =>
       import('../features/user/user.module').then(
@@ -42,6 +47,7 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    // 5
     path: 'media',
     loadChildren: () =>
       import('../features/media/media.module').then(
@@ -50,28 +56,34 @@ export const routes: Routes = [
     canActivate: [authGuard],
   },
   {
+    // 6
     path: 'imprint',
     component: ImpressumComponent,
   },
   {
+    // 7
     path: 'about',
     component: AboutComponent,
   },
   {
+    // 7
     path: 'privacy-policy',
     component: PrivacyPolicyComponent,
   },
   {
+    // 8
     path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
     component: MultiSearchComponent,
     canActivate: [authGuard],
   },
   {
+    // 9
     path: ROUTES_LIST[12].fullUrl,
     component: AllUserTracklistsComponent,
     canActivate: [authGuard],
   },
   {
+    // 19
     path: '**',
     redirectTo: '/',
     pathMatch: 'full',
