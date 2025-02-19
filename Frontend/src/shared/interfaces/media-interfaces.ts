@@ -1,4 +1,4 @@
-import { TracklistStatusType } from '../variables/tracklist';
+import { SeasonTracklist } from "./tracklist-interfaces";
 
 export interface TMDBGenre {
   id: number;
@@ -67,58 +67,7 @@ export interface Season {
   tracklists: SeasonTracklist[];
 }
 
-export interface SeasonTracklistEpisode {
-  id: number;
-  tmdbEpisodeID: number;
-  name: string;
-  overview: string;
-  episodeNumber: number;
-  runtime: number;
-  airDate: string;
-  stillPath: string;
-}
 
-export interface SeasonTracklist {
-  id: number;
-  media: {
-    id: number;
-    tmdbID: number;
-    imdbID: string;
-    originalName: string;
-    name: string;
-    description: string;
-    firstAirDate: string;
-    tmdbGenres: {
-      id: number;
-      tmdbGenreID: number;
-      name: string;
-    }[];
-
-    seasons: {
-      id: number;
-      tmdbSeasonID: number;
-      seasonNumber: number;
-      name: string;
-      overview: string;
-      airDate: string;
-      episodeCount: number;
-      posterPath: string;
-      episodes: SeasonTracklistEpisode[];
-    }[];
-    type: 'tv';
-    posterPath: '/1KRSR1dUAOpUv3mxHU5W3QWo2og.jpg';
-    backdropPath: '/odVlTMqPPiMksmxpN9cCbPCjUPP.jpg';
-  };
-  rating: null | number;
-  status: string;
-  startDate: null | string;
-  finishDate: null | string;
-  tracklistName: string;
-  tracklistSeasons: {
-    id: number;
-    tracklistEpisodes: any[];
-  }[];
-}
 
 export interface TV {
   // tv series
@@ -152,45 +101,9 @@ export interface MultiSearchResponse {
   total_pages: 1;
 }
 
-export interface TrackListCreation {
-  name: string;
-  tmdbId: number;
-}
+
 
 export interface MediaIDResponse {
   media_id: string;
 }
 
-export interface TracklistSeasonEpisode {
-  id: number;
-  name: string;
-  overview: string;
-  episodeNumber: number;
-  runtime: number; // in minutes
-  airDate: string;
-  stillPath: string;
-}
-
-export interface TracklistSeason {
-  id: number;
-  tracklistEpisodes: any[];
-  season: {
-    id: 1;
-    seasonNumber: 1;
-    episodes: TracklistSeason[];
-  };
-}
-
-export interface Tracklist {
-  id: number;
-  rating: null | number;
-  status: TracklistStatusType;
-  startDate: null | string;
-  finishDate: null | string;
-  tracklistName: string;
-  media: {
-    id: number;
-    type: string;
-  };
-  tracklistSeasons: TracklistSeason[];
-}

@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MediaService } from '../../../service/media/media.service';
 import { Observable } from 'rxjs';
-import { Tracklist } from '../../../shared/interfaces/media-interfaces';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { CommonModule } from '@angular/common';
@@ -11,6 +10,7 @@ import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatti
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
+import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
 
 @Component({
   selector: 'app-all-user-tracklists',

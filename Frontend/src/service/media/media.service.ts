@@ -3,8 +3,6 @@ import {
   Film,
   MediaIDResponse,
   Season,
-  Tracklist,
-  TrackListCreation,
 } from '../../shared/interfaces/media-interfaces';
 import { catchError, Observable, shareReplay, throwError } from 'rxjs';
 import {
@@ -22,6 +20,7 @@ import {
   ROUTE_MULTI_SEARCH,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
+import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
 
 @Injectable({
   providedIn: 'root',
