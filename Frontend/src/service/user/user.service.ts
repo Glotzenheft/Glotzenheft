@@ -6,7 +6,6 @@ import {
   RegisterCredentials,
   ResetPasswordCredentials,
 } from '../../shared/interfaces/login';
-<<<<<<< HEAD
 import {
   BehaviorSubject,
   catchError,
@@ -16,9 +15,6 @@ import {
   tap,
   throwError,
 } from 'rxjs';
-=======
-import { BehaviorSubject, catchError, Observable, tap, throwError } from 'rxjs';
->>>>>>> feature/frontend/customize-reset-password
 import { isUserLoggedIn } from '../../guards/auth.guard';
 import { isPlatformBrowser } from '@angular/common';
 import {
@@ -29,10 +25,7 @@ import {
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-<<<<<<< HEAD
 import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
-=======
->>>>>>> feature/frontend/customize-reset-password
 import { MediaService } from '../media/media.service';
 
 @Injectable({
