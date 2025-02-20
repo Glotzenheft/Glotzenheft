@@ -52,26 +52,10 @@ class TracklistService
     {
         $this->data = $this->handleRequest($request);
 
-        if (!isset($this->data['tracklist_id']))
+        $tracklist = $this->validateAndGetTracklist();
+        if (is_array($tracklist)) // When there is an error
         {
-            return $this->returnTracklistIDNotProvided();
-        }
-
-        if (!isset($this->data['user_id']))
-        {
-            return $this->returnInvalidRequest();
-        }
-
-        $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
-        if (!$user instanceof User)
-        {
-            return $this->returnUserNotFound();
-        }
-
-        $tracklist = $this->entityManager->getRepository(Tracklist::class)->find($this->data['tracklist_id']);
-        if (!$tracklist instanceof Tracklist || !$tracklist->getUser() === $user)
-        {
-            return $this->returnTracklistNotFound();
+            return $tracklist;
         }
 
         return [
@@ -141,21 +125,10 @@ class TracklistService
             ->setMedia($media)
         ;
 
-        if (isset($this->data['tracklist_rating']))
+        $tracklist = $this->setOptionalTracklistProperties($tracklist);
+        if (is_array($tracklist)) // When there is an error
         {
-            $tracklist->setRating($this->data['tracklist_rating']);
-        }
-
-        if (isset($this->data['tracklist_start_date']))
-        {
-            $startDate = DateTime::createFromFormat('Y-m-d', $this->data['tracklist_start_date']);
-            $tracklist->setStartDate($startDate);
-        }
-
-        if (isset($this->data['tracklist_finish_date']))
-        {
-            $finishDate = DateTime::createFromFormat('Y-m-d', $this->data['tracklist_finish_date']);
-            $tracklist->setFinishDate($finishDate);
+            return $tracklist;
         }
 
         $this->entityManager->persist($tracklist);
@@ -186,5 +159,122 @@ class TracklistService
         return [
             'tracklist' => $tracklist,
         ];
+    }
+
+    /**
+     * @param Request $request
+     * @return array
+     */
+    public function updateTracklist(Request $request): array
+    {
+        $this->data = $this->handleRequest($request);
+
+        $tracklist = $this->validateAndGetTracklist();
+        if (is_array($tracklist)) // When there is an error
+        {
+            return $tracklist;
+        }
+
+        if (isset($this->data['tracklist_name']))
+        {
+            $tracklist->setTracklistName($this->data['tracklist_name']);
+        }
+
+        if (isset($this->data['tracklist_status']))
+        {
+            try
+            {
+                $tracklistStatus = TracklistStatus::from($this->data['tracklist_status']);
+                $tracklist->setStatus($tracklistStatus);
+            }
+            catch
+            (ValueError $e)
+            {
+                return $this->returnInvalidTracklistStatus();
+            }
+        }
+
+        $tracklist = $this->setOptionalTracklistProperties($tracklist);
+        if (is_array($tracklist)) // When there is an error
+        {
+            return $tracklist;
+        }
+
+        $this->entityManager->persist($tracklist);
+        $this->entityManager->flush();
+
+        return [
+            'tracklist' => $tracklist,
+        ];
+    }
+
+    private function setOptionalTracklistProperties(Tracklist $tracklist): Tracklist | array
+    {
+        if (!empty($this->data['tracklist_rating']) && is_numeric($this->data['tracklist_rating']))
+        {
+            $rating = (int) $this->data['tracklist_rating'];
+            if ($rating < 1 || $rating > 10)
+            {
+                return $this->returnInvalidRating();
+            }
+
+            $tracklist->setRating($rating);
+        }
+
+        if (!empty($this->data['tracklist_start_date']))
+        {
+            $startDate = DateTime::createFromFormat('Y-m-d', $this->data['tracklist_start_date']);
+            if ($startDate === false || $startDate->format('Y-m-d') !== $this->data['tracklist_start_date'])
+            {
+                return $this->returnInvalidDate();
+            }
+
+            $tracklist->setStartDate($startDate);
+        }
+
+        if (!empty($this->data['tracklist_finish_date']))
+        {
+            $finishDate = DateTime::createFromFormat('Y-m-d', $this->data['tracklist_finish_date']);
+            if ($finishDate === false || $finishDate->format('Y-m-d') !== $this->data['tracklist_finish_date'])
+            {
+                return $this->returnInvalidDate();
+            }
+
+            $tracklist->setFinishDate($finishDate);
+        }
+
+        return $tracklist;
+    }
+
+    private function validateAndGetTracklist(): Tracklist | array
+    {
+        if (!isset($this->data['tracklist_id']))
+        {
+            return $this->returnTracklistIDNotProvided();
+        }
+
+        if (!isset($this->data['user_id']))
+        {
+            return $this->returnInvalidRequest();
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
+        if (!$user instanceof User)
+        {
+            return $this->returnUserNotFound();
+        }
+
+        $tracklist = $this->entityManager->getRepository(Tracklist::class)->find($this->data['tracklist_id']);
+        if (!$tracklist instanceof Tracklist)
+        {
+            return $this->returnTracklistNotFound();
+        }
+
+        if (!$tracklist->getUser() === $user)
+        {
+            return $this->returnUserNotAuthorized();
+        }
+
+        return $tracklist;
     }
 }
