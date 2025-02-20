@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: TracklistRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -43,10 +44,12 @@ class Tracklist
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $startDate = null;
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $finishDate = null;
 
     #[Groups(['tracklist_details'])]

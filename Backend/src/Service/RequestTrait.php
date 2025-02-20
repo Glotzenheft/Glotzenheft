@@ -233,6 +233,21 @@ trait RequestTrait
         ];
     }
 
+    private function returnInvalidRating(): array
+    {
+        return [
+            'error' => 'Invalid rating provided. Rating must be between 1 and 10.',
+            'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnInvalidDate(): array
+    {
+        return [
+            'error' => 'Invalid date provided. Use the following format: Y-m-d.',
+            'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
     private function validateRequest(): bool
     {
         if (!isset($this->data['user_id'], $this->data['security_question'], $this->data['security_answer']))

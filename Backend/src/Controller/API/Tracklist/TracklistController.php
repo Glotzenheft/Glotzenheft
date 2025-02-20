@@ -75,14 +75,21 @@ class TracklistController extends AbstractController
 
     #[IsAuthenticated]
     #[Route('/api/tracklist', name: 'update_tracklist', methods: ['PATCH'])]
-    public function updateTracklist(): JsonResponse
+    public function updateTracklist(Request $request): JsonResponse
     {
-        return $this->json([]);
+        $response = $this->tracklistService->updateTracklist($request);
+
+        if (isset($response['error']))
+        {
+            return $this->json($response['error'], (int) $response['code']);
+        }
+
+        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
     }
 
     #[IsAuthenticated]
     #[Route('/api/tracklist', name: 'delete_tracklist', methods: ['DELETE'])]
-    public function deleteTracklist(): JsonResponse
+    public function deleteTracklist(Request $request): JsonResponse
     {
         return $this->json([]);
     }
