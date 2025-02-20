@@ -42,6 +42,13 @@ export class UserMenuComponent {
           },
         },
         {
+          label: 'Account löschen',
+          icon: 'pi pi-trash',
+          command: () => {
+            this.router.navigateByUrl(ROUTES_LIST[13].fullUrl);
+          },
+        },
+        {
           label: 'Ausloggen',
           icon: 'pi pi-sign-out',
           command: () => {

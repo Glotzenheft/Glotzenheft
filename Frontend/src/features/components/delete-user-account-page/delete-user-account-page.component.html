@@ -1,12 +1,14 @@
-<div class="login">
-  <div class="register">
+<h1>Account löschen</h1>
+
+<div class="deleteAccountWrapper">
+  <div class="deleteAccountWindow">
     <form
       action="submit"
       [formGroup]="deleteUserForm"
       (ngSubmit)="submitForm()"
     >
       <div>
-        <p-float-label variant="on">
+        <p-float-label variant="in">
           <p-select
             [options]="validationQuestions"
             optionLabel="name"
@@ -27,7 +29,7 @@
         >
       </div>
       <div>
-        <p-float-label variant="on">
+        <p-float-label variant="in">
           <input
             pInputText
             type="text"
@@ -47,7 +49,15 @@
         >
       </div>
 
-      <p-button label="Speichern" type="submit" />
+      <div class="loginActions">
+        <p-button
+          label="Löschen"
+          type="submit"
+          icon="pi pi-trash"
+          severity="danger"
+        />
+        <p-button label="Abbrechen" icon="pi pi-times" severity="secondary" />
+      </div>
     </form>
   </div>
 </div>
