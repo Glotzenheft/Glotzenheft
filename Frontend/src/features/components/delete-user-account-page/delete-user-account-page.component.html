@@ -1,0 +1,63 @@
+<h1>Account löschen</h1>
+
+<div class="deleteAccountWrapper">
+  <div class="deleteAccountWindow">
+    <form
+      action="submit"
+      [formGroup]="deleteUserForm"
+      (ngSubmit)="submitForm()"
+    >
+      <div>
+        <p-float-label variant="in">
+          <p-select
+            [options]="validationQuestions"
+            optionLabel="name"
+            formControlName="security_question"
+            id="question"
+            placeholder="Sicherheitsfrage auswählen ..."
+          />
+          <label for="question">Sicherheitsfrage</label>
+        </p-float-label>
+        <p-message
+          severity="error"
+          size="small"
+          *ngIf="
+            deleteUserForm.get('security_question')?.invalid &&
+            hasErrorField('security_question')
+          "
+          >Sicherheitsfrage muss ausgewählt sein.</p-message
+        >
+      </div>
+      <div>
+        <p-float-label variant="in">
+          <input
+            pInputText
+            type="text"
+            formControlName="security_answer"
+            id="answer"
+          />
+          <label for="answer">Antwort</label>
+        </p-float-label>
+        <p-message
+          severity="error"
+          size="small"
+          *ngIf="
+            deleteUserForm.get('security_answer')?.invalid &&
+            hasErrorField('security_answer')
+          "
+          >Die Antwort darf nicht leer sein.</p-message
+        >
+      </div>
+
+      <div class="loginActions">
+        <p-button
+          label="Löschen"
+          type="submit"
+          icon="pi pi-trash"
+          severity="danger"
+        />
+        <p-button label="Abbrechen" icon="pi pi-times" severity="secondary" />
+      </div>
+    </form>
+  </div>
+</div>
