@@ -16,8 +16,7 @@ export interface LoginAndMessageResponse {
 }
 
 export interface ResetPasswordCredentials {
-  username: string;
-  validationQuestion: string;
-  validationAnswer: string;
-  newPassword: string;
+  security_question: string;
+  security_answer: string;
+  new_password: string;
 }

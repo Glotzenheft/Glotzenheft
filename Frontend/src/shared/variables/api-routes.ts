@@ -28,7 +28,7 @@ export const ROUTE_MEDIA_ID_FOR_MEDIA: string[] = [
 export const ROUTE_SEASON_DETAILS: string =
   'https://127.0.0.1:8000/api/tv/season';
 
-export const ROUTE_RESET_PASSWORD: string = '';
+export const ROUTE_RESET_PASSWORD: string = 'https://127.0.0.1:8000/api/user';
 
 export const ROUTE_LOGIN: string = 'https://127.0.0.1:8000/api/login';
 
