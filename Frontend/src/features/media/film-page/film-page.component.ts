@@ -141,7 +141,7 @@ export class FilmPageComponent implements OnInit {
     this.isTracklistFormPageVisible = true;
   };
 
-  public closeTracklistDialog = () => {
+  public cancelTracklistForm = () => {
     this.isTracklistFormPageVisible = false;
   };
 }

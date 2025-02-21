@@ -350,6 +350,11 @@ p {
     overflow-x: hidden;
     overflow-y: auto;
   }
+
+  .tracklistActions .p-button {
+    width: 100%;
+    height: 3rem;
+  }
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
