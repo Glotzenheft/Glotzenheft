@@ -20,6 +20,7 @@ import {
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
+import { start } from 'repl';
 
 @Injectable({
   providedIn: 'root',
@@ -122,8 +123,8 @@ export class MediaService {
     mediaID: number,
     seasonID: number,
     startDate: string,
-    endDate: string,
-    status: string,
+    endDate: string | null,
+    status: string | null,
     rating: number | null
   ): Observable<any> | null => {
     const header = this.getHeader();
@@ -132,13 +133,30 @@ export class MediaService {
       return null;
     }
 
+    let formattedDate: string = '';
+    let formattedEndDate: string = '';
+
+    console.log('start date:', startDate, ', end date: ', endDate);
+
+    if (startDate) {
+      let startDateAsDate: Date = new Date(startDate);
+      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+      formattedDate = startDateAsDate.toISOString().split('T')[0];
+    }
+
+    if (endDate) {
+      let endDateAsDate: Date = new Date(endDate);
+      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+    }
+
     let url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name.toString()}${
       ROUTE_CREATE_NEW_TRACKLIST[1]
     }${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${
       ROUTE_CREATE_NEW_TRACKLIST[3]
     }${seasonID}${ROUTE_CREATE_NEW_TRACKLIST[4]}tv${
       ROUTE_CREATE_NEW_TRACKLIST[5]
-    }${startDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${endDate}${
+    }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${
       ROUTE_CREATE_NEW_TRACKLIST[7]
     }${rating ? rating : ''}`;
 
@@ -163,8 +181,8 @@ export class MediaService {
   public createNewMovieTracklist = (
     name: string,
     mediaID: number,
-    startDate: string,
-    endDate: string,
+    startDate: string | null,
+    endDate: string | null,
     status: string,
     rating: number | null
   ): Observable<any> | null => {
@@ -173,13 +191,30 @@ export class MediaService {
     if (!header) {
       return null;
     }
-    const formattedDate: string = new Date(startDate)
-      .toISOString()
-      .split('T')[0];
 
-    const formattedEndDate: string = new Date(endDate)
-      .toISOString()
-      .split('T')[0];
+    let formattedDate: string = '';
+    let formattedEndDate: string = '';
+
+    console.log('start date:', startDate, ', end date: ', endDate);
+
+    if (startDate) {
+      let startDateAsDate: Date = new Date(startDate);
+      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+      formattedDate = startDateAsDate.toISOString().split('T')[0];
+    }
+
+    if (endDate) {
+      let endDateAsDate: Date = new Date(endDate);
+      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+    }
+
+    console.log(
+      'formatted: start date, ',
+      formattedDate,
+      ', end date',
+      formattedEndDate
+    );
 
     const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name.toString()}${
       ROUTE_CREATE_NEW_TRACKLIST[1]

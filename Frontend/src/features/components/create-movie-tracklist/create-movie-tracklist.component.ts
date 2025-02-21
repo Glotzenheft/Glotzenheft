@@ -73,9 +73,9 @@ export class CreateMovieTracklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.tracklistForm = this.formBuilder.group({
-      trackListName: [this.mediaName(), Validators.required],
-      startDate: [new Date(), Validators.required],
-      endDate: [new Date(), Validators.required],
+      trackListName: [this.mediaName().toString(), [Validators.required]],
+      startDate: [null],
+      endDate: [null],
       status: ['', Validators.required],
       rating: [null],
     });
@@ -85,13 +85,10 @@ export class CreateMovieTracklistComponent implements OnInit {
     this.isTracklistSubmitted = true;
 
     if (this.tracklistForm.invalid) {
-      this.messageService.add({
-        life: 7000,
-        summary: 'Ungültiger Name',
-        detail: 'Der Name der Tracklist darf nicht leer sein.',
-        severity: 'error',
-      });
-      console.log('rating', this.tracklistForm.get('rating')?.value);
+      console.log(
+        'trackListName',
+        this.tracklistForm.get('trackListName')?.value.toString().length
+      );
       return;
     }
 
