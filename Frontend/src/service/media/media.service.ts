@@ -3,6 +3,7 @@ import {
   Film,
   MediaIDResponse,
   Season,
+  UpdateTracklistRequest,
 } from '../../shared/interfaces/media-interfaces';
 import { catchError, Observable, shareReplay, throwError } from 'rxjs';
 import {
@@ -17,6 +18,7 @@ import {
   ROUTE_MEDIA_ID_FOR_MEDIA,
   ROUTE_MOVIE_DETAILS_SEARCH,
   ROUTE_MULTI_SEARCH,
+  ROUTE_UPDATE_TRACKLIST,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
@@ -251,5 +253,53 @@ export class MediaService {
           return throwError(() => error);
         })
       );
+  };
+
+  public updateTracklist = (
+    tracklistData: UpdateTracklistRequest
+  ): Observable<any> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    let formattedStartDate: string = '';
+    let formattedEndDate: string = '';
+
+    if (tracklistData.tracklist_start_date) {
+      let startDateAsDate: Date = new Date(tracklistData.tracklist_start_date);
+
+      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+      formattedStartDate = startDateAsDate.toISOString().split('T')[0];
+    }
+
+    if (tracklistData.tracklist_finish_date) {
+      let endDateAsDate: Date = new Date(tracklistData.tracklist_finish_date);
+
+      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+    }
+
+    const url: string =
+      ROUTE_UPDATE_TRACKLIST[0] +
+      tracklistData.tracklist_id +
+      ROUTE_UPDATE_TRACKLIST[1] +
+      tracklistData.tracklist_status +
+      ROUTE_UPDATE_TRACKLIST[2] +
+      tracklistData.tracklist_name +
+      ROUTE_UPDATE_TRACKLIST[3] +
+      tracklistData.tracklist_rating +
+      ROUTE_UPDATE_TRACKLIST[4] +
+      formattedStartDate +
+      ROUTE_UPDATE_TRACKLIST[5] +
+      formattedEndDate;
+
+    return this.http.patch<any>(url, {}, { headers: header }).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
   };
 }

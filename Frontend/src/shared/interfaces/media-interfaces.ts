@@ -1,4 +1,4 @@
-import { SeasonTracklist } from "./tracklist-interfaces";
+import { SeasonTracklist } from './tracklist-interfaces';
 
 export interface TMDBGenre {
   id: number;
@@ -67,8 +67,6 @@ export interface Season {
   tracklists: SeasonTracklist[];
 }
 
-
-
 export interface TV {
   // tv series
   seasons: Season[];
@@ -101,9 +99,15 @@ export interface MultiSearchResponse {
   total_pages: 1;
 }
 
-
-
 export interface MediaIDResponse {
   media_id: string;
 }
 
+export interface UpdateTracklistRequest {
+  tracklist_id: string;
+  tracklist_status: string;
+  tracklist_name: string;
+  tracklist_rating: number;
+  tracklist_start_date: string;
+  tracklist_finish_date: string;
+}

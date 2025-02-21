@@ -1,4 +1,4 @@
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   img {
     height: 100%;
   }
@@ -66,7 +66,7 @@
   }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 700px) {
   img {
     height: 100%;
   }
@@ -109,7 +109,7 @@
 
   .seasonWrapper {
     width: 100%;
-    height: 14rem;
+    height: 30rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,12 +126,21 @@
 
   .seasonWrapper .seasonPoster {
     width: 30%;
-    height: 90%;
+    height: 50%;
   }
 
   .seasonWrapper .seasonPoster img {
     height: 100%;
     border: 0.1rem solid black;
+  }
+
+  .tracklistSelectionDIV {
+    width: 100%;
+    background-color: black;
+  }
+
+  .tracklistSelectionDIV div {
+    width: 50%;
   }
 }
 

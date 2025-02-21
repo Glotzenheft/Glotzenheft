@@ -40,6 +40,7 @@ import {
 import { SelectModule } from 'primeng/select';
 import { TracklistService } from '../../../service/tracklist/tracklist.service';
 import { TracklistFormComponent } from '../../components/tracklist-form/tracklist-form.component';
+import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
 
 @Component({
   selector: 'app-season-page',
@@ -60,6 +61,7 @@ import { TracklistFormComponent } from '../../components/tracklist-form/tracklis
     AccordionModule,
     SelectModule,
     TracklistFormComponent,
+    UpdateTracklistFormComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -83,7 +85,9 @@ export class SeasonPageComponent implements OnInit {
   public tracklistSelectionForm!: FormGroup;
 
   // dialog and visibility variables
-  public isTracklistFormVisible: boolean = false;
+
+  // = 0: media details; = 1: create tracklist; = 2: update tracklist
+  public isTracklistFormVisible: number = 0;
 
   // variables for current object values
   public currentSeason: TVSeasonWithTracklist | null = null;
@@ -159,23 +163,9 @@ export class SeasonPageComponent implements OnInit {
 
   // functions -----------------------------------------------------
 
-  public showEpisodeDialog = (season: SeasonWithEpisodes) => {
-    this.isTracklistFormVisible = true;
-
-    this.visibleSeason = season;
-  };
-
-  public saveEpisode = (season: SeasonWithEpisodes) => {
-    this.isTracklistFormVisible = false;
-  };
-
-  public closeEpisodeDialog = () => {
-    this.isTracklistFormVisible = false;
-  };
-
   public openTracklistForm = (season: TVSeasonWithTracklist) => {
     this.currentSeason = season;
-    this.isTracklistFormVisible = true;
+    this.isTracklistFormVisible = 1;
   };
 
   public navigateToMultiSearch = () => {
@@ -207,6 +197,10 @@ export class SeasonPageComponent implements OnInit {
   };
 
   public cancelTracklistForm = () => {
-    this.isTracklistFormVisible = false;
+    this.isTracklistFormVisible = 0;
+  };
+
+  public setVisibility = (page: number) => {
+    this.isTracklistFormVisible = page;
   };
 }
