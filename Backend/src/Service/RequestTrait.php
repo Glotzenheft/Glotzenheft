@@ -201,6 +201,14 @@ trait RequestTrait
         ];
     }
 
+    private function returnTracklistDeleteError(): array
+    {
+        return [
+            'error' => 'There was an error while deleting the tracklist. Please try again.',
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR
+        ];
+    }
+
     private function returnPasswordChangeError(): array
     {
         return [
