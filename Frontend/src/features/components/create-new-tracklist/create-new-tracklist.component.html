@@ -5,12 +5,11 @@
     [formGroup]="trackListForm"
   >
     <div>
-      <p-float-label variant="on">
+      <p-float-label variant="in">
         <input
           type="text"
           pInputText
           formControlName="trackListName"
-          [value]="mediaName()"
           id="listName"
         />
         <label for="listName">Name der Tracklist</label>
@@ -27,14 +26,17 @@
       </p-message>
     </div>
     <div>
-      <p>Status der Trackliste:</p>
-      <p-select
-        [options]="tracklistSelectionList"
-        [checkmark]="true"
-        formControlName="status"
-        optionLabel="name"
-        placeholder="Status auswählen ..."
-      />
+      <p-float-label variant="in">
+        <p-select
+          [options]="tracklistSelectionList"
+          [checkmark]="true"
+          formControlName="status"
+          optionLabel="name"
+          placeholder="Status auswählen ..."
+          id="trackStatus"
+        />
+        <label for="trackStatus">Status der Trackliste</label>
+      </p-float-label>
       <p-message
         *ngIf="hasErrorField('status') && trackListForm.get('status')?.invalid"
         severity="error"
@@ -47,14 +49,41 @@
     <div>
       <div class="movieListDIV">
         <div class="startDateDIV">
-          <p>Enddatum:</p>
-          <p-date-picker formControlName="endDate" dateFormat="dd.mm.yy" />
+          <p-float-label variant="in">
+            <p-date-picker
+              formControlName="endDate"
+              dateFormat="dd.mm.yy"
+              [showIcon]="true"
+              inputId="end"
+            />
+            <label for="end">Enddatum</label>
+          </p-float-label>
         </div>
         <div class="startDateDIV">
-          <p>Startdatum:</p>
-          <p-date-picker formControlName="startDate" dateFormat="dd.mm.yy" />
+          <p-float-label variant="in">
+            <p-date-picker
+              formControlName="startDate"
+              dateFormat="dd.mm.yy"
+              [showIcon]="true"
+              inputId="start"
+            />
+            <label for="start">Startdatum</label>
+          </p-float-label>
         </div>
       </div>
+
+      <div class="ratingDIV">
+        <p>Bewertung:</p>
+        <p-rating [stars]="10" formControlName="rating" />
+      </div>
+      <p-message
+        *ngIf="hasErrorField('rating') && trackListForm.get('rating')?.invalid"
+        severity="error"
+        size="small"
+      >
+        Die Bewertung ist Pflicht.
+      </p-message>
+
       <div class="loginActions">
         <p-button label="Speichern" type="submit" />
         <p-button

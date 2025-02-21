@@ -101,11 +101,6 @@ export class TracklistService {
       return true;
     }
 
-    // console.log(
-    //   'current tracklist [TRACKSERVICE]:',
-    //   tracklistSelectionForm.get('selectedTracklist')?.value
-    // );
-
     const selectedTracklistFull: SeasonTracklist[] = tracklistsOfSeason.filter(
       (tracklist: SeasonTracklist) => {
         return (

@@ -1,0 +1,7 @@
+<ng-container *ngIf="isNewTracklistForm()">
+  <app-create-new-tracklist
+    [inputSeason]="inputTVSeason()"
+    [mediaID]="mediaID()"
+    (cancelTracklistForm)="cancelTracklistForm()"
+  />
+</ng-container>
