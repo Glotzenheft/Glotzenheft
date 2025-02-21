@@ -26,6 +26,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectModule } from 'primeng/select';
 import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-create-movie-tracklist',
@@ -39,6 +40,7 @@ import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
     DialogModule,
     DatePickerModule,
     SelectModule,
+    RatingModule,
   ],
   templateUrl: './create-movie-tracklist.component.html',
   styleUrl: './create-movie-tracklist.component.css',
@@ -75,6 +77,7 @@ export class CreateMovieTracklistComponent implements OnInit {
       startDate: [new Date(), Validators.required],
       endDate: [new Date(), Validators.required],
       status: ['', Validators.required],
+      rating: [null],
     });
   }
 
@@ -88,17 +91,17 @@ export class CreateMovieTracklistComponent implements OnInit {
         detail: 'Der Name der Tracklist darf nicht leer sein.',
         severity: 'error',
       });
+      console.log('rating', this.tracklistForm.get('rating')?.value);
       return;
     }
-
-    console.log('status: ', this.tracklistForm.get('status')?.value.name);
 
     this.createNewTracklist$ = this.mediaService.createNewMovieTracklist(
       this.tracklistForm.get('trackListName')?.value,
       this.mediaID(),
       this.tracklistForm.get('startDate')?.value,
       this.tracklistForm.get('endDate')?.value,
-      this.tracklistForm.get('status')?.value.name
+      this.tracklistForm.get('status')?.value.name,
+      this.tracklistForm.get('rating')?.value
     );
 
     if (!this.createNewTracklist$) {

@@ -84,7 +84,7 @@ export class CreateNewTracklistComponent implements OnInit {
       status: ['', Validators.required],
       startDate: [''],
       endDate: [''],
-      rating: [null, Validators.required],
+      rating: [null],
     });
     console.log('season id', this.inputSeason().id);
   }
@@ -119,13 +119,18 @@ export class CreateNewTracklistComponent implements OnInit {
       console.log('end date if', formattedEndDate);
     }
 
+    let rating: number | null = this.trackListForm.get('rating')?.value;
+
+
+
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
       this.trackListForm.get('trackListName')?.value,
       this.mediaID(),
       this.inputSeason().id,
       formattedStartDate,
       formattedEndDate,
-      this.trackListForm.get('status')?.value.name
+      this.trackListForm.get('status')?.value.name,
+       this.trackListForm.get('rating')?.value
     );
 
     if (!this.createNewTracklist$) {

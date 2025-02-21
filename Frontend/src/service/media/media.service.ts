@@ -11,8 +11,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import {
-  ROUTE_CREATE_NEW_MOVIE_TRACKLIST,
-  ROUTE_CREATE_NEW_SEASON_TRACKLIST,
+  ROUTE_CREATE_NEW_TRACKLIST,
   ROUTE_GET_ALL_USER_TRACKLISTS,
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MEDIA_ID_FOR_MEDIA,
@@ -136,7 +135,8 @@ export class MediaService {
     seasonID: number,
     startDate: string,
     endDate: string,
-    status: string
+    status: string,
+    rating: number | null
   ): Observable<any> | null => {
     const header = this.getHeader();
 
@@ -144,7 +144,15 @@ export class MediaService {
       return null;
     }
 
-    let url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[5]}${startDate}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
+    let url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name}${
+      ROUTE_CREATE_NEW_TRACKLIST[1]
+    }${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${
+      ROUTE_CREATE_NEW_TRACKLIST[3]
+    }${seasonID}${ROUTE_CREATE_NEW_TRACKLIST[4]}tv${
+      ROUTE_CREATE_NEW_TRACKLIST[5]
+    }${startDate}${
+      ROUTE_CREATE_NEW_TRACKLIST[6]
+    }${endDate}${ROUTE_CREATE_NEW_TRACKLIST}${rating ? rating : ''}`;
 
     // if (!startDate.trim()) {
     //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
@@ -169,7 +177,8 @@ export class MediaService {
     mediaID: number,
     startDate: string,
     endDate: string,
-    status: string
+    status: string,
+    rating: number
   ): Observable<any> | null => {
     const header = this.getHeader();
 
@@ -184,7 +193,7 @@ export class MediaService {
       .toISOString()
       .split('T')[0];
 
-    const url: string = `${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[4]}${formattedDate}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[5]}${formattedEndDate}`;
+    const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${ROUTE_CREATE_NEW_TRACKLIST[5]}${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]}${rating}`;
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
