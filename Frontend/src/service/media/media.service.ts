@@ -112,18 +112,6 @@ export class MediaService {
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {
-    // const hheaders: HttpHeaders | null = this.getHeader();
-
-    // console.log('multisearch headers: ', hheaders?.get('Authorization'));
-
-    // if (hheaders !== null) {
-    //   return this.http
-    //     .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`, {
-    //       headers: hheaders,
-    //     })
-    //     .pipe(shareReplay(1));
-    // }
-
     return this.http
       .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
       .pipe(shareReplay(1));
@@ -153,8 +141,6 @@ export class MediaService {
     }${startDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${endDate}${
       ROUTE_CREATE_NEW_TRACKLIST[7]
     }${rating ? rating : ''}`;
-
-    console.log('url', url);
 
     // if (!startDate.trim()) {
     //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
@@ -204,7 +190,6 @@ export class MediaService {
     }${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]}${
       rating ? rating : ''
     }`;
-    console.log('url', url);
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
