@@ -34,8 +34,8 @@ class TracklistEpisodeController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/api/tracklist-episode', name: 'tracklist-episode', methods: ['POST'])]
     #[IsAuthenticated]
+    #[Route('/api/tracklist-episode', name: 'create_tracklist_episode', methods: ['POST'])]
     public function createTracklistEpisode(Request $request): JsonResponse
     {
         $tracklistEpisode = $this->tracklistEpisodeService->createTracklistEpisode($request);
@@ -46,5 +46,59 @@ class TracklistEpisodeController extends AbstractController
         }
 
         return $this->json([$tracklistEpisode], context: ['groups' => ['tracklist_episode']]);
+    }
+
+    /**
+     * Update the watch date of a tracklist episode entry.
+     *
+     *  Required request parameters:
+     *  `tracklist_id` (int)
+     *  `tracklist_season_id` (int)
+     *  `tracklist_episode_id` (int)
+     *  `watch_date` (string, ISO 8601)
+     * @example https://127.0.0.1:8000/api/tracklist-episode?tracklist_id=26&tracklist_season_id=18&tracklist_episode_id=31&watch_date=2024-01-28T13:48:00.000Z`
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[IsAuthenticated]
+    #[Route('/api/tracklist-episode', name: 'update_tracklist_episode', methods: ['PATCH'])]
+    public function updateTracklistEpisode(Request $request): JsonResponse
+    {
+        $tracklistEpisode = $this->tracklistEpisodeService->updateTracklistEpisode($request);
+
+        if (isset($tracklistEpisode['error']))
+        {
+            return $this->json($tracklistEpisode['error'], (int) $tracklistEpisode['code']);
+        }
+
+        return $this->json([$tracklistEpisode], context: ['groups' => ['tracklist_episode']]);
+    }
+
+    /**
+     * Delete a tracklist episode entry.
+     *
+     * Required request parameters:
+     * `tracklist_id` (int)
+     * `tracklist_season_id` (int)
+     * `tracklist_episode_id` (int)
+     *
+     * @example https://127.0.0.1:8000/api/tracklist-episode?tracklist_id=26&tracklist_season_id=18&tracklist_episode_id=32
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
+    #[IsAuthenticated]
+    #[Route('/api/tracklist-episode', name: 'delete_tracklist_episode', methods: ['DELETE'])]
+    public function deleteTracklistEpisode(Request $request): JsonResponse
+    {
+        $tracklistEpisode = $this->tracklistEpisodeService->deleteTracklistEpisode($request);
+
+        if (isset($tracklistEpisode['error']))
+        {
+            return $this->json($tracklistEpisode['error'], (int) $tracklistEpisode['code']);
+        }
+
+        return $this->json($tracklistEpisode['message']);
     }
 }
