@@ -103,4 +103,125 @@ class TracklistEpisodeService
             'tracklist_episode' => $tracklistEpisode
         ];
     }
+
+    public function updateTracklistEpisode(Request $request): array
+    {
+        $this->data = $this->handleRequest($request);
+
+        if (!isset($this->data['watch_date']))
+        {
+            return $this->returnNoWatchDateProvided();
+        }
+
+        $tracklistEpisode = $this->validateAndGetTracklistEpisode();
+        if (is_array($tracklistEpisode))
+        {
+            return $tracklistEpisode;
+        }
+
+        try
+        {
+            $watchDate = new DateTime($this->data['watch_date']);
+        }
+        catch (DateMalformedStringException $e)
+        {
+            return $this->returnWatchDateError();
+        }
+
+        $tracklistEpisode->setWatchDate($watchDate);
+        $this->entityManager->persist($tracklistEpisode);
+        $this->entityManager->flush();
+
+        return [
+            'tracklist_episode' => $tracklistEpisode
+        ];
+    }
+
+    public function deleteTracklistEpisode(Request $request): array
+    {
+        $this->data = $this->handleRequest($request);
+
+        $tracklistEpisode = $this->validateAndGetTracklistEpisode();
+        if (is_array($tracklistEpisode))
+        {
+            return $tracklistEpisode;
+        }
+
+        $this->entityManager->remove($tracklistEpisode);
+        $this->entityManager->flush();
+
+        $tracklistEpisode = $this->entityManager->getRepository(TracklistEpisode::class)->find($this->data['tracklist_episode_id']);
+        if ($tracklistEpisode instanceof TracklistEpisode)
+        {
+            return $this->returnTracklistEpisodeDeleteError();
+        }
+
+        return [
+            'message' => 'Tracklist Episode successfully deleted'
+        ];
+    }
+
+    private function validateAndGetTracklistEpisode(): TracklistEpisode | array
+    {
+        if (!isset($this->data['tracklist_id']))
+        {
+            return $this->returnTracklistIDNotProvided();
+        }
+
+        if (!isset($this->data['tracklist_season_id']))
+        {
+            return $this->returnTracklistSeasonIDNotProvided();
+        }
+
+        if (!isset($this->data['tracklist_episode_id']))
+        {
+            return $this->returnTracklistEpisodeIDNotProvided();
+        }
+
+        if (!isset($this->data['user_id']))
+        {
+            return $this->returnInvalidRequest();
+        }
+
+        $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
+        if (!$user instanceof User)
+        {
+            return $this->returnUserNotFound();
+        }
+
+        $tracklistEpisode = $this->entityManager->getRepository(TracklistEpisode::class)->find($this->data['tracklist_episode_id']);
+        if (!$tracklistEpisode instanceof TracklistEpisode)
+        {
+            return $this->returnTracklistEpisodeNotFound();
+        }
+
+        $tracklistSeason = $this->entityManager->getRepository(TracklistSeason::class)->find($this->data['tracklist_season_id']);
+        if (!$tracklistSeason instanceof TracklistSeason)
+        {
+            return $this->returnTracklistSeasonNotFound();
+        }
+
+        if ($tracklistEpisode->getTracklistSeason() !== $tracklistSeason)
+        {
+            return $this->returnWrongTracklistSeasonTracklistEpisode();
+        }
+
+        $tracklist = $this->entityManager->getRepository(Tracklist::class)->find($this->data['tracklist_id']);
+        if (!$tracklist instanceof Tracklist)
+        {
+            return $this->returnTracklistNotFound();
+        }
+
+        if ($tracklistSeason->getTracklist() !== $tracklist)
+        {
+            return $this->returnWrongTracklistTracklistSeason();
+        }
+
+        if ($tracklist->getUser() !== $user)
+        {
+            return $this->returnUserNotAuthorized();
+        }
+
+        return $tracklistEpisode;
+    }
 }

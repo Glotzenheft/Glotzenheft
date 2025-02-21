@@ -295,7 +295,7 @@ class TracklistService
             return $this->returnTracklistNotFound();
         }
 
-        if (!$tracklist->getUser() === $user)
+        if ($tracklist->getUser() !== $user)
         {
             return $this->returnUserNotAuthorized();
         }
