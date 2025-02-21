@@ -121,8 +121,6 @@ export class CreateNewTracklistComponent implements OnInit {
 
     let rating: number | null = this.trackListForm.get('rating')?.value;
 
-
-
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
       this.trackListForm.get('trackListName')?.value,
       this.mediaID(),
@@ -130,7 +128,7 @@ export class CreateNewTracklistComponent implements OnInit {
       formattedStartDate,
       formattedEndDate,
       this.trackListForm.get('status')?.value.name,
-       this.trackListForm.get('rating')?.value
+      this.trackListForm.get('rating')?.value
     );
 
     if (!this.createNewTracklist$) {

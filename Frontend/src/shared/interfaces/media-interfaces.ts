@@ -104,10 +104,10 @@ export interface MediaIDResponse {
 }
 
 export interface UpdateTracklistRequest {
-  tracklist_id: string;
+  tracklist_id: number;
   tracklist_status: string;
   tracklist_name: string;
-  tracklist_rating: number;
-  tracklist_start_date: string;
-  tracklist_finish_date: string;
+  tracklist_rating: number | null;
+  tracklist_start_date: string | null;
+  tracklist_finish_date: string | null;
 }

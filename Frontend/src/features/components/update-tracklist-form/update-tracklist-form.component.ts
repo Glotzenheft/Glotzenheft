@@ -25,6 +25,11 @@ import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
 import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
+import { Observable } from 'rxjs';
+import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-update-tracklist-form',
@@ -62,12 +67,14 @@ export class UpdateTracklistFormComponent implements OnInit {
       name: status,
       value: status,
     }));
+  public updateResponseData$: Observable<any> | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
-    private tracklistService: TracklistService,
     private mediaService: MediaService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router,
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -109,12 +116,113 @@ export class UpdateTracklistFormComponent implements OnInit {
         Validators.required,
       ],
       tracklist_rating: [selectedTracklistFull[0].rating],
-      tracklist_start_date: [selectedTracklistFull[0].startDate],
-      tracklist_finish_date: [selectedTracklistFull[0].finishDate],
+      tracklist_start_date: [
+        selectedTracklistFull[0].startDate
+          ? new Date(selectedTracklistFull[0].startDate)
+          : null,
+      ],
+      tracklist_finish_date: [
+        selectedTracklistFull[0].finishDate
+          ? new Date(selectedTracklistFull[0].finishDate)
+          : null,
+      ],
     });
   }
 
-  public submitForm = () => {}
+  public submitForm = () => {
+    this.isFormSubmitted = true;
+
+    if (this.updateTracklistForm.invalid) {
+      console.log('invalid');
+      return;
+    }
+
+    if (!this.selectedFullTracklist) {
+      console.log('fehler');
+      return;
+    }
+
+    let formattedStartDate: string = '';
+    let formattedEndDate: string = '';
+
+    if (this.updateTracklistForm.get('tracklist_start_date')?.value) {
+      formattedStartDate = new Date(
+        this.updateTracklistForm.get('tracklist_start_date')?.value
+      )
+        .toISOString()
+        .split('T')[0];
+
+      console.log('start date if:', formattedStartDate);
+    }
+
+    if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
+      formattedEndDate = new Date(
+        this.updateTracklistForm.get('tracklist_finish_date')?.value
+      )
+        .toISOString()
+        .split('T')[0];
+      console.log('end date if', formattedEndDate);
+    }
+
+    const updateTracklistData: UpdateTracklistRequest = {
+      tracklist_id: this.selectedFullTracklist.id,
+      tracklist_status:
+        this.updateTracklistForm.get('tracklist_status')?.value.name,
+      tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
+      tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
+      tracklist_start_date: formattedStartDate,
+      tracklist_finish_date: formattedEndDate,
+    };
+
+    console.log('updated tracklist:', updateTracklistData);
+
+    this.updateResponseData$ =
+      this.mediaService.updateTracklist(updateTracklistData);
+
+    if (!this.updateResponseData$) {
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Speichern',
+        detail:
+          'Beim Speichern ist ein Fehler aufgetreten. Bitte probiere es noch einmal.',
+      });
+      return;
+    }
+
+    this.updateResponseData$.subscribe({
+      next: (res) => {
+        this.messageService.add({
+          life: 7000,
+          severity: 'success',
+          summary: 'Erfolgreich gespeichert',
+        });
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: 'Ungültige Authentifizierung',
+            detail:
+              'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
+          });
+          this.userService.logoutOfAccount();
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+
+          return;
+        }
+
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: 'Fehler beim Speichern',
+          detail:
+            'Beim Speichern ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+        });
+      },
+    });
+  };
 
   public hasErrorField = (field: string) => {
     const fieldControl = this.updateTracklistForm.get(field);

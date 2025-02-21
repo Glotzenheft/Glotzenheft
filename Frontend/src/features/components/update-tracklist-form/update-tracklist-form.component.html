@@ -79,16 +79,6 @@
         <div class="ratingDIV">
           <p>Bewertung</p>
           <p-rating [stars]="10" formControlName="tracklist_rating" />
-          <p-message
-            *ngIf="
-              hasErrorField('tracklist_rating') &&
-              updateTracklistForm.get('tracklist_rating')?.invalid
-            "
-            severity="error"
-            size="small"
-          >
-            Die Bewertung ist Pflicht.
-          </p-message>
         </div>
 
         <div class="tracklistActions">
