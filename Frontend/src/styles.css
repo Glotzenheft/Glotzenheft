@@ -823,6 +823,10 @@ p {
     width: 90%;
     height: 90%;
   }
+
+  .tracklistActions .p-button {
+    width: 10rem;
+  }
 }
 
 .p-select {
