@@ -98,7 +98,7 @@ export class TracklistService {
     tracklistSelectionForm: FormGroup<any>
   ): boolean => {
     if (!selectedSeason) {
-      return false;
+      return true;
     }
 
     // console.log(
