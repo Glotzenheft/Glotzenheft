@@ -208,6 +208,31 @@ class TracklistService
         ];
     }
 
+    public function deleteTracklist(Request $request): array
+    {
+        $this->data = $this->handleRequest($request);
+
+        $tracklist = $this->validateAndGetTracklist();
+        if (is_array($tracklist)) // When there is an error
+        {
+            return $tracklist;
+        }
+
+        $this->entityManager->remove($tracklist);
+        $this->entityManager->flush();
+
+        $tracklist = $this->entityManager->getRepository(Tracklist::class)->find($this->data['tracklist_id']);
+        if ($tracklist instanceof Tracklist)
+        {
+            return $this->returnTracklistDeleteError();
+        }
+
+        return [
+            'message' => 'Tracklist deleted',
+            'code' => 200,
+        ];
+    }
+
     private function setOptionalTracklistProperties(Tracklist $tracklist): Tracklist | array
     {
         if (!empty($this->data['tracklist_rating']) && is_numeric($this->data['tracklist_rating']))
