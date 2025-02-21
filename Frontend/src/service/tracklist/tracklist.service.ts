@@ -11,11 +11,16 @@ import {
   TVWithTracklist,
 } from '../../shared/interfaces/tracklist-interfaces';
 import { FormGroup } from '@angular/forms';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
 })
 export class TracklistService {
+  // variables for rerender of season page/ film page
+  private filmRefreshSubject = new BehaviorSubject<void>(undefined);
+  public refreshFilmPage$ = this.filmRefreshSubject.asObservable();
+
   constructor() {}
 
   /**
@@ -128,5 +133,10 @@ export class TracklistService {
     }
 
     return false;
+  };
+
+  // functions for refreshing pages ---------------------------
+  public refreshFilmPage = () => {
+    this.filmRefreshSubject.next();
   };
 }

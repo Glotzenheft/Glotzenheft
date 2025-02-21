@@ -1,4 +1,4 @@
-<ng-container *ngIf="!isTracklistFormPageVisible">
+<div *ngIf="visibilityStatus === 0" class="filmDetailsWrapper">
   <h1>Film</h1>
 
   <div class="backButtonDIV">
@@ -57,35 +57,47 @@
     </div>
 
     <div class="newWatchlistButton">
-      <p-button
-        label="neue Watchlist anlegen"
-        (onClick)="openTracklistDialog()"
-        class="bigButton"
-        icon="pi pi-plus"
-      />
+      <p-panel
+        *ngFor="let tracklist of filmData.tracklists; let i = index"
+        [header]="tracklist.tracklistName"
+        [toggleable]="true"
+        [collapsed]="true"
+      >
+        <p>Status: {{ tracklist.status }}</p>
+        <p-button
+          label="Tracklist bearbeiten"
+          icon="pi pi-pencil"
+          (onClick)="setSelectedTracklist(tracklist)"
+        />
+      </p-panel>
     </div>
+
+    <p-button
+      label="Neue Watchlist erstellen"
+      icon="pi pi-plus"
+      (onClick)="setVisibilityStatus(1)"
+    />
   </div>
-</ng-container>
-<ng-container
-  *ngIf="isTracklistFormPageVisible && (filmData$ | async) as filmData"
->
+</div>
+<ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
   <app-create-movie-tracklist
     [mediaID]="filmData.media.id"
     [mediaName]="filmData.media.name"
-    (cancelTracklistCreation)="cancelTracklistForm()"
+    (cancelTracklistCreation)="setVisibilityStatus(0)"
   />
 </ng-container>
 
-<!-- <p-dialog
-  class="dialog"
-  *ngIf="isTracklistDialogVisible && (filmData$ | async) as filmData"
-  [(visible)]="isTracklistDialogVisible"
-  [header]="filmData.media.name"
+<ng-container
+  *ngIf="
+    visibilityStatus === 2 &&
+    selectedTracklist &&
+    (filmData$ | async) as filmData
+  "
 >
-  <app-create-movie-tracklist
-    *ngIf="filmData"
-    [mediaID]="filmData.media.id"
-    [mediaName]="filmData.media.name"
-    (cancelTracklistCreation)="closeTracklistDialog()"
+  <app-update-film-tracklist
+    [inpFilmData]="filmData"
+    [inpTracklist]="selectedTracklist"
+    (cancelTracklistForm)="setVisibilityStatus(0)"
+    (refreshFilmPage)="refreshPage()"
   />
-</p-dialog> -->
+</ng-container>

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
@@ -6,147 +7,108 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MediaService } from '../../../service/media/media.service';
+import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
-import { MessageModule } from 'primeng/message';
-import { SelectModule } from 'primeng/select';
+import { DatePickerModule } from 'primeng/datepicker';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
-import { DatePickerModule } from 'primeng/datepicker';
-import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
-import { Observable, Subscription } from 'rxjs';
-import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
-import { Router } from '@angular/router';
+import { SelectModule } from 'primeng/select';
+import { MediaService } from '../../../service/media/media.service';
+import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import {
+  Film,
+  UpdateTracklistRequest,
+} from '../../../shared/interfaces/media-interfaces';
+import { Observable } from 'rxjs';
+import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { UserService } from '../../../service/user/user.service';
 import { TracklistService } from '../../../service/tracklist/tracklist.service';
 
 @Component({
-  selector: 'app-update-tracklist-form',
+  selector: 'app-update-film-tracklist',
   imports: [
-    CommonModule,
     ReactiveFormsModule,
-    ButtonModule,
-    MessageModule,
-    SelectModule,
-    FloatLabelModule,
     InputTextModule,
-    DatePickerModule,
+    CommonModule,
+    MessageModule,
+    ButtonModule,
+    FloatLabelModule,
+    SelectModule,
     RatingModule,
+    DatePickerModule,
   ],
-  templateUrl: './update-tracklist-form.component.html',
-  styleUrl: './update-tracklist-form.component.css',
+  templateUrl: './update-film-tracklist.component.html',
+  styleUrl: './update-film-tracklist.component.css',
 })
-export class UpdateTracklistFormComponent implements OnInit {
+export class UpdateFilmTracklistComponent implements OnInit {
   // input variables
-  public inpSeasonTracklists: InputSignal<SeasonTracklist[]> =
-    input.required<SeasonTracklist[]>();
-  public inpTracklistSelectionForm: InputSignal<FormGroup<any>> =
-    input.required<FormGroup<any>>();
+  public inpTracklist: InputSignal<SeasonTracklist> =
+    input.required<SeasonTracklist>();
+  public inpFilmData: InputSignal<Film> = input.required<Film>();
 
   // output variables
-  @Output() cancelTracklistEditing: EventEmitter<number> =
+  @Output() cancelTracklistForm: EventEmitter<number> =
     new EventEmitter<number>();
+  @Output() refreshFilmPage: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   // other variables
   public updateTracklistForm!: FormGroup;
-  public selectedFullTracklist: SeasonTracklist | null = null;
-  public isFormSubmitted: boolean = false;
+  public isTracklistSubmitted: boolean = false;
+  public updateResponseData$: Observable<any> | null = null;
   public tracklistStatusOptions: { name: string; value: string }[] =
     TRACK_LIST_STATUS_LIST.map((status: string) => ({
       name: status,
       value: status,
     }));
-  public updateResponseData$: Observable<any> | null = null;
-
-  // variables for refreshing page
-  private refreshSubscription!: Subscription;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private mediaService: MediaService,
     private messageService: MessageService,
     private router: Router,
+    private mediaService: MediaService,
+    private formBuilder: FormBuilder,
     private userService: UserService,
     private tracklistService: TracklistService
   ) {}
 
   ngOnInit(): void {
-    this.loadFilmData();
-  }
-
-  public loadFilmData = () => {
-    const selectedTracklistFull: SeasonTracklist[] =
-      this.inpSeasonTracklists().filter((tracklist: SeasonTracklist) => {
-        return (
-          tracklist.id ===
-          this.inpTracklistSelectionForm().get('selectedTracklist')?.value
-            .tracklistId
-        );
-      });
-
-    if (selectedTracklistFull.length !== 1) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Tracklist-Abruf',
-        detail:
-          'Es ist ein Fehler aufgetreten. Wir leiten Sie zurück zur Übersicht.',
-      });
-
-      this.cancelTracklistEditing.emit(0);
-      return;
-    }
-
-    this.selectedFullTracklist = selectedTracklistFull[0];
-    console.log('tracklist full:', selectedTracklistFull[0]);
-
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
         {
-          name: selectedTracklistFull[0].status,
-          value: selectedTracklistFull[0].status,
+          name: this.inpTracklist().status,
+          value: this.inpTracklist().status,
         },
         Validators.required,
       ],
-      tracklist_name: [
-        selectedTracklistFull[0].tracklistName,
-        Validators.required,
-      ],
-      tracklist_rating: [selectedTracklistFull[0].rating],
+      tracklist_name: [this.inpTracklist().tracklistName, Validators.required],
+      tracklist_rating: [this.inpTracklist().rating],
       tracklist_start_date: [
-        selectedTracklistFull[0].startDate
-          ? new Date(selectedTracklistFull[0].startDate)
+        this.inpTracklist().startDate !== null
+          ? new Date(this.inpTracklist().startDate!)
           : null,
       ],
       tracklist_finish_date: [
-        selectedTracklistFull[0].finishDate
-          ? new Date(selectedTracklistFull[0].finishDate)
+        this.inpTracklist().finishDate
+          ? new Date(this.inpTracklist().finishDate!)
           : null,
       ],
     });
-  };
+  }
 
   public submitForm = () => {
-    this.isFormSubmitted = true;
+    this.isTracklistSubmitted = true;
 
     if (this.updateTracklistForm.invalid) {
-      console.log('invalid');
-      return;
-    }
-
-    if (!this.selectedFullTracklist) {
-      console.log('fehler');
       return;
     }
 
@@ -159,8 +121,6 @@ export class UpdateTracklistFormComponent implements OnInit {
       )
         .toISOString()
         .split('T')[0];
-
-      console.log('start date if:', formattedStartDate);
     }
 
     if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
@@ -169,11 +129,10 @@ export class UpdateTracklistFormComponent implements OnInit {
       )
         .toISOString()
         .split('T')[0];
-      console.log('end date if', formattedEndDate);
     }
 
     const updateTracklistData: UpdateTracklistRequest = {
-      tracklist_id: this.selectedFullTracklist.id,
+      tracklist_id: this.inpTracklist().id,
       tracklist_status:
         this.updateTracklistForm.get('tracklist_status')?.value.name,
       tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
@@ -181,8 +140,6 @@ export class UpdateTracklistFormComponent implements OnInit {
       tracklist_start_date: formattedStartDate,
       tracklist_finish_date: formattedEndDate,
     };
-
-    console.log('updated tracklist:', updateTracklistData);
 
     this.updateResponseData$ =
       this.mediaService.updateTracklist(updateTracklistData);
@@ -205,6 +162,8 @@ export class UpdateTracklistFormComponent implements OnInit {
           severity: 'success',
           summary: 'Erfolgreich gespeichert',
         });
+
+        this.refreshFilmPage.emit(true);
       },
       error: (err) => {
         if (err.status === 401) {
@@ -215,8 +174,6 @@ export class UpdateTracklistFormComponent implements OnInit {
             detail:
               'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
           });
-          this.userService.logoutOfAccount();
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
@@ -237,11 +194,13 @@ export class UpdateTracklistFormComponent implements OnInit {
 
     return (
       fieldControl! &&
-      (fieldControl!.dirty || fieldControl!.touched || this.isFormSubmitted)
+      (fieldControl!.dirty ||
+        fieldControl!.touched ||
+        this.isTracklistSubmitted)
     );
   };
 
   public cancelTracklist = () => {
-    this.cancelTracklistEditing.emit(0);
+    this.cancelTracklistForm.emit(0);
   };
 }

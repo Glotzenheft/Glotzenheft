@@ -89,3 +89,12 @@
   height: 20rem;
 }
 
+.filmDetailsWrapper {
+  height: 60rem;
+  width: 100%;
+}
+
+.tracklistDIV {
+  margin-bottom: 4rem;
+  height: 10rem;
+}
