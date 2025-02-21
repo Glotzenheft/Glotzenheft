@@ -144,15 +144,17 @@ export class MediaService {
       return null;
     }
 
-    let url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name}${
+    let url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name.toString()}${
       ROUTE_CREATE_NEW_TRACKLIST[1]
     }${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${
       ROUTE_CREATE_NEW_TRACKLIST[3]
     }${seasonID}${ROUTE_CREATE_NEW_TRACKLIST[4]}tv${
       ROUTE_CREATE_NEW_TRACKLIST[5]
-    }${startDate}${
-      ROUTE_CREATE_NEW_TRACKLIST[6]
-    }${endDate}${ROUTE_CREATE_NEW_TRACKLIST}${rating ? rating : ''}`;
+    }${startDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${endDate}${
+      ROUTE_CREATE_NEW_TRACKLIST[7]
+    }${rating ? rating : ''}`;
+
+    console.log('url', url);
 
     // if (!startDate.trim()) {
     //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
@@ -178,7 +180,7 @@ export class MediaService {
     startDate: string,
     endDate: string,
     status: string,
-    rating: number
+    rating: number | null
   ): Observable<any> | null => {
     const header = this.getHeader();
 
@@ -193,7 +195,16 @@ export class MediaService {
       .toISOString()
       .split('T')[0];
 
-    const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${ROUTE_CREATE_NEW_TRACKLIST[5]}${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]}${rating}`;
+    const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name.toString()}${
+      ROUTE_CREATE_NEW_TRACKLIST[1]
+    }${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${
+      ROUTE_CREATE_NEW_TRACKLIST[4]
+    }movie${ROUTE_CREATE_NEW_TRACKLIST[5]}${formattedDate}${
+      ROUTE_CREATE_NEW_TRACKLIST[6]
+    }${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]}${
+      rating ? rating : ''
+    }`;
+    console.log('url', url);
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
