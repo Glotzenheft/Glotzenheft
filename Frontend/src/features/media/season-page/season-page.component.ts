@@ -43,11 +43,9 @@ import {
   TVSeasonWithTracklist,
   TVWithTracklist,
 } from '../../../shared/interfaces/tracklist-interfaces';
-import {
-  extractTracklistsOfTV,
-  joinTVWithTracklists,
-} from '../../../shared/functions/tracklist-functions';
+
 import { SelectModule } from 'primeng/select';
+import { TracklistService } from '../../../service/tracklist/tracklist.service';
 
 @Component({
   selector: 'app-season-page',
@@ -102,8 +100,8 @@ export class SeasonPageComponent implements OnInit {
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private location: Location,
-    private userService: UserService
+    private userService: UserService,
+    private tracklistService: TracklistService
   ) {}
 
   ngOnInit(): void {
@@ -147,15 +145,15 @@ export class SeasonPageComponent implements OnInit {
           trackListName: [res.media.name, Validators.required],
         });
 
-        this.tracklistSelectionForm = this.formBuilder.group({
-          selectedTracklist: [{ tracklistName: '', tracklistId: -1 }],
-        });
-
         this.currentTracklist = res.tracklists[0];
 
         // join seasondata with tracklists
-        this.tvDataWithTracklist = joinTVWithTracklists(res);
+        this.tvDataWithTracklist =
+          this.tracklistService.joinTVWithTracklists(res);
 
+        this.tracklistSelectionForm = this.formBuilder.group({
+          selectedTracklist: [{ tracklistName: '', tracklistId: -1 }],
+        });
         this.tracklistsOfSeason = res.tracklists;
       },
       error: (err) => {
@@ -214,35 +212,5 @@ export class SeasonPageComponent implements OnInit {
             .tracklistId
         );
       });
-  };
-
-  public isEpisodeInCurrenTracklist = (episodeID: number): boolean => {
-    if (!this.selectedSeason) {
-      return false;
-    }
-
-    const selectedTracklistFull: SeasonTracklist[] =
-      this.tracklistsOfSeason.filter((tracklist: SeasonTracklist) => {
-        return (
-          tracklist.id ===
-          this.tracklistSelectionForm.get('selectedTracklist')?.value
-            .tracklistId
-        );
-      });
-
-    // checking if given episode is in the first season of all seasons of the tracklist
-    // selectedTracklistFull will only be one tracklist + there is only one season per tracklist!
-    const trackSeasonEpisodeIDs: number[] =
-      selectedTracklistFull[0].tracklistSeasons[0].tracklistEpisodes.map(
-        (episode: TracklistEpisode) => {
-          return episode.episode_id;
-        }
-      );
-
-    if (trackSeasonEpisodeIDs.includes(episodeID)) {
-      return true;
-    }
-
-    return false;
   };
 }

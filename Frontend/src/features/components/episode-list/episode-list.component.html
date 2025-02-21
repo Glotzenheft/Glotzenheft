@@ -5,6 +5,7 @@
     (click)="openDialog(episode)"
   >
     <p>E {{ episode.episodeNumber }}: {{ episode.name }}</p>
+    <p *ngIf="!checkEpisodeInCurrentTracklist(episode.id)">+</p>
   </div>
 </div>
 

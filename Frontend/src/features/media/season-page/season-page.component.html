@@ -106,6 +106,7 @@
                     [options]="season.tracklistsForSeason"
                     optionLabel="tracklistName"
                     formControlName="selectedTracklist"
+                    placeholder="Trackliste auswählen ..."
                   ></p-select>
                 </div>
               </div>
@@ -116,7 +117,12 @@
               (onClick)="openTracklistDialog(season.id, season.name)"
             />
 
-            <app-episode-list [episodeList]="season.episodes" />
+            <app-episode-list
+              [episodeList]="season.episodes"
+              [tracklistSelectionForm]="tracklistSelectionForm"
+              [selectedSeason]="selectedSeason"
+              [tracklistsOfSeason]="tracklistsOfSeason"
+            />
           </p-accordion-content>
         </p-accordion-panel>
       </p-accordion>
