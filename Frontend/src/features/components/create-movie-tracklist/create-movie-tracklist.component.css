@@ -1,7 +1,7 @@
 @media (max-width: 850px) {
   .createMovieTracklistWrapper {
     width: 100%;
-    height: 50rem;
+    height: 60rem;
     /* overflow-y: auto; */
     overflow-x: hidden;
     overflow-y: hidden;
@@ -9,7 +9,7 @@
   }
   .createNewTracklist {
     width: 100%;
-    height: 90%;
+    height: 76%;
     overflow: hidden;
     background-color: rgba(255, 255, 255, 0.8);
 
@@ -71,6 +71,11 @@
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
+  }
+
+  .createMovieWindow {
+    width: 100%;
+    height: 100%;
   }
 }
 
