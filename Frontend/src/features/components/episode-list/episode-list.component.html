@@ -1,11 +1,14 @@
 <div *ngIf="episodeList().length > 0" class="episodeDIVWrapper">
-  <div
-    *ngFor="let episode of episodeList()"
-    class="episodeDIV"
-    (click)="openDialog(episode)"
-  >
-    <p>E {{ episode.episodeNumber }}: {{ episode.name }}</p>
-    <p *ngIf="!checkEpisodeInCurrentTracklist(episode.id)">+</p>
+  <div *ngFor="let episode of episodeList()" class="episodeDIV">
+    <div (click)="openDialog(episode)">
+      <p>E {{ episode.episodeNumber }}: {{ episode.name }}</p>
+    </div>
+    <p-button
+      *ngIf="!checkEpisodeInCurrentTracklist(episode.id)"
+      icon="pi pi-plus"
+      severity="secondary"
+      pTooltip="Episode zur Watchlist hinzufügen"
+    />
   </div>
 </div>
 

@@ -9,10 +9,12 @@ import {
   SeasonTracklist,
   TVSeasonWithTracklist,
 } from '../../../shared/interfaces/tracklist-interfaces';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-episode-list',
-  imports: [CommonModule, DialogModule, DateFormattingPipe],
+  imports: [CommonModule, DialogModule, DateFormattingPipe, ButtonModule, TooltipModule],
   templateUrl: './episode-list.component.html',
   styleUrl: './episode-list.component.css',
 })
