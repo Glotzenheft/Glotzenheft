@@ -41,6 +41,8 @@ trait RequestTrait
 
         $episodeID = filter_var($request->query->get('episode_id'), FILTER_VALIDATE_INT) ?: null;
 
+        $tracklistEpisodeID = filter_var($request->query->get('tracklist_episode_id'), FILTER_VALIDATE_INT) ?: null;
+
         $mediaType = $request->query->get('media_type') ?: null;
 
         $tracklistStatus = $request->query->get('tracklist_status') ?: null;
@@ -61,6 +63,7 @@ trait RequestTrait
             'tracklist_name' => $tracklistName,
             'tracklist_id' => $tracklistID,
             'tracklist_season_id' => $tracklistSeasonID,
+            'tracklist_episode_id' => $tracklistEpisodeID,
             'media_id' => $mediaID,
             'media_type' => $mediaType,
             'season_id' => $seasonID,
@@ -93,6 +96,22 @@ trait RequestTrait
     {
         return [
             'error' => 'TracklistID not provided.',
+            'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnTracklistSeasonIDNotProvided(): array
+    {
+        return [
+            'error' => 'TracklistSeasonID not provided.',
+            'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnTracklistEpisodeIDNotProvided(): array
+    {
+        return [
+            'error' => 'TracklistEpisodeID not provided.',
             'code' => Response::HTTP_BAD_REQUEST
         ];
     }
@@ -169,6 +188,14 @@ trait RequestTrait
         ];
     }
 
+    private function returnWrongTracklistSeasonTracklistEpisode(): array
+    {
+        return [
+            'error' => 'Provided tracklist_episode_id does not belong to the tracklist_season_id.',
+            'code' => Response::HTTP_CONFLICT
+        ];
+    }
+
     private function returnWrongSeasonEpisode(): array
     {
         return [
@@ -193,6 +220,14 @@ trait RequestTrait
         ];
     }
 
+    private function returnTracklistEpisodeNotFound(): array
+    {
+        return [
+            'error' => 'Tracklist episode not found',
+            'code' => Response::HTTP_NOT_FOUND
+        ];
+    }
+
     private function returnUserDeleteError(): array
     {
         return [
@@ -205,6 +240,14 @@ trait RequestTrait
     {
         return [
             'error' => 'There was an error while deleting the tracklist. Please try again.',
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR
+        ];
+    }
+
+    private function returnTracklistEpisodeDeleteError(): array
+    {
+        return [
+            'error' => 'There was an error while deleting the tracklist episode. Please try again.',
             'code' => Response::HTTP_INTERNAL_SERVER_ERROR
         ];
     }
@@ -253,6 +296,14 @@ trait RequestTrait
     {
         return [
             'error' => 'Invalid date provided. Use the following format: Y-m-d.',
+            'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnNoWatchDateProvided(): array
+    {
+        return [
+            'error' => 'No watch date provided when trying to update the watch date.',
             'code' => Response::HTTP_BAD_REQUEST
         ];
     }
