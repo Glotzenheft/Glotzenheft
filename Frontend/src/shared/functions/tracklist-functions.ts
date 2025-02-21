@@ -1,6 +1,8 @@
 import { Season, SeasonWithEpisodes } from '../interfaces/media-interfaces';
 import {
+  ExtractedTracklist,
   SeasonTracklist,
+  TracklistEpisode,
   TVSeasonWithTracklist,
   TVWithTracklist,
 } from '../interfaces/tracklist-interfaces';
@@ -11,43 +13,7 @@ import {
  * @returns TVWithTracklist
  */
 export const joinTVWithTracklists = (data: Season): TVWithTracklist => {
-  const tvSeasonsWithTracklist: TVSeasonWithTracklist[] =
-    data.media.seasons.map((season: SeasonWithEpisodes) => ({
-      tmdbSeasonID: season.tmdbSeasonID,
-      seasonNumber: season.seasonNumber,
-      name: season.name,
-      overview: season.overview,
-      airDate: season.airDate,
-      episodeCount: season.episodeCount,
-      posterPath: season.posterPath,
-      tracklistsForSeason: data.tracklists
-        .map((tracklist: SeasonTracklist) => {
-          // find all tracklists of the tv for the tv season that include the tv season
-
-          for (const trackSeason of tracklist.media.seasons) {
-            if (trackSeason.id === season.id) {
-              return {
-                tracklistName: tracklist.tracklistName,
-                tracklistId: tracklist.id,
-              };
-            }
-          }
-
-          return {
-            tracklistName: '',
-            tracklistId: -1,
-          };
-        })
-        .filter((tracklist: { tracklistName: string; tracklistId: number }) => {
-          // filter out values with name === "" and/ or id < 0 (e.g. -1)
-          return (
-            tracklist.tracklistName.trim() !== '' && tracklist.tracklistId >= 0
-          );
-        }),
-      episodes: season.episodes,
-    }));
-
-  const tvWithTracklist: TVWithTracklist = {
+  const tvWithTracklist = {
     id: data.media.id,
     tmdbID: data.media.tmdbID,
     imdbID: data.media.imdbID,
@@ -56,12 +22,60 @@ export const joinTVWithTracklists = (data: Season): TVWithTracklist => {
     description: data.media.description,
     firstAirDate: data.media.firstAirDate,
     tmdbGenres: data.media.tmdbGenres,
+    seasons: data.media.seasons.map((season: SeasonWithEpisodes) => {
+      // get all tracklists for the season
+      const tracklistWithSeason: {
+        tracklistName: string;
+        tracklistId: number;
+      }[] = [];
+
+      for (const tracklist of data.tracklists) {
+        for (const trackSeason of tracklist.tracklistSeasons) {
+          if (trackSeason.season.id === season.id) {
+            tracklistWithSeason.push({
+              tracklistId: tracklist.id,
+              tracklistName: tracklist.tracklistName,
+            });
+          }
+        }
+      }
+
+      return {
+        id: season.id,
+        tmdbSeasonID: season.tmdbSeasonID,
+        seasonNumber: season.seasonNumber,
+        name: season.name,
+        overview: season.overview,
+        airDate: season.airDate,
+        episodeCount: season.episodeCount,
+        posterPath: season.posterPath,
+        tracklistsForSeason: tracklistWithSeason,
+        episodes: season.episodes,
+      };
+    }),
     type: data.media.type,
     posterPath: data.media.posterPath,
     backdropPath: data.media.backdropPath,
     mediaID: data.media.mediaID,
-    seasons: tvSeasonsWithTracklist,
   };
 
   return tvWithTracklist;
+};
+
+export const extractTracklistsOfTV = (data: Season): ExtractedTracklist[] => {
+  return data.tracklists.map((tracklist: SeasonTracklist) => {
+    const episodes: { episodeID: number }[] =
+      tracklist.tracklistSeasons[0].tracklistEpisodes.map(
+        (epi: TracklistEpisode) => {
+          return {
+            episodeID: epi.id,
+          };
+        }
+      );
+
+    return {
+      tracklistId: tracklist.id,
+      episodes: episodes,
+    };
+  });
 };

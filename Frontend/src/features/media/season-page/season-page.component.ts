@@ -35,12 +35,19 @@ import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 import { UserService } from '../../../service/user/user.service';
 import { AccordionModule } from 'primeng/accordion';
 import {
+  ExtractedTracklist,
   SeasonTracklist,
+  SeasonTracklistType,
   Tracklist,
+  TracklistEpisode,
   TVSeasonWithTracklist,
   TVWithTracklist,
 } from '../../../shared/interfaces/tracklist-interfaces';
-import { joinTVWithTracklists } from '../../../shared/functions/tracklist-functions';
+import {
+  extractTracklistsOfTV,
+  joinTVWithTracklists,
+} from '../../../shared/functions/tracklist-functions';
+import { SelectModule } from 'primeng/select';
 
 @Component({
   selector: 'app-season-page',
@@ -60,6 +67,7 @@ import { joinTVWithTracklists } from '../../../shared/functions/tracklist-functi
     CreateNewTracklistComponent,
     EpisodeListComponent,
     AccordionModule,
+    SelectModule,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -79,9 +87,12 @@ export class SeasonPageComponent implements OnInit {
   public isTracklistDialogVisible: boolean = false;
   public currentSeasonID: number | null = null;
   public currentSeasonName: string | null = null;
+  public selectedSeason: TVSeasonWithTracklist | null = null;
+  public tracklistsOfSeason: SeasonTracklist[] = [];
 
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
+  public tracklistSelectionForm!: FormGroup;
 
   constructor(
     public stringService: StringService,
@@ -136,10 +147,16 @@ export class SeasonPageComponent implements OnInit {
           trackListName: [res.media.name, Validators.required],
         });
 
+        this.tracklistSelectionForm = this.formBuilder.group({
+          selectedTracklist: [{ tracklistName: '', tracklistId: -1 }],
+        });
+
         this.currentTracklist = res.tracklists[0];
 
         // join seasondata with tracklists
         this.tvDataWithTracklist = joinTVWithTracklists(res);
+
+        this.tracklistsOfSeason = res.tracklists;
       },
       error: (err) => {
         if (err.status === 401) {
@@ -184,5 +201,48 @@ export class SeasonPageComponent implements OnInit {
         fieldControl!.touched ||
         this.isTracklistSubmitted)
     );
+  };
+
+  public setSelectedSeason = (season: TVSeasonWithTracklist) => {
+    this.selectedSeason = season;
+
+    const selectedTracklistFull: SeasonTracklist[] =
+      this.tracklistsOfSeason.filter((tracklist: SeasonTracklist) => {
+        return (
+          tracklist.id ===
+          this.tracklistSelectionForm.get('selectedTracklist')?.value
+            .tracklistId
+        );
+      });
+  };
+
+  public isEpisodeInCurrenTracklist = (episodeID: number): boolean => {
+    if (!this.selectedSeason) {
+      return false;
+    }
+
+    const selectedTracklistFull: SeasonTracklist[] =
+      this.tracklistsOfSeason.filter((tracklist: SeasonTracklist) => {
+        return (
+          tracklist.id ===
+          this.tracklistSelectionForm.get('selectedTracklist')?.value
+            .tracklistId
+        );
+      });
+
+    // checking if given episode is in the first season of all seasons of the tracklist
+    // selectedTracklistFull will only be one tracklist + there is only one season per tracklist!
+    const trackSeasonEpisodeIDs: number[] =
+      selectedTracklistFull[0].tracklistSeasons[0].tracklistEpisodes.map(
+        (episode: TracklistEpisode) => {
+          return episode.episode_id;
+        }
+      );
+
+    if (trackSeasonEpisodeIDs.includes(episodeID)) {
+      return true;
+    }
+
+    return false;
   };
 }

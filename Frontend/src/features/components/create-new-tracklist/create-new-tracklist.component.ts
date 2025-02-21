@@ -68,6 +68,7 @@ export class CreateNewTracklistComponent implements OnInit {
       startDate: [''],
       endDate: [''],
     });
+    console.log('season id', this.seasonID());
   }
 
   public createNewTrackList = () => {
@@ -98,13 +99,6 @@ export class CreateNewTracklistComponent implements OnInit {
         .split('T')[0];
       console.log('end date if', formattedEndDate);
     }
-
-    console.log(
-      'start date:',
-      formattedStartDate,
-      'end date:',
-      formattedEndDate
-    );
 
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
       this.trackListForm.get('trackListName')?.value,
