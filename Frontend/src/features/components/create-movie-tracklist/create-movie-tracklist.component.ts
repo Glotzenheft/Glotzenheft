@@ -53,6 +53,7 @@ export class CreateMovieTracklistComponent implements OnInit {
   // output variables
   @Output() cancelTracklistCreation: EventEmitter<boolean> =
     new EventEmitter<boolean>(false);
+  @Output() saveNewTracklist: EventEmitter<number> = new EventEmitter<number>();
 
   // variables for submitting the form
   public isTracklistSubmitted: boolean = false;
@@ -119,6 +120,8 @@ export class CreateMovieTracklistComponent implements OnInit {
           severity: 'success',
           summary: 'Tracklist erfolgreich angelegt.',
         });
+
+        this.saveNewTracklist.emit(0);
       },
       error: (err) => {
         if (err.status === 401) {

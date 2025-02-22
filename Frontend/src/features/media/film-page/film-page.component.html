@@ -72,18 +72,22 @@
       </p-panel>
     </div>
 
-    <p-button
-      label="Neue Watchlist erstellen"
-      icon="pi pi-plus"
-      (onClick)="setVisibilityStatus(1)"
-    />
+    <div class="newWatchlisButton">
+      <p-button
+        label="Neue Watchlist erstellen"
+        icon="pi pi-plus"
+        (onClick)="setVisibilityStatus(1)"
+      />
+    </div>
   </div>
 </div>
+
 <ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
   <app-create-movie-tracklist
     [mediaID]="filmData.media.id"
     [mediaName]="filmData.media.name"
     (cancelTracklistCreation)="setVisibilityStatus(0)"
+    (saveNewTracklist)="refreshPage()"
   />
 </ng-container>
 
