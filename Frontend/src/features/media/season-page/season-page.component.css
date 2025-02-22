@@ -1,4 +1,4 @@
-@media (max-width: 600px) {
+@media (max-width: 700px) {
   img {
     height: 100%;
   }
@@ -64,9 +64,21 @@
     height: 100%;
     border: 0.1rem solid black;
   }
+
+  .tracklistSelectionDIV {
+    width: 100%;
+    height: 10rem;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .tracklistSelectionDIV div {
+    width: 50%;
+  }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 700px) {
   img {
     height: 100%;
   }
@@ -109,7 +121,7 @@
 
   .seasonWrapper {
     width: 100%;
-    height: 14rem;
+    height: 30rem;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -126,12 +138,25 @@
 
   .seasonWrapper .seasonPoster {
     width: 30%;
-    height: 90%;
+    height: 50%;
   }
 
   .seasonWrapper .seasonPoster img {
     height: 100%;
     border: 0.1rem solid black;
+  }
+
+  .tracklistSelectionDIV {
+    width: 100%;
+    height: 4rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 1rem;
+  }
+
+  .tracklistSelectionDIV div {
+    width: 50%;
   }
 }
 

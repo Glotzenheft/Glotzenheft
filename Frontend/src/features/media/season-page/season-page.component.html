@@ -1,4 +1,4 @@
-<ng-container *ngIf="!isTracklistFormVisible">
+<ng-container *ngIf="isTracklistFormVisible === 0">
   <div class="backButtonDIV">
     <p-button
       label="zurück zur Suche"
@@ -52,15 +52,6 @@
       </div>
     </div>
 
-    <!-- <div class="newWatchlistButton">
-          <p-button
-            label="neue Watchlist anlegen"
-            (onClick)="openTracklistDialog()"
-            class="bigButton"
-            icon="pi pi-plus"
-          />
-        </div> -->
-
     <div class="mainDIV episodes" *ngIf="seasonData.media.seasons.length > 0">
       <h2>Staffeln</h2>
 
@@ -99,22 +90,33 @@
                       Beschreibung: <i>keine Beschreibung vorhanden</i>
                     </p>
                     <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
-                    <p-select
-                      *ngIf="
-                        season.tracklistsForSeason &&
-                        season.tracklistsForSeason.length > 0
-                      "
-                      [options]="season.tracklistsForSeason"
-                      optionLabel="tracklistName"
-                      formControlName="selectedTracklist"
-                      placeholder="Trackliste auswählen ..."
-                    ></p-select>
                   </div>
                 </div>
               </div>
 
+              <div
+                class="tracklistSelectionDIV"
+                *ngIf="
+                  season.tracklistsForSeason &&
+                  season.tracklistsForSeason.length > 0
+                "
+              >
+                <p-select
+                  [options]="season.tracklistsForSeason"
+                  optionLabel="tracklistName"
+                  formControlName="selectedTracklist"
+                  placeholder="Trackliste auswählen ..."
+                ></p-select>
+                <p-button
+                  *ngIf="isEditingButtonVisible"
+                  label="Bearbeiten"
+                  (onClick)="setVisibility(2)"
+                  icon="pi pi-pencil"
+                />
+              </div>
               <p-button
                 label="Neue Trackliste anlegen"
+                icon="pi pi-plus"
                 (onClick)="openTracklistForm(season)"
               />
 
@@ -132,23 +134,9 @@
   </div>
 </ng-container>
 
-<!-- <p-dialog
-  class="dialog"
-  *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
-  [(visible)]="isTracklistDialogVisible"
-  [header]="seasonData.media.name"
->
-  <app-create-new-tracklist
-    *ngIf="currentSeasonID"
-    [mediaName]="seasonData.media.name"
-    [mediaID]="seasonData.media.id"
-    [seasonID]="currentSeasonID"
-  />
-</p-dialog> -->
-
 <ng-container
   *ngIf="
-    isTracklistFormVisible &&
+    isTracklistFormVisible === 1 &&
     currentSeason &&
     (seasonData$ | async) as seasonData
   "
@@ -159,5 +147,23 @@
     [inputTVSeason]="currentSeason"
     [mediaID]="seasonData.media.id"
     (cancelTracklistFormSubmission)="cancelTracklistForm()"
+    (saveNewTracklist)="refreshPage()"
+  />
+</ng-container>
+
+<ng-container
+  *ngIf="
+    isTracklistFormVisible === 2 &&
+    tracklistSelectionForm.get('selectedTracklist')?.value &&
+    (seasonData$ | async) as seasonData
+  "
+>
+  <app-update-tracklist-form
+    [inpSeasonTracklists]="seasonData.tracklists"
+    [inpSelectedTracklist]="
+      tracklistSelectionForm.get('selectedTracklist')?.value
+    "
+    (cancelTracklistEditing)="cancelTracklistForm()"
+    (saveUpdatedTracklist)="refreshPage()"
   />
 </ng-container>

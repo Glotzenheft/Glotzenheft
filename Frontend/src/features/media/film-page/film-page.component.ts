@@ -27,6 +27,8 @@ import { MediaService } from '../../../service/media/media.service';
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 import { UserService } from '../../../service/user/user.service';
 import { CreateMovieTracklistComponent } from '../../components/create-movie-tracklist/create-movie-tracklist.component';
+import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
 
 @Component({
   selector: 'app-film-page',
@@ -44,6 +46,7 @@ import { CreateMovieTracklistComponent } from '../../components/create-movie-tra
     MessageModule,
     ReactiveFormsModule,
     CreateMovieTracklistComponent,
+    UpdateFilmTracklistComponent,
   ],
   templateUrl: './film-page.component.html',
   styleUrl: './film-page.component.css',
@@ -56,7 +59,11 @@ export class FilmPageComponent implements OnInit {
   public filmData$: Observable<Film> | null = null;
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
-  public isTracklistFormPageVisible: boolean = false;
+  public visibilityStatus: number = 0;
+  public selectedTracklist: SeasonTracklist | null = null;
+
+  // variable for controlling the toggle status of the tracklist panels
+  public activePanel: number | null = null;
 
   constructor(
     private messageService: MessageService,
@@ -71,6 +78,10 @@ export class FilmPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  public loadData = () => {
     this.movieID = this.route.snapshot.paramMap.get('id');
 
     if (!this.movieID) {
@@ -118,7 +129,7 @@ export class FilmPageComponent implements OnInit {
         this.hasError = true;
       },
     });
-  }
+  };
 
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);
@@ -137,11 +148,18 @@ export class FilmPageComponent implements OnInit {
   };
 
   // dialog
-  public openTracklistDialog = () => {
-    this.isTracklistFormPageVisible = true;
+
+  public setVisibilityStatus = (status: number) => {
+    this.visibilityStatus = status;
   };
 
-  public cancelTracklistForm = () => {
-    this.isTracklistFormPageVisible = false;
+  public setSelectedTracklist = (tracklist: SeasonTracklist) => {
+    this.selectedTracklist = tracklist;
+    this.visibilityStatus = 2;
+  };
+
+  public refreshPage = () => {
+    this.setVisibilityStatus(0);
+    this.loadData();
   };
 }

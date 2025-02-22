@@ -1,4 +1,8 @@
 @media (max-width: 600px) {
+  .filmDetailsWrapper {
+    height: 90rem;
+    width: 100%;
+  }
   img {
     height: 100%;
   }
@@ -35,10 +39,22 @@
 
   .newWatchlistButton {
     margin-top: 2rem;
+    margin-bottom: 4rem;
+    height: 10rem;
+    overflow-y: auto;
+  }
+
+  .newWatchlisButton {
+    margin-top: 2rem;
+    height: 3rem;
   }
 }
 
 @media (min-width: 600px) {
+  .filmDetailsWrapper {
+    height: 70rem;
+    width: 100%;
+  }
   img {
     height: 100%;
   }
@@ -78,6 +94,13 @@
   .bigButton .p-button {
     width: 10rem;
   }
+
+  .newWatchlistButton {
+    margin-top: 2rem;
+    margin-bottom: 4rem;
+    height: 16rem;
+    overflow-y: auto;
+  }
 }
 
 .backButtonDIV {
@@ -89,3 +112,7 @@
   height: 20rem;
 }
 
+.tracklistDIV {
+  margin-bottom: 4rem;
+  height: 10rem;
+}

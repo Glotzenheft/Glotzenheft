@@ -49,3 +49,12 @@ export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
 
 export const ROUTE_DELETE_USER_ACCOUNT: string =
   'https://127.0.0.1:8000/api/user';
+
+export const ROUTE_UPDATE_TRACKLIST: string[] = [
+  'https://127.0.0.1:8000/api/tracklist?tracklist_id=', // 0
+  '&tracklist_status=', // 1
+  '&tracklist_name=', // 2
+  '&tracklist_rating=', // 3
+  '&tracklist_start_date=', // 4
+  '&tracklist_finish_date=', // 5
+];

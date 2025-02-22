@@ -41,6 +41,8 @@ export class TracklistFormComponent implements OnInit {
   // output variables
   @Output() cancelTracklistFormSubmission: EventEmitter<boolean> =
     new EventEmitter<boolean>();
+  @Output() saveNewTracklist: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   constructor(private messageService: MessageService) {}
   ngOnInit(): void {
@@ -48,6 +50,9 @@ export class TracklistFormComponent implements OnInit {
   }
 
   // functions ----------------------
+  public saveNewUpdatedTracklist = () => {
+    this.saveNewTracklist.emit(true);
+  };
   public cancelTracklistForm = () => {
     this.cancelTracklistFormSubmission.emit(false);
   };
