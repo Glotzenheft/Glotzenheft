@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, input, InputSignal, OnInit } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  input,
+  InputSignal,
+  OnInit,
+  Output,
+} from '@angular/core';
 import {
   FormBuilder,
   FormGroup,
@@ -18,6 +26,8 @@ import { Observable } from 'rxjs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import { TVSeasonWithTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-create-new-tracklist',
@@ -31,15 +41,20 @@ import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
     FloatLabelModule,
     DatePickerModule,
     SelectModule,
+    RatingModule,
   ],
   templateUrl: './create-new-tracklist.component.html',
   styleUrl: './create-new-tracklist.component.css',
 })
 export class CreateNewTracklistComponent implements OnInit {
   // input variables
-  public mediaName: InputSignal<string> = input.required<string>();
   public mediaID: InputSignal<number> = input.required<number>();
-  public seasonID: InputSignal<number> = input.required<number>();
+  public inputSeason: InputSignal<TVSeasonWithTracklist> =
+    input.required<TVSeasonWithTracklist>();
+
+  // output variables
+  @Output() cancelTracklistForm: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   // variables for tracklist submitting
   public isTracklistSubmitted: boolean = false;
@@ -61,24 +76,29 @@ export class CreateNewTracklistComponent implements OnInit {
   ngOnInit(): void {
     this.trackListForm = this.formBuilder.group({
       trackListName: [
-        `${this.mediaName()} - Staffel ${this.seasonID()}`,
+        `${this.inputSeason().name} - Staffel ${
+          this.inputSeason().seasonNumber
+        }`,
         Validators.required,
       ],
       status: ['', Validators.required],
       startDate: [''],
       endDate: [''],
+      rating: [null],
     });
+    console.log('season id', this.inputSeason().id);
   }
 
   public createNewTrackList = () => {
     this.isTracklistSubmitted = true;
     if (this.trackListForm.invalid) {
-      this.messageService.add({
-        life: 7000,
-        summary: 'Ungültiger Name',
-        detail: 'Der Name der Tracklist darf nicht leer sein.',
-        severity: 'error',
-      });
+      //   this.messageService.add({
+      //     life: 7000,
+      //     summary: 'Ungültiger Name',
+      //     detail: 'Der Name der Tracklist darf nicht leer sein.',
+      //     severity: 'error',
+      //   });
+      return;
     }
 
     let formattedStartDate: string = '';
@@ -99,20 +119,18 @@ export class CreateNewTracklistComponent implements OnInit {
       console.log('end date if', formattedEndDate);
     }
 
-    console.log(
-      'start date:',
-      formattedStartDate,
-      'end date:',
-      formattedEndDate
-    );
+    let rating: number | null = this.trackListForm.get('rating')?.value;
+
+
 
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
       this.trackListForm.get('trackListName')?.value,
       this.mediaID(),
-      this.seasonID(),
+      this.inputSeason().id,
       formattedStartDate,
       formattedEndDate,
-      this.trackListForm.get('status')?.value.name
+      this.trackListForm.get('status')?.value.name,
+       this.trackListForm.get('rating')?.value
     );
 
     if (!this.createNewTracklist$) {
@@ -152,7 +170,9 @@ export class CreateNewTracklistComponent implements OnInit {
     });
   };
 
-  public cancelNewTracklist = () => {};
+  public cancelNewTracklist = () => {
+    this.cancelTracklistForm.emit(false);
+  };
 
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);

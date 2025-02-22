@@ -1,69 +1,82 @@
-<h1>Film</h1>
+<ng-container *ngIf="!isTracklistFormPageVisible">
+  <h1>Film</h1>
 
-<div class="backButtonDIV">
-  <p-button
-    label="zurück zur Suche"
-    (onClick)="navigateToMultiSearch()"
-    severity="secondary"
-    icon="pi pi-arrow-left"
-  />
-</div>
-<div *ngIf="hasError">
-  <p-panel header="Fehler beim Laden der Seite" class="error">
-    <p>
-      Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte versuchen
-      Sie es erneut durch ein erneutes Laden der Seite.
-    </p>
-  </p-panel>
-</div>
-
-<div *ngIf="isInvalidID">
-  <p-panel header="Fehler beim Laden der Seite" class="error">
-    <p>
-      Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es erneut
-      durch ein Zurückgehen zur letzten Seite und ein erneutes Laden dieser
-      Seite.
-    </p>
-  </p-panel>
-</div>
-
-<div *ngIf="filmData$ | async as filmData">
-  <div class="seasonMeta">
-    <div class="seasonPictureWrapper">
-      <div class="seasonMetaPicture">
-        <p *ngIf="filmData.media.posterPath === null">kein Bild vorhanden</p>
-        <img
-          *ngIf="filmData.media.posterPath !== null"
-          [src]="'https://image.tmdb.org/t/p/w500' + filmData.media.posterPath"
-          [alt]="'Dies ist das Bild für von ' + filmData.media.name"
-        />
-      </div>
-    </div>
-    <div class="seasonMetaContent">
-      <div>
-        <h2>Beschreibung</h2>
-        <p class="descriptionP">{{ filmData.media.description }}</p>
-        <p>
-          Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}
-        </p>
-        <p *ngIf="filmData.media.seasons.length > 0">
-          Anzahl der Staffeln: {{ filmData.media.seasons.length }}
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div class="newWatchlistButton">
+  <div class="backButtonDIV">
     <p-button
-      label="neue Watchlist anlegen"
-      (onClick)="openTracklistDialog()"
-      class="bigButton"
-      icon="pi pi-plus"
+      label="zurück zur Suche"
+      (onClick)="navigateToMultiSearch()"
+      severity="secondary"
+      icon="pi pi-arrow-left"
     />
   </div>
-</div>
+  <div *ngIf="hasError">
+    <p-panel header="Fehler beim Laden der Seite" class="error">
+      <p>
+        Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte versuchen
+        Sie es erneut durch ein erneutes Laden der Seite.
+      </p>
+    </p-panel>
+  </div>
 
-<p-dialog
+  <div *ngIf="isInvalidID">
+    <p-panel header="Fehler beim Laden der Seite" class="error">
+      <p>
+        Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
+        erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
+        dieser Seite.
+      </p>
+    </p-panel>
+  </div>
+
+  <div *ngIf="filmData$ | async as filmData">
+    <div class="seasonMeta">
+      <div class="seasonPictureWrapper">
+        <div class="seasonMetaPicture">
+          <p *ngIf="filmData.media.posterPath === null">kein Bild vorhanden</p>
+          <img
+            *ngIf="filmData.media.posterPath !== null"
+            [src]="
+              'https://image.tmdb.org/t/p/w500' + filmData.media.posterPath
+            "
+            [alt]="'Dies ist das Bild für von ' + filmData.media.name"
+          />
+        </div>
+      </div>
+      <div class="seasonMetaContent">
+        <div>
+          <h2>Beschreibung</h2>
+          <p class="descriptionP">{{ filmData.media.description }}</p>
+          <p>
+            Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}
+          </p>
+          <p *ngIf="filmData.media.seasons.length > 0">
+            Anzahl der Staffeln: {{ filmData.media.seasons.length }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="newWatchlistButton">
+      <p-button
+        label="neue Watchlist anlegen"
+        (onClick)="openTracklistDialog()"
+        class="bigButton"
+        icon="pi pi-plus"
+      />
+    </div>
+  </div>
+</ng-container>
+<ng-container
+  *ngIf="isTracklistFormPageVisible && (filmData$ | async) as filmData"
+>
+  <app-create-movie-tracklist
+    [mediaID]="filmData.media.id"
+    [mediaName]="filmData.media.name"
+    (cancelTracklistCreation)="cancelTracklistForm()"
+  />
+</ng-container>
+
+<!-- <p-dialog
   class="dialog"
   *ngIf="isTracklistDialogVisible && (filmData$ | async) as filmData"
   [(visible)]="isTracklistDialogVisible"
@@ -75,4 +88,4 @@
     [mediaName]="filmData.media.name"
     (cancelTracklistCreation)="closeTracklistDialog()"
   />
-</p-dialog>
+</p-dialog> -->

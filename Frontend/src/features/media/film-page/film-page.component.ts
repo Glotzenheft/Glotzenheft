@@ -56,7 +56,7 @@ export class FilmPageComponent implements OnInit {
   public filmData$: Observable<Film> | null = null;
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
-  public isTracklistDialogVisible: boolean = false;
+  public isTracklistFormPageVisible: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -138,10 +138,10 @@ export class FilmPageComponent implements OnInit {
 
   // dialog
   public openTracklistDialog = () => {
-    this.isTracklistDialogVisible = true;
+    this.isTracklistFormPageVisible = true;
   };
 
-  public closeTracklistDialog = () => {
-    this.isTracklistDialogVisible = false;
+  public cancelTracklistForm = () => {
+    this.isTracklistFormPageVisible = false;
   };
 }

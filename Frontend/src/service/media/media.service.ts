@@ -11,8 +11,7 @@ import {
   HttpHeaders,
 } from '@angular/common/http';
 import {
-  ROUTE_CREATE_NEW_MOVIE_TRACKLIST,
-  ROUTE_CREATE_NEW_SEASON_TRACKLIST,
+  ROUTE_CREATE_NEW_TRACKLIST,
   ROUTE_GET_ALL_USER_TRACKLISTS,
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MEDIA_ID_FOR_MEDIA,
@@ -21,6 +20,7 @@ import {
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
+import { start } from 'repl';
 
 @Injectable({
   providedIn: 'root',
@@ -113,18 +113,6 @@ export class MediaService {
   };
 
   getMultiSearchResults = (searchString: string): Observable<any> => {
-    // const hheaders: HttpHeaders | null = this.getHeader();
-
-    // console.log('multisearch headers: ', hheaders?.get('Authorization'));
-
-    // if (hheaders !== null) {
-    //   return this.http
-    //     .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`, {
-    //       headers: hheaders,
-    //     })
-    //     .pipe(shareReplay(1));
-    // }
-
     return this.http
       .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
       .pipe(shareReplay(1));
@@ -135,8 +123,9 @@ export class MediaService {
     mediaID: number,
     seasonID: number,
     startDate: string,
-    endDate: string,
-    status: string
+    endDate: string | null,
+    status: string | null,
+    rating: number | null
   ): Observable<any> | null => {
     const header = this.getHeader();
 
@@ -144,7 +133,32 @@ export class MediaService {
       return null;
     }
 
-    let url: string = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[5]}${startDate}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
+    let formattedDate: string = '';
+    let formattedEndDate: string = '';
+
+    console.log('start date:', startDate, ', end date: ', endDate);
+
+    if (startDate) {
+      let startDateAsDate: Date = new Date(startDate);
+      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+      formattedDate = startDateAsDate.toISOString().split('T')[0];
+    }
+
+    if (endDate) {
+      let endDateAsDate: Date = new Date(endDate);
+      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+    }
+
+    let url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name.toString()}${
+      ROUTE_CREATE_NEW_TRACKLIST[1]
+    }${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${
+      ROUTE_CREATE_NEW_TRACKLIST[3]
+    }${seasonID}${ROUTE_CREATE_NEW_TRACKLIST[4]}tv${
+      ROUTE_CREATE_NEW_TRACKLIST[5]
+    }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${
+      ROUTE_CREATE_NEW_TRACKLIST[7]
+    }${rating ? rating : ''}`;
 
     // if (!startDate.trim()) {
     //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
@@ -167,24 +181,50 @@ export class MediaService {
   public createNewMovieTracklist = (
     name: string,
     mediaID: number,
-    startDate: string,
-    endDate: string,
-    status: string
+    startDate: string | null,
+    endDate: string | null,
+    status: string,
+    rating: number | null
   ): Observable<any> | null => {
     const header = this.getHeader();
 
     if (!header) {
       return null;
     }
-    const formattedDate: string = new Date(startDate)
-      .toISOString()
-      .split('T')[0];
 
-    const formattedEndDate: string = new Date(endDate)
-      .toISOString()
-      .split('T')[0];
+    let formattedDate: string = '';
+    let formattedEndDate: string = '';
 
-    const url: string = `${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[1]}${status}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[3]}movie${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[4]}${formattedDate}${ROUTE_CREATE_NEW_MOVIE_TRACKLIST[5]}${formattedEndDate}`;
+    console.log('start date:', startDate, ', end date: ', endDate);
+
+    if (startDate) {
+      let startDateAsDate: Date = new Date(startDate);
+      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+      formattedDate = startDateAsDate.toISOString().split('T')[0];
+    }
+
+    if (endDate) {
+      let endDateAsDate: Date = new Date(endDate);
+      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+    }
+
+    console.log(
+      'formatted: start date, ',
+      formattedDate,
+      ', end date',
+      formattedEndDate
+    );
+
+    const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${name.toString()}${
+      ROUTE_CREATE_NEW_TRACKLIST[1]
+    }${status}${ROUTE_CREATE_NEW_TRACKLIST[2]}${mediaID}${
+      ROUTE_CREATE_NEW_TRACKLIST[4]
+    }movie${ROUTE_CREATE_NEW_TRACKLIST[5]}${formattedDate}${
+      ROUTE_CREATE_NEW_TRACKLIST[6]
+    }${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]}${
+      rating ? rating : ''
+    }`;
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),

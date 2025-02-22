@@ -26,6 +26,7 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { DropdownModule } from 'primeng/dropdown';
 import { SelectModule } from 'primeng/select';
 import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-create-movie-tracklist',
@@ -39,6 +40,7 @@ import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
     DialogModule,
     DatePickerModule,
     SelectModule,
+    RatingModule,
   ],
   templateUrl: './create-movie-tracklist.component.html',
   styleUrl: './create-movie-tracklist.component.css',
@@ -71,10 +73,11 @@ export class CreateMovieTracklistComponent implements OnInit {
 
   ngOnInit(): void {
     this.tracklistForm = this.formBuilder.group({
-      trackListName: [this.mediaName(), Validators.required],
-      startDate: [new Date(), Validators.required],
-      endDate: [new Date(), Validators.required],
+      trackListName: [this.mediaName().toString(), [Validators.required]],
+      startDate: [null],
+      endDate: [null],
       status: ['', Validators.required],
+      rating: [null],
     });
   }
 
@@ -82,23 +85,20 @@ export class CreateMovieTracklistComponent implements OnInit {
     this.isTracklistSubmitted = true;
 
     if (this.tracklistForm.invalid) {
-      this.messageService.add({
-        life: 7000,
-        summary: 'Ungültiger Name',
-        detail: 'Der Name der Tracklist darf nicht leer sein.',
-        severity: 'error',
-      });
+      console.log(
+        'trackListName',
+        this.tracklistForm.get('trackListName')?.value.toString().length
+      );
       return;
     }
-
-    console.log('status: ', this.tracklistForm.get('status')?.value.name);
 
     this.createNewTracklist$ = this.mediaService.createNewMovieTracklist(
       this.tracklistForm.get('trackListName')?.value,
       this.mediaID(),
       this.tracklistForm.get('startDate')?.value,
       this.tracklistForm.get('endDate')?.value,
-      this.tracklistForm.get('status')?.value.name
+      this.tracklistForm.get('status')?.value.name,
+      this.tracklistForm.get('rating')?.value
     );
 
     if (!this.createNewTracklist$) {

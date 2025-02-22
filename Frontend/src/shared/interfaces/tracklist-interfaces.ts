@@ -56,44 +56,27 @@ export interface SeasonTracklistEpisode {
 export interface SeasonTracklist {
   id: number;
   media: {
-    id: number;
-    tmdbID: number;
-    imdbID: string;
-    originalName: string;
-    name: string;
-    description: string;
-    firstAirDate: string;
-    tmdbGenres: {
-      id: number;
-      tmdbGenreID: number;
-      name: string;
-    }[];
-
-    seasons: {
-      id: number;
-      tmdbSeasonID: number;
-      seasonNumber: number;
-      name: string;
-      overview: string;
-      airDate: string;
-      episodeCount: number;
-      posterPath: string;
-      episodes: SeasonTracklistEpisode[];
-    }[];
-    type: string;
-    posterPath: string;
-    backdropPath: string;
+    id: number; // id of the tv or movie itself
+    type: string; // "movie" or "tv"
   };
   rating: null | number;
   status: string;
   startDate: null | string;
   finishDate: null | string;
   tracklistName: string;
-  tracklistSeasons: {
-    id: number;
-    tracklistEpisodes: any[];
-  }[];
+  tracklistSeasons: [
+    {
+      id: number;
+      tracklistEpisodes: TracklistEpisode[];
+      season: {
+        id: number;
+        seasonNumber: number;
+      };
+    }
+  ];
 }
+
+// interfaces for season together with tracklists ----------------------------------------------------
 
 export interface SeasonEpisodeWithTracklist {
   id: number;
@@ -108,6 +91,7 @@ export interface SeasonEpisodeWithTracklist {
 }
 
 export interface TVSeasonWithTracklist {
+  id: number;
   tmdbSeasonID: number;
   seasonNumber: number;
   name: string;
@@ -115,7 +99,7 @@ export interface TVSeasonWithTracklist {
   airDate: string;
   episodeCount: number;
   posterPath: string;
-  tracklistsForSeason: { tracklistName: string; tracklistId: number }[];
+  tracklistsForSeason: SeasonTracklistType[];
   episodes: SeasonEpisode[];
 }
 
@@ -144,4 +128,20 @@ export interface TracklistForSeasonList {
   id: number;
   tmdbGenreID: number;
   name: string;
+}
+
+export interface ExtractedTracklist {
+  tracklistId: number;
+  episodes: {
+    episodeID: number;
+  }[];
+}
+
+export interface TracklistEpisode {
+  id: number;
+  tracklist_season_id: number;
+  episode_id: number;
+  watch_date: string | null;
+  created_at: string | null;
+  updated_at: string | null;
 }
