@@ -9,7 +9,7 @@
   }
   .createNewTracklist {
     width: 100%;
-    height: 76%;
+    height: 82%;
     overflow: hidden;
     background-color: rgba(255, 255, 255, 0.8);
 
@@ -67,7 +67,7 @@
 
   .tracklistActions {
     width: 100%;
-    height: 8rem;
+    height: 12rem;
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;

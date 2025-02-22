@@ -6,10 +6,8 @@ import { ImpressumComponent } from '../features/components/impressum/impressum.c
 import { AboutComponent } from '../features/components/about/about.component';
 import { PrivacyPolicyComponent } from '../features/components/privacy-policy/privacy-policy.component';
 import { ROUTES_LIST } from '../shared/variables/routes-list';
-import { SeasonMainComponent } from '../features/components/media/season/season-main/season-main.component';
-import { FilmMainComponent } from '../features/components/media/film/film-main/film-main.component';
 import { MultiSearchComponent } from '../features/components/search/multi-search.component';
-import { authGuard, isUserLoggedIn } from '../guards/auth.guard';
+import { authGuard } from '../guards/auth.guard';
 import { ResetPasswordComponent } from '../features/start/reset-password/reset-password.component';
 import { AllUserTracklistsComponent } from '../features/media/all-user-tracklists/all-user-tracklists.component';
 

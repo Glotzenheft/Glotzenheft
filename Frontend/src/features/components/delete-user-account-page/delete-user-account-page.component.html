@@ -56,7 +56,12 @@
           icon="pi pi-trash"
           severity="danger"
         />
-        <p-button label="Abbrechen" icon="pi pi-times" severity="secondary" />
+        <p-button
+          label="Abbrechen"
+          icon="pi pi-times"
+          severity="secondary"
+          (onClick)="cancelDeletion()"
+        />
       </div>
     </form>
   </div>
