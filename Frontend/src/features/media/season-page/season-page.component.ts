@@ -4,9 +4,9 @@ import {
   Season,
   SeasonWithEpisodes,
 } from '../../../shared/interfaces/media-interfaces';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MediaService } from '../../../service/media/media.service';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
