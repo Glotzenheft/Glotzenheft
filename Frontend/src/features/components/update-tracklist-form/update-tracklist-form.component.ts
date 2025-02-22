@@ -69,7 +69,10 @@ export class UpdateTracklistFormComponent implements OnInit {
       name: status,
       value: status,
     }));
+
+  // request variables
   public updateResponseData$: Observable<any> | null = null;
+  public deleteResponseData$: Observable<any> | null = null;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -212,5 +215,56 @@ export class UpdateTracklistFormComponent implements OnInit {
 
   public cancelTracklist = () => {
     this.cancelTracklistEditing.emit(0);
+  };
+
+  public deleteTracklist = () => {
+    this.deleteResponseData$ = this.mediaService.deleteTracklist(
+      this.inpSelectedTracklist().id
+    );
+
+    if (!this.deleteResponseData$) {
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Löschen der Trackliste',
+        detail:
+          'Beim Löschen der Trackliste ist ein Fehler aufgetreten. Bitte probiere es noch einmal.',
+      });
+      return;
+    }
+
+    this.deleteResponseData$.subscribe({
+      next: () => {
+        this.messageService.add({
+          life: 7000,
+          severity: 'success',
+          summary: 'Trackliste erfolgreich gelöscht',
+        });
+        this.saveUpdatedTracklist.emit(true);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: 'Ungültige Authentifizierung',
+            detail:
+              'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
+          });
+          this.userService.logoutOfAccount();
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+
+          return;
+        }
+
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: 'Fehler beim Löschen',
+          detail:
+            'Beim Löschen ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+        });
+      },
+    });
   };
 }

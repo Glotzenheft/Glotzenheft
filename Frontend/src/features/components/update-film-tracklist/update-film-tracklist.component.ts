@@ -65,20 +65,22 @@ export class UpdateFilmTracklistComponent implements OnInit {
   // other variables
   public updateTracklistForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
-  public updateResponseData$: Observable<any> | null = null;
   public tracklistStatusOptions: { name: string; value: string }[] =
     TRACK_LIST_STATUS_LIST.map((status: string) => ({
       name: status,
       value: status,
     }));
 
+  // variables for requests
+  public updateResponseData$: Observable<any> | null = null;
+  public deleteTracklistResponseData$: Observable<any> | null = null;
+
   constructor(
     private messageService: MessageService,
     private router: Router,
     private mediaService: MediaService,
     private formBuilder: FormBuilder,
-    private userService: UserService,
-    private tracklistService: TracklistService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -202,5 +204,56 @@ export class UpdateFilmTracklistComponent implements OnInit {
 
   public cancelTracklist = () => {
     this.cancelTracklistForm.emit(0);
+  };
+
+  public deleteTracklist = () => {
+    this.deleteTracklistResponseData$ = this.mediaService.deleteTracklist(
+      this.inpTracklist().id
+    );
+
+    if (!this.deleteTracklistResponseData$) {
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Löschen der Trackliste',
+        detail:
+          'Beim Löschen der Trackliste ist ein Fehler aufgetreten. Bitte probiere es noch einmal.',
+      });
+      return;
+    }
+
+    this.deleteTracklistResponseData$.subscribe({
+      next: () => {
+        this.messageService.add({
+          life: 7000,
+          severity: 'success',
+          summary: 'Trackliste erfolgreich gelöscht',
+        });
+        this.refreshFilmPage.emit(true);
+      },
+      error: (err: any) => {
+        if (err.status === 401) {
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: 'Ungültige Authentifizierung',
+            detail:
+              'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
+          });
+          this.userService.logoutOfAccount();
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+
+          return;
+        }
+
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: 'Fehler beim Löschen',
+          detail:
+            'Beim Löschen ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+        });
+      },
+    });
   };
 }

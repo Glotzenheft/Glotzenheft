@@ -58,3 +58,6 @@ export const ROUTE_UPDATE_TRACKLIST: string[] = [
   '&tracklist_start_date=', // 4
   '&tracklist_finish_date=', // 5
 ];
+
+export const ROUTE_DELETE_TRACKLIST: string =
+  'https://127.0.0.1:8000/api/tracklist?tracklist_id=';

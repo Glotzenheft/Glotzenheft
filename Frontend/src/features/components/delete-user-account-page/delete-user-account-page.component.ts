@@ -83,7 +83,6 @@ export class DeleteUserAccountPageComponent implements OnInit {
       security_answer: this.deleteUserForm.get('security_answer')?.value,
     };
 
-
     this.deleteUserAccountData$ =
       this.userService.deleteUserAccount(deleteUserData);
 
@@ -119,5 +118,9 @@ export class DeleteUserAccountPageComponent implements OnInit {
       fieldControl! &&
       (fieldControl!.dirty || fieldControl!.touched || this.isFormSubmitted)
     );
+  };
+
+  public cancelDeletion = () => {
+    this.router.navigateByUrl(ROUTES_LIST[8].fullUrl);
   };
 }

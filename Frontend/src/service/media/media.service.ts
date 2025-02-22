@@ -13,6 +13,7 @@ import {
 } from '@angular/common/http';
 import {
   ROUTE_CREATE_NEW_TRACKLIST,
+  ROUTE_DELETE_TRACKLIST,
   ROUTE_GET_ALL_USER_TRACKLISTS,
   ROUTE_MEDIA_DETAILS_SEARCH,
   ROUTE_MEDIA_ID_FOR_MEDIA,
@@ -170,18 +171,6 @@ export class MediaService {
       ROUTE_CREATE_NEW_TRACKLIST[7] +
       `${rating ? rating : ''}`;
 
-    console.log('url:', url);
-
-    // if (!startDate.trim()) {
-    //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[6]}${endDate}`;
-    // } else if (!endDate.trim()) {
-    //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv${ROUTE_CREATE_NEW_SEASON_TRACKLIST[5]}${startDate}`;
-    // }
-
-    // if (!startDate.trim() && !endDate.trim()) {
-    //   url = `${ROUTE_CREATE_NEW_SEASON_TRACKLIST[0]}${name}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[1]}watching${ROUTE_CREATE_NEW_SEASON_TRACKLIST[2]}${mediaID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[3]}${seasonID}${ROUTE_CREATE_NEW_SEASON_TRACKLIST[4]}tv`;
-    // }
-
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
@@ -207,8 +196,6 @@ export class MediaService {
     let formattedDate: string = '';
     let formattedEndDate: string = '';
 
-    console.log('start date:', startDate, ', end date: ', endDate);
-
     if (startDate) {
       let startDateAsDate: Date = new Date(startDate);
       startDateAsDate.setDate(startDateAsDate.getDate() + 1);
@@ -220,13 +207,6 @@ export class MediaService {
       endDateAsDate.setDate(endDateAsDate.getDate() + 1);
       formattedEndDate = endDateAsDate.toISOString().split('T')[0];
     }
-
-    console.log(
-      'formatted: start date, ',
-      formattedDate,
-      ', end date',
-      formattedEndDate
-    );
 
     const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${encodeURIComponent(
       name
@@ -306,6 +286,23 @@ export class MediaService {
       formattedEndDate;
 
     return this.http.patch<any>(url, {}, { headers: header }).pipe(
+      shareReplay(1),
+      catchError((error: HttpErrorResponse) => {
+        return throwError(() => error);
+      })
+    );
+  };
+
+  public deleteTracklist = (tracklistID: number): Observable<any> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    const url: string = ROUTE_DELETE_TRACKLIST + tracklistID;
+
+    return this.http.delete(url, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => error);
