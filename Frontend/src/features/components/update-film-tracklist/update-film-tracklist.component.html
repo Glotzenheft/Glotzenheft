@@ -71,7 +71,6 @@
               dateFormat="dd.mm.yy"
               [showIcon]="true"
               inputId="start"
-              
             />
             <label for="start">Startdatum</label>
           </p-float-label>
@@ -89,6 +88,13 @@
             severity="secondary"
             icon="pi pi-times"
             (onClick)="cancelTracklist()"
+          />
+
+          <p-button
+            label="Trackliste löschen"
+            severity="danger"
+            icon="pi pi-trash"
+            (onClick)="deleteTracklist()"
           />
         </div>
       </form>
