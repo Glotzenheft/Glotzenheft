@@ -61,3 +61,11 @@ export const ROUTE_UPDATE_TRACKLIST: string[] = [
 
 export const ROUTE_DELETE_TRACKLIST: string =
   'https://127.0.0.1:8000/api/tracklist?tracklist_id=';
+
+// api routes for episodes --------------------------
+export const ROUTE_CREATE_TRACKLIST_EPISODE: string[] = [
+  'https://127.0.0.1:8000/api/tracklist-episode?tracklist_season_id=',
+  '&episode_id=',
+  '&watch_date=',
+  '&tracklist_id=',
+];

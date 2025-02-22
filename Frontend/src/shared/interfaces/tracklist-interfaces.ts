@@ -136,10 +136,10 @@ export interface ExtractedTracklist {
 }
 
 export interface TracklistEpisode {
+  episode: {
+    episodeNumber: number;
+    id: number;
+  };
   id: number;
-  tracklist_season_id: number;
-  episode_id: number;
-  watch_date: string | null;
-  created_at: string | null;
-  updated_at: string | null;
+  watchDate: string;
 }

@@ -118,7 +118,7 @@ export class TracklistService {
     const trackSeasonEpisodeIDs: number[] =
       selectedTracklistFull[0].tracklistSeasons[0].tracklistEpisodes.map(
         (episode: TracklistEpisode) => {
-          return episode.episode_id;
+          return episode.id;
         }
       );
 

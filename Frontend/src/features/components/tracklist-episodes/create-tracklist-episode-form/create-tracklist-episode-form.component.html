@@ -1,0 +1,30 @@
+<div class="createTracklistEpisodeDIV">
+  <h1>Episode zur Trackliste hinzufügen</h1>
+  <div class="createTracklistEpisodeFormDIV">
+    <form
+      action="submit"
+      [formGroup]="createEpisodeForm"
+      (submit)="submitForm()"
+    >
+      <p>Tracklistname: {{ inpTracklist().tracklistName }}</p>
+      <p>Episode: {{ inpEpisode().name }}</p>
+
+      <p-float-label variant="in">
+        <p-date-picker
+          inputId="watch"
+          [showIcon]="true"
+          formControlName="watchDate"
+          dateFormat="dd.mm.yy"
+          [showTime]="true"
+          [hourFormat]="'24'"
+        />
+        <label for="watch">wann geschaut? (optional)</label>
+      </p-float-label>
+
+      <div class="formAcions">
+        <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" />
+        <p-button label="Abbrechen" icon="pi pi-times" />
+      </div>
+    </form>
+  </div>
+</div>
