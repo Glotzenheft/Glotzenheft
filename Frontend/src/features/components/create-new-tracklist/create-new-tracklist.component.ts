@@ -55,6 +55,8 @@ export class CreateNewTracklistComponent implements OnInit {
   // output variables
   @Output() cancelTracklistForm: EventEmitter<boolean> =
     new EventEmitter<boolean>();
+  @Output() saveUpdatedTracklist: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   // variables for tracklist submitting
   public isTracklistSubmitted: boolean = false;
@@ -92,12 +94,6 @@ export class CreateNewTracklistComponent implements OnInit {
   public createNewTrackList = () => {
     this.isTracklistSubmitted = true;
     if (this.trackListForm.invalid) {
-      //   this.messageService.add({
-      //     life: 7000,
-      //     summary: 'Ungültiger Name',
-      //     detail: 'Der Name der Tracklist darf nicht leer sein.',
-      //     severity: 'error',
-      //   });
       return;
     }
 
@@ -118,8 +114,6 @@ export class CreateNewTracklistComponent implements OnInit {
         .split('T')[0];
       console.log('end date if', formattedEndDate);
     }
-
-    let rating: number | null = this.trackListForm.get('rating')?.value;
 
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
       this.trackListForm.get('trackListName')?.value,
@@ -149,6 +143,8 @@ export class CreateNewTracklistComponent implements OnInit {
           severity: 'success',
           summary: 'Tracklist erfolgreich angelegt.',
         });
+
+        this.saveUpdatedTracklist.emit(true);
       },
       error: (err) => {
         if (err.status === 401) {

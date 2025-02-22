@@ -57,6 +57,8 @@ export class UpdateTracklistFormComponent implements OnInit {
   // output variables
   @Output() cancelTracklistEditing: EventEmitter<number> =
     new EventEmitter<number>();
+  @Output() saveUpdatedTracklist: EventEmitter<boolean> =
+    new EventEmitter<boolean>();
 
   // other variables
   public updateTracklistForm!: FormGroup;
@@ -77,8 +79,7 @@ export class UpdateTracklistFormComponent implements OnInit {
     private mediaService: MediaService,
     private messageService: MessageService,
     private router: Router,
-    private userService: UserService,
-    private tracklistService: TracklistService
+    private userService: UserService
   ) {}
 
   ngOnInit(): void {
@@ -197,6 +198,7 @@ export class UpdateTracklistFormComponent implements OnInit {
           severity: 'success',
           summary: 'Erfolgreich gespeichert',
         });
+        this.saveUpdatedTracklist.emit(true);
       },
       error: (err) => {
         if (err.status === 401) {

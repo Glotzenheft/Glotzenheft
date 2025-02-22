@@ -97,6 +97,8 @@ export class SeasonPageComponent implements OnInit {
   public currentSeason: TVSeasonWithTracklist | null = null;
   public currentTracklist: SeasonTracklist | null = null;
 
+  public isEditingButtonVisible: boolean = true;
+
   constructor(
     public stringService: StringService,
     private route: ActivatedRoute,
@@ -110,6 +112,12 @@ export class SeasonPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  // functions -----------------------------------------------------
+
+  public loadData = () => {
     this.tvSeriesID = this.route.snapshot.paramMap.get('id');
 
     if (!this.tvSeriesID) {
@@ -168,9 +176,7 @@ export class SeasonPageComponent implements OnInit {
         this.hasError = true;
       },
     });
-  }
-
-  // functions -----------------------------------------------------
+  };
 
   public openTracklistForm = (season: TVSeasonWithTracklist) => {
     this.currentSeason = season;
@@ -211,8 +217,24 @@ export class SeasonPageComponent implements OnInit {
 
     this.selectedSeason = season;
     this.currentSeason = season;
+
+    if (
+      this.tracklistSelectionForm.get('selectedTracklist')?.value.tracklistName
+        .length > 0 &&
+      this.tracklistSelectionForm.get('selectedTracklist')?.value.tracklistId >
+        0
+    ) {
+      this.isEditingButtonVisible = true;
+      return;
+    }
+
+    this.isEditingButtonVisible = false;
   };
 
+  public refreshPage = () => {
+    this.setVisibility(0);
+    this.loadData();
+  };
   public cancelTracklistForm = () => {
     this.isTracklistFormVisible = 0;
   };

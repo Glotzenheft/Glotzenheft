@@ -107,7 +107,11 @@
                   formControlName="selectedTracklist"
                   placeholder="Trackliste auswählen ..."
                 ></p-select>
-                <p-button label="Bearbeiten" (onClick)="setVisibility(2)" />
+                <p-button
+                  *ngIf="isEditingButtonVisible"
+                  label="Bearbeiten"
+                  (onClick)="setVisibility(2)"
+                />
               </div>
 
               <p-button
@@ -142,6 +146,7 @@
     [inputTVSeason]="currentSeason"
     [mediaID]="seasonData.media.id"
     (cancelTracklistFormSubmission)="cancelTracklistForm()"
+    (saveNewTracklist)="refreshPage()"
   />
 </ng-container>
 
@@ -156,5 +161,6 @@
     [inpSeasonTracklists]="seasonData.tracklists"
     [inpTracklistSelectionForm]="tracklistSelectionForm"
     (cancelTracklistEditing)="cancelTracklistForm()"
+    (saveUpdatedTracklist)="refreshPage()"
   />
 </ng-container>

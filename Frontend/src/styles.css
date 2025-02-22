@@ -177,7 +177,7 @@ p {
   }
   .mainDIV {
     margin-top: 4rem;
-    margin-bottom: 1rem;
+    margin-bottom: 15rem;
   }
 
   .marginRight {
@@ -345,11 +345,13 @@ p {
     align-items: center;
   }
 
-  .episodes {
-    height: 25rem;
+  /* .episodes {
+    height: 30rem;
     overflow-x: hidden;
     overflow-y: auto;
-  }
+
+    margin-bottom: 10rem;
+  } */
 
   .tracklistActions .p-button {
     width: 100%;
