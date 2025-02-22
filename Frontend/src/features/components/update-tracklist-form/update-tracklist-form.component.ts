@@ -109,7 +109,6 @@ export class UpdateTracklistFormComponent implements OnInit {
     }
 
     this.selectedFullTracklist = selectedTracklistFull[0];
-    console.log('tracklist full:', selectedTracklistFull[0]);
 
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
@@ -141,12 +140,10 @@ export class UpdateTracklistFormComponent implements OnInit {
     this.isFormSubmitted = true;
 
     if (this.updateTracklistForm.invalid) {
-      console.log('invalid');
       return;
     }
 
     if (!this.selectedFullTracklist) {
-      console.log('fehler');
       return;
     }
 
@@ -159,8 +156,6 @@ export class UpdateTracklistFormComponent implements OnInit {
       )
         .toISOString()
         .split('T')[0];
-
-      console.log('start date if:', formattedStartDate);
     }
 
     if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
@@ -169,7 +164,6 @@ export class UpdateTracklistFormComponent implements OnInit {
       )
         .toISOString()
         .split('T')[0];
-      console.log('end date if', formattedEndDate);
     }
 
     const updateTracklistData: UpdateTracklistRequest = {
@@ -181,8 +175,6 @@ export class UpdateTracklistFormComponent implements OnInit {
       tracklist_start_date: formattedStartDate,
       tracklist_finish_date: formattedEndDate,
     };
-
-    console.log('updated tracklist:', updateTracklistData);
 
     this.updateResponseData$ =
       this.mediaService.updateTracklist(updateTracklistData);

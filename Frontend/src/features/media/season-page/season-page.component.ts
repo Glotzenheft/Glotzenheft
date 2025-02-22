@@ -33,6 +33,7 @@ import { UserService } from '../../../service/user/user.service';
 import { AccordionModule } from 'primeng/accordion';
 import {
   SeasonTracklist,
+  SeasonTracklistType,
   TVSeasonWithTracklist,
   TVWithTracklist,
 } from '../../../shared/interfaces/tracklist-interfaces';
@@ -41,6 +42,7 @@ import { SelectModule } from 'primeng/select';
 import { TracklistService } from '../../../service/tracklist/tracklist.service';
 import { TracklistFormComponent } from '../../components/tracklist-form/tracklist-form.component';
 import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-season-page',
@@ -62,6 +64,7 @@ import { UpdateTracklistFormComponent } from '../../components/update-tracklist-
     SelectModule,
     TracklistFormComponent,
     UpdateTracklistFormComponent,
+    MenuModule,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -84,8 +87,9 @@ export class SeasonPageComponent implements OnInit {
   public isTracklistSubmitted: boolean = false;
   public tracklistSelectionForm!: FormGroup;
 
-  // dialog and visibility variables
+  public currentTracklistSelection: SeasonTracklistType | null = null;
 
+  // dialog and visibility variables --------------------------
   // = 0: media details; = 1: create tracklist; = 2: update tracklist
   public isTracklistFormVisible: number = 0;
 
@@ -147,7 +151,12 @@ export class SeasonPageComponent implements OnInit {
           this.tracklistService.joinTVWithTracklists(res);
 
         this.tracklistSelectionForm = this.formBuilder.group({
-          selectedTracklist: [{ tracklistName: '', tracklistId: -1 }],
+          selectedTracklist: [
+            {
+              tracklistName: '',
+              tracklistId: '',
+            },
+          ],
         });
         this.tracklistsOfSeason = res.tracklists;
       },
@@ -184,16 +193,24 @@ export class SeasonPageComponent implements OnInit {
   };
 
   public setSelectedSeason = (season: TVSeasonWithTracklist) => {
-    this.selectedSeason = season;
+    if (season.id !== this.currentSeason?.id) {
+      // set form to the first tracklist value of all tracklists that belong to this season
+      // do not set form if the current selected season is equal to the parameter "season" -> otherwise the selection won't work anymore!
+      this.tracklistSelectionForm.get('selectedTracklist')?.setValue(
+        season.tracklistsForSeason.length > 0
+          ? {
+              tracklistName: season.tracklistsForSeason[0].tracklistName,
+              tracklistId: season.tracklistsForSeason[0].tracklistId,
+            }
+          : {
+              tracklistName: '',
+              tracklistId: -1,
+            }
+      );
+    }
 
-    const selectedTracklistFull: SeasonTracklist[] =
-      this.tracklistsOfSeason.filter((tracklist: SeasonTracklist) => {
-        return (
-          tracklist.id ===
-          this.tracklistSelectionForm.get('selectedTracklist')?.value
-            .tracklistId
-        );
-      });
+    this.selectedSeason = season;
+    this.currentSeason = season;
   };
 
   public cancelTracklistForm = () => {
@@ -202,5 +219,9 @@ export class SeasonPageComponent implements OnInit {
 
   public setVisibility = (page: number) => {
     this.isTracklistFormVisible = page;
+  };
+
+  public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {
+    this.currentTracklistSelection = tracklist;
   };
 }

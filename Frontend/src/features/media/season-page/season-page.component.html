@@ -94,23 +94,20 @@
                 </div>
               </div>
 
-              <div class="tracklistSelectionDIV">
-                <div>
-                  <p-select
-                    *ngIf="
-                      season.tracklistsForSeason &&
-                      season.tracklistsForSeason.length > 0
-                    "
-                    [options]="season.tracklistsForSeason"
-                    optionLabel="tracklistName"
-                    formControlName="selectedTracklist"
-                    placeholder="Trackliste auswählen ..."
-                  ></p-select>
-                </div>
-
-                <div *ngIf="tracklistSelectionForm.get('selectedTracklist')">
-                  <p-button label="Bearbeiten" (onClick)="setVisibility(2)" />
-                </div>
+              <div
+                class="tracklistSelectionDIV"
+                *ngIf="
+                  season.tracklistsForSeason &&
+                  season.tracklistsForSeason.length > 0
+                "
+              >
+                <p-select
+                  [options]="season.tracklistsForSeason"
+                  optionLabel="tracklistName"
+                  formControlName="selectedTracklist"
+                  placeholder="Trackliste auswählen ..."
+                ></p-select>
+                <p-button label="Bearbeiten" (onClick)="setVisibility(2)" />
               </div>
 
               <p-button
