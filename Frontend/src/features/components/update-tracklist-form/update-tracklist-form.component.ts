@@ -29,7 +29,6 @@ import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfa
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { UserService } from '../../../service/user/user.service';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
 
 @Component({
   selector: 'app-update-tracklist-form',
@@ -51,8 +50,9 @@ export class UpdateTracklistFormComponent implements OnInit {
   // input variables
   public inpSeasonTracklists: InputSignal<SeasonTracklist[]> =
     input.required<SeasonTracklist[]>();
-  public inpTracklistSelectionForm: InputSignal<FormGroup<any>> =
-    input.required<FormGroup<any>>();
+
+  public inpSelectedTracklist: InputSignal<SeasonTracklist> =
+    input.required<SeasonTracklist>();
 
   // output variables
   @Output() cancelTracklistEditing: EventEmitter<number> =
@@ -71,9 +71,6 @@ export class UpdateTracklistFormComponent implements OnInit {
     }));
   public updateResponseData$: Observable<any> | null = null;
 
-  // variables for refreshing page
-  private refreshSubscription!: Subscription;
-
   constructor(
     private formBuilder: FormBuilder,
     private mediaService: MediaService,
@@ -87,51 +84,29 @@ export class UpdateTracklistFormComponent implements OnInit {
   }
 
   public loadFilmData = () => {
-    const selectedTracklistFull: SeasonTracklist[] =
-      this.inpSeasonTracklists().filter((tracklist: SeasonTracklist) => {
-        return (
-          tracklist.id ===
-          this.inpTracklistSelectionForm().get('selectedTracklist')?.value
-            .tracklistId
-        );
-      });
-
-    if (selectedTracklistFull.length !== 1) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Tracklist-Abruf',
-        detail:
-          'Es ist ein Fehler aufgetreten. Wir leiten Sie zurück zur Übersicht.',
-      });
-
-      this.cancelTracklistEditing.emit(0);
-      return;
-    }
-
-    this.selectedFullTracklist = selectedTracklistFull[0];
+    this.selectedFullTracklist = this.inpSelectedTracklist();
 
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
         {
-          name: selectedTracklistFull[0].status,
-          value: selectedTracklistFull[0].status,
+          name: this.inpSelectedTracklist().status,
+          value: this.inpSelectedTracklist().status,
         },
         Validators.required,
       ],
       tracklist_name: [
-        selectedTracklistFull[0].tracklistName,
+        this.inpSelectedTracklist().tracklistName,
         Validators.required,
       ],
-      tracklist_rating: [selectedTracklistFull[0].rating],
+      tracklist_rating: [this.inpSelectedTracklist().rating],
       tracklist_start_date: [
-        selectedTracklistFull[0].startDate
-          ? new Date(selectedTracklistFull[0].startDate)
+        this.inpSelectedTracklist().startDate
+          ? new Date(this.inpSelectedTracklist().startDate!)
           : null,
       ],
       tracklist_finish_date: [
-        selectedTracklistFull[0].finishDate
-          ? new Date(selectedTracklistFull[0].finishDate)
+        this.inpSelectedTracklist().finishDate
+          ? new Date(this.inpSelectedTracklist().finishDate!)
           : null,
       ],
     });

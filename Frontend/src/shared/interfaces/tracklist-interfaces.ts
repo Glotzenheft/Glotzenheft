@@ -64,16 +64,14 @@ export interface SeasonTracklist {
   startDate: null | string;
   finishDate: null | string;
   tracklistName: string;
-  tracklistSeasons: [
-    {
+  tracklistSeasons: {
+    id: number;
+    tracklistEpisodes: TracklistEpisode[];
+    season: {
       id: number;
-      tracklistEpisodes: TracklistEpisode[];
-      season: {
-        id: number;
-        seasonNumber: number;
-      };
-    }
-  ];
+      seasonNumber: number;
+    };
+  }[];
 }
 
 // interfaces for season together with tracklists ----------------------------------------------------
@@ -99,7 +97,7 @@ export interface TVSeasonWithTracklist {
   airDate: string;
   episodeCount: number;
   posterPath: string;
-  tracklistsForSeason: SeasonTracklistType[];
+  tracklistsForSeason: SeasonTracklist[];
   episodes: SeasonEpisode[];
 }
 

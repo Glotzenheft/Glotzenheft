@@ -99,6 +99,20 @@ export class SeasonPageComponent implements OnInit {
 
   public isEditingButtonVisible: boolean = true;
 
+  private EMPTY_TRACKLIST: SeasonTracklist = {
+    id: -1,
+    media: {
+      id: -1, // id of the tv or movie itself
+      type: '', // "movie" or "tv"
+    },
+    rating: -1,
+    status: '',
+    startDate: '',
+    finishDate: '',
+    tracklistName: '',
+    tracklistSeasons: [],
+  };
+
   constructor(
     public stringService: StringService,
     private route: ActivatedRoute,
@@ -159,12 +173,7 @@ export class SeasonPageComponent implements OnInit {
           this.tracklistService.joinTVWithTracklists(res);
 
         this.tracklistSelectionForm = this.formBuilder.group({
-          selectedTracklist: [
-            {
-              tracklistName: '',
-              tracklistId: '',
-            },
-          ],
+          selectedTracklist: [this.EMPTY_TRACKLIST],
         });
         this.tracklistsOfSeason = res.tracklists;
       },
@@ -202,27 +211,21 @@ export class SeasonPageComponent implements OnInit {
     if (season.id !== this.currentSeason?.id) {
       // set form to the first tracklist value of all tracklists that belong to this season
       // do not set form if the current selected season is equal to the parameter "season" -> otherwise the selection won't work anymore!
-      this.tracklistSelectionForm.get('selectedTracklist')?.setValue(
-        season.tracklistsForSeason.length > 0
-          ? {
-              tracklistName: season.tracklistsForSeason[0].tracklistName,
-              tracklistId: season.tracklistsForSeason[0].tracklistId,
-            }
-          : {
-              tracklistName: '',
-              tracklistId: -1,
-            }
-      );
+      this.tracklistSelectionForm
+        .get('selectedTracklist')
+        ?.setValue(
+          season.tracklistsForSeason.length > 0
+            ? season.tracklistsForSeason[0]
+            : this.EMPTY_TRACKLIST
+        );
     }
 
     this.selectedSeason = season;
     this.currentSeason = season;
 
     if (
-      this.tracklistSelectionForm.get('selectedTracklist')?.value.tracklistName
-        .length > 0 &&
-      this.tracklistSelectionForm.get('selectedTracklist')?.value.tracklistId >
-        0
+      this.tracklistSelectionForm.get('selectedTracklist')?.value !==
+      this.EMPTY_TRACKLIST
     ) {
       this.isEditingButtonVisible = true;
       return;

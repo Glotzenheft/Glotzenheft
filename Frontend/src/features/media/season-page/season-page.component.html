@@ -159,7 +159,9 @@
 >
   <app-update-tracklist-form
     [inpSeasonTracklists]="seasonData.tracklists"
-    [inpTracklistSelectionForm]="tracklistSelectionForm"
+    [inpSelectedTracklist]="
+      tracklistSelectionForm.get('selectedTracklist')?.value
+    "
     (cancelTracklistEditing)="cancelTracklistForm()"
     (saveUpdatedTracklist)="refreshPage()"
   />

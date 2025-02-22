@@ -40,18 +40,12 @@ export class TracklistService {
       tmdbGenres: data.media.tmdbGenres,
       seasons: data.media.seasons.map((season: SeasonWithEpisodes) => {
         // get all tracklists for the season
-        const tracklistWithSeason: {
-          tracklistName: string;
-          tracklistId: number;
-        }[] = [];
+        const tracklistWithSeason: SeasonTracklist[] = [];
 
         for (const tracklist of data.tracklists) {
           for (const trackSeason of tracklist.tracklistSeasons) {
             if (trackSeason.season.id === season.id) {
-              tracklistWithSeason.push({
-                tracklistId: tracklist.id,
-                tracklistName: tracklist.tracklistName,
-              });
+              tracklistWithSeason.push(tracklist);
             }
           }
         }
