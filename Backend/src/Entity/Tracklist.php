@@ -11,6 +11,7 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: TracklistRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -26,6 +27,7 @@ class Tracklist
 
     #[ORM\ManyToOne(targetEntity: Media::class, inversedBy: 'tracklists')]
     #[ORM\JoinColumn(nullable: false)]
+    #[Groups(['tracklist_details'])]
     private ?Media $media = null;
 
     #[Groups(['tracklist_details'])]
@@ -42,10 +44,12 @@ class Tracklist
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $startDate = null;
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
+    #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $finishDate = null;
 
     #[Groups(['tracklist_details'])]
@@ -55,7 +59,7 @@ class Tracklist
     /**
      * @var Collection<int, TracklistSeason>
      */
-    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', orphanRemoval: true)]
+    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', cascade: ['persist', 'remove'], orphanRemoval: true)]
     #[Groups(['tracklist_details'])]
     private Collection $tracklistSeasons;
 

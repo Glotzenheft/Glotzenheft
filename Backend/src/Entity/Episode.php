@@ -5,6 +5,8 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampsTrait;
 use App\Repository\EpisodeRepository;
 use DateTimeInterface;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
@@ -19,7 +21,7 @@ class Episode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes', 'tracklist_episode'])]
     private ?int $id = null;
 
     #[ORM\Column]
@@ -31,11 +33,11 @@ class Episode
     private ?string $name = null;
 
     #[ORM\Column(type: Types::TEXT)]
-    #[Groups(['media_details', 'tracklist_episodes'])]
+    #[Groups(['media_details'])]
     private ?string $overview = null;
 
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes', 'tracklist_episode'])]
     private ?int $episodeNumber = null;
 
     #[ORM\Column]
@@ -47,8 +49,8 @@ class Episode
     #[Context(['datetime_format' => 'Y-m-d'])]
     private ?DateTimeInterface $airDate = null;
 
-    #[ORM\OneToOne(mappedBy: 'episode', cascade: ['persist', 'remove'])]
-    private ?TracklistEpisode $tracklistEpisode = null;
+    #[ORM\OneToMany(targetEntity: TracklistEpisode::class, mappedBy: 'episode', cascade: ['persist'], orphanRemoval: true)]
+    private Collection $tracklistEpisodes;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['media_details', 'tracklist_episodes'])]
@@ -57,6 +59,11 @@ class Episode
     #[ORM\ManyToOne(inversedBy: 'episodes')]
     #[ORM\JoinColumn(nullable: false)]
     private ?Season $Season = null;
+
+    public function __construct()
+    {
+        $this->tracklistEpisodes = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -135,19 +142,28 @@ class Episode
         return $this;
     }
 
-    public function getTracklistEpisode(): ?TracklistEpisode
+    /**
+     * @return Collection<int, TracklistEpisode>
+     */
+    public function getTracklistEpisodes(): Collection
     {
-        return $this->tracklistEpisode;
+        return $this->tracklistEpisodes;
     }
 
-    public function setTracklistEpisode(TracklistEpisode $tracklistEpisode): static
+    public function addTracklistEpisode(TracklistEpisode $tracklistEpisode): static
     {
-        // set the owning side of the relation if necessary
-        if ($tracklistEpisode->getEpisode() !== $this) {
+        if (!$this->tracklistEpisodes->contains($tracklistEpisode))
+        {
+            $this->tracklistEpisodes->add($tracklistEpisode);
             $tracklistEpisode->setEpisode($this);
         }
 
-        $this->tracklistEpisode = $tracklistEpisode;
+        return $this;
+    }
+
+    public function removeTracklistEpisode(TracklistEpisode $tracklistEpisode): static
+    {
+        $this->tracklistEpisodes->removeElement($tracklistEpisode);
 
         return $this;
     }

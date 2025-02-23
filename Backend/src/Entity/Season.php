@@ -21,7 +21,7 @@ class Season
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episode'])]
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'seasons')]
@@ -33,7 +33,7 @@ class Season
     private ?int $tmdbSeasonID = null;
 
     #[ORM\Column]
-    #[Groups(['media_details', 'tracklist_details'])]
+    #[Groups(['media_details', 'tracklist_details', 'tracklist_episode'])]
     private ?int $seasonNumber = null;
 
     #[ORM\Column(length: 255)]
@@ -61,7 +61,7 @@ class Season
      * @var Collection<int, Episode>
      */
     #[ORM\OneToMany(targetEntity: Episode::class, mappedBy: 'Season', orphanRemoval: true)]
-    #[Groups(['media_details', 'tracklist_details', 'tracklist_episodes'])]
+    #[Groups(['media_details'])]
     private Collection $episodes;
 
     /**

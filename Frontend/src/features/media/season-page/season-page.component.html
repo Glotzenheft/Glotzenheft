@@ -1,140 +1,169 @@
-<div class="backButtonDIV">
-  <p-button
-    label="zurück"
-    (onClick)="navigateToMultiSearch()"
-    severity="secondary"
-  />
-</div>
-<div *ngIf="hasError">
-  <p-panel header="Fehler beim Laden der Seite" class="error">
-    <p>
-      Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte versuchen
-      Sie es erneut durch ein erneutes Laden der Seite.
-    </p>
-  </p-panel>
-</div>
-
-<div *ngIf="isInvalidID">
-  <p-panel header="Fehler beim Laden der Seite" class="error">
-    <p>
-      Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es erneut
-      durch ein Zurückgehen zur letzten Seite und ein erneutes Laden dieser
-      Seite.
-    </p>
-  </p-panel>
-</div>
-
-<div *ngIf="seasonData$ | async as seasonData">
-  <div class="heading">
-    <h1>{{ seasonData.name }}</h1>
-    <p *ngIf="seasonData.mediaID">GESPEICHERT</p>
-  </div>
-  <div class="seasonMeta">
-    <div class="seasonPictureWrapper">
-      <div class="seasonMetaPicture">
-        <p *ngIf="seasonData.posterPath === null">kein Bild vorhanden</p>
-        <img
-          *ngIf="seasonData.posterPath !== null"
-          [src]="posterPath + seasonData.posterPath"
-          [alt]="'Dies ist das Bild für von ' + seasonData.name"
-        />
-      </div>
-    </div>
-    <div class="seasonMetaContent">
-      <div>
-        <h2>Beschreibung</h2>
-        <p class="descriptionP">{{ seasonData.description }}</p>
-        <p>Ausstrahlung am {{ seasonData.firstAirDate | dateFormatting }}</p>
-        <p *ngIf="seasonData.seasons.length > 0">
-          Anzahl der Staffeln: {{ seasonData.seasons.length }}
-        </p>
-      </div>
-    </div>
-  </div>
-
-  <div class="newWatchlistButton">
+<ng-container *ngIf="isTracklistFormVisible === 0">
+  <div class="backButtonDIV">
     <p-button
-      label="neue Watchlist anlegen"
-      (onClick)="openTracklistDialog()"
-      class="bigButton"
-      icon="pi pi-plus"
+      label="zurück zur Suche"
+      (onClick)="navigateToMultiSearch()"
+      severity="secondary"
+      icon="pi pi-arrow-left"
     />
   </div>
-
-  <div class="mainDIV episodes" *ngIf="seasonData.seasons.length > 0">
-    <h2>Staffeln</h2>
-
-    <p-accordion>
-      <p-accordion-panel
-        [value]="i"
-        *ngFor="let season of seasonData.seasons; let i = index"
-        class="panel"
-      >
-        <p-accordion-header>{{ season.name }}</p-accordion-header>
-        <p-accordion-content>
-          <div class="seasonWrapper">
-            <div class="seasonPoster">
-              <p *ngIf="season.posterPath === null">kein Bild vorhanden</p>
-              <img
-                *ngIf="seasonData.posterPath !== null"
-                [src]="posterPath + season.posterPath"
-                [alt]="'Dies ist das Bild für von ' + seasonData.name"
-              />
-            </div>
-            <div class="seasonMeta">
-              <div>
-                <p *ngIf="season.overview">
-                  Beschreibung: <br />
-                  {{ season.overview }}
-                </p>
-                <p *ngIf="!season.overview">
-                  Beschreibung: <i>keine Beschreibung vorhanden</i>
-                </p>
-                <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
-              </div>
-            </div>
-          </div>
-
-          <app-episode-list [episodeList]="season.episodes" />
-        </p-accordion-content>
-      </p-accordion-panel>
-    </p-accordion>
+  <div *ngIf="hasError">
+    <p-panel header="Fehler beim Laden der Seite" class="error">
+      <p>
+        Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte versuchen
+        Sie es erneut durch ein erneutes Laden der Seite.
+      </p>
+    </p-panel>
   </div>
-</div>
 
-<p-dialog
-  class="dialog"
-  *ngIf="isTracklistDialogVisible && (seasonData$ | async) as seasonData"
-  [(visible)]="isTracklistDialogVisible"
-  [header]="seasonData.name"
->
-  <app-create-new-tracklist
-    [mediaName]="seasonData.name"
-    [mediaID]="seasonData.id"
-  />
-</p-dialog>
+  <div *ngIf="isInvalidID">
+    <p-panel header="Fehler beim Laden der Seite" class="error">
+      <p>
+        Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
+        erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
+        dieser Seite.
+      </p>
+    </p-panel>
+  </div>
 
-<p-dialog
-  *ngIf="visibleSeason && isDialogVisible"
-  [(visible)]="isDialogVisible"
-  [header]="visibleSeason.name"
-  class="dialog"
->
-  <div>
-    <p>{{ visibleSeason.overview }}</p>
-    <p-rating stars="10" [(ngModel)]="episodeRating" />
-    <p>{{ episodeRating }}</p>
-    <div class="dialogActions">
-      <p-button
-        label="speichern"
-        class="marginRight"
-        (onClick)="saveEpisode(visibleSeason)"
-      />
-      <p-button
-        label="abbrechen"
-        severity="secondary"
-        (onClick)="closeEpisodeDialog()"
-      />
+  <div *ngIf="seasonData$ | async as seasonData">
+    <div class="seasonMeta">
+      <div class="seasonPictureWrapper">
+        <div class="seasonMetaPicture">
+          <p *ngIf="!seasonData.media.posterPath">kein Bild vorhanden</p>
+          <img
+            *ngIf="seasonData.media.posterPath !== null"
+            [src]="posterPath + seasonData.media.posterPath"
+            [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
+          />
+        </div>
+      </div>
+      <div class="seasonMetaContent">
+        <div>
+          <h2>Beschreibung</h2>
+          <p class="descriptionP">{{ seasonData.media.description }}</p>
+          <p>
+            Ausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}
+          </p>
+          <p *ngIf="seasonData.media.seasons.length > 0">
+            Anzahl der Staffeln: {{ seasonData.media.seasons.length }}
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <div class="mainDIV episodes" *ngIf="seasonData.media.seasons.length > 0">
+      <h2>Staffeln</h2>
+
+      <form action="" [formGroup]="tracklistSelectionForm">
+        <p-accordion
+          *ngIf="
+            tvDataWithTracklist &&
+            tvDataWithTracklist.seasons &&
+            tvDataWithTracklist.seasons.length > 0
+          "
+        >
+          <p-accordion-panel
+            [value]="i"
+            *ngFor="let season of tvDataWithTracklist?.seasons; let i = index"
+            class="panel"
+            (click)="setSelectedSeason(season)"
+          >
+            <p-accordion-header>{{ season.name }}</p-accordion-header>
+            <p-accordion-content>
+              <div class="seasonWrapper">
+                <div class="seasonPoster">
+                  <p *ngIf="season.posterPath === null">kein Bild vorhanden</p>
+                  <img
+                    *ngIf="seasonData.media.posterPath !== null"
+                    [src]="posterPath + season.posterPath"
+                    [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
+                  />
+                </div>
+                <div class="seasonMeta">
+                  <div>
+                    <p *ngIf="season.overview">
+                      Beschreibung: <br />
+                      {{ season.overview }}
+                    </p>
+                    <p *ngIf="!season.overview">
+                      Beschreibung: <i>keine Beschreibung vorhanden</i>
+                    </p>
+                    <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+                  </div>
+                </div>
+              </div>
+
+              <div
+                class="tracklistSelectionDIV"
+                *ngIf="
+                  season.tracklistsForSeason &&
+                  season.tracklistsForSeason.length > 0
+                "
+              >
+                <p-select
+                  [options]="season.tracklistsForSeason"
+                  optionLabel="tracklistName"
+                  formControlName="selectedTracklist"
+                  placeholder="Trackliste auswählen ..."
+                ></p-select>
+                <p-button
+                  *ngIf="isEditingButtonVisible"
+                  label="Bearbeiten"
+                  (onClick)="setVisibility(2)"
+                  icon="pi pi-pencil"
+                />
+              </div>
+              <p-button
+                label="Neue Trackliste anlegen"
+                icon="pi pi-plus"
+                (onClick)="openTracklistForm(season)"
+              />
+
+              <app-episode-list
+                [episodeList]="season.episodes"
+                [tracklistSelectionForm]="tracklistSelectionForm"
+                [selectedSeason]="selectedSeason"
+                [tracklistsOfSeason]="tracklistsOfSeason"
+              />
+            </p-accordion-content>
+          </p-accordion-panel>
+        </p-accordion>
+      </form>
     </div>
   </div>
-</p-dialog>
+</ng-container>
+
+<ng-container
+  *ngIf="
+    isTracklistFormVisible === 1 &&
+    currentSeason &&
+    (seasonData$ | async) as seasonData
+  "
+>
+  <app-tracklist-form
+    [isNewTracklistForm]="true"
+    [isNewTracklistOfTypeTV]="true"
+    [inputTVSeason]="currentSeason"
+    [mediaID]="seasonData.media.id"
+    (cancelTracklistFormSubmission)="cancelTracklistForm()"
+    (saveNewTracklist)="refreshPage()"
+  />
+</ng-container>
+
+<ng-container
+  *ngIf="
+    isTracklistFormVisible === 2 &&
+    tracklistSelectionForm.get('selectedTracklist')?.value &&
+    (seasonData$ | async) as seasonData
+  "
+>
+  <app-update-tracklist-form
+    [inpSeasonTracklists]="seasonData.tracklists"
+    [inpSelectedTracklist]="
+      tracklistSelectionForm.get('selectedTracklist')?.value
+    "
+    (cancelTracklistEditing)="cancelTracklistForm()"
+    (saveUpdatedTracklist)="refreshPage()"
+  />
+</ng-container>

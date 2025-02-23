@@ -4,9 +4,9 @@ import {
   Season,
   SeasonWithEpisodes,
 } from '../../../shared/interfaces/media-interfaces';
-import { Observable, of } from 'rxjs';
+import { Observable } from 'rxjs';
 import { MediaService } from '../../../service/media/media.service';
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -27,12 +27,22 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
-import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 import { EpisodeListComponent } from '../../components/episode-list/episode-list.component';
 import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 import { UserService } from '../../../service/user/user.service';
 import { AccordionModule } from 'primeng/accordion';
+import {
+  SeasonTracklist,
+  SeasonTracklistType,
+  TVSeasonWithTracklist,
+  TVWithTracklist,
+} from '../../../shared/interfaces/tracklist-interfaces';
+
+import { SelectModule } from 'primeng/select';
+import { TracklistService } from '../../../service/tracklist/tracklist.service';
+import { TracklistFormComponent } from '../../components/tracklist-form/tracklist-form.component';
+import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-season-page',
@@ -49,9 +59,12 @@ import { AccordionModule } from 'primeng/accordion';
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-    CreateNewTracklistComponent,
     EpisodeListComponent,
     AccordionModule,
+    SelectModule,
+    TracklistFormComponent,
+    UpdateTracklistFormComponent,
+    MenuModule,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -59,17 +72,46 @@ import { AccordionModule } from 'primeng/accordion';
 export class SeasonPageComponent implements OnInit {
   public tvSeriesID: string | null = null;
   public seasonData$: Observable<Season> | null = null;
+  public tvDataWithTracklist: TVWithTracklist | null = null;
   public episodeRating: number = 0;
   public posterPath: string = TMDB_POSTER_PATH;
 
   public hasError: boolean = false;
   public isInvalidID: boolean = false;
-  public isDialogVisible: boolean = false;
+
   public visibleSeason: SeasonWithEpisodes | null = null;
-  public isTracklistDialogVisible: boolean = false;
+  public selectedSeason: TVSeasonWithTracklist | null = null;
+  public tracklistsOfSeason: SeasonTracklist[] = [];
 
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
+  public tracklistSelectionForm!: FormGroup;
+
+  public currentTracklistSelection: SeasonTracklistType | null = null;
+
+  // dialog and visibility variables --------------------------
+  // = 0: media details; = 1: create tracklist; = 2: update tracklist
+  public isTracklistFormVisible: number = 0;
+
+  // variables for current object values
+  public currentSeason: TVSeasonWithTracklist | null = null;
+  public currentTracklist: SeasonTracklist | null = null;
+
+  public isEditingButtonVisible: boolean = true;
+
+  private EMPTY_TRACKLIST: SeasonTracklist = {
+    id: -1,
+    media: {
+      id: -1, // id of the tv or movie itself
+      type: '', // "movie" or "tv"
+    },
+    rating: -1,
+    status: '',
+    startDate: '',
+    finishDate: '',
+    tracklistName: '',
+    tracklistSeasons: [],
+  };
 
   constructor(
     public stringService: StringService,
@@ -79,11 +121,17 @@ export class SeasonPageComponent implements OnInit {
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
-    private location: Location,
-    private userService: UserService
+    private userService: UserService,
+    private tracklistService: TracklistService
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  // functions -----------------------------------------------------
+
+  public loadData = () => {
     this.tvSeriesID = this.route.snapshot.paramMap.get('id');
 
     if (!this.tvSeriesID) {
@@ -101,24 +149,33 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.seasonData$) {
       this.hasError = true;
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Laden der Seite',
+        detail:
+          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
+      });
+
+      return;
     }
 
     this.seasonData$.subscribe({
       next: (res: Season) => {
-        // if (res.id && res.id.toString() !== splittedURL[1].trim()) {
-        //   this.location.replaceState(
-        //     `/media/${res.id}_${splittedURL[1].trim()}`
-        //   );
-        // }
-
         this.trackListForm = this.formBuilder.group({
-          trackListName: [res.name, Validators.required],
+          trackListName: [res.media.name, Validators.required],
         });
 
-        if (this.tvSeriesID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
-          // replacing the url with "media_id" if necessary
-          this.location.replaceState(`/media/tv/${res.id}`);
-        }
+        this.currentTracklist = res.tracklists[0];
+
+        // join seasondata with tracklists
+        this.tvDataWithTracklist =
+          this.tracklistService.joinTVWithTracklists(res);
+
+        this.tracklistSelectionForm = this.formBuilder.group({
+          selectedTracklist: [this.EMPTY_TRACKLIST],
+        });
+        this.tracklistsOfSeason = res.tracklists;
       },
       error: (err) => {
         if (err.status === 401) {
@@ -128,24 +185,11 @@ export class SeasonPageComponent implements OnInit {
         this.hasError = true;
       },
     });
-  }
-
-  public showEpisodeDialog = (season: SeasonWithEpisodes) => {
-    this.isDialogVisible = true;
-
-    this.visibleSeason = season;
   };
 
-  public saveEpisode = (season: SeasonWithEpisodes) => {
-    this.isDialogVisible = false;
-  };
-
-  public closeEpisodeDialog = () => {
-    this.isDialogVisible = false;
-  };
-
-  public openTracklistDialog = () => {
-    this.isTracklistDialogVisible = true;
+  public openTracklistForm = (season: TVSeasonWithTracklist) => {
+    this.currentSeason = season;
+    this.isTracklistFormVisible = 1;
   };
 
   public navigateToMultiSearch = () => {
@@ -161,5 +205,48 @@ export class SeasonPageComponent implements OnInit {
         fieldControl!.touched ||
         this.isTracklistSubmitted)
     );
+  };
+
+  public setSelectedSeason = (season: TVSeasonWithTracklist) => {
+    if (season.id !== this.currentSeason?.id) {
+      // set form to the first tracklist value of all tracklists that belong to this season
+      // do not set form if the current selected season is equal to the parameter "season" -> otherwise the selection won't work anymore!
+      this.tracklistSelectionForm
+        .get('selectedTracklist')
+        ?.setValue(
+          season.tracklistsForSeason.length > 0
+            ? season.tracklistsForSeason[0]
+            : this.EMPTY_TRACKLIST
+        );
+    }
+
+    this.selectedSeason = season;
+    this.currentSeason = season;
+
+    if (
+      this.tracklistSelectionForm.get('selectedTracklist')?.value !==
+      this.EMPTY_TRACKLIST
+    ) {
+      this.isEditingButtonVisible = true;
+      return;
+    }
+
+    this.isEditingButtonVisible = false;
+  };
+
+  public refreshPage = () => {
+    this.setVisibility(0);
+    this.loadData();
+  };
+  public cancelTracklistForm = () => {
+    this.isTracklistFormVisible = 0;
+  };
+
+  public setVisibility = (page: number) => {
+    this.isTracklistFormVisible = page;
+  };
+
+  public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {
+    this.currentTracklistSelection = tracklist;
   };
 }

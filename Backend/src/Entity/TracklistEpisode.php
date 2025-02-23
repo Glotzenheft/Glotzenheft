@@ -18,21 +18,22 @@ class TracklistEpisode
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
-    #[Groups(['tracklist_details'])]
+    #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?int $id = null;
 
-    #[ORM\OneToOne(inversedBy: 'tracklistEpisode', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Episode::class, cascade: ['persist'], inversedBy: 'tracklistEpisodes')]
     #[ORM\JoinColumn(nullable: false)]
-    #[Groups(['tracklist_details'])]
+    #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?Episode $episode = null;
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE)]
-    #[Groups(['tracklist_details'])]
+    #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?DateTimeInterface $watchDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistEpisodes')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?TracklistSeason $TracklistSeason = null;
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
+    #[Groups(['tracklist_episode'])]
+    private ?TracklistSeason $tracklistSeason = null;
 
     public function getId(): ?int
     {
@@ -65,12 +66,12 @@ class TracklistEpisode
 
     public function getTracklistSeason(): ?TracklistSeason
     {
-        return $this->TracklistSeason;
+        return $this->tracklistSeason;
     }
 
-    public function setTracklistSeason(?TracklistSeason $TracklistSeason): static
+    public function setTracklistSeason(?TracklistSeason $tracklistSeason): static
     {
-        $this->TracklistSeason = $TracklistSeason;
+        $this->tracklistSeason = $tracklistSeason;
 
         return $this;
     }

@@ -31,14 +31,7 @@ class TracklistController extends AbstractController
     #[Route('/api/user-tracklists', name: 'get_tracklists', methods: ['GET'])]
     public function getTracklists(Request $request): JsonResponse
     {
-        $data = $this->handleRequest($request);
-
-        if (!isset($data['userID']))
-        {
-            return $this->json(['error' => 'User not found'], 404);
-        }
-
-        $response = $this->tracklistService->getUserTracklist($data);
+        $response = $this->tracklistService->getUserTracklists($request);
 
         if (isset($response['error']))
         {
@@ -56,99 +49,100 @@ class TracklistController extends AbstractController
     #[Route('/api/tracklist', name: 'get_tracklist', methods: ['GET'])]
     public function getTracklist(Request $request): JsonResponse
     {
-        $data = $this->handleRequest($request);
-
-        if (!$data['tracklistID'])
-        {
-            return $this->json(['error' => 'TracklistID not provided.'], 400);
-        }
-
-        $response = $this->tracklistService->getTracklist($data);
+        $response = $this->tracklistService->getTracklist($request);
 
         if (isset($response['error']))
         {
-            return $this->json($response['error'], $response['code']);
+            return $this->json($response['error'], (int) $response['code']);
         }
 
-        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
+        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
     }
 
+    /**
+     *  Creates a tracklist.
+     *
+     * @param Request $request
+     * @return JsonResponse
+     * @example POST /api/tracklist
+     *          Header: Authorization: Bearer <JWT-TOKEN>
+     *          Required request parameters:
+     *          - `tracklist_status` (string) - Status of the tracklist.
+     *          - `tracklist_name` (string) - Name of the tracklist.
+     *          - `media_id` (int) - ID of the associated media.
+     *          - `media_type` (string) - Type of the media.
+     *          Optional request parameters:
+     *          - `tracklist_rating` (int) - Rating of the tracklist.
+     *          - `tracklist_start_date` (date)
+     *          - `tracklist_finish_date` (date)
+     *
+     */
     #[IsAuthenticated]
     #[Route('/api/tracklist', name: 'create_tracklist', methods: ['POST'])]
     public function createTracklist(Request $request): JsonResponse
     {
-        $data = $this->handleRequest($request);
-
-        if (!isset($data['tracklistName'], $data['userID'], $data['tracklistStatus'], $data['mediaID'], $data['mediaType']))
-        {
-            return $this->json(['error' => 'Invalid request data'], 400);
-        }
-
-        if (isset($data['tracklistID']))
-        {
-            return $this->json(['error' => 'Tracklist ID provided, even though create tracklist endpoint used!'], 400);
-        }
-
-        if ($data['mediaType'] === 'tv' && !isset($data['seasonID']))
-        {
-            return $this->json(['error' => 'Season ID not provided.'], 400);
-        }
-
-        $response = $this->tracklistService->createTracklist($data);
+        $response = $this->tracklistService->createTracklist($request);
 
         if (isset($response['error']))
         {
-            return $this->json($response['error'], $response['code']);
+            return $this->json($response['error'], (int) $response['code']);
         }
+
         return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
     }
 
+    /**
+     * Updates a tracklist.
+     *
+     * @example PATCH /api/tracklist
+     *          Header: Authorization: Bearer <JWT-TOKEN>
+     *          Required request parameter:
+     *          - `tracklist_id` (int) - The ID of the tracklist to update.
+     *          Optional request parameters:
+     *          - `tracklist_status` (string) - Status of the tracklist.
+     *          - `tracklist_name` (string) - Name of the tracklist.
+     *          - `tracklist_rating` (int) - Rating of the tracklist.
+     *          - `tracklist_start_date` (date)
+     *          - `tracklist_finish_date` (date)
+     *
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[IsAuthenticated]
     #[Route('/api/tracklist', name: 'update_tracklist', methods: ['PATCH'])]
-    public function updateTracklist(): JsonResponse
+    public function updateTracklist(Request $request): JsonResponse
     {
-        return $this->json([]);
+        $response = $this->tracklistService->updateTracklist($request);
+
+        if (isset($response['error']))
+        {
+            return $this->json($response['error'], (int) $response['code']);
+        }
+
+        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
     }
 
+    /**
+     * Delete a tracklist and its tracklist season and tracklist episodes if avaible.
+     *
+     * @example DELETE /api/tracklist
+     *          Header: Authorization: Bearer <JWT-TOKEN>
+     *          Required request parameter:
+     *          - `tracklist_id` (int) - The ID of the tracklist to delete.
+     * @param Request $request
+     * @return JsonResponse
+     */
     #[IsAuthenticated]
     #[Route('/api/tracklist', name: 'delete_tracklist', methods: ['DELETE'])]
-    public function deleteTracklist(): JsonResponse
+    public function deleteTracklist(Request $request): JsonResponse
     {
-        return $this->json([]);
-    }
+        $respone = $this->tracklistService->deleteTracklist($request);
 
-    private function handleRequest(Request $request): array
-    {
-        $tracklistName = $request->query->get('tracklist_name') ?? null;
-        $tracklistID = $request->query->get('tracklist_id') !== null
-            ? (int) $request->query->get('tracklist_id')
-            : null;
-        $userID = $request->attributes->get('user_id') !== null
-            ? $request->attributes->get('user_id')
-            : null;
-        $mediaID = $request->query->get('media_id') !== null
-            ? (int) $request->query->get('media_id')
-            : null;
-        $mediaType = $request->query->get('media_type') ?? null;
-        $seasonID = $request->query->get('season_id') !== null
-            ? (int) $request->query->get('season_id')
-            : null;
-        $tracklistStatus = $request->query->get('tracklist_status') ?? null;
-        $tracklistRating = $request->query->get('tracklist_rating') ?? null;
-        $tracklistStartDate = $request->query->get('tracklist_start_date') ?? null;
-        $tracklistFinishDate = $request->query->get('tracklist_finish_date') ?? null;
+        if (isset($respone['error']))
+        {
+            return $this->json($respone['error'], (int) $respone['code']);
+        }
 
-        return [
-            'tracklistName' => $tracklistName,
-            'tracklistID' => $tracklistID,
-            'userID' => $userID,
-            'mediaID' => $mediaID,
-            'mediaType' => $mediaType,
-            'seasonID' => $seasonID,
-            'tracklistStatus' => $tracklistStatus,
-            'tracklistRating' => $tracklistRating,
-            'tracklistStartDate' => $tracklistStartDate,
-            'tracklistFinishDate' => $tracklistFinishDate,
-        ];
+        return $this->json($respone['message'], $respone['code']);
     }
 }

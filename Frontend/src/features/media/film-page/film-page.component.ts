@@ -16,7 +16,6 @@ import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatti
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
-import { CreateNewTracklistComponent } from '../../components/create-new-tracklist/create-new-tracklist.component';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute } from '@angular/router';
 import { StringService } from '../../../service/string/string.service';
@@ -27,6 +26,9 @@ import { Film } from '../../../shared/interfaces/media-interfaces';
 import { MediaService } from '../../../service/media/media.service';
 import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
 import { UserService } from '../../../service/user/user.service';
+import { CreateMovieTracklistComponent } from '../../components/create-movie-tracklist/create-movie-tracklist.component';
+import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
 
 @Component({
   selector: 'app-film-page',
@@ -43,7 +45,8 @@ import { UserService } from '../../../service/user/user.service';
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-    CreateNewTracklistComponent,
+    CreateMovieTracklistComponent,
+    UpdateFilmTracklistComponent,
   ],
   templateUrl: './film-page.component.html',
   styleUrl: './film-page.component.css',
@@ -56,7 +59,11 @@ export class FilmPageComponent implements OnInit {
   public filmData$: Observable<Film> | null = null;
   public trackListForm!: FormGroup;
   public isTracklistSubmitted: boolean = false;
-  public isTracklistDialogVisible: boolean = false;
+  public visibilityStatus: number = 0;
+  public selectedTracklist: SeasonTracklist | null = null;
+
+  // variable for controlling the toggle status of the tracklist panels
+  public activePanel: number | null = null;
 
   constructor(
     private messageService: MessageService,
@@ -71,6 +78,10 @@ export class FilmPageComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.loadData();
+  }
+
+  public loadData = () => {
     this.movieID = this.route.snapshot.paramMap.get('id');
 
     if (!this.movieID) {
@@ -87,17 +98,27 @@ export class FilmPageComponent implements OnInit {
 
     if (!this.filmData$) {
       this.hasError = true;
+
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Fehler beim Laden der Seite',
+        detail:
+          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
+      });
+
+      return;
     }
 
     this.filmData$.subscribe({
       next: (res: Film) => {
         this.trackListForm = this.formBuilder.group({
-          trackListName: [res.name, Validators.required],
+          trackListName: [res.media.name, Validators.required],
         });
 
-        if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.id) {
+        if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.media.id) {
           // replacing the url with "media_id" if necessary
-          this.location.replaceState(`/media/movie/${res.id}`);
+          this.location.replaceState(`/media/movie/${res.media.id}`);
         }
       },
       error: (err) => {
@@ -108,7 +129,7 @@ export class FilmPageComponent implements OnInit {
         this.hasError = true;
       },
     });
-  }
+  };
 
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);
@@ -127,7 +148,18 @@ export class FilmPageComponent implements OnInit {
   };
 
   // dialog
-  public openTracklistDialog = () => {
-    this.isTracklistDialogVisible = true;
+
+  public setVisibilityStatus = (status: number) => {
+    this.visibilityStatus = status;
+  };
+
+  public setSelectedTracklist = (tracklist: SeasonTracklist) => {
+    this.selectedTracklist = tracklist;
+    this.visibilityStatus = 2;
+  };
+
+  public refreshPage = () => {
+    this.setVisibilityStatus(0);
+    this.loadData();
   };
 }
