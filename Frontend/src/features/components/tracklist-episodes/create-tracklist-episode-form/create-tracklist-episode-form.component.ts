@@ -47,6 +47,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
   // output variables
   @Output() saveEpisode: EventEmitter<boolean> = new EventEmitter<boolean>();
+  @Output() cancelEpisode: EventEmitter<boolean> = new EventEmitter<boolean>();
 
   // other variables
   public createEpisodeForm!: FormGroup;
@@ -132,5 +133,9 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         });
       },
     });
+  };
+
+  public cancelEpisodeForm = () => {
+    this.cancelEpisode.emit(true);
   };
 }
