@@ -24,7 +24,7 @@ class TracklistEpisodeService
     {
         $this->data = $this->handleRequest($request);
 
-        if (!isset($this->data['tracklist_id'], $this->data['tracklist_season_id'], $this->data['episode_id'], $this->data['watch_date'], $this->data['user_id']))
+        if (!isset($this->data['tracklist_id'], $this->data['tracklist_season_id'], $this->data['episode_id'], $this->data['user_id']))
         {
             return $this->returnInvalidRequest();
         }
@@ -79,15 +79,18 @@ class TracklistEpisodeService
             return $this->returnTracklistEpisodeAlreadyExistsError();
         }
 
-        try
+        $watchDate = null;
+        if (isset($this->data['watch_date']))
         {
-            $watchDate = new DateTime($this->data['watch_date']);
+            try
+            {
+                $watchDate = new DateTime($this->data['watch_date']);
+            }
+            catch (DateMalformedStringException $e)
+            {
+                return $this->returnWatchDateError();
+            }
         }
-        catch (DateMalformedStringException $e)
-        {
-            return $this->returnWatchDateError();
-        }
-
 
         $tracklistEpisode = new TracklistEpisode();
         $tracklistEpisode
@@ -108,24 +111,23 @@ class TracklistEpisodeService
     {
         $this->data = $this->handleRequest($request);
 
-        if (!isset($this->data['watch_date']))
-        {
-            return $this->returnNoWatchDateProvided();
-        }
-
         $tracklistEpisode = $this->validateAndGetTracklistEpisode();
         if (is_array($tracklistEpisode))
         {
             return $tracklistEpisode;
         }
 
-        try
+        $watchDate = null;
+        if (isset($this->data['watch_date']))
         {
-            $watchDate = new DateTime($this->data['watch_date']);
-        }
-        catch (DateMalformedStringException $e)
-        {
-            return $this->returnWatchDateError();
+            try
+            {
+                $watchDate = new DateTime($this->data['watch_date']);
+            }
+            catch (DateMalformedStringException $e)
+            {
+                return $this->returnWatchDateError();
+            }
         }
 
         $tracklistEpisode->setWatchDate($watchDate);

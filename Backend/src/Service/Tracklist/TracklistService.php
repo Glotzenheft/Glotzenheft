@@ -235,6 +235,7 @@ class TracklistService
 
     private function setOptionalTracklistProperties(Tracklist $tracklist): Tracklist | array
     {
+        $rating = null;
         if (!empty($this->data['tracklist_rating']) && is_numeric($this->data['tracklist_rating']))
         {
             $rating = (int) $this->data['tracklist_rating'];
@@ -242,10 +243,10 @@ class TracklistService
             {
                 return $this->returnInvalidRating();
             }
-
-            $tracklist->setRating($rating);
         }
+        $tracklist->setRating($rating);
 
+        $startDate = null;
         if (!empty($this->data['tracklist_start_date']))
         {
             $startDate = DateTime::createFromFormat('Y-m-d', $this->data['tracklist_start_date']);
@@ -253,10 +254,10 @@ class TracklistService
             {
                 return $this->returnInvalidDate();
             }
-
-            $tracklist->setStartDate($startDate);
         }
+        $tracklist->setStartDate($startDate);
 
+        $finishDate = null;
         if (!empty($this->data['tracklist_finish_date']))
         {
             $finishDate = DateTime::createFromFormat('Y-m-d', $this->data['tracklist_finish_date']);
@@ -264,9 +265,8 @@ class TracklistService
             {
                 return $this->returnInvalidDate();
             }
-
-            $tracklist->setFinishDate($finishDate);
         }
+        $tracklist->setFinishDate($finishDate);
 
         return $tracklist;
     }
