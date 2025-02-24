@@ -20,6 +20,7 @@ import {
 } from '../../../shared/interfaces/tracklist-interfaces';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { StringService } from '../../../service/string/string.service';
 
 @Component({
   selector: 'app-episode-list',
@@ -52,7 +53,7 @@ export class EpisodeListComponent {
   @Output() setEpisode: EventEmitter<SeasonEpisode> =
     new EventEmitter<SeasonEpisode>();
 
-  constructor(private tracklistService: TracklistService) {}
+  constructor(public stringService: StringService) {}
 
   public openDialog = (currenEpisode: SeasonEpisode) => {
     this.currentEpisodeForDialog = currenEpisode;

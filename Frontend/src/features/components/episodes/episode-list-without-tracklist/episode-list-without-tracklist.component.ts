@@ -11,6 +11,7 @@ import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-forma
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
+import { StringService } from '../../../../service/string/string.service';
 
 @Component({
   selector: 'app-episode-list-without-tracklist',
@@ -38,6 +39,9 @@ export class EpisodeListWithoutTracklistComponent {
   public isEpisodeDialogVisible: boolean = false;
 
   // functions ----------------------------------------------
+
+  constructor(public stringService: StringService) {}
+
   public selectEpisode = (episode: SeasonEpisode) => {
     this.setEpisode.emit(episode);
   };

@@ -1,7 +1,10 @@
 <div *ngIf="inpEpisodeList().length > 0" class="episodeDIVWrapper">
   <div *ngFor="let episode of inpEpisodeList()" class="episodeDIV">
     <div (click)="openDialog(episode)">
-      <p>E {{ episode.episodeNumber }}: {{ episode.name }}</p>
+      <p [pTooltip]="episode.name">
+        E{{ episode.episodeNumber }}:
+        {{ stringService.shortenString(episode.name) }}
+      </p>
     </div>
   </div>
 </div>
