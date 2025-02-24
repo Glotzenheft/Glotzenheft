@@ -1,4 +1,12 @@
-import { Component, Input, input, InputSignal } from '@angular/core';
+import {
+  Component,
+  EventEmitter,
+  Input,
+  input,
+  InputSignal,
+  OnInit,
+  Output,
+} from '@angular/core';
 import { SeasonEpisode } from '../../../shared/interfaces/media-interfaces';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
@@ -7,22 +15,31 @@ import { TracklistService } from '../../../service/tracklist/tracklist.service';
 import { FormGroup } from '@angular/forms';
 import {
   SeasonTracklist,
+  TracklistEpisode,
   TVSeasonWithTracklist,
 } from '../../../shared/interfaces/tracklist-interfaces';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { StringService } from '../../../service/string/string.service';
 
 @Component({
   selector: 'app-episode-list',
-  imports: [CommonModule, DialogModule, DateFormattingPipe, ButtonModule, TooltipModule],
+  imports: [
+    CommonModule,
+    DialogModule,
+    DateFormattingPipe,
+    ButtonModule,
+    TooltipModule,
+  ],
   templateUrl: './episode-list.component.html',
   styleUrl: './episode-list.component.css',
 })
 export class EpisodeListComponent {
+  // input variables
   public episodeList: InputSignal<SeasonEpisode[]> =
     input.required<SeasonEpisode[]>();
-  public currentEpisodeForDialog: SeasonEpisode | null = null;
-  public isEpisodeDialogVisible: boolean = false;
+  public inpSelectedTracklist: InputSignal<SeasonTracklist> =
+    input.required<SeasonTracklist>();
   public tracklistSelectionForm: InputSignal<FormGroup<any>> =
     input.required<FormGroup<any>>();
   public selectedSeason: InputSignal<TVSeasonWithTracklist | null> =
@@ -30,21 +47,41 @@ export class EpisodeListComponent {
   public tracklistsOfSeason: InputSignal<SeasonTracklist[]> =
     input.required<SeasonTracklist[]>();
 
-  constructor(private tracklistService: TracklistService) {}
+  public currentEpisodeForDialog: SeasonEpisode | null = null;
+  public isEpisodeDialogVisible: boolean = false;
+  // output variables
+  @Output() setEpisode: EventEmitter<SeasonEpisode> =
+    new EventEmitter<SeasonEpisode>();
+
+  constructor(public stringService: StringService) {}
 
   public openDialog = (currenEpisode: SeasonEpisode) => {
     this.currentEpisodeForDialog = currenEpisode;
     this.isEpisodeDialogVisible = true;
-
-    console.log('open');
   };
 
   public checkEpisodeInCurrentTracklist = (episodeID: number): boolean => {
-    return this.tracklistService.isEpisodeInCurrenTracklist(
-      episodeID,
-      this.selectedSeason(),
-      this.tracklistsOfSeason(),
-      this.tracklistSelectionForm()
-    );
+    const episodesOfTracklist: number[] =
+      this.inpSelectedTracklist()!.tracklistSeasons[0].tracklistEpisodes.map(
+        (epis: TracklistEpisode) => {
+          return epis.episode.id;
+        }
+      );
+
+    if (episodesOfTracklist.includes(episodeID)) {
+      return true;
+    }
+    return false;
+
+    // return this.tracklistService.isEpisodeInCurrenTracklist(
+    //   episodeID,
+    //   this.selectedSeason(),
+    //   this.tracklistsOfSeason(),
+    //   this.tracklistSelectionForm()
+    // );
+  };
+
+  public selectEpisode = (episode: SeasonEpisode) => {
+    this.setEpisode.emit(episode);
   };
 }
