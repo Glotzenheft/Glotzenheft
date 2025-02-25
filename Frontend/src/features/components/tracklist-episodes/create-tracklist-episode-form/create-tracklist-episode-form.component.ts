@@ -56,6 +56,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   // other variables
   public createEpisodeForm!: FormGroup;
   public createEpisodeRequestData$: Observable<any> | null = null;
+  public updateEpisodeRequestData$: Observable<any> | null = null;
 
   constructor(
     private messageService: MessageService,
@@ -65,6 +66,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    // extract the episode of the tracklist (for retrieving e. g. watchDate and trakcklist episode id)
     const episodeInTracklist =
       this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
         (epis: TracklistEpisode) => {
@@ -72,26 +74,36 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         }
       );
 
-    console.log('full episode: ', episodeInTracklist);
-
     const isEpisodeInTracklist: boolean =
-      episodeInTracklist.length === 1 &&
-      episodeInTracklist[0].watchDate.length > 0 &&
-      this.inpIsEpisodeEditing();
+      episodeInTracklist.length === 1 && this.inpIsEpisodeEditing();
 
-    console.log('is episode in tracklist', isEpisodeInTracklist);
-
+    if (episodeInTracklist[0] && episodeInTracklist[0].watchDate) {
+      const watchDateAsDate = new Date(episodeInTracklist[0].watchDate);
+      watchDateAsDate.setHours(watchDateAsDate.getHours() - 1);
+      this.createEpisodeForm = this.formBuilder.group({
+        watchDate: [
+          isEpisodeInTracklist &&
+          episodeInTracklist[0] &&
+          episodeInTracklist[0].watchDate &&
+          episodeInTracklist[0].watchDate.length > 0
+            ? watchDateAsDate
+            : null,
+        ],
+      });
+      return;
+    }
     this.createEpisodeForm = this.formBuilder.group({
-      watchDate: [
-        isEpisodeInTracklist ? new Date(episodeInTracklist[0].watchDate) : null,
-      ],
+      watchDate: [null],
     });
   }
 
+  /**
+   * Function for add a new episode of the current selected season to the current selected episode.
+   * @returns void
+   */
   public submitForm = () => {
     const watchDate: string | null =
       this.createEpisodeForm.get('watchDate')?.value;
-    console.log(watchDate, watchDate === null);
     let formattedDate: string = '';
 
     if (watchDate !== null) {
@@ -110,28 +122,117 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       episodeID: this.inpEpisode().id,
     };
 
-    console.log('submit data: ', createEpisodeData);
+    this.makeAPIRequest(createEpisodeData, false);
+  };
 
-    this.createEpisodeRequestData$ =
-      this.episodeService.createTracklistEpisode(createEpisodeData);
+  public saveEditedEpisode = () => {
+    const watchDate: string | null =
+      this.createEpisodeForm.get('watchDate')?.value;
+    let formattedDate: string = '';
 
-    if (!this.createEpisodeRequestData$) {
+    if (watchDate !== null) {
+      const watchDateAsDate = new Date(watchDate);
+
+      // increasing date hours by 1 hour
+      watchDateAsDate.setHours(watchDateAsDate.getHours() + 1);
+
+      formattedDate = watchDateAsDate.toISOString();
+    }
+
+    const episodeInTracklist =
+      this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
+        (epis: TracklistEpisode) => {
+          return this.inpEpisode().id === epis.episode.id;
+        }
+      );
+
+    const updateEpisodeData: CreateTracklistEpisode = {
+      tracklistID: this.inpTracklist().id,
+      tracklistSeasonID: this.inpTracklist().tracklistSeasons[0].id,
+      watchDate: formattedDate,
+      episodeID: episodeInTracklist[0].id, // tracklist episode id
+    };
+
+    this.makeAPIRequest(updateEpisodeData, true);
+  };
+
+  public makeAPIRequest = (
+    episodeData: CreateTracklistEpisode,
+    isUpdatingEpisode: boolean
+  ) => {
+    const errorMessageSummary: string = isUpdatingEpisode
+      ? 'Fehler beim Speichern der Episode'
+      : 'Fehler beim Hinzufügen der Episode';
+
+    const errorMessageDetail: string = isUpdatingEpisode
+      ? 'Beim Speichern der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
+      : 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
+
+    if (!isUpdatingEpisode) {
+      this.createEpisodeRequestData$ =
+        this.episodeService.createTracklistEpisode(episodeData);
+
+      if (!this.createEpisodeRequestData$) {
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: errorMessageSummary,
+          detail: errorMessageDetail,
+        });
+        return;
+      }
+
+      this.createEpisodeRequestData$.subscribe({
+        next: () => {
+          this.messageService.add({
+            life: 7000,
+            severity: 'success',
+            summary: 'Episode erfolgreich hinzugefügt',
+          });
+          this.saveEpisode.emit(true);
+        },
+        error: (err: any) => {
+          if (err.status === 401) {
+            this.messageService.add({
+              life: 7000,
+              severity: 'error',
+              summary: 'Ungültige Authentifizierung',
+              detail:
+                'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
+            });
+            return;
+          }
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: errorMessageSummary,
+            detail: errorMessageDetail,
+          });
+        },
+      });
+
+      return;
+    }
+
+    this.updateEpisodeRequestData$ =
+      this.episodeService.updateTracklistEpisode(episodeData);
+
+    if (!this.updateEpisodeRequestData$) {
       this.messageService.add({
         life: 7000,
         severity: 'error',
-        summary: 'Fehler beim Hinzufügen der Episode',
-        detail:
-          'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+        summary: errorMessageSummary,
+        detail: errorMessageDetail,
       });
       return;
     }
 
-    this.createEpisodeRequestData$.subscribe({
+    this.updateEpisodeRequestData$.subscribe({
       next: () => {
         this.messageService.add({
           life: 7000,
           severity: 'success',
-          summary: 'Episode erfolgreich hinzugefügt',
+          summary: 'Episode erfolgreich gespeichert',
         });
         this.saveEpisode.emit(true);
       },
@@ -149,9 +250,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.messageService.add({
           life: 7000,
           severity: 'error',
-          summary: 'Fehler beim Hinzufügen der Episode',
-          detail:
-            'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+          summary: errorMessageSummary,
+          detail: errorMessageDetail,
         });
       },
     });

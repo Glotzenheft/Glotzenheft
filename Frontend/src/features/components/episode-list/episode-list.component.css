@@ -48,8 +48,8 @@
 
   transition-duration: var(--transition--duration);
 
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
+  padding-left: calc(0.5 * var(--padding--left-right));
+  padding-right: calc(0.5 * var(--padding--left-right));
 }
 
 .episodeInTracklistDIV:hover {
