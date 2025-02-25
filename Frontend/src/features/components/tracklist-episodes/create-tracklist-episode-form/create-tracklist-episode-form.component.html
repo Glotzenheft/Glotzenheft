@@ -1,6 +1,12 @@
 <div class="createTracklistEpisodeDIV">
   <div class="createTracklistEpisodeWrapperDIV">
-    <h1>Episode zur Trackliste hinzufügen</h1>
+    <h1>
+      {{
+        inpIsEpisodeEditing()
+          ? "Episode editieren"
+          : "Episode zur Trackliste hinzufügen"
+      }}
+    </h1>
     <div class="createTracklistEpisodeFormDIV">
       <form
         action="submit"

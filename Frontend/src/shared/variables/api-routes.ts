@@ -69,3 +69,11 @@ export const ROUTE_CREATE_TRACKLIST_EPISODE: string[] = [
   '&watch_date=',
   '&tracklist_id=',
 ];
+
+export const ROUTE_UPDATE_TRACKLIST_EPISODE: string[] = [
+  // for updating the watch date of an episode
+  'https://127.0.0.1:8000/api/tracklist-episode?tracklist_id=',
+  '&tracklist_season_id=',
+  '&tracklist_episode_id=',
+  '&watch_date=',
+];

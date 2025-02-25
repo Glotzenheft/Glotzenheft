@@ -6,7 +6,10 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { SeasonTracklist } from '../../../../shared/interfaces/tracklist-interfaces';
+import {
+  SeasonTracklist,
+  TracklistEpisode,
+} from '../../../../shared/interfaces/tracklist-interfaces';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -44,6 +47,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   public inpEpisode: InputSignal<SeasonEpisode> =
     input.required<SeasonEpisode>();
   public inpSeasonID: InputSignal<number> = input.required<number>();
+  public inpIsEpisodeEditing: InputSignal<boolean> = input.required<boolean>();
 
   // output variables
   @Output() saveEpisode: EventEmitter<boolean> = new EventEmitter<boolean>();
@@ -61,8 +65,26 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    const episodeInTracklist =
+      this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
+        (epis: TracklistEpisode) => {
+          return this.inpEpisode().id === epis.episode.id;
+        }
+      );
+
+    console.log('full episode: ', episodeInTracklist);
+
+    const isEpisodeInTracklist: boolean =
+      episodeInTracklist.length === 1 &&
+      episodeInTracklist[0].watchDate.length > 0 &&
+      this.inpIsEpisodeEditing();
+
+    console.log('is episode in tracklist', isEpisodeInTracklist);
+
     this.createEpisodeForm = this.formBuilder.group({
-      watchDate: [null],
+      watchDate: [
+        isEpisodeInTracklist ? new Date(episodeInTracklist[0].watchDate) : null,
+      ],
     });
   }
 
