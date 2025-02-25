@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import {
   Season,
+  SeasonEpisode,
   SeasonWithEpisodes,
 } from '../../../shared/interfaces/media-interfaces';
 import { Observable } from 'rxjs';
@@ -43,6 +44,8 @@ import { TracklistService } from '../../../service/tracklist/tracklist.service';
 import { TracklistFormComponent } from '../../components/tracklist-form/tracklist-form.component';
 import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
+import { CreateTracklistEpisodeFormComponent } from '../../components/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
+import { EpisodeListWithoutTracklistComponent } from '../../components/episodes/episode-list-without-tracklist/episode-list-without-tracklist.component';
 
 @Component({
   selector: 'app-season-page',
@@ -65,6 +68,8 @@ import { MenuModule } from 'primeng/menu';
     TracklistFormComponent,
     UpdateTracklistFormComponent,
     MenuModule,
+    CreateTracklistEpisodeFormComponent,
+    EpisodeListWithoutTracklistComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -90,16 +95,17 @@ export class SeasonPageComponent implements OnInit {
   public currentTracklistSelection: SeasonTracklistType | null = null;
 
   // dialog and visibility variables --------------------------
-  // = 0: media details; = 1: create tracklist; = 2: update tracklist
+  // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist
   public isTracklistFormVisible: number = 0;
 
   // variables for current object values
   public currentSeason: TVSeasonWithTracklist | null = null;
   public currentTracklist: SeasonTracklist | null = null;
+  public currentEpisode: SeasonEpisode | null = null;
 
   public isEditingButtonVisible: boolean = true;
 
-  private EMPTY_TRACKLIST: SeasonTracklist = {
+  public EMPTY_TRACKLIST: SeasonTracklist = {
     id: -1,
     media: {
       id: -1, // id of the tv or movie itself
@@ -234,6 +240,11 @@ export class SeasonPageComponent implements OnInit {
     this.isEditingButtonVisible = false;
   };
 
+  public setCurrentEpisode = (episode: SeasonEpisode) => {
+    this.currentEpisode = episode;
+    this.setVisibility(3);
+  };
+
   public refreshPage = () => {
     this.setVisibility(0);
     this.loadData();
@@ -248,5 +259,6 @@ export class SeasonPageComponent implements OnInit {
 
   public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {
     this.currentTracklistSelection = tracklist;
+    this.isTracklistFormVisible = 3;
   };
 }

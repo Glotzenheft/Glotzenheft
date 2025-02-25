@@ -16,8 +16,8 @@
 
   transition-duration: var(--transition--duration);
 
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
+  padding-left: calc(0.5 * var(--padding--left-right));
+  padding-right: calc(0.5 * var(--padding--left-right));
 }
 
 .episodeDIV:hover {
@@ -31,5 +31,37 @@
 }
 
 .episodeDialogDIV {
+  width: 100%;
+}
+
+.episodeInTracklistDIV {
+  width: 100%;
+  height: 3rem;
+  border: 0.1rem solid black;
+  border-radius: var(--border--radius);
+  background: rgba(5, 150, 105, 0.5);
+  margin-bottom: 1rem;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  transition-duration: var(--transition--duration);
+
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
+}
+
+.episodeInTracklistDIV:hover {
+  cursor: pointer;
+  background-color: black;
+  color: white;
+}
+
+.episodeInTracklistDIV p {
+  font-weight: bolder;
+}
+
+.episodeInTracklistDIV {
   width: 100%;
 }

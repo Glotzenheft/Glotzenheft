@@ -26,7 +26,7 @@ class TracklistEpisode
     #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?Episode $episode = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?DateTimeInterface $watchDate = null;
 
@@ -57,7 +57,7 @@ class TracklistEpisode
         return $this->watchDate;
     }
 
-    public function setWatchDate(DateTimeInterface $watchDate): static
+    public function setWatchDate(?DateTimeInterface $watchDate): static
     {
         $this->watchDate = $watchDate;
 
