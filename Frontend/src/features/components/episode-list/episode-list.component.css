@@ -39,7 +39,8 @@
   height: 3rem;
   border: 0.1rem solid black;
   border-radius: var(--border--radius);
-  background: rgba(5, 150, 105, 0.5);
+  background: rgba(5, 150, 105, 0.9);
+  color: white;
   margin-bottom: 1rem;
 
   display: flex;
@@ -48,8 +49,8 @@
 
   transition-duration: var(--transition--duration);
 
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
+  padding-left: calc(0.5 * var(--padding--left-right));
+  padding-right: calc(0.5 * var(--padding--left-right));
 }
 
 .episodeInTracklistDIV:hover {

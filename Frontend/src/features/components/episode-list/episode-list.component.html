@@ -18,7 +18,14 @@
       icon="pi pi-plus"
       severity="secondary"
       pTooltip="Episode zur Watchlist hinzufügen"
-      (onClick)="selectEpisode(episode)"
+      (onClick)="selectEpisode(episode, false)"
+    />
+    <p-button
+      *ngIf="checkEpisodeInCurrentTracklist(episode.id)"
+      icon="pi pi-pencil"
+      severity="secondary"
+      pTooltip="Episode bearbeiten"
+      (onClick)="selectEpisode(episode, true)"
     />
   </div>
 </div>

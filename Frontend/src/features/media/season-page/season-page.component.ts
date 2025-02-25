@@ -95,7 +95,7 @@ export class SeasonPageComponent implements OnInit {
   public currentTracklistSelection: SeasonTracklistType | null = null;
 
   // dialog and visibility variables --------------------------
-  // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist
+  // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist; = 4: edit episode of current tracklist
   public isTracklistFormVisible: number = 0;
 
   // variables for current object values
@@ -240,9 +240,17 @@ export class SeasonPageComponent implements OnInit {
     this.isEditingButtonVisible = false;
   };
 
-  public setCurrentEpisode = (episode: SeasonEpisode) => {
+  public setCurrentEpisode = (
+    episode: SeasonEpisode,
+    isEpisodeForEditing: boolean
+  ) => {
     this.currentEpisode = episode;
-    this.setVisibility(3);
+
+    if (!isEpisodeForEditing) {
+      this.setVisibility(3);
+      return;
+    }
+    this.setVisibility(4);
   };
 
   public refreshPage = () => {

@@ -1,6 +1,12 @@
 <div class="createTracklistEpisodeDIV">
   <div class="createTracklistEpisodeWrapperDIV">
-    <h1>Episode zur Trackliste hinzufügen</h1>
+    <h1>
+      {{
+        inpIsEpisodeEditing()
+          ? "Episode editieren"
+          : "Episode zur Trackliste hinzufügen"
+      }}
+    </h1>
     <div class="createTracklistEpisodeFormDIV">
       <form
         action="submit"
@@ -23,7 +29,18 @@
         </p-float-label>
 
         <div class="formAcions">
-          <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" />
+          <p-button
+            *ngIf="!inpIsEpisodeEditing()"
+            label="Hinzufügen"
+            icon="pi pi-plus"
+            type="submit"
+          />
+          <p-button
+            *ngIf="inpIsEpisodeEditing()"
+            label="Speichern"
+            icon="pi pi-save"
+            (onClick)="saveEditedEpisode()"
+          />
           <div>
             <p-button
               label="Abbrechen"

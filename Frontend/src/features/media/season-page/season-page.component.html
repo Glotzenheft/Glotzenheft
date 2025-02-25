@@ -135,7 +135,8 @@
                     ? tracklistSelectionForm.get('selectedTracklist')?.value
                     : null
                 "
-                (setEpisode)="setCurrentEpisode($event)"
+                (setEpisode)="setCurrentEpisode($event, false)"
+                (setEpisodeForEditing)="setCurrentEpisode($event, true)"
               />
 
               <app-episode-list-without-tracklist
@@ -200,6 +201,25 @@
     [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
     [inpEpisode]="currentEpisode"
     [inpSeasonID]="currentSeason.id"
+    [inpIsEpisodeEditing]="false"
+    (saveEpisode)="refreshPage()"
+    (cancelEpisode)="cancelTracklistForm()"
+  />
+</ng-container>
+
+<ng-container
+  *ngIf="
+    isTracklistFormVisible === 4 &&
+    tracklistSelectionForm.get('selectedTracklist')?.value &&
+    currentEpisode &&
+    currentSeason
+  "
+>
+  <app-create-tracklist-episode-form
+    [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
+    [inpEpisode]="currentEpisode"
+    [inpSeasonID]="currentSeason.id"
+    [inpIsEpisodeEditing]="true"
     (saveEpisode)="refreshPage()"
     (cancelEpisode)="cancelTracklistForm()"
   />

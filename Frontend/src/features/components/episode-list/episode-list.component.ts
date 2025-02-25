@@ -52,6 +52,8 @@ export class EpisodeListComponent {
   // output variables
   @Output() setEpisode: EventEmitter<SeasonEpisode> =
     new EventEmitter<SeasonEpisode>();
+  @Output() setEpisodeForEditing: EventEmitter<SeasonEpisode> =
+    new EventEmitter<SeasonEpisode>();
 
   constructor(public stringService: StringService) {}
 
@@ -81,7 +83,16 @@ export class EpisodeListComponent {
     // );
   };
 
-  public selectEpisode = (episode: SeasonEpisode) => {
-    this.setEpisode.emit(episode);
+  public selectEpisode = (
+    episode: SeasonEpisode,
+    isEpisodeEditing: boolean
+  ) => {
+    if (!isEpisodeEditing) {
+      this.setEpisode.emit(episode);
+      return;
+    }
+
+    console.log('update from episode list');
+    this.setEpisodeForEditing.emit(episode);
   };
 }
