@@ -78,20 +78,8 @@ class AuthorizationController extends AbstractController
         $entityManager->persist($user);
         $entityManager->flush();
 
-        // JWT erstellen
-        $privateKeyPath = $this->projectDir . '/config/private.pem';
-        $privateKey = file_get_contents($privateKeyPath);
-        $payload = [
-            'sub' => $user->getId(),  // User-ID als Subject
-            'username' => $user->getUsername(),
-            'iat' => time(),
-            'exp' => time() + 604800, // 1 Woche gültig
-        ];
-        $jwt = JWT::encode($payload, $privateKey, 'RS256');
-
         return new JsonResponse([
-            'message' => 'User registered successfully',
-            'token' => $jwt,
+            'message' => 'User registered successfully'
         ]);
     }
 

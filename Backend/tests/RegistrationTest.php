@@ -22,7 +22,7 @@ class RegistrationTest extends WebTestCase
 
         // Create test user object
         $this->user = new User();
-        $this->user->setUsername('testuser4');
+        $this->user->setUsername('testuser10');
         $this->user->setPassword('123456677!');
         $this->user->setSecurityQuestion(SecurityQuestions::PET_COLOR);
         $this->user->setSecurityAnswer('Grey');
@@ -43,7 +43,9 @@ class RegistrationTest extends WebTestCase
         $registerResponse = json_decode($this->client->getResponse()->getContent(), true);
         $this->assertArrayHasKey('token', $registerResponse, 'No token received after registration');
         echo "User registration successful.\n";
-
+     }
+     public function changePassword(): void 
+     {
         // Log in to get JWT token
         $loginData = [
             'username' => $this->user->getUsername(),
@@ -52,7 +54,6 @@ class RegistrationTest extends WebTestCase
         $this->client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($loginData));
         $responseData = json_decode($this->client->getResponse()->getContent(), true);
         $this->token = $responseData['token'] ?? '';
-
         $changePasswordData = [
             'security_question' => $this->user->getSecurityQuestion(),
             'security_answer' => $this->user->getSecurityAnswer(),
@@ -79,12 +80,9 @@ class RegistrationTest extends WebTestCase
         }
         $this->assertEquals('Password successfully changed', $changePasswordResponse['message'] ?? '', 'Unexpected password change message');
         echo "User password changed successfully.\n";
-
-
-    }
-
-    protected function tearDown(): void
-    {
+     }
+     public function deleteUserTest(): void 
+     {
         $deleteData = [
             'security_question' => $this->user->getSecurityQuestion(),
             'security_answer' => $this->user->getSecurityAnswer(),
@@ -110,5 +108,5 @@ class RegistrationTest extends WebTestCase
         }
         $this->assertEquals('User deleted successfully', $deleteResponse['message'] ?? '', 'Unexpected deletion message');
         echo "User deletion successful.\n";
-    }
+     }
 }

@@ -20,8 +20,8 @@ class LoginTest extends WebTestCase
 
         // Create test user object
         $this->user = new User();
-        $this->user->setUsername('testuser');
-        $this->user->setPassword('SecurePassword123!');
+        $this->user->setUsername('testuser5');
+        $this->user->setPassword('123456677!');
 
     }
     public function testLogin(): void

@@ -20,8 +20,8 @@ class WrongLoginTest extends WebTestCase
 
         // Create test user object
         $this->user = new User();
-        $this->user->setUsername('AutoTester2');
-        $this->user->setPassword('12345678!');
+        $this->user->setUsername('testuser5');
+        $this->user->setPassword('123456677!');
     }
     public function testLoginWithInvalidCredentials(): void
     {
