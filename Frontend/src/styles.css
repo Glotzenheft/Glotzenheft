@@ -360,7 +360,7 @@ p {
 
   .createTracklistEpisodeFormDIV form .formAcions .p-button {
     width: 100%;
-    height: 3rem;
+    height: 2.5rem;
   }
 }
 
@@ -589,6 +589,11 @@ p {
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
+  }
+
+  .createTracklistEpisodeFormDIV form .formAcions .p-button {
+    width: 10rem;
+    height: 3rem;
   }
 }
 
@@ -836,7 +841,7 @@ p {
   }
 
   .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 14rem;
+    width: 12rem;
     height: 3rem;
   }
 }
