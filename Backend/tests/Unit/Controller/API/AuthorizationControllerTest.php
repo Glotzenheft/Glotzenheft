@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller\API\Authorization;
+namespace App\Tests\Unit\Controller\API;
 
 use App\Controller\API\Authorization\AuthorizationController;
 use App\Entity\User;
@@ -10,6 +10,8 @@ use App\Enum\SecurityQuestions;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\TestCase;
+use Psr\Container\ContainerExceptionInterface;
+use Psr\Container\NotFoundExceptionInterface;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
@@ -22,6 +24,10 @@ class AuthorizationControllerTest extends TestCase
     private UserPasswordHasherInterface $passwordHasher;
     private ContainerBagInterface $params;
 
+    /**
+     * @throws ContainerExceptionInterface
+     * @throws NotFoundExceptionInterface
+     */
     protected function setUp(): void
     {
         $this->entityManager = $this->createMock(EntityManagerInterface::class);

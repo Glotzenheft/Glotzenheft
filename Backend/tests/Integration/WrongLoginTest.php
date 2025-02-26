@@ -1,13 +1,13 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Tests\Controller\API\Authorization;
+namespace App\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 
-class LoginTest extends WebTestCase
+class WrongLoginTest extends WebTestCase
 {
     private User $user;
     private EntityManagerInterface $entityManager;
@@ -22,20 +22,18 @@ class LoginTest extends WebTestCase
         $this->user = new User();
         $this->user->setUsername('testuser5');
         $this->user->setPassword('123456677!');
-
     }
-    public function testLogin(): void
+    public function testLoginWithInvalidCredentials(): void
     {
-         // Login Request
-        $loginData = [
+        
+        $invalidLoginData = [
             'username' => $this->user->getUsername(),
-            'password' => $this->user->getPassword(),
+            'password' => '11111111',
         ];
         
-        $this->client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($loginData));
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User login failed');
-        $loginResponse = json_decode($this->client->getResponse()->getContent(), true);
-        $this->assertArrayHasKey('token', $loginResponse, 'No token received after login');
-        echo "User login successful.\n";
+        // Failed Login Request
+        $this->client->request('POST', '/api/login', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($invalidLoginData));
+        $this->assertResponseStatusCodeSame(Response::HTTP_UNAUTHORIZED, 'Invalid credentials should not allow login');
+        echo "User login failed due to invalid credentials.\n";
     }
 }

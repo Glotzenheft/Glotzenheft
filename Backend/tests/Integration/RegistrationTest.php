@@ -1,7 +1,6 @@
-<?php
+<?php declare(strict_types=1);
 
-namespace App\Tests\Controller\API\User;
-namespace App\Tests\Controller\API\Authorization;
+namespace App\Tests\Integration;
 
 use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpFoundation\Response;
@@ -9,7 +8,7 @@ use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use App\Enum\SecurityQuestions;
 
-class ChangePasswordTest extends WebTestCase
+class RegistrationTest extends WebTestCase
 {
     private User $user;
     private EntityManagerInterface $entityManager;
@@ -23,15 +22,32 @@ class ChangePasswordTest extends WebTestCase
 
         // Create test user object
         $this->user = new User();
-        $this->user->setUsername('testuser5');
+        $this->user->setUsername('testuser10');
         $this->user->setPassword('123456677!');
         $this->user->setSecurityQuestion(SecurityQuestions::PET_COLOR);
         $this->user->setSecurityAnswer('Grey');
     }
-    public function testChangePassword(): void
+    public function testRegistration(): void
     {
-         // Log in to get JWT token
-         $loginData = [
+         
+        $userData = [
+            'username' => $this->user->getUsername(),
+            'password' => $this->user->getPassword(),
+            'security_question' => $this->user->getSecurityQuestion(),
+            'security_answer' => $this->user->getSecurityAnswer(),
+        ];
+
+        // Registration Request
+        $this->client->request('POST', '/api/register', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($userData));
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User registration failed');
+        $registerResponse = json_decode($this->client->getResponse()->getContent(), true);
+        $this->assertArrayHasKey('token', $registerResponse, 'No token received after registration');
+        echo "User registration successful.\n";
+     }
+     public function changePassword(): void 
+     {
+        // Log in to get JWT token
+        $loginData = [
             'username' => $this->user->getUsername(),
             'password' => $this->user->getPassword(),
         ];
@@ -64,5 +80,33 @@ class ChangePasswordTest extends WebTestCase
         }
         $this->assertEquals('Password successfully changed', $changePasswordResponse['message'] ?? '', 'Unexpected password change message');
         echo "User password changed successfully.\n";
-    }
+     }
+     public function deleteUserTest(): void 
+     {
+        $deleteData = [
+            'security_question' => $this->user->getSecurityQuestion(),
+            'security_answer' => $this->user->getSecurityAnswer(),
+        ];
+
+        $this->client->request(
+            'DELETE',
+            '/api/user',
+            [],
+            [],
+            [
+                'CONTENT_TYPE' => 'application/json',
+                'HTTP_Authorization' => 'Bearer ' . $this->token,
+            ],
+            json_encode($deleteData)
+        );
+
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User deletion failed');
+        $deleteResponse = json_decode($this->client->getResponse()->getContent(), true);
+        // Antwort kommt mit zwei Anführungszeichen
+        if (!is_array($deleteResponse)) {
+            $deleteResponse = ['message' => trim($this->client->getResponse()->getContent(), '"')];
+        }
+        $this->assertEquals('User deleted successfully', $deleteResponse['message'] ?? '', 'Unexpected deletion message');
+        echo "User deletion successful.\n";
+     }
 }

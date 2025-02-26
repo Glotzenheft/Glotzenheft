@@ -2,29 +2,27 @@
 
 declare(strict_types=1);
 
-namespace App\Tests\Controller\API\User;
+namespace App\Tests\Unit\Controller\API;
 
 use App\Controller\API\User\UserController;
 use App\Service\User\UserService;
-use PHPUnit\Framework\TestCase;
-use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Bundle\FrameworkBundle\Test\KernelTestCase;
 use Symfony\Component\HttpFoundation\Request;
 use App\Enum\SecurityQuestions;
 
-class UserControllerTest extends TestCase
+class UserControllerTest extends KernelTestCase
 {
     private UserController $controller;
     private UserService $userService;
 
     protected function setUp(): void
     {
-        //self::bootKernel();
-        //$container = static::getContainer();
+        self::bootKernel();
+        $container = static::getContainer();
 
-        //$this->controller = $container->get(UserController::class);
+        $this->controller = $container->get(UserController::class);
         $this->userService = $this->createMock(UserService::class);
         $this->controller = new UserController($this->userService);
-
     }
 
     public function testDeleteUserSuccess(): void
