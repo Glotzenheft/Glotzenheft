@@ -23,7 +23,7 @@ import { EpisodeService } from '../../../../service/episode/episode.service';
 import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
 import { CreateTracklistEpisode } from '../../../../shared/interfaces/tracklist-episode-interfaces';
 import { Observable } from 'rxjs';
-import { UserService } from '../../../../service/user/user.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-create-tracklist-episode-form',
@@ -36,6 +36,7 @@ import { UserService } from '../../../../service/user/user.service';
     ButtonModule,
     FloatLabelModule,
     SelectModule,
+    TooltipModule,
   ],
   templateUrl: './create-tracklist-episode-form.component.html',
   styleUrl: './create-tracklist-episode-form.component.css',
@@ -57,12 +58,12 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   public createEpisodeForm!: FormGroup;
   public createEpisodeRequestData$: Observable<any> | null = null;
   public updateEpisodeRequestData$: Observable<any> | null = null;
+  public deleteEpisodeRequestData$: Observable<any> | null = null;
 
   constructor(
     private messageService: MessageService,
     private episodeService: EpisodeService,
-    private formBuilder: FormBuilder,
-    private userService: UserService
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
@@ -78,6 +79,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       episodeInTracklist.length === 1 && this.inpIsEpisodeEditing();
 
     if (episodeInTracklist[0] && episodeInTracklist[0].watchDate) {
+      console.log('condition');
       const watchDateAsDate = new Date(episodeInTracklist[0].watchDate);
       watchDateAsDate.setHours(watchDateAsDate.getHours() - 1);
       this.createEpisodeForm = this.formBuilder.group({
@@ -93,9 +95,13 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       return;
     }
     this.createEpisodeForm = this.formBuilder.group({
-      watchDate: [null],
+      watchDate: [!this.inpIsEpisodeEditing() ? new Date() : null],
     });
   }
+
+  public deleteDate = () => {
+    this.createEpisodeForm.get('watchDate')?.setValue(null);
+  };
 
   /**
    * Function for add a new episode of the current selected season to the current selected episode.
@@ -122,7 +128,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       episodeID: this.inpEpisode().id,
     };
 
-    this.makeAPIRequest(createEpisodeData, false);
+    this.makeAPIRequest(createEpisodeData, 0);
   };
 
   public saveEditedEpisode = () => {
@@ -153,22 +159,69 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       episodeID: episodeInTracklist[0].id, // tracklist episode id
     };
 
-    this.makeAPIRequest(updateEpisodeData, true);
+    this.makeAPIRequest(updateEpisodeData, 1);
   };
 
+  public deleteEpisode = () => {
+    const episodeInTracklist =
+      this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
+        (epis: TracklistEpisode) => {
+          return this.inpEpisode().id === epis.episode.id;
+        }
+      );
+
+    if (episodeInTracklist.length < 1) {
+      this.messageService.add({
+        life: 7000,
+        severity: 'error',
+        summary: 'Episode nicht gefunden',
+        detail:
+          'Die Episode wurde nicht gefunden und konnte daher nicht gelöscht werden. Bitte probiere es erneut.',
+      });
+
+      return;
+    }
+
+    const deleteEpisodeData: CreateTracklistEpisode = {
+      tracklistID: this.inpTracklist().id,
+      tracklistSeasonID: this.inpTracklist().tracklistSeasons[0].id,
+      watchDate: '',
+      episodeID: episodeInTracklist[0].id, // tracklist episode id
+    };
+
+    this.makeAPIRequest(deleteEpisodeData, 2);
+  };
+
+  /**
+   *
+   * @param episodeData CreateTracklistEpisode
+   * @param episodeActionNumber number -> 0 (create), 1 (update) or 2 (delete) episode
+   * @returns
+   */
   public makeAPIRequest = (
     episodeData: CreateTracklistEpisode,
-    isUpdatingEpisode: boolean
+    episodeActionNumber: number
   ) => {
-    const errorMessageSummary: string = isUpdatingEpisode
-      ? 'Fehler beim Speichern der Episode'
-      : 'Fehler beim Hinzufügen der Episode';
+    // = 0: create episode; = 1: update selected episode; = 2: delete episode
+    const errorMessageSummary: string =
+      episodeActionNumber === 0
+        ? 'Fehler beim Hinzufügen der Episode'
+        : episodeActionNumber === 1
+        ? 'Fehler beim Speichern der Episode'
+        : 'Fehler beim Löschen der Episode';
 
-    const errorMessageDetail: string = isUpdatingEpisode
-      ? 'Beim Speichern der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
-      : 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
+    // episodeActionNumber === 1
+    //   ? 'Fehler beim Speichern der Episode' : episodeActionNumber === 2 ?
+    //    'Fehler beim Hinzufügen der Episode';
 
-    if (!isUpdatingEpisode) {
+    const errorMessageDetail: string =
+      episodeActionNumber === 0
+        ? 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
+        : episodeActionNumber === 1
+        ? 'Beim Speichern der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
+        : 'Beim Löschen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
+
+    if (episodeActionNumber === 0) {
       this.createEpisodeRequestData$ =
         this.episodeService.createTracklistEpisode(episodeData);
 
@@ -212,49 +265,97 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       });
 
       return;
-    }
+    } else if (episodeActionNumber === 1) {
+      // updating episode
+      this.updateEpisodeRequestData$ =
+        this.episodeService.updateTracklistEpisode(episodeData);
 
-    this.updateEpisodeRequestData$ =
-      this.episodeService.updateTracklistEpisode(episodeData);
-
-    if (!this.updateEpisodeRequestData$) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: errorMessageSummary,
-        detail: errorMessageDetail,
-      });
-      return;
-    }
-
-    this.updateEpisodeRequestData$.subscribe({
-      next: () => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Episode erfolgreich gespeichert',
-        });
-        this.saveEpisode.emit(true);
-      },
-      error: (err: any) => {
-        if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Authentifizierung',
-            detail:
-              'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
-          });
-          return;
-        }
+      if (!this.updateEpisodeRequestData$) {
         this.messageService.add({
           life: 7000,
           severity: 'error',
           summary: errorMessageSummary,
           detail: errorMessageDetail,
         });
-      },
-    });
+        return;
+      }
+
+      this.updateEpisodeRequestData$.subscribe({
+        next: () => {
+          this.messageService.add({
+            life: 7000,
+            severity: 'success',
+            summary: 'Episode erfolgreich gespeichert',
+          });
+          this.saveEpisode.emit(true);
+        },
+        error: (err: any) => {
+          if (err.status === 401) {
+            this.messageService.add({
+              life: 7000,
+              severity: 'error',
+              summary: 'Ungültige Authentifizierung',
+              detail:
+                'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
+            });
+            return;
+          }
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: errorMessageSummary,
+            detail: errorMessageDetail,
+          });
+        },
+      });
+    } else if (episodeActionNumber === 2) {
+      // delete episode
+      this.deleteEpisodeRequestData$ =
+        this.episodeService.deleteTracklistEpisode(
+          episodeData.tracklistID,
+          episodeData.tracklistSeasonID,
+          episodeData.episodeID
+        );
+
+      if (!this.deleteEpisodeRequestData$) {
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: errorMessageSummary,
+          detail: errorMessageDetail,
+        });
+        return;
+      }
+
+      this.deleteEpisodeRequestData$.subscribe({
+        next: () => {
+          this.messageService.add({
+            life: 7000,
+            severity: 'success',
+            summary: 'Episode erfolgreich gelöscht',
+          });
+          this.saveEpisode.emit(true);
+        },
+        error: (err: any) => {
+          if (err.status === 401) {
+            this.messageService.add({
+              life: 7000,
+              severity: 'error',
+              summary: 'Ungültige Authentifizierung',
+              detail:
+                'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
+            });
+            return;
+          }
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: errorMessageSummary,
+            detail: errorMessageDetail,
+          });
+        },
+      });
+    }
   };
 
   public cancelEpisodeForm = () => {

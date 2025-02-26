@@ -27,6 +27,13 @@
           />
           <label for="watch">wann geschaut? (optional)</label>
         </p-float-label>
+        <p-button
+          label="Datum löschen"
+          severity="contrast"
+          icon="pi pi-times"
+          (onClick)="deleteDate()"
+          pTooltip="aktuelles Datum löschen"
+        />
 
         <div class="formAcions">
           <p-button
@@ -41,6 +48,14 @@
             icon="pi pi-save"
             (onClick)="saveEditedEpisode()"
           />
+          <div *ngIf="inpIsEpisodeEditing()">
+            <p-button
+              label="Löschen"
+              icon="pi pi-trash"
+              severity="danger"
+              (onClick)="deleteEpisode()"
+            />
+          </div>
           <div>
             <p-button
               label="Abbrechen"
