@@ -60,7 +60,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
   },
   {
     // 8
-    description: 'User Start',
+    description: 'Startseite',
     fullUrl: 'user',
     shortUrl: 'user',
     showInLinkList: false,
@@ -106,6 +106,18 @@ export const getVisibleRoutes = (): VisibleRoute[] => {
   return ROUTES_LIST.filter(
     (route: RoutesListItem) => route.showInLinkList
   ).map((route: RoutesListItem) => ({
+    description: route.description,
+    fullUrl: route.fullUrl,
+    shortUrl: route.shortUrl,
+  }));
+};
+
+export const getVisibleRoutesForUser = (): VisibleRoute[] => {
+  return ROUTES_LIST.filter((route: RoutesListItem) => {
+    return (
+      route.fullUrl.startsWith('user') && !route.fullUrl.includes('delete')
+    );
+  }).map((route: RoutesListItem) => ({
     description: route.description,
     fullUrl: route.fullUrl,
     shortUrl: route.shortUrl,

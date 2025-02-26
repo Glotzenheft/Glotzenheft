@@ -1,12 +1,23 @@
 <router-outlet />
+
+<div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
+  Container
+</div>
+
 <p-panel
   header="Meine letzen Aktivitäten"
   class="userPanel"
   [toggleable]="true"
+  [collapsed]="true"
 >
   <p>Bla</p>
 </p-panel>
 
-<p-panel header="Meine Serien und Filme" class="userPanel" [toggleable]="true">
+<p-panel
+  header="Meine Serien und Filme"
+  class="userPanel"
+  [toggleable]="true"
+  [collapsed]="true"
+>
   <p>Bla</p>
 </p-panel>

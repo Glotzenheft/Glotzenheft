@@ -1,5 +1,5 @@
 <div class="footer">
-  <h1>Weiteres</h1>
+  <!-- <h1>Weiteres</h1>
   <div class="footerContent">
     <ul>
       <li
@@ -14,5 +14,15 @@
   <small
     >This product uses the TMDB API but is not endorsed or certified by
     TMDB.</small
-  >
+  > -->
+  <h1>Weiteres</h1>
+  <div class="footerContent">
+    <p-menu #menu [model]="footerLinkList" [popup]="true" />
+    <p-button
+      (onClick)="menu.toggle($event)"
+      icon="pi pi-ellipsis-v"
+      severity="contrast"
+      label="Über uns"
+    />
+  </div>
 </div>

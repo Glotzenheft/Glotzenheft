@@ -10,10 +10,19 @@ import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { MessageService } from 'primeng/api';
 import { StringService } from '../../../service/string/string.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { AvatarModule } from 'primeng/avatar';
+import { AvatarGroupModule } from 'primeng/avatargroup';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [CommonModule, MenuModule, ButtonModule, TooltipModule],
+  imports: [
+    CommonModule,
+    MenuModule,
+    ButtonModule,
+    TooltipModule,
+    AvatarGroupModule,
+    AvatarModule,
+  ],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.css',
 })
@@ -23,24 +32,10 @@ export class UserMenuComponent implements OnInit {
       label: 'Optionen',
       items: [
         {
-          label: 'Startseite',
-          icon: 'pi pi-home',
-          command: () => {
-            this.router.navigateByUrl(ROUTES_LIST[8].fullUrl);
-          },
-        },
-        {
           label: 'Passwort ändern',
           icon: 'pi pi-user-edit',
           command: () => {
             this.router.navigateByUrl(ROUTES_LIST[9].fullUrl);
-          },
-        },
-        {
-          label: 'Meine Tracklisten',
-          icon: 'pi pi-list',
-          command: () => {
-            this.router.navigateByUrl(ROUTES_LIST[12].fullUrl);
           },
         },
         {

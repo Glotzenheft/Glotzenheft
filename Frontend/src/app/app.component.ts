@@ -8,14 +8,14 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { SearchBarComponent } from '../features/components/search-bar/search-bar.component';
-import { Observable, Subscription } from 'rxjs';
+import { Subscription } from 'rxjs';
 import { SearchService } from '../service/search/search.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
 import { UserLinksComponent } from '../features/components/user-links/user-links.component';
 import { UserService } from '../service/user/user.service';
-import { UserMenuComponent } from '../features/components/user-menu/user-menu.component';
+import { UserMenuComponent } from "../features/components/user-menu/user-menu.component";
 
 @Component({
   selector: 'app-root',
@@ -31,8 +31,8 @@ import { UserMenuComponent } from '../features/components/user-menu/user-menu.co
     SearchBarComponent,
     ToastModule,
     UserLinksComponent,
-    UserMenuComponent,
-  ],
+    UserMenuComponent
+],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MessageService],
@@ -42,8 +42,6 @@ export class AppComponent implements OnInit, OnDestroy {
   public isMultiSearchResponseVisible: boolean = false;
   public userQuery: string = '';
   public toastSubscription!: Subscription;
-  private lastWindowHeight: number = window.innerHeight;
-  private lastWindowWidth: number = window.innerWidth;
 
   constructor(
     public searchService: SearchService,
