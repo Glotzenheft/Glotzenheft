@@ -50,6 +50,7 @@ export class UserService {
     private mediaService: MediaService
   ) {}
 
+  // functions -----------------------------------------------------------------------
   loginIntoAccount = (
     loginData: LoginCredentials
   ): Observable<LoginAndMessageResponse> => {
@@ -228,5 +229,29 @@ export class UserService {
           return throwError(() => error);
         })
       );
+  };
+
+  /**
+   * Function for getting the username if the user is logged in 
+   * @returns string | null
+   */
+  public getUserName = (): string | null => {
+    if (!isUserLoggedIn()) {
+      return null;
+    }
+
+    let userName: string = '';
+
+    if (isPlatformBrowser(this.platformId)) {
+      userName = localStorage.getItem('username') ?? '';
+
+      if (!userName.trim()) {
+        return null;
+      }
+
+      return userName;
+    }
+
+    return null;
   };
 }

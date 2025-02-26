@@ -1,9 +1,10 @@
-<div *ngIf="isUserLoggedInInAccount()">
+<div *ngIf="isUserLoggedInInAccount() && userName.length > 0">
   <p-menu #menu [model]="userMenuList" [popup]="true" />
   <p-button
     icon="pi pi-ellipsis-v"
     (onClick)="menu.toggle($event)"
-    label="Menü"
+    [label]="stringService.shortenString(userName)"
     severity="contrast"
+    [pTooltip]="userName"
   />
 </div>
