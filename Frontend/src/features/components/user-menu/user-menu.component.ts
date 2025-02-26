@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
 import { UserMenuList } from '../../../shared/interfaces/user-interfaces';
@@ -8,14 +8,16 @@ import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { MessageService } from 'primeng/api';
+import { StringService } from '../../../service/string/string.service';
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [CommonModule, MenuModule, ButtonModule],
+  imports: [CommonModule, MenuModule, ButtonModule, TooltipModule],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.css',
 })
-export class UserMenuComponent {
+export class UserMenuComponent implements OnInit {
   public userMenuList: UserMenuList[] = [
     {
       label: 'Optionen',
@@ -65,11 +67,18 @@ export class UserMenuComponent {
     },
   ];
 
+  public userName: string = '';
+
   constructor(
     private userService: UserService,
     private router: Router,
-    private messageService: MessageService
+    private messageService: MessageService,
+    public stringService: StringService
   ) {}
+
+  ngOnInit(): void {
+    this.userName = this.userService.getUserName() ?? '';
+  }
 
   public isUserLoggedInInAccount = isUserLoggedIn;
 }
