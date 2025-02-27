@@ -78,7 +78,7 @@ class Media
     private ?MediaType $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?string $posterPath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
