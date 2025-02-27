@@ -85,6 +85,9 @@ class Media
     #[Groups(['media_details'])]
     private ?string $backdropPath = null;
 
+    #[ORM\Column(nullable: true)]
+    private ?int $runtime = null;
+
     public function __construct()
     {
         $this->tmdbGenres = new ArrayCollection();
@@ -276,6 +279,18 @@ class Media
     public function setBackdropPath(?string $backdropPath): static
     {
         $this->backdropPath = $backdropPath;
+
+        return $this;
+    }
+
+    public function getRuntime(): ?int
+    {
+        return $this->runtime;
+    }
+
+    public function setRuntime(?int $runtime): static
+    {
+        $this->runtime = $runtime;
 
         return $this;
     }

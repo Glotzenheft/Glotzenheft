@@ -112,6 +112,7 @@ trait MediaDetailTrait
             ->setBackdropPath($result['backdrop_path'] ?? null)
             ->setType($type)
             ->setTmdbID($tmdbID)
+            ->setRuntime($result['runtime'] ?? null)
         ;
 
         foreach ($genreArray as $genre)
