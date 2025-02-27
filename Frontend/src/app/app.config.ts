@@ -15,6 +15,7 @@ import {
 } from '@angular/platform-browser';
 import { provideHttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
+import { ChartModule } from 'primeng/chart';
 
 export const appConfig: ApplicationConfig = {
   providers: [
@@ -29,5 +30,6 @@ export const appConfig: ApplicationConfig = {
     }),
     provideHttpClient(),
     MessageService,
+    ChartModule,
   ],
 };

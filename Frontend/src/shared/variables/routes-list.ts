@@ -60,7 +60,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
   },
   {
     // 8
-    description: 'Startseite',
+    description: 'Meine Übersicht',
     fullUrl: 'user',
     shortUrl: 'user',
     showInLinkList: false,
@@ -98,6 +98,13 @@ export const ROUTES_LIST: RoutesListItem[] = [
     description: 'Account löschen',
     fullUrl: 'user/delete-user',
     shortUrl: 'delete-user',
+    showInLinkList: false,
+  },
+  {
+    // 14
+    description: 'Aktivitäten',
+    fullUrl: 'user/activities',
+    shortUrl: 'activities',
     showInLinkList: false,
   },
 ];

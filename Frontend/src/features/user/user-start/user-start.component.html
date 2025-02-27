@@ -1,7 +1,32 @@
 <router-outlet />
 
 <div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
-  Container
+  <h1>Meine Übersicht</h1>
+
+  <p-select
+    [options]="diagramSelection"
+    optionLabel="name"
+    (onChange)="handleDiagramSelectionChange($event)"
+  />
+
+  <p-chart
+    *ngIf="
+      selectedDiagramType.name === 'Balkendiagramm' &&
+      chartSelectionCondition === true
+    "
+    type="bar"
+    [data]="lineDiagramData"
+    [options]="diagramOptions"
+  />
+  <p-chart
+    *ngIf="
+      selectedDiagramType.name === 'Kreisdiagramm' &&
+      chartSelectionCondition === false
+    "
+    type="pie"
+    [data]="pieChartData"
+    [options]="pieChartOptions"
+  />
 </div>
 
 <p-panel
