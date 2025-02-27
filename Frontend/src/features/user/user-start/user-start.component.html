@@ -1,12 +1,36 @@
 <router-outlet />
-<p-panel
-  header="Meine letzen Aktivitäten"
-  class="userPanel"
-  [toggleable]="true"
->
-  <p>Bla</p>
-</p-panel>
 
-<p-panel header="Meine Serien und Filme" class="userPanel" [toggleable]="true">
-  <p>Bla</p>
-</p-panel>
+<div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
+  <h1>Meine Übersicht</h1>
+
+  <div class="diagramSelection">
+    <p-select
+      [options]="diagramSelection"
+      optionLabel="name"
+      (onChange)="handleDiagramSelectionChange($event)"
+    />
+  </div>
+
+  <div class="barChartDIVWrapper">
+    <div
+      class="barChartDIV"
+      *ngIf="
+        selectedDiagramType.name === 'Balkendiagramm' &&
+        chartSelectionCondition === true
+      "
+    >
+      <p-chart type="bar" [data]="lineDiagramData" [options]="diagramOptions" />
+    </div>
+  </div>
+  <div
+    class="pieChartDIV"
+    *ngIf="
+      selectedDiagramType.name === 'Kreisdiagramm' &&
+      chartSelectionCondition === false
+    "
+  >
+    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
+  </div>
+</div>
+
+<div class="gapDIV"></div>
