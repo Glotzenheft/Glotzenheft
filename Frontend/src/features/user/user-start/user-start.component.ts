@@ -19,6 +19,7 @@ import {
 } from '../../../shared/interfaces/diagram-interfaces';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
+import { RatingModule } from 'primeng/rating';
 
 @Component({
   selector: 'app-user-start',
@@ -131,26 +132,6 @@ export class UserStartComponent implements OnInit {
             },
           ],
         };
-
-        // this.lineDiagramData = {
-        //   labels: ['Januar', 'Februar', 'März', 'April', 'Mai'],
-        //   datasets: [
-        //     {
-        //       label: 'Umsatz',
-        //       data: [65, 59, 80, 81, 56],
-        //       fill: false,
-        //       borderColor: '#42A5F5',
-        //       tension: 0.4,
-        //     },
-        //     {
-        //       label: 'Gewinn',
-        //       data: [28, 48, 40, 19, 86],
-        //       fill: false,
-        //       borderColor: '#FFA726',
-        //       tension: 0.4,
-        //     },
-        //   ],
-        // };
 
         this.pieChartData = {
           labels: ['mit Bewertung', 'ohne Bewertung'],

@@ -11,6 +11,12 @@ import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
 import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import { PanelModule } from 'primeng/panel';
+import { RatingModule } from 'primeng/rating';
+import { FormsModule } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
+import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
 
 @Component({
   selector: 'app-all-user-tracklists',
@@ -21,6 +27,12 @@ import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
     DialogModule,
     TableModule,
     AccordionModule,
+    PanelModule,
+    RatingModule,
+    FormsModule,
+    ButtonModule,
+    UpdateFilmTracklistComponent,
+    UpdateTracklistFormComponent,
   ],
   templateUrl: './all-user-tracklists.component.html',
   styleUrl: './all-user-tracklists.component.css',
@@ -30,10 +42,17 @@ export class AllUserTracklistsComponent implements OnInit {
   public posterPath: string = TMDB_POSTER_PATH;
   public isDialogVisible: boolean = false;
   public currentTracklist: Tracklist | null = null;
+  public tracklistStatusClass: string | null = null;
+  public tmdbPosterPath: string = TMDB_POSTER_PATH;
+  public visibility: number = 0;
 
   constructor(private mediaService: MediaService, private router: Router) {}
 
   ngOnInit(): void {
+    this.loadTracklists();
+  }
+
+  public loadTracklists = () => {
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
     if (!this.userTracklists$) {
@@ -48,7 +67,7 @@ export class AllUserTracklistsComponent implements OnInit {
         }
       },
     });
-  }
+  };
 
   public navigateToDetailspage = (mediaID: number, mediaType: string) => {
     let url: string =
@@ -57,5 +76,49 @@ export class AllUserTracklistsComponent implements OnInit {
         : `${ROUTES_LIST[6].fullUrl}/${mediaID}`;
 
     this.router.navigateByUrl(url);
+  };
+
+  public setTracklistStatus = (status: string): string => {
+    switch (status) {
+      case 'watching':
+        this.tracklistStatusClass = 'statusWatching';
+        return 'statusWatching';
+
+      case 'pausing':
+        this.tracklistStatusClass = 'statusPausing';
+        return 'statusPausing';
+
+      case 'dropped':
+        this.tracklistStatusClass = 'statusDropped';
+        return 'statusDropped';
+
+      case 'rewatching':
+        this.tracklistStatusClass = 'statusRewatching';
+        return 'statusRewatching';
+
+      case 'plan to watch':
+        this.tracklistStatusClass = 'statusPlanToWatch';
+        return 'statusPlanToWatch';
+
+      case 'completed':
+        this.tracklistStatusClass = 'statusCompleted';
+        return 'statusCompleted';
+    }
+    return '';
+  };
+
+  public editTracklist = (tracklist: Tracklist, isMovie: boolean) => {
+    this.currentTracklist = tracklist;
+    this.visibility = isMovie ? 1 : 2;
+  };
+
+  public refreshPage = (isCancelling: boolean) => {
+    // refreshing page
+    this.visibility = 0;
+
+    if (!isCancelling) {
+      // refresh page if user has updated tracklist
+      this.loadTracklists();
+    }
   };
 }

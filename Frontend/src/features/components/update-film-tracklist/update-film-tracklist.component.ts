@@ -23,7 +23,10 @@ import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
 import { MediaService } from '../../../service/media/media.service';
-import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import {
+  SeasonTracklist,
+  Tracklist,
+} from '../../../shared/interfaces/tracklist-interfaces';
 import {
   Film,
   UpdateTracklistRequest,
@@ -54,7 +57,6 @@ export class UpdateFilmTracklistComponent implements OnInit {
   // input variables
   public inpTracklist: InputSignal<SeasonTracklist> =
     input.required<SeasonTracklist>();
-  public inpFilmData: InputSignal<Film> = input.required<Film>();
 
   // output variables
   @Output() cancelTracklistForm: EventEmitter<number> =
