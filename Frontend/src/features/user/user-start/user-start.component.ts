@@ -127,7 +127,7 @@ export class UserStartComponent implements OnInit {
               backgroundColor: '#059669',
               borderColor: '#059669',
               fill: true,
-              tension: 0.4,
+              tension: 0.2,
             },
           ],
         };
@@ -172,7 +172,6 @@ export class UserStartComponent implements OnInit {
           responsive: true,
           scales: {
             x: { title: { display: true, text: 'Bewertung' } },
-            y: null,
           },
         };
 

@@ -1,13 +1,60 @@
-.diagrammDIV {
-  background-color: rgba(255, 255, 255, 0.8);
-  border-radius: var(--border--radius);
+@media (max-width: 850px) {
+  .diagrammDIV {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border--radius);
 
-  padding-left: calc(0.5 * var(--padding--left-right));
-  padding-right: calc(0.5 * var(--padding--left-right));
-  padding-top: var(--padding--top-bottom);
-  padding-bottom: var(--padding--top-bottom);
+    padding-left: calc(0.5 * var(--padding--left-right));
+    padding-right: calc(0.5 * var(--padding--left-right));
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    box-shadow: var(--box--shadow-button);
+
+    height: 30rem;
+  }
+
+  .diagramSelection {
+    margin-bottom: 4rem;
+  }
+
+  .diagrammDIV h1 {
+    color: black;
+  }
+  .gapDIV {
+    height: 4rem;
+  }
+
+  .barChartDIVWrapper {
+    width: 100%;
+    overflow: auto;
+  }
+  .barChartDIV {
+    width: 30rem;
+  }
 }
 
-.diagrammDIV h1 {
-  color: black;
+@media (min-width: 850px) {
+  .diagrammDIV {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border--radius);
+
+    padding-left: calc(0.5 * var(--padding--left-right));
+    padding-right: calc(0.5 * var(--padding--left-right));
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    box-shadow: var(--box--shadow-button);
+    width: 100%;
+  }
+
+  .diagrammDIV h1 {
+    color: black;
+  }
+  .gapDIV {
+    height: 4rem;
+  }
+
+  .pieChartDIV {
+    width: 50%;
+  }
 }

@@ -3,46 +3,34 @@
 <div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
   <h1>Meine Übersicht</h1>
 
-  <p-select
-    [options]="diagramSelection"
-    optionLabel="name"
-    (onChange)="handleDiagramSelectionChange($event)"
-  />
+  <div class="diagramSelection">
+    <p-select
+      [options]="diagramSelection"
+      optionLabel="name"
+      (onChange)="handleDiagramSelectionChange($event)"
+    />
+  </div>
 
-  <p-chart
-    *ngIf="
-      selectedDiagramType.name === 'Balkendiagramm' &&
-      chartSelectionCondition === true
-    "
-    type="bar"
-    [data]="lineDiagramData"
-    [options]="diagramOptions"
-  />
-  <p-chart
+  <div class="barChartDIVWrapper">
+    <div
+      class="barChartDIV"
+      *ngIf="
+        selectedDiagramType.name === 'Balkendiagramm' &&
+        chartSelectionCondition === true
+      "
+    >
+      <p-chart type="bar" [data]="lineDiagramData" [options]="diagramOptions" />
+    </div>
+  </div>
+  <div
+    class="pieChartDIV"
     *ngIf="
       selectedDiagramType.name === 'Kreisdiagramm' &&
       chartSelectionCondition === false
     "
-    type="pie"
-    [data]="pieChartData"
-    [options]="pieChartOptions"
-  />
+  >
+    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
+  </div>
 </div>
 
-<p-panel
-  header="Meine letzen Aktivitäten"
-  class="userPanel"
-  [toggleable]="true"
-  [collapsed]="true"
->
-  <p>Bla</p>
-</p-panel>
-
-<p-panel
-  header="Meine Serien und Filme"
-  class="userPanel"
-  [toggleable]="true"
-  [collapsed]="true"
->
-  <p>Bla</p>
-</p-panel>
+<div class="gapDIV"></div>
