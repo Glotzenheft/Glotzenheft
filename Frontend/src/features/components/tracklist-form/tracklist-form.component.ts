@@ -37,6 +37,7 @@ export class TracklistFormComponent implements OnInit {
   public isNewTracklistOfTypeTV: InputSignal<boolean> =
     input.required<boolean>();
   public mediaID: InputSignal<number> = input.required<number>();
+  public inpTVName: InputSignal<string> = input.required<string>();
 
   // output variables
   @Output() cancelTracklistFormSubmission: EventEmitter<boolean> =

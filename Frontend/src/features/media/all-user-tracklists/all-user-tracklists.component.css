@@ -32,25 +32,26 @@ img {
   justify-content: center;
   align-items: center;
   border-radius: var(--border--radius);
+  color: white;
 }
 
 .statusWatching {
-  background-color: yellow;
+  background-color: #3e9c96;
 }
 .statusPausing {
-  background-color: gray;
+  background-color: #6b8e23;
 }
 .statusDropped {
-  background-color: red;
+  background-color: #d32f2f;
 }
 .statusRewatching {
-  background-color: pink;
+  background-color: #028090;
 }
 .statusPlanToWatch {
-  background-color: blue;
+  background-color: #facc15;
 }
 .statusCompleted {
-  background-color: greenyellow;
+  background-color: #059669;
 }
 
 .tracklistPanelDIV {

@@ -51,6 +51,7 @@ export class CreateNewTracklistComponent implements OnInit {
   public mediaID: InputSignal<number> = input.required<number>();
   public inputSeason: InputSignal<TVSeasonWithTracklist> =
     input.required<TVSeasonWithTracklist>();
+  public inpTVName: InputSignal<string> = input.required<string>();
 
   // output variables
   @Output() cancelTracklistForm: EventEmitter<boolean> =
@@ -78,9 +79,7 @@ export class CreateNewTracklistComponent implements OnInit {
   ngOnInit(): void {
     this.trackListForm = this.formBuilder.group({
       trackListName: [
-        `${this.inputSeason().name} - Staffel ${
-          this.inputSeason().seasonNumber
-        }`,
+        `${this.inpTVName()} - Staffel ${this.inputSeason().seasonNumber}`,
         Validators.required,
       ],
       status: ['', Validators.required],

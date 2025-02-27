@@ -3,7 +3,7 @@
 >
   <p-panel
     *ngFor="let tracklist of userTracklists"
-    [header]="tracklist.tracklistName"
+    [header]="tracklist.tracklistName + ' [' + tracklist.status + ']'"
     [toggleable]="true"
     [collapsed]="true"
   >
@@ -24,22 +24,21 @@
           <p>Status: {{ tracklist.status }}</p>
         </div>
 
-        <p>
+        <p *ngIf="tracklist.startDate">
           Startdatum:
-          {{
-            tracklist.startDate
-              ? (tracklist.status | dateFormatting)
-              : "nicht vorhanden"
-          }}
+          {{ tracklist.startDate | dateFormatting }}
         </p>
-        <p>
+        <p *ngIf="!tracklist.startDate">
+          Startdatum:
+          <i>nicht vorhanden</i>
+        </p>
+
+        <p *ngIf="tracklist.finishDate">
           Enddatum:
-          {{
-            tracklist.finishDate
-              ? (tracklist.finishDate | dateFormatting)
-              : "nicht vorhanden"
-          }}
+          {{ tracklist.finishDate | dateFormatting }}
         </p>
+        <p *ngIf="!tracklist.finishDate">Enddatum: <i>nicht vorhanden</i></p>
+
         <div class="ratingDIV">
           <p>Bewertung:</p>
           <p-rating
