@@ -21,12 +21,14 @@ import {
   ROUTE_DELETE_USER_ACCOUNT,
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
+  ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
 } from '../../shared/variables/api-routes';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
 import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
+import { WatchTimeStatistic } from '../../shared/statistic-interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -232,7 +234,7 @@ export class UserService {
   };
 
   /**
-   * Function for getting the username if the user is logged in 
+   * Function for getting the username if the user is logged in
    * @returns string | null
    */
   public getUserName = (): string | null => {
@@ -254,4 +256,18 @@ export class UserService {
 
     return null;
   };
+
+  public getUserStatisticWatchTime =
+    (): Observable<WatchTimeStatistic> | null => {
+      const header = this.mediaService.getHeader();
+
+      if (!header) {
+        return null;
+      }
+
+      return this.http.get<WatchTimeStatistic>(
+        ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+        { headers: header }
+      );
+    };
 }

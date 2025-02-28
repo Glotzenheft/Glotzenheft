@@ -26,5 +26,5 @@ export interface BarDiagramDataset {
 
 export interface BarDiagram {
   labels: string[];
-  dataset: BarDiagramDataset[];
+  datasets: BarDiagramDataset[];
 }

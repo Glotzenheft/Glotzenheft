@@ -83,3 +83,7 @@ export const ROUTE_DELETE_TRACKLIST_EPISODE: string[] = [
   '&tracklist_season_id=',
   '&tracklist_episode_id=',
 ];
+
+// api routes for statistics ---------------------------------
+export const ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY: string =
+  'https://127.0.0.1:8000/api/statistic/watchtime-per-day';
