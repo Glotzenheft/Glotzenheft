@@ -59,6 +59,8 @@ trait RequestTrait
 
         $statisticPeriodEndDate = $request->query->get('period_end_date') ?: null;
 
+        $userActivityPage = filter_var($request->query->get('user_activity_page'), FILTER_VALIDATE_INT) ?: null;
+
         return [
             'user_id' => $userID,
             'security_question' => $userSecurityQuestion,
@@ -79,6 +81,7 @@ trait RequestTrait
             'watch_date' => $watchDate,
             'period_start_date' => $statisticPeriodStartDate,
             'period_end_date' => $statisticPeriodEndDate,
+            'user_activity_page' => $userActivityPage,
         ];
     }
 
@@ -87,6 +90,14 @@ trait RequestTrait
         return [
             'error' => 'Invalid request',
             'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnDatabaseError(): array
+    {
+        return [
+            'error' => 'Database error occurred.',
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR
         ];
     }
 
