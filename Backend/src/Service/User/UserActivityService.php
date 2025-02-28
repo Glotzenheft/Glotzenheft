@@ -1,0 +1,107 @@
+<?php declare(strict_types=1);
+
+namespace App\Service\User;
+
+use App\Entity\User;
+use App\Service\RequestTrait;
+use Doctrine\DBAL\Exception;
+use PDO;
+use Symfony\Component\HttpFoundation\Request;
+
+class UserActivityService
+{
+    use RequestTrait;
+
+    /**
+     * This function fetches and returns a paginated list of user activities from the database.
+     * Activities include:
+     *  - Watched TV show episodes.
+     *  - Completed movies.
+     *
+     * @param Request $request
+     * @return array
+     */
+    public function getUserActivities(Request $request): array
+    {
+        $this->data = $this->handleRequest($request);
+
+        $page = $this->data['user_activity_page'] ?? 1;
+        $limit = 50;
+        $offset = ($page - 1) * $limit;
+
+        $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
+        if (!$user instanceof User)
+        {
+            return $this->returnUserNotFound();
+        }
+
+        $userId = $user->getId();
+
+        $sql =<<<SQL
+(SELECT 
+    'episode' AS type, 
+    te.watch_date AS date, 
+    m.id AS mediaID,
+    m.name AS mediaTitle,
+    s.id AS seasonID,
+    s.season_number AS seasonNumber, 
+    e.id AS episodeID,
+    e.episode_number AS episodeNumber,
+    t.id AS tracklistID,
+    t.tracklist_name AS tracklistName,
+    ts.id AS tracklistSeasinID,
+    te.id AS tracklistEpisodeID,
+    s.poster_path AS posterPath,
+    e.still_path AS stillPath
+FROM tracklist_episode te
+JOIN episode e ON te.episode_id = e.id
+JOIN season s ON e.season_id = s.id
+JOIN media m ON s.media_id = m.id
+JOIN tracklist_season ts ON te.tracklist_season_id = ts.id
+JOIN tracklist t ON ts.tracklist_id = t.id
+WHERE t.user_id = :userId
+AND te.watch_date IS NOT NULL)
+
+UNION ALL
+
+(SELECT 
+    'movie' AS type, 
+    t.finish_date AS date, 
+    m.id AS mediaID,
+    m.name AS mediaTitle, 
+    NULL AS seasonID,
+    NULL AS seasonNumber, 
+    NULL AS episodeID,
+    NULL AS episodeNumber,
+    t.id AS tracklistID,
+    t.tracklist_name AS tracklistName,
+    NULL AS tracklistSeasinID,
+    NULL AS tracklistEpisodeID,
+    m.poster_path AS posterPath,
+    NULL AS stillPath
+FROM tracklist t
+JOIN media m ON t.media_id = m.id
+WHERE t.user_id = :userId 
+AND t.finish_date IS NOT NULL
+AND m.type = 'movie')
+
+ORDER BY date DESC
+LIMIT :limit OFFSET :offset
+SQL;
+
+        try
+        {
+            $stmt = $this->entityManager->getConnection()->prepare($sql);
+            $stmt->bindValue('userId', $userId, PDO::PARAM_INT);
+            $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
+            $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
+
+            $result = $stmt->executeQuery();
+            return $result->fetchAllAssociative();
+        }
+        catch (Exception $e)
+        {
+            return $this->returnDatabaseError();
+        }
+    }
+}
