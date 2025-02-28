@@ -78,6 +78,11 @@ export class AllUserTracklistsComponent implements OnInit {
     this.router.navigateByUrl(url);
   };
 
+  /**
+   * Function for settting the CSS class for the current status of the tracklist.
+   * @param status string
+   * @returns string
+   */
   public setTracklistStatus = (status: string): string => {
     switch (status) {
       case 'watching':
@@ -107,11 +112,22 @@ export class AllUserTracklistsComponent implements OnInit {
     return '';
   };
 
+  /**
+   * Function for switching them visible component to the editing tracklist interface.
+   * @param tracklist Tracklist
+   * @param isMovie boolean
+   * @returns void
+   */
   public editTracklist = (tracklist: Tracklist, isMovie: boolean) => {
     this.currentTracklist = tracklist;
     this.visibility = isMovie ? 1 : 2;
   };
 
+  /**
+   * Function returning the page to the tracklist list page.
+   * @param isCancelling boolean
+   * @return void
+   */
   public refreshPage = (isCancelling: boolean) => {
     // refreshing page
     this.visibility = 0;
