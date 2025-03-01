@@ -1,0 +1,15 @@
+.pagination {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+.gapDIV {
+  height: 5rem;
+  width: 100%;
+}
+
+img {
+  height: 6rem;
+  border: 0.2rem solid black;
+}

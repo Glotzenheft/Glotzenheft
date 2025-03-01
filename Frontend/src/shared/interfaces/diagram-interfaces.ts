@@ -1,4 +1,5 @@
 // interfaces for line diagram chart
+
 export interface LineDiagramDataset {
   label: string;
   data: number[];
@@ -9,6 +10,9 @@ export interface LineDiagramDataset {
   backgroundColor: string;
 }
 
+/**
+ * Interface for the data structure for a line chart diagram.
+ */
 export interface LineDiagram {
   labels: string[];
   datasets: LineDiagramDataset[];
@@ -24,7 +28,10 @@ export interface BarDiagramDataset {
   tension: number;
 }
 
+/**
+ * Interface for the data structure for a bar chart diagram.
+ */
 export interface BarDiagram {
   labels: string[];
-  dataset: BarDiagramDataset[];
+  datasets: BarDiagramDataset[];
 }

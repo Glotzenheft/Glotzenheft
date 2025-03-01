@@ -1,1 +1,62 @@
-<p>activities-page works!</p>
+<div class="pagination">
+  <p-button
+    icon="pi pi-angle-left"
+    pTooltip="vorherige Seite"
+    [rounded]="true"
+    [raised]="true"
+    (onClick)="changeToPreviousPage()"
+    [disabled]="isLeftButtonDisabled"
+  />
+
+  <p>aktuelle Seite: {{ this.currentPage }}</p>
+  <p-button
+    icon="pi pi-angle-right"
+    pTooltip="nächste Seite"
+    [rounded]="true"
+    [raised]="true"
+    (onClick)="changeToNextPage()"
+    [disabled]="isRightButtonDisabled"
+  />
+</div>
+
+<div
+  *ngIf="userActivitiesRequest$ | async as userActivitiesRequest"
+  class="userActivitiesTable"
+>
+  <div class="userActivitesTableDIV">
+    <p-table
+      [value]="userActivitiesRequest"
+      stripedRows
+      [loading]="isTableLoading"
+    >
+      <ng-template #header>
+        <tr>
+          <th>Bild</th>
+          <th>Datum</th>
+          <th>Episodennummer</th>
+          <th>Medienname</th>
+          <th>Tracklist-Name</th>
+          <th>Medientyp</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-tracklist>
+        <tr>
+          <td *ngIf="getPicture(tracklist)">
+            <img
+              [src]="posterPath + getPicture(tracklist)"
+              [alt]="'Poster für ' + tracklist.mediaTitle"
+            />
+          </td>
+          <td *ngIf="!getPicture(tracklist)"><i>kein Bild vorhanden</i></td>
+          <td *ngIf=""></td>
+          <td>{{ tracklist.date | dateFormatting }}</td>
+          <td>{{ tracklist.episodeNumber }}</td>
+          <td>{{ tracklist.mediaTitle }}</td>
+          <td>{{ tracklist.tracklistName }}</td>
+          <td>{{ tracklist.type === "movie" ? "Film" : "Folge" }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>
+<div class="gapDIV"></div>

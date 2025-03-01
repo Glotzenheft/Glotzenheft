@@ -38,6 +38,7 @@ export interface Tracklist {
   media: {
     id: number;
     type: string;
+    posterPath: string;
   };
   tracklistSeasons: TracklistSeason[];
 }

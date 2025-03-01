@@ -254,6 +254,7 @@ export class SeasonPageComponent implements OnInit {
   };
 
   public refreshPage = () => {
+    this.currentSeason = null;
     this.setVisibility(0);
     this.loadData();
   };
