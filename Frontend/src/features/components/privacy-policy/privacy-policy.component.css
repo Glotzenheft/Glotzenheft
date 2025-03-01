@@ -4,3 +4,14 @@
   padding-top: var(--padding--top-bottom);
   padding-bottom: var(--padding--top-bottom);
 }
+
+.privacyPolicy ul {
+  list-style: circle;
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
+}
+
+p,
+article {
+  text-align: justify;
+}
