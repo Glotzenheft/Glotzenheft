@@ -51,7 +51,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   // variables for pagination
   public currentPage: number = 1; // >= 1
   public nextPagesLimit: number | null = null; // the limit for the next page button => for disabling the button
-  public isNextPageButtonDisabled: boolean = false;
+  public isNextPageButtonDisabled: boolean = true;
   public isPrevPageButtonDisabled: boolean = true;
 
   constructor(
@@ -63,8 +63,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   ) {}
 
   ngOnInit(): void {
-    // this.loadMultiSearchResults(1);
-
     this.searchSubscription = this.searchService.searchTerm$.subscribe({
       next: (searchTerm) => {
         if (!searchTerm.trim()) {
@@ -82,7 +80,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         // resetting page limit and current page
         this.nextPagesLimit = null;
         this.currentPage = 1;
-        console.log('h');
 
         this.isLoading = true;
         this.loadMultiSearchResults(1, this.currentSearchTerm);
@@ -105,6 +102,11 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   }
 
   public loadMultiSearchResults = (page: number, searchTerm: string) => {
+    // if (!this.currentSearchTerm.trim()) {
+    //   this.isNextPageButtonDisabled = true;
+    //   this.isPrevPageButtonDisabled = true;
+    // }
+
     this.results$ = this.mediaService.getMultiSearchResults(
       searchTerm,
       this.currentPage
@@ -121,7 +123,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
         // logic for pagination ----------------------------------------------------------------
         this.currentPage = page;
-        console.log(this.currentPage);
 
         if (this.currentPage < 2) {
           // disable prev button
