@@ -11,7 +11,6 @@ import { SeasonEpisode } from '../../../shared/interfaces/media-interfaces';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
 import { FormGroup } from '@angular/forms';
 import {
   SeasonTracklist,
@@ -39,17 +38,17 @@ export class EpisodeListComponent {
   // input variables
   public episodeList: InputSignal<SeasonEpisode[]> =
     input.required<SeasonEpisode[]>();
-  public inpSelectedTracklist: InputSignal<SeasonTracklist> =
-    input.required<SeasonTracklist>();
-  public tracklistSelectionForm: InputSignal<FormGroup<any>> =
-    input.required<FormGroup<any>>();
+  public inpSelectedTracklist: InputSignal<SeasonTracklist | null> =
+    input.required<SeasonTracklist | null>();
+  public tracklistSelectionForm: InputSignal<FormGroup<any> | null> =
+    input.required<FormGroup<any> | null>();
   public selectedSeason: InputSignal<TVSeasonWithTracklist | null> =
     input.required<TVSeasonWithTracklist | null>();
   public tracklistsOfSeason: InputSignal<SeasonTracklist[]> =
     input.required<SeasonTracklist[]>();
+  public inpIsWithTracklist: InputSignal<boolean> = input.required<boolean>();
 
-
-    public posterPath: string = TMDB_POSTER_PATH
+  public posterPath: string = TMDB_POSTER_PATH;
 
   public currentEpisodeForDialog: SeasonEpisode | null = null;
   public isEpisodeDialogVisible: boolean = false;

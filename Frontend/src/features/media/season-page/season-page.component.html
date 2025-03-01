@@ -138,18 +138,33 @@
                     ? tracklistSelectionForm.get('selectedTracklist')?.value
                     : null
                 "
+                [inpIsWithTracklist]="true"
                 (setEpisode)="setCurrentEpisode($event, false)"
                 (setEpisodeForEditing)="setCurrentEpisode($event, true)"
               />
 
-              <app-episode-list-without-tracklist
+              <app-episode-list
+                *ngIf="
+                  !tracklistSelectionForm.get('selectedTracklist')?.value ||
+                  tracklistSelectionForm.get('selectedTracklist')?.value ===
+                    EMPTY_TRACKLIST
+                "
+                [episodeList]="season.episodes"
+                [tracklistSelectionForm]="tracklistSelectionForm"
+                [selectedSeason]="null"
+                [tracklistsOfSeason]="[]"
+                [inpSelectedTracklist]="null"
+                [inpIsWithTracklist]="false"
+              />
+
+              <!-- <app-episode-list-without-tracklist
                 *ngIf="
                   !tracklistSelectionForm.get('selectedTracklist')?.value ||
                   tracklistSelectionForm.get('selectedTracklist')?.value ===
                     EMPTY_TRACKLIST
                 "
                 [inpEpisodeList]="season.episodes"
-              />
+              /> -->
             </p-accordion-content>
           </p-accordion-panel>
         </p-accordion>
