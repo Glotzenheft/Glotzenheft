@@ -12,6 +12,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
 import { StringService } from '../../../../service/string/string.service';
+import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
 
 @Component({
   selector: 'app-episode-list-without-tracklist',
@@ -37,6 +38,7 @@ export class EpisodeListWithoutTracklistComponent {
   // other variables
   public currentEpisodeForDialog: SeasonEpisode | null = null;
   public isEpisodeDialogVisible: boolean = false;
+  public posterPath: string = TMDB_POSTER_PATH;
 
   // functions ----------------------------------------------
 
@@ -48,6 +50,7 @@ export class EpisodeListWithoutTracklistComponent {
 
   public openDialog = (currentEpisode: SeasonEpisode) => {
     this.currentEpisodeForDialog = currentEpisode;
+    console.log(currentEpisode);
     this.isEpisodeDialogVisible = true;
   };
 }

@@ -26,6 +26,10 @@
   color: white;
 }
 
+.episodeDIV div {
+  width: 100%;
+}
+
 .episodeDIV p {
   font-weight: bolder;
 }
@@ -53,6 +57,10 @@
   padding-right: calc(0.5 * var(--padding--left-right));
 }
 
+.episodeInTracklistDIV div {
+  width: 100%;
+}
+
 .episodeInTracklistDIV:hover {
   cursor: pointer;
   background-color: black;
@@ -63,6 +71,21 @@
   font-weight: bolder;
 }
 
-.episodeInTracklistDIV {
+.episodePosterDIV {
   width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+@media (max-width: 560px) {
+  .episodeDialogDIV img {
+    height: 8rem;
+  }
+}
+
+@media (min-width: 560px) {
+  .episodeDialogDIV img {
+    height: 12rem;
+  }
 }

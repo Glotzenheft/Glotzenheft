@@ -21,6 +21,7 @@ import {
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { StringService } from '../../../service/string/string.service';
+import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 
 @Component({
   selector: 'app-episode-list',
@@ -46,6 +47,9 @@ export class EpisodeListComponent {
     input.required<TVSeasonWithTracklist | null>();
   public tracklistsOfSeason: InputSignal<SeasonTracklist[]> =
     input.required<SeasonTracklist[]>();
+
+
+    public posterPath: string = TMDB_POSTER_PATH
 
   public currentEpisodeForDialog: SeasonEpisode | null = null;
   public isEpisodeDialogVisible: boolean = false;

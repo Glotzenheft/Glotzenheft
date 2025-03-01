@@ -39,6 +39,16 @@
   [style]="{ width: '80%', height: 'auto' }"
 >
   <div class="episodeDialogDIV">
+    <div class="episodePosterDIV">
+      <img
+        *ngIf="currentEpisodeForDialog.stillPath"
+        [src]="posterPath + currentEpisodeForDialog.stillPath"
+        [alt]="'Poster für ' + currentEpisodeForDialog.name"
+      />
+      <p *ngIf="!currentEpisodeForDialog.stillPath">
+        <i>kein Poster vorhanden</i>
+      </p>
+    </div>
     <p>{{ currentEpisodeForDialog.overview }}</p>
     <p>Ausstrahlung: {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
   </div>

@@ -26,10 +26,33 @@
   color: white;
 }
 
+.episodePosterDIV {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .episodeDIV p {
   font-weight: bolder;
 }
 
+.episodeDIV div {
+  width: 100%;
+}
+
 .episodeDialogDIV {
   width: 100%;
+}
+
+@media (max-width: 560px) {
+  .episodeDialogDIV img {
+    height: 8rem;
+  }
+}
+
+@media (min-width: 560px) {
+  .episodeDialogDIV img {
+    height: 12rem;
+  }
 }
