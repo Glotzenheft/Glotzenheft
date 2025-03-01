@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, signal, WritableSignal } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { UserService } from '../../../service/user/user.service';
@@ -56,6 +56,8 @@ export class ActivitiesPageComponent implements OnInit {
 
     this.userActivitiesRequest$?.subscribe({
       next: (userActivities: UserActivity[]) => {
+        this.currentPage = page;
+
         this.currentPage = page;
 
         if (this.currentPage === 1) {
