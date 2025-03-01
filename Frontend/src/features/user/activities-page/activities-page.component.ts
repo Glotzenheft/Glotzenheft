@@ -56,11 +56,12 @@ export class ActivitiesPageComponent implements OnInit {
 
     this.userActivitiesRequest$?.subscribe({
       next: (userActivities: UserActivity[]) => {
+        // logic for pagination -------------------------------------------------
         this.currentPage = page;
 
-        this.currentPage = page;
+        // this.currentPage = page;
 
-        if (this.currentPage === 1) {
+        if (this.currentPage < 2) {
           this.isLeftButtonDisabled = true;
         }
 
@@ -78,6 +79,9 @@ export class ActivitiesPageComponent implements OnInit {
             this.rightButtonPagesLimit = page;
             this.loadUserActivities(this.currentPage);
             return;
+          } else if (userActivities.length < 2 && this.currentPage < 2) {
+            this.isLeftButtonDisabled = true;
+            this.isRightButtonDisabled = true;
           } else if (this.currentPage === 1) {
             this.isRightButtonDisabled = false;
             this.isLeftButtonDisabled = true;
