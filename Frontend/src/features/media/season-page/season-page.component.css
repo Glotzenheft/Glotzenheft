@@ -1,4 +1,4 @@
-@media (max-width: 700px) {
+@media (max-width: 950px) {
   img {
     height: 100%;
   }
@@ -25,7 +25,7 @@
     width: 100%;
     padding-left: var(--padding--left-right);
     border-left: 0.1rem solid white;
-    height: 30rem;
+    height: 20rem;
   }
 
   .seasonMetaPicture {
@@ -39,7 +39,8 @@
 
   .seasonWrapper {
     width: 100%;
-    height: 34rem;
+    height: 28rem;
+    padding-top: var(--padding--top-bottom);
   }
 
   .seasonWrapper .seasonMeta {
@@ -54,7 +55,7 @@
 
   .seasonWrapper .seasonPoster {
     width: 100%;
-    height: 30%;
+    height: 40%;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -78,20 +79,26 @@
   }
 }
 
-@media (min-width: 700px) {
+@media (min-width: 950px) {
   img {
     height: 100%;
   }
+
+  .headingDIV {
+    height: 6rem;
+  }
   .seasonMeta {
     width: 100%;
-    height: 26rem;
+    height: 20rem;
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
   }
 
   .seasonPictureWrapper {
-    height: 30rem;
+    height: 100%;
+    display: flex;
+    align-items: center;
   }
 
   .seasonMetaPicture {
@@ -108,7 +115,7 @@
   .seasonMetaContent {
     width: calc(100% - 13rem);
 
-    height: 40rem;
+    height: 20rem;
   }
   .seasonMetaContent div {
     border-left: 0.1rem solid white;
@@ -121,14 +128,14 @@
 
   .seasonWrapper {
     width: 100%;
-    height: 30rem;
+    height: 20rem;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .seasonWrapper .seasonMeta {
-    height: 100%;
+    height: auto;
     width: 70%;
   }
 
@@ -137,8 +144,8 @@
   }
 
   .seasonWrapper .seasonPoster {
-    width: 30%;
-    height: 50%;
+    width: 20%;
+    height: 56%;
   }
 
   .seasonWrapper .seasonPoster img {
@@ -166,5 +173,5 @@
 
 .descriptionP {
   overflow-y: auto;
-  height: 20rem;
+  height: 10rem;
 }

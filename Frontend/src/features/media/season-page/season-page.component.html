@@ -27,6 +27,9 @@
   </div>
 
   <div *ngIf="seasonData$ | async as seasonData">
+    <div class="headingDIV">
+      <h1>{{ seasonData.media.name }}</h1>
+    </div>
     <div class="seasonMeta">
       <div class="seasonPictureWrapper">
         <div class="seasonMetaPicture">
@@ -82,7 +85,7 @@
                 </div>
                 <div class="seasonMeta">
                   <div>
-                    <p *ngIf="season.overview">
+                    <p *ngIf="season.overview" class="descriptionP">
                       Beschreibung: <br />
                       {{ season.overview }}
                     </p>
