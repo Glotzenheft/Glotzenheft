@@ -5,6 +5,11 @@
 }
 
 .gapDIV {
-  height: 10rem;
+  height: 5rem;
   width: 100%;
+}
+
+img {
+  height: 6rem;
+  border: 0.2rem solid black;
 }

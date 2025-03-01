@@ -8,6 +8,7 @@ import { UserActivity } from '../../../shared/interfaces/user-interfaces';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
+import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 
 @Component({
   selector: 'app-activities-page',
@@ -34,6 +35,8 @@ export class ActivitiesPageComponent implements OnInit {
 
   public isTableLoading: boolean = false;
   public isError: boolean = false;
+
+  public posterPath: string = TMDB_POSTER_PATH;
 
   constructor(
     private userService: UserService,
@@ -136,5 +139,17 @@ export class ActivitiesPageComponent implements OnInit {
 
     this.currentPage -= 1;
     this.loadUserActivities(this.currentPage);
+  };
+
+  public getPicture = (currentActivity: UserActivity): string | null => {
+    if (!currentActivity.stillPath && !currentActivity.posterPath) {
+      return null;
+    }
+
+    if (currentActivity.type === 'movie') {
+      return currentActivity.posterPath;
+    } else {
+      return currentActivity.stillPath;
+    }
   };
 }
