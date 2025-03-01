@@ -142,13 +142,7 @@ export class FilmPageComponent implements OnInit {
     );
   };
 
-  // navigation
-  public navigateToMultiSearch = () => {
-    this.navigationService.navigateToMultiSearch();
-  };
-
   // dialog
-
   public setVisibilityStatus = (status: number) => {
     this.visibilityStatus = status;
   };

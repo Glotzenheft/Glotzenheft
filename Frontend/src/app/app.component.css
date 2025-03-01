@@ -5,7 +5,6 @@
     margin: 0;
     padding: 0;
     /* overflow: hidden; */
-
     background: linear-gradient(
       var(--content-background-color),
       var(--content-background-color2)

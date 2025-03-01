@@ -1,12 +1,4 @@
 <ng-container *ngIf="isTracklistFormVisible === 0">
-  <div class="backButtonDIV">
-    <p-button
-      label="zurück zur Suche"
-      (onClick)="navigateToMultiSearch()"
-      severity="secondary"
-      icon="pi pi-arrow-left"
-    />
-  </div>
   <div *ngIf="hasError">
     <p-panel header="Fehler beim Laden der Seite" class="error">
       <p>

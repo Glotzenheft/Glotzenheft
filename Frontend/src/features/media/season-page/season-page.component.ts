@@ -196,10 +196,6 @@ export class SeasonPageComponent implements OnInit {
     this.isTracklistFormVisible = 1;
   };
 
-  public navigateToMultiSearch = () => {
-    this.navigationService.navigateToMultiSearch();
-  };
-
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);
 
