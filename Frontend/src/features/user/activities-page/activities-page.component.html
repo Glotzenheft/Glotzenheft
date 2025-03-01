@@ -1,1 +1,52 @@
-<p>activities-page works!</p>
+<div class="pagination">
+  <p-button
+    icon="pi pi-angle-left"
+    pTooltip="vorherige Seite"
+    [rounded]="true"
+    [raised]="true"
+    (onClick)="changeToPreviousPage()"
+    [disabled]="isLeftButtonDisabled"
+  />
+
+  <p>aktuelle Seite: {{ this.currentPage }}</p>
+  <p-button
+    icon="pi pi-angle-right"
+    pTooltip="nächste Seite"
+    [rounded]="true"
+    [raised]="true"
+    (onClick)="changeToNextPage()"
+    [disabled]="isRightButtonDisabled"
+  />
+</div>
+
+<div
+  *ngIf="userActivitiesRequest$ | async as userActivitiesRequest"
+  class="userActivitiesTable"
+>
+  <div class="userActivitesTableDIV">
+    <p-table
+      [value]="userActivitiesRequest"
+      stripedRows
+      [loading]="isTableLoading"
+    >
+      <ng-template #header>
+        <tr>
+          <th>Datum</th>
+          <th>Episodennummer</th>
+          <th>Medienname</th>
+          <th>Tracklist-Name</th>
+          <th>Medientyp</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-tracklist>
+        <tr>
+          <td>{{ tracklist.date | dateFormatting }}</td>
+          <td>{{ tracklist.episodeNumber }}</td>
+          <td>{{ tracklist.mediaTitle }}</td>
+          <td>{{ tracklist.tracklistName }}</td>
+          <td>{{ tracklist.type }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

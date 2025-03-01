@@ -87,3 +87,6 @@ export const ROUTE_DELETE_TRACKLIST_EPISODE: string[] = [
 // api routes for statistics ---------------------------------
 export const ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY: string =
   'https://127.0.0.1:8000/api/statistic/watchtime-per-day';
+
+export const ROUTE_USER_ACTIVITIES: string =
+  'https://127.0.0.1:8000/api/user-activities?user_activity_page=';

@@ -20,6 +20,13 @@ import {
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
+import {
+  UserActivitiesPageEvent,
+  UserActivity,
+} from '../../../shared/interfaces/user-interfaces';
+import { Table, TableModule } from 'primeng/table';
+import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
+import { PaginatorModule } from 'primeng/paginator';
 
 @Component({
   selector: 'app-user-start',
@@ -34,6 +41,9 @@ import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
     ChartModule,
     ReactiveFormsModule,
     SelectModule,
+    TableModule,
+    DateFormattingPipe,
+    PaginatorModule,
   ],
   templateUrl: './user-start.component.html',
   styleUrl: './user-start.component.css',
@@ -41,6 +51,12 @@ import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
 export class UserStartComponent implements OnInit {
   public userTracklists$: Observable<Tracklist[]> | null = null;
   public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;
+
+  // variables for user activities overview
+  public userActivitiesRequest$: Observable<UserActivity[]> | null = null;
+  public userActivitiesRequest: UserActivity[] = [];
+  public first: number = 0;
+  public rows: number = 10;
 
   public isError: boolean = false;
 
@@ -81,6 +97,7 @@ export class UserStartComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadTracklistData();
+    this.loadUserActivities(1);
   }
 
   public loadTracklistData = () => {
@@ -290,6 +307,43 @@ export class UserStartComponent implements OnInit {
     });
   };
 
+  public loadUserActivities = (page: number) => {
+    console.log('aufgerufen');
+    this.userActivitiesRequest$ = this.userService.getUserActivities(page);
+
+    if (!this.userActivitiesRequest$) {
+      this.isError = true;
+      return;
+    }
+
+    this.userActivitiesRequest$?.subscribe({
+      next: (userActivities: UserActivity[]) => {
+        console.log(userActivities);
+      },
+      error: (err: any) => {
+        if (err.status === 401) {
+          this.messageService.add({
+            life: 7000,
+            severity: 'error',
+            summary: 'Ungültige Anfrage',
+            detail:
+              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
+          });
+
+          return;
+        }
+
+        this.isError = true;
+        this.messageService.add({
+          life: 7000,
+          severity: 'error',
+          summary: 'Fehler beim Laden der Daten',
+          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+        });
+      },
+    });
+  };
+
   public handleDiagramSelectionChange = (e: any) => {
     this.selectedDiagramType = e.value;
 
@@ -298,5 +352,16 @@ export class UserStartComponent implements OnInit {
     } else {
       this.loadTracklistData();
     }
+  };
+
+  public onUserActivitiesPageChange = (event: any) => {
+    console.log('event', event);
+    this.first = event.first;
+    this.rows = event.rows;
+
+    const page = event.first / event.rows + 1;
+    console.log('page', page);
+
+    this.loadUserActivities(page);
   };
 }

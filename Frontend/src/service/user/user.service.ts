@@ -22,11 +22,15 @@ import {
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
   ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+  ROUTE_USER_ACTIVITIES,
 } from '../../shared/variables/api-routes';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
+import {
+  DeleteUserRequest,
+  UserActivity,
+} from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
 import { WatchTimeStatistic } from '../../shared/statistic-interfaces';
 
@@ -257,6 +261,10 @@ export class UserService {
     return null;
   };
 
+  /**
+   * Function for getting the user statistic data of the watch time.
+   * @returns Observable<WatchTimeStatistic> | null
+   */
   public getUserStatisticWatchTime =
     (): Observable<WatchTimeStatistic> | null => {
       const header = this.mediaService.getHeader();
@@ -265,9 +273,41 @@ export class UserService {
         return null;
       }
 
-      return this.http.get<WatchTimeStatistic>(
-        ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
-        { headers: header }
-      );
+      return this.http
+        .get<WatchTimeStatistic>(ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, {
+          headers: header,
+        })
+        .pipe(
+          shareReplay(1),
+          catchError((error: HttpErrorResponse) => {
+            return throwError(() => error);
+          })
+        );
     };
+
+  /**
+   * Function for getting the data of the recent user activities.
+   * @param responsePage number
+   * @returns Observable<UserActivity> | null
+   */
+  public getUserActivities = (
+    responsePage: number
+  ): Observable<UserActivity[]> | null => {
+    const header = this.mediaService.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    return this.http
+      .get<UserActivity[]>(ROUTE_USER_ACTIVITIES + responsePage, {
+        headers: header,
+      })
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
+  };
 }
