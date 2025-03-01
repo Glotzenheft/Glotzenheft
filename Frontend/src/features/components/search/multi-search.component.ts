@@ -116,6 +116,9 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
           (r) => r.media_type === 'tv' || r.media_type === 'movie'
         );
 
+        // pages limit is delivered in every response
+        this.nextPagesLimit = res.total_pages + 1;
+
         // logic for pagination ----------------------------------------------------------------
         this.currentPage = page;
         console.log(this.currentPage);
@@ -136,7 +139,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             // return to previous page if loaded page has no entries
             this.isNextPageButtonDisabled = true;
             this.currentPage--;
-            this.nextPagesLimit = page;
             this.loadMultiSearchResults(
               this.currentPage,
               this.currentSearchTerm
