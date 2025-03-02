@@ -5,7 +5,6 @@
     margin: 0;
     padding: 0;
     /* overflow: hidden; */
-
     background: linear-gradient(
       var(--content-background-color),
       var(--content-background-color2)
@@ -29,6 +28,40 @@
   .appHeading h1 a {
     text-decoration: none;
     color: white;
+  }
+
+  .closedSidebarToggleDIV {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 3rem;
+  }
+
+  .sidebarToggleDIV {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 3rem;
+    /* height: 100%; */
+  }
+
+  .sidebarToggleDIV div,
+  .closedSidebarToggleDIV div {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border--radius);
+    transition-duration: var(--transition--duration);
+  }
+
+  .sidebarToggleDIV div:hover,
+  .closedSidebarToggleDIV div:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
   }
 }
 
@@ -57,10 +90,6 @@
     display: none;
   }
 
-  .appHeading h1 {
-    /* width: 8rem; */
-  }
-
   .appHeading h1:hover {
     text-decoration: underline;
     cursor: pointer;
@@ -69,6 +98,39 @@
   .appHeading h1 a {
     text-decoration: none;
     color: white;
+  }
+
+  .closedSidebarToggleDIV {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3rem;
+  }
+
+  .sidebarToggleDIV {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 3rem;
+  }
+
+  .sidebarToggleDIV div,
+  .closedSidebarToggleDIV div {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border--radius);
+    transition-duration: var(--transition--duration);
+  }
+
+  .sidebarToggleDIV div:hover,
+  .closedSidebarToggleDIV div:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
   }
 }
 
@@ -96,12 +158,43 @@
     width: 100%;
 
     display: flex;
-    justify-content: space-between;
+    flex-direction: column;
+    justify-content: start;
     align-items: center;
   }
 
-  .appHeading h1 {
-    /* width: 8rem; */
+  .closedSidebarToggleDIV {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 3rem;
+  }
+
+  .sidebarToggleDIV {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    width: 100%;
+    height: 3rem;
+    /* height: 100%; */
+  }
+
+  .sidebarToggleDIV div,
+  .closedSidebarToggleDIV div {
+    width: 2rem;
+    height: 2rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border--radius);
+    transition-duration: var(--transition--duration);
+  }
+
+  .sidebarToggleDIV div:hover,
+  .closedSidebarToggleDIV div:hover {
+    background-color: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
   }
 
   .appHeading h1:hover {

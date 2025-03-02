@@ -43,6 +43,11 @@ export class UserService {
   public isSearchBarVisible$: Observable<boolean> =
     this.isSearchBarVisible.asObservable();
 
+  private visibleUserName: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
+  public visibleUserName$: Observable<string> =
+    this.visibleUserName.asObservable();
+
   // variables for checking validation of user login
   private USER_KEY_LAST_LOGIN: string = 'lastLogin';
   private USER_KEY_LOGIN_TRIES: string = 'loginTries';
@@ -65,6 +70,7 @@ export class UserService {
       .pipe(
         tap(() => {
           this.isSearchBarVisible.next(true);
+          this.visibleUserName.next(loginData.username);
         }),
         catchError((error: HttpErrorResponse) => {
           return throwError(() => error);
@@ -81,7 +87,11 @@ export class UserService {
         JSON.stringify(registerData)
       )
       .pipe(
-        tap(() => this.isSearchBarVisible.next(true)),
+        tap(() => {
+          this.isSearchBarVisible.next(true);
+          this.visibleUserName.next(registerData.username);
+        }),
+
         catchError((error: HttpErrorResponse) => {
           return throwError(() => error);
         })
@@ -94,6 +104,7 @@ export class UserService {
         localStorage.clear();
       }
       this.isSearchBarVisible.next(false);
+      this.visibleUserName.next('');
     }
   };
 

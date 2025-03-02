@@ -45,7 +45,6 @@ import { TracklistFormComponent } from '../../components/tracklist-form/tracklis
 import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../components/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
-import { EpisodeListWithoutTracklistComponent } from '../../components/episodes/episode-list-without-tracklist/episode-list-without-tracklist.component';
 
 @Component({
   selector: 'app-season-page',
@@ -69,7 +68,6 @@ import { EpisodeListWithoutTracklistComponent } from '../../components/episodes/
     UpdateTracklistFormComponent,
     MenuModule,
     CreateTracklistEpisodeFormComponent,
-    EpisodeListWithoutTracklistComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -196,10 +194,6 @@ export class SeasonPageComponent implements OnInit {
   public openTracklistForm = (season: TVSeasonWithTracklist) => {
     this.currentSeason = season;
     this.isTracklistFormVisible = 1;
-  };
-
-  public navigateToMultiSearch = () => {
-    this.navigationService.navigateToMultiSearch();
   };
 
   public hasErrorField = (field: string) => {

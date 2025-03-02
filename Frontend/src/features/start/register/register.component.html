@@ -111,6 +111,21 @@
         >
       </div>
 
+      <div>
+        <p-checkbox inputId="agb" formControlName="agbAccept" [binary]="true" />
+        <label for="agb" class="agbLabel">
+          Ich habe die AGB gelesen und akzeptiere diese.</label
+        >
+        <p-message
+          severity="error"
+          size="small"
+          *ngIf="
+            registerGroup.get('agbAccept')?.invalid && hasError('agbAccept')
+          "
+          >Die AGB müssen akzeptiert werden.</p-message
+        >
+      </div>
+
       <div class="loginActions">
         <p-button
           fluid

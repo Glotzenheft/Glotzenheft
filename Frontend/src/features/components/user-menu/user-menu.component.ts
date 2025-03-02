@@ -62,7 +62,30 @@ export class UserMenuComponent implements OnInit {
     },
   ];
 
+  public loggedOutMenuList: UserMenuList[] = [
+    {
+      label: 'Optionen',
+      items: [
+        {
+          label: 'Einloggen',
+          icon: 'pi pi-sign-in',
+          command: () => {
+            this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          },
+        },
+        {
+          label: 'Registrieren',
+          icon: 'pi pi-user-plus',
+          command: () => {
+            this.router.navigateByUrl(ROUTES_LIST[11].fullUrl);
+          },
+        },
+      ],
+    },
+  ];
+
   public userName: string = '';
+  public isUserMenuVisible: boolean = false;
 
   constructor(
     private userService: UserService,
@@ -72,7 +95,14 @@ export class UserMenuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.userService.getUserName() ?? '';
+    // this.userName = this.userService.getUserName() ?? '';
+    this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
+      this.isUserMenuVisible = status;
+    });
+
+    this.userService.visibleUserName$.subscribe((userName: string) => {
+      this.userName = userName;
+    });
   }
 
   public isUserLoggedInInAccount = isUserLoggedIn;

@@ -1,17 +1,19 @@
-<div *ngIf="isUserLoggedInInAccount() && userName.length > 0">
-  <!-- <p-menu #menu [model]="userMenuList" [popup]="true" />
-  <p-button
-    icon="pi pi-ellipsis-v"
-    (onClick)="menu.toggle($event)"
-    [label]="stringService.shortenString(userName)"
-    severity="contrast"
-    [pTooltip]="userName"
-  /> -->
+<div *ngIf="isUserMenuVisible && userName.length > 0">
   <p-menu #menu [model]="userMenuList" [popup]="true" />
-  <p-button (onClick)="menu.toggle($event)" severity="contrast"
-    ><p-avatar
-      [label]="userName.substring(0, 2)"
-      shape="circle"
-      [pTooltip]="userName"
-  /></p-button>
+
+  <div (click)="menu.toggle($event)" class="menuDIV" [pTooltip]="userName">
+    <p-avatar [label]="userName.substring(0, 2)" shape="circle" />
+  </div>
+</div>
+
+<div *ngIf="!isUserMenuVisible">
+  <p-menu #menu [model]="loggedOutMenuList" [popup]="true" />
+
+  <div
+    (click)="menu.toggle($event)"
+    class="menuDIV"
+    pTooltip="nicht eingeloggt"
+  >
+    <p-avatar label="_" shape="circle" />
+  </div>
 </div>

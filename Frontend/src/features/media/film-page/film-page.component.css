@@ -1,6 +1,6 @@
-@media (max-width: 600px) {
+@media (max-width: 850px) {
   .filmDetailsWrapper {
-    height: 90rem;
+    height: 75rem;
     width: 100%;
   }
   img {
@@ -17,7 +17,7 @@
   .seasonMetaPicture {
     width: 13rem;
     height: 13rem;
-    border: 0.4rem solid white;
+    border: 0.2rem solid white;
     margin-right: 1rem;
     display: flex;
     justify-content: center;
@@ -29,7 +29,7 @@
     width: 100%;
     padding-left: var(--padding--left-right);
     border-left: 0.1rem solid white;
-    height: 30rem;
+    height: 50%;
   }
 
   .seasonMetaPicture {
@@ -40,7 +40,7 @@
   .newWatchlistButton {
     margin-top: 2rem;
     margin-bottom: 4rem;
-    height: 10rem;
+    height: 12rem;
     overflow-y: auto;
   }
 
@@ -50,9 +50,9 @@
   }
 }
 
-@media (min-width: 600px) {
+@media (min-width: 850px) {
   .filmDetailsWrapper {
-    height: 70rem;
+    height: 55rem;
     width: 100%;
   }
   img {
@@ -60,14 +60,17 @@
   }
   .seasonMeta {
     width: 100%;
-    height: 26rem;
+    height: 20rem;
     display: flex;
     justify-content: center;
     align-items: center;
   }
 
   .seasonPictureWrapper {
-    height: 30rem;
+    height: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .seasonMetaPicture {
@@ -84,11 +87,12 @@
   .seasonMetaContent {
     width: calc(100% - 13rem);
 
-    height: 40rem;
+    height: 100%;
   }
   .seasonMetaContent div {
     border-left: 0.1rem solid white;
     padding-left: var(--padding--left-right);
+    height: 100%;
   }
 
   .bigButton .p-button {
@@ -98,21 +102,25 @@
   .newWatchlistButton {
     margin-top: 2rem;
     margin-bottom: 4rem;
-    height: 16rem;
+    height: 20rem;
     overflow-y: auto;
   }
 }
 
 .backButtonDIV {
-  height: 10rem;
+  height: 4rem;
 }
 
 .descriptionP {
   overflow-y: auto;
-  height: 20rem;
+  height: 14rem;
 }
 
 .tracklistDIV {
   margin-bottom: 4rem;
   height: 10rem;
+}
+
+h1 {
+  margin-bottom: 2rem;
 }

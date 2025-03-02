@@ -8,6 +8,7 @@ export interface RegisterCredentials {
   password: string;
   security_question: string;
   security_answer: string;
+  agb_accept: boolean;
 }
 
 export interface LoginAndMessageResponse {

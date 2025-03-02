@@ -4,3 +4,14 @@
   padding-top: var(--padding--top-bottom);
   padding-bottom: var(--padding--top-bottom);
 }
+
+.impressum ul {
+  list-style: circle;
+  padding-left: var(--padding--left-right);
+  padding-right: var(--padding--left-right);
+}
+
+.impressum h2 {
+  font-size: 1.4rem;
+  text-decoration: underline;
+}

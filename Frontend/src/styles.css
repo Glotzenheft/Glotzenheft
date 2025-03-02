@@ -185,7 +185,7 @@ p {
   }
 
   .login {
-    height: 110%;
+    height: 120%;
     width: 100%;
 
     display: flex;
@@ -480,7 +480,7 @@ p {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 110%;
   }
 
   .loginWindow {
@@ -733,7 +733,7 @@ p {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 110%;
   }
 
   .p-message {

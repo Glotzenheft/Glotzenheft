@@ -1,32 +1,35 @@
 <div class="appwrapper">
   <div class="sidebar" *ngIf="isSidebarOpen">
     <div class="appHeading">
-      <p-button
-        class="toggleButton"
-        icon="pi pi-times"
-        pTooltip="Klicken zum Schließen des Menüs."
-        tooltipPosition="right"
-        (onClick)="toggleSidebar(false)"
-      />
+      <div class="sidebarToggleDIV">
+        <div (click)="toggleSidebar(false)">
+          <span
+            class="pi pi-times"
+            pTooltip="Klicken zum Schließen des Menüs"
+            tooltipPosition="right"
+          ></span>
+        </div>
+      </div>
 
       <h1><a href="/">Glotzenheft</a></h1>
     </div>
-    <app-user-menu />
     <app-user-links />
     <app-footer (sideBarOpenEvent)="toggleSidebar(false)" />
   </div>
 
   <div class="closedSidebar" *ngIf="!isSidebarOpen">
-    <div>
-      <p-button
-        icon="pi pi-bars"
-        pTooltip="Klicken zum Öffnen des Menüs."
-        tooltipPosition="right"
-        (onClick)="toggleSidebar(true)"
-      />
+    <div class="closedSidebarToggleDIV">
+      <div (click)="toggleSidebar(true)">
+        <span
+          class="pi pi-bars"
+          pTooltip="Klicken zum Öffnen des Menüs"
+          tooltipPosition="right"
+        ></span>
+      </div>
     </div>
   </div>
   <div class="content">
+    <app-user-menu />
     <app-search-bar (emitSearchQuery)="setUserQuery($event)" />
     <router-outlet></router-outlet>
   </div>
