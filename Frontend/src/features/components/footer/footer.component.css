@@ -24,3 +24,18 @@
   align-items: start;
   height: 100%;
 }
+
+.toggleDIV {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  transition-duration: var(--transition--duration);
+  border-radius: var(--border--radius);
+  padding-left: calc(0.2 * var(--padding--left-right));
+  padding-right: calc(0.2 * var(--padding--left-right));
+}
+
+.toggleDIV:hover {
+  cursor: pointer;
+  background-color: rgba(255, 255, 255, 0.3);
+}
