@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AuthService } from '../../../service/auth/auth.service';
 import { CommonModule } from '@angular/common';
 import {
@@ -7,6 +7,7 @@ import {
 } from '../../../shared/variables/routes-list';
 import { VisibleRoute } from '../../../shared/interfaces/route-list-item';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
+import { UserService } from '../../../service/user/user.service';
 
 @Component({
   selector: 'app-user-links',
@@ -14,11 +15,18 @@ import { isUserLoggedIn } from '../../../guards/auth.guard';
   templateUrl: './user-links.component.html',
   styleUrl: './user-links.component.css',
 })
-export class UserLinksComponent {
+export class UserLinksComponent implements OnInit {
   public isLoggedIn: boolean = false;
   public personalUserLinks: VisibleRoute[] = getVisibleRoutesForUser();
 
-  constructor(public authService: AuthService) {
-    this.isLoggedIn = isUserLoggedIn();
+  constructor(
+    public authService: AuthService,
+    private userService: UserService
+  ) {}
+
+  ngOnInit(): void {
+    this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
+      this.isLoggedIn = status;
+    });
   }
 }
