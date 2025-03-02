@@ -1,6 +1,4 @@
-<div
-  *ngIf="isUserLoggedInInAccount() && userName.length > 0 && isUserMenuVisible"
->
+<div *ngIf="isUserMenuVisible && userName.length > 0">
   <p-menu #menu [model]="userMenuList" [popup]="true" />
 
   <div (click)="menu.toggle($event)" class="menuDIV" [pTooltip]="userName">
@@ -8,10 +6,14 @@
   </div>
 </div>
 
-<div *ngIf="!isUserLoggedInInAccount() && isUserMenuVisible">
+<div *ngIf="!isUserMenuVisible">
   <p-menu #menu [model]="loggedOutMenuList" [popup]="true" />
 
-  <div (click)="menu.toggle($event)" class="menuDIV" [pTooltip]="userName">
-    <p-avatar label="ME" shape="circle" />
+  <div
+    (click)="menu.toggle($event)"
+    class="menuDIV"
+    pTooltip="nicht eingeloggt"
+  >
+    <p-avatar label="_" shape="circle" />
   </div>
 </div>

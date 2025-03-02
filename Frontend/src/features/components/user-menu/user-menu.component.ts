@@ -95,9 +95,13 @@ export class UserMenuComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userName = this.userService.getUserName() ?? '';
+    // this.userName = this.userService.getUserName() ?? '';
     this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
       this.isUserMenuVisible = status;
+    });
+
+    this.userService.visibleUserName$.subscribe((userName: string) => {
+      this.userName = userName;
     });
   }
 
