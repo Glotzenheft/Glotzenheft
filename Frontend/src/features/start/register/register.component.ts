@@ -24,6 +24,9 @@ import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-quest
 import { SelectModule } from 'primeng/select';
 import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 import { CheckboxModule } from 'primeng/checkbox';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { AgbComponent } from '../../components/agb/agb.component';
 
 @Component({
   selector: 'app-register',
@@ -38,6 +41,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     DialogModule,
     SelectModule,
     CheckboxModule,
+    AgbComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -46,6 +50,8 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
+  public isAGBDialogVisible: boolean = false;
+
   public questionList: ValidationQuestion[] = VALIDATION_QUESTIONS.map(
     (question) => ({
       name: question,
@@ -59,7 +65,8 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private messageService: MessageService,
-    private securityService: SecurityService
+    private securityService: SecurityService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -142,5 +149,9 @@ export class RegisterComponent implements OnInit {
 
   showDialog = () => {
     this.isDialogVisible = true;
+  };
+
+  public openAGBDialog = () => {
+    this.isAGBDialogVisible = true;
   };
 }

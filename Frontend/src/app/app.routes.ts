@@ -10,6 +10,7 @@ import { MultiSearchComponent } from '../features/components/search/multi-search
 import { authGuard } from '../guards/auth.guard';
 import { ResetPasswordComponent } from '../features/start/reset-password/reset-password.component';
 import { AllUserTracklistsComponent } from '../features/media/all-user-tracklists/all-user-tracklists.component';
+import { AgbComponent } from '../features/components/agb/agb.component';
 
 export const routes: Routes = [
   {
@@ -79,6 +80,11 @@ export const routes: Routes = [
     path: ROUTES_LIST[12].fullUrl,
     component: AllUserTracklistsComponent,
     canActivate: [authGuard],
+  },
+  {
+    // 10
+    path: ROUTES_LIST[15].fullUrl,
+    component: AgbComponent,
   },
   {
     // 19
