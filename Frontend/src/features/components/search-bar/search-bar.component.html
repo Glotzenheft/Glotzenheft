@@ -1,13 +1,14 @@
 <div class="searchBar" *ngIf="isVisible">
-  <p-button
-    *ngIf="isBackButtonVisible"
-    [raised]="true"
-    icon="pi pi-arrow-left"
-    severity="secondary"
-    pTooltip="zurück zur Suche"
-    (onClick)="navigateToMultiSearch()"
-  />
   <div class="searchDIV">
+    <p-button
+      *ngIf="isBackButtonVisible"
+      [raised]="true"
+      icon="pi pi-arrow-left"
+      severity="secondary"
+      pTooltip="zurück zur Suche"
+      (onClick)="navigateToMultiSearch()"
+      class="backButtonB"
+    />
     <p-iconfield class="search">
       <p-inputicon styleClass="pi pi-search" />
       <input
@@ -21,9 +22,9 @@
       />
     </p-iconfield>
     <p-button
-      label="Suche"
       (onClick)="navigateToSearch()"
       class="buttonShadow"
+      pTooltip="Suchen"
       icon="pi pi-search"
     />
   </div>

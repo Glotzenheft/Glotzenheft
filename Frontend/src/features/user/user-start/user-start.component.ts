@@ -66,15 +66,15 @@ export class UserStartComponent implements OnInit {
   public barChartMediaStatisticOptions: any;
   public pieChartColors: string[] = [
     '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
-    '#059669',
+    '#0a6045',
+    '#9be8cf',
+    '#121413',
+    '#19f709',
+    '#07d3ea',
+    '#babc34',
+    '#d19412',
+    '#d13d14',
+    '#f24b4b',
     '#d6e5e4',
   ];
   public barDiagramData: BarDiagram | null = null;
