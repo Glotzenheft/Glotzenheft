@@ -1,19 +1,18 @@
-<div *ngIf="isUserMenuVisible && userName.length > 0">
-  <p-menu #menu [model]="userMenuList" [popup]="true" />
-
-  <div (click)="menu.toggle($event)" class="menuDIV" [pTooltip]="userName">
-    <p-avatar [label]="userName.substring(0, 2)" shape="circle" />
-  </div>
-</div>
-
-<div *ngIf="!isUserMenuVisible">
-  <p-menu #menu [model]="loggedOutMenuList" [popup]="true" />
+<div>
+  <p-menu
+    #menu
+    [model]="isUserMenuVisible ? userMenuList : loggedOutMenuList"
+    [popup]="true"
+  />
 
   <div
     (click)="menu.toggle($event)"
     class="menuDIV"
-    pTooltip="nicht eingeloggt"
+    [pTooltip]="isUserMenuVisible ? userName : 'nicht eingeloggt'"
   >
-    <p-avatar label="_" shape="circle" />
+    <p-avatar
+      [label]="isUserMenuVisible ? userName.substring(0, 2) : '?'"
+      shape="circle"
+    />
   </div>
 </div>

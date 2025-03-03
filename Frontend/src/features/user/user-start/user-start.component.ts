@@ -308,7 +308,6 @@ export class UserStartComponent implements OnInit {
   };
 
   public loadUserActivities = (page: number) => {
-    console.log('aufgerufen');
     this.userActivitiesRequest$ = this.userService.getUserActivities(page);
 
     if (!this.userActivitiesRequest$) {
@@ -317,9 +316,7 @@ export class UserStartComponent implements OnInit {
     }
 
     this.userActivitiesRequest$?.subscribe({
-      next: (userActivities: UserActivity[]) => {
-        console.log(userActivities);
-      },
+      next: (userActivities: UserActivity[]) => {},
       error: (err: any) => {
         if (err.status === 401) {
           this.messageService.add({
@@ -355,12 +352,10 @@ export class UserStartComponent implements OnInit {
   };
 
   public onUserActivitiesPageChange = (event: any) => {
-    console.log('event', event);
     this.first = event.first;
     this.rows = event.rows;
 
     const page = event.first / event.rows + 1;
-    console.log('page', page);
 
     this.loadUserActivities(page);
   };
