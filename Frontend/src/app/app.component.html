@@ -9,6 +9,7 @@
             tooltipPosition="right"
           ></span>
         </div>
+        <app-user-menu />
       </div>
 
       <h1><a href="/">Glotzenheft</a></h1>
@@ -27,9 +28,9 @@
         ></span>
       </div>
     </div>
+    <app-user-menu />
   </div>
   <div class="content">
-    <app-user-menu />
     <app-search-bar (emitSearchQuery)="setUserQuery($event)" />
     <router-outlet></router-outlet>
   </div>

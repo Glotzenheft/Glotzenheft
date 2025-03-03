@@ -64,7 +64,19 @@ export class UserStartComponent implements OnInit {
   public diagramOptions: any;
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
-  public pieChartColors: string[] = ['#059669', '#d6e5e4'];
+  public pieChartColors: string[] = [
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#059669',
+    '#d6e5e4',
+  ];
   public barDiagramData: BarDiagram | null = null;
   public pieChartData: any;
   public barChartForMediaStatistic: BarDiagram | null = null;
@@ -141,7 +153,7 @@ export class UserStartComponent implements OnInit {
           ],
           datasets: [
             {
-              label: 'Rating',
+              label: 'Bewertung',
               data: ratingValues,
               fill: true,
               borderColor: '#059669',
@@ -158,7 +170,7 @@ export class UserStartComponent implements OnInit {
           }),
           datasets: [
             {
-              label: 'Rating',
+              label: 'Bewertung',
               data: filteredTracklists.map((tracklist: Tracklist) =>
                 tracklist.rating !== null ? tracklist.rating : 1
               ),
@@ -171,12 +183,24 @@ export class UserStartComponent implements OnInit {
         };
 
         this.pieChartData = {
-          labels: ['mit Bewertung', 'ohne Bewertung'],
+          labels: [
+            '1 / 10',
+            '2 / 10',
+            '3 / 10',
+            '4 / 10',
+            '5 / 10',
+            '6 / 10',
+            '7 / 10',
+            '8 / 10',
+            '9 / 10',
+            '10 / 10',
+            'ohne Bewertung',
+          ],
           datasets: [
             {
               label: 'Bewertet',
               data: [
-                filteredTracklists.length,
+                ...ratingValues,
                 res.filter((tracklist: Tracklist) => tracklist.rating === null)
                   .length,
               ],
@@ -188,8 +212,10 @@ export class UserStartComponent implements OnInit {
 
         this.pieChartOptions = {
           responsive: true,
-          scales: {
-            x: { title: { display: true, text: 'Bewertung' } },
+          plugins: {
+            legend: {
+              position: 'right',
+            },
           },
         };
 
