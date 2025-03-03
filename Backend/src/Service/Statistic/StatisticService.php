@@ -100,8 +100,12 @@ class StatisticService
 
         $watchTimeArray['unknown_date'] = $watchTimeUnknownDate;
 
-        return array_filter($watchTimeArray, function ($value) {
+        $filteredWatchTimeArray = array_filter($watchTimeArray, function ($value) {
             return $value !== 0;
         });
+
+        krsort($filteredWatchTimeArray);
+
+        return $filteredWatchTimeArray;
     }
 }
