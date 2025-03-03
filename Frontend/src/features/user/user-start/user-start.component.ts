@@ -289,14 +289,16 @@ export class UserStartComponent implements OnInit {
 
     this.userMediaStatistic$.subscribe({
       next: (res: WatchTimeStatistic) => {
-        const resAsList: [string, number][] = Object.entries(res).slice(0, 4);
+        const resAsList: [string, number][] = Object.entries(res).slice(0, 5);
 
         this.barChartForMediaStatistic = {
-          labels: resAsList.map((val: [string, number]) =>
-            val[0] === 'unknown_date'
-              ? 'unbekanntes Datum'
-              : new Date(val[0]).toLocaleDateString()
-          ),
+          labels: resAsList
+            .filter((val: [string, number]) => {
+              return val[0] !== 'unknown_date';
+            })
+            .map((val: [string, number]) =>
+              new Date(val[0]).toLocaleDateString()
+            ),
           datasets: [
             {
               label: 'geschaute Zeit [min]',
