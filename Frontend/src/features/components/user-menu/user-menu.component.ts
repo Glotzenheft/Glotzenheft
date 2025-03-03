@@ -101,7 +101,7 @@ export class UserMenuComponent implements OnInit {
     });
 
     this.userService.visibleUserName$.subscribe((userName: string) => {
-      this.userName = userName;
+      this.userName = localStorage.getItem('username') ?? userName;
     });
   }
 
