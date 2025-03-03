@@ -41,6 +41,10 @@
     justify-content: center;
     align-items: center;
   }
+
+  .activitiesPage {
+    height: 15rem;
+  }
 }
 
 @media (min-width: 850px) {
@@ -69,5 +73,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .activitiesPage {
+    height: 10rem;
   }
 }

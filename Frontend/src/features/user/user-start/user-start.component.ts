@@ -27,6 +27,7 @@ import {
 import { Table, TableModule } from 'primeng/table';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
 
 @Component({
   selector: 'app-user-start',
@@ -42,8 +43,8 @@ import { PaginatorModule } from 'primeng/paginator';
     ReactiveFormsModule,
     SelectModule,
     TableModule,
-    DateFormattingPipe,
     PaginatorModule,
+    ButtonModule,
   ],
   templateUrl: './user-start.component.html',
   styleUrl: './user-start.component.css',
@@ -386,5 +387,9 @@ export class UserStartComponent implements OnInit {
     const page = event.first / event.rows + 1;
 
     this.loadUserActivities(page);
+  };
+
+  public navigateToActivitiesPage = () => {
+    this.router.navigateByUrl(ROUTES_LIST[14].fullUrl);
   };
 }
