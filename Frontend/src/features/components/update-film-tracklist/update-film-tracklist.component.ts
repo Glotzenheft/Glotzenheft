@@ -40,6 +40,7 @@ import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../../shared/variables/message-vars';
+import { DeleteDialogComponent } from "../delete-dialog/delete-dialog.component";
 
 @Component({
   selector: 'app-update-film-tracklist',
@@ -53,7 +54,8 @@ import {
     SelectModule,
     RatingModule,
     DatePickerModule,
-  ],
+    DeleteDialogComponent
+],
   templateUrl: './update-film-tracklist.component.html',
   styleUrl: './update-film-tracklist.component.css',
 })
@@ -80,6 +82,8 @@ export class UpdateFilmTracklistComponent implements OnInit {
   // variables for requests
   public updateResponseData$: Observable<any> | null = null;
   public deleteTracklistResponseData$: Observable<any> | null = null;
+
+  public isDeleteDialogVisible: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -249,5 +253,9 @@ export class UpdateFilmTracklistComponent implements OnInit {
         );
       },
     });
+  };
+
+  public setDeleteDialogVisibility = (status: boolean) => {
+    this.isDeleteDialogVisible = status;
   };
 }
