@@ -25,8 +25,8 @@ import { SelectModule } from 'primeng/select';
 import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { AgbComponent } from '../../components/agb/agb.component';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-register',
@@ -119,8 +119,14 @@ export class RegisterComponent implements OnInit {
 
     this.userService.registerAccount(registerData).subscribe({
       next: (res: LoginAndMessageResponse) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('username', this.userName);
+        this.messageService.add({
+          life: 7000,
+          severity: 'success',
+          summary: 'Nutzer erfolgreich angelegt',
+        });
+
+        // navigate user to login page
+        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
       },
       error: () => {
         this.messageService.add({
@@ -132,7 +138,6 @@ export class RegisterComponent implements OnInit {
         });
       },
     });
-    this.navigationService.navigateToUserStart();
   };
 
   hasError = (field: string): boolean => {

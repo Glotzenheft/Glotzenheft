@@ -24,6 +24,7 @@ import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
 import { CreateTracklistEpisode } from '../../../../shared/interfaces/tracklist-episode-interfaces';
 import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
+import { DeleteDialogComponent } from '../../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-create-tracklist-episode-form',
@@ -37,6 +38,7 @@ import { TooltipModule } from 'primeng/tooltip';
     FloatLabelModule,
     SelectModule,
     TooltipModule,
+    DeleteDialogComponent,
   ],
   templateUrl: './create-tracklist-episode-form.component.html',
   styleUrl: './create-tracklist-episode-form.component.css',
@@ -59,6 +61,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   public createEpisodeRequestData$: Observable<any> | null = null;
   public updateEpisodeRequestData$: Observable<any> | null = null;
   public deleteEpisodeRequestData$: Observable<any> | null = null;
+
+  public isDeletionDialogVisible: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -163,6 +167,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   };
 
   public deleteEpisode = () => {
+    this.setDeletionDialogVisibilityStatus(false);
+
     const episodeInTracklist =
       this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
         (epis: TracklistEpisode) => {
@@ -360,5 +366,10 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
   public cancelEpisodeForm = () => {
     this.cancelEpisode.emit(true);
+  };
+
+  public setDeletionDialogVisibilityStatus = (status: boolean) => {
+    this.isDeletionDialogVisible = status;
+    console.log('new status:', this.isDeletionDialogVisible);
   };
 }
