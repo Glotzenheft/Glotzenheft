@@ -5,7 +5,7 @@
     <form
       action="submit"
       [formGroup]="deleteUserForm"
-      (ngSubmit)="submitForm()"
+      (ngSubmit)="setDialogStatus(true)"
     >
       <div>
         <p-float-label variant="in">
@@ -66,3 +66,13 @@
     </form>
   </div>
 </div>
+
+<app-delete-dialog
+  *ngIf="isDeleteDialogVisible"
+  [inpHeading]="'Account löschen'"
+  [inpText]="
+    'Willst du deinen Account wirklich löschen? Das kann nicht mehr rückgängig gemacht werden.'
+  "
+  (outCancelDeletion)="setDialogStatus(false)"
+  (outDeleteMedia)="submitForm()"
+/>

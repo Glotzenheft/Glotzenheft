@@ -20,6 +20,7 @@ import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-quest
 import { DeleteUserRequest } from '../../../shared/interfaces/user-interfaces';
 import { Observable } from 'rxjs';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-delete-user-account-page',
@@ -32,6 +33,7 @@ import { ROUTES_LIST } from '../../../shared/variables/routes-list';
     SelectModule,
     ReactiveFormsModule,
     FloatLabelModule,
+    DeleteDialogComponent,
   ],
   templateUrl: './delete-user-account-page.component.html',
   styleUrl: './delete-user-account-page.component.css',
@@ -46,6 +48,7 @@ export class DeleteUserAccountPageComponent implements OnInit {
       value: question,
     }));
   public deleteUserAccountData$: Observable<any> | null = null;
+  public isDeleteDialogVisible: boolean = false;
 
   constructor(
     private messageService: MessageService,
@@ -106,7 +109,7 @@ export class DeleteUserAccountPageComponent implements OnInit {
           detail: 'Du wirst nun ausgeloggt und zum Login weitergeleitet.',
         });
         this.userService.logoutOfAccount();
-        this.router.navigateByUrl(ROUTES_LIST[1].fullUrl);
+        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
       },
     });
   };
@@ -122,5 +125,9 @@ export class DeleteUserAccountPageComponent implements OnInit {
 
   public cancelDeletion = () => {
     this.router.navigateByUrl(ROUTES_LIST[8].fullUrl);
+  };
+
+  public setDialogStatus = (status: boolean) => {
+    this.isDeleteDialogVisible = status;
   };
 }
