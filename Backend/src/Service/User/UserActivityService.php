@@ -40,7 +40,8 @@ class UserActivityService
         $sql =<<<SQL
 (SELECT 
     'episode' AS type, 
-    te.watch_date AS date, 
+    te.watch_date AS date,
+    e.runtime AS runtime,
     m.id AS mediaID,
     m.name AS mediaTitle,
     s.id AS seasonID,
@@ -66,7 +67,8 @@ UNION ALL
 
 (SELECT 
     'movie' AS type, 
-    t.finish_date AS date, 
+    t.finish_date AS date,
+    m.runtime AS runtime,
     m.id AS mediaID,
     m.name AS mediaTitle, 
     NULL AS seasonID,
