@@ -28,6 +28,10 @@ import { Table, TableModule } from 'primeng/table';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-user-start',
@@ -256,17 +260,10 @@ export class UserStartComponent implements OnInit {
       },
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Authentifizierung',
-            detail: 'Deine Authentifizierungsdaten sind ungültig.',
-          });
-
+          // logout user
           this.userService.logoutOfAccount();
-
-          // navigate to login page
-          this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(`/${ROUTES_LIST[10].fullUrl}`);
           return;
         }
 
@@ -314,24 +311,21 @@ export class UserStartComponent implements OnInit {
       },
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Anfrage',
-            detail:
-              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-          });
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
         this.isError = true;
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Laden der Daten',
-          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Laden der Daten',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
   };
@@ -348,24 +342,21 @@ export class UserStartComponent implements OnInit {
       next: (userActivities: UserActivity[]) => {},
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Anfrage',
-            detail:
-              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-          });
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
         this.isError = true;
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Laden der Daten',
-          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Laden der Seite',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
   };

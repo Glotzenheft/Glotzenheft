@@ -17,7 +17,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { StringService } from '../../../service/string/string.service';
 import { NavigationService } from '../../../service/navigation/navigation.service';
 import { SecurityService } from '../../../service/security/security.service';
@@ -29,6 +29,11 @@ import { UserService } from '../../../service/user/user.service';
 import { CreateMovieTracklistComponent } from '../../components/create-movie-tracklist/create-movie-tracklist.component';
 import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-film-page',
@@ -69,12 +74,12 @@ export class FilmPageComponent implements OnInit {
     private messageService: MessageService,
     private route: ActivatedRoute,
     public stringService: StringService,
-    private navigationService: NavigationService,
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
     private mediaService: MediaService,
     private location: Location,
-    private userService: UserService
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -99,14 +104,6 @@ export class FilmPageComponent implements OnInit {
     if (!this.filmData$) {
       this.hasError = true;
 
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Laden der Seite',
-        detail:
-          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
-      });
-
       return;
     }
 
@@ -123,7 +120,10 @@ export class FilmPageComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 401) {
-          this.userService.showLoginMessage();
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
         }
 
         this.hasError = true;

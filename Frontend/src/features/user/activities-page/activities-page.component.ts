@@ -9,6 +9,12 @@ import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatti
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-activities-page',
@@ -40,7 +46,8 @@ export class ActivitiesPageComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -96,24 +103,21 @@ export class ActivitiesPageComponent implements OnInit {
       },
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Anfrage',
-            detail:
-              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-          });
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
         this.isError = true;
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Laden der Daten',
-          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Laden der Daten',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
 

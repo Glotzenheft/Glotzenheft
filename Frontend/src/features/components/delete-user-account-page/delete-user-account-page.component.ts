@@ -7,7 +7,6 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
 import { ToastModule } from 'primeng/toast';
-import { MediaService } from '../../../service/media/media.service';
 import { UserService } from '../../../service/user/user.service';
 import {
   FormBuilder,
@@ -21,6 +20,10 @@ import { DeleteUserRequest } from '../../../shared/interfaces/user-interfaces';
 import { Observable } from 'rxjs';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-delete-user-account-page',
@@ -53,7 +56,6 @@ export class DeleteUserAccountPageComponent implements OnInit {
   constructor(
     private messageService: MessageService,
     private router: Router,
-    private mediaService: MediaService,
     private userService: UserService,
     private formBuilder: FormBuilder
   ) {}
@@ -69,14 +71,6 @@ export class DeleteUserAccountPageComponent implements OnInit {
     this.isFormSubmitted = true;
 
     if (this.deleteUserForm.invalid) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Ungültige Eingaben',
-        detail:
-          'Die eingegebenen Daten sind ungültig. Bitte prüfe deine Eingaben und probiere es noch einmal.',
-      });
-
       return;
     }
 
@@ -90,26 +84,43 @@ export class DeleteUserAccountPageComponent implements OnInit {
       this.userService.deleteUserAccount(deleteUserData);
 
     if (!this.deleteUserAccountData$) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Löschen des Accounts',
-        detail:
-          'Beim Löschen des Accounts ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Fehler beim Löschen des Accounts',
+          'Beim Löschen des Account ist ein Fehler aufgetreten. Bitte probiere es erneut.'
+        )
+      );
       return;
     }
 
     this.deleteUserAccountData$.subscribe({
       next: (res) => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Account erfolgreich gelöscht',
-          detail: 'Du wirst nun ausgeloggt und zum Login weitergeleitet.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'success',
+            'Account erfolgreich gelöscht',
+            'Du wirst nun ausgeloggt.'
+          )
+        );
         this.userService.logoutOfAccount();
         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+      },
+      error: (err: any) => {
+        if (err.status === 401) {
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Löschen des Accounts',
+            'Beim Löschen ist ein Fehler aufgetreten. Bitte probiere es erneut.'
+          )
+        );
       },
     });
   };

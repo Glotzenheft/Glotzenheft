@@ -23,10 +23,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
-import { DropdownModule } from 'primeng/dropdown';
 import { SelectModule } from 'primeng/select';
 import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-create-movie-tracklist',
@@ -69,6 +74,7 @@ export class CreateMovieTracklistComponent implements OnInit {
     private messageService: MessageService,
     private mediaService: MediaService,
     private formBuilder: FormBuilder,
+    private router: Router,
     private userService: UserService
   ) {}
 
@@ -86,10 +92,6 @@ export class CreateMovieTracklistComponent implements OnInit {
     this.isTracklistSubmitted = true;
 
     if (this.tracklistForm.invalid) {
-      console.log(
-        'trackListName',
-        this.tracklistForm.get('trackListName')?.value.toString().length
-      );
       return;
     }
 
@@ -103,40 +105,40 @@ export class CreateMovieTracklistComponent implements OnInit {
     );
 
     if (!this.createNewTracklist$) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Anlegen der Trackliste',
-        detail:
-          'Beim Anlegen der Tracklist ist ein Fehler aufgetreten. Bitte lade die Seite neu und versuche es noch einmal.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Fehler beim Anlegen der Trackliste',
+          'Bitte probiere es erneut nach einem Laden der Seite.'
+        )
+      );
       return;
     }
 
     this.createNewTracklist$.subscribe({
       next: (res) => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Tracklist erfolgreich angelegt.',
-        });
+        this.messageService.add(
+          getMessageObject('success', 'Trackliste erfolgreich angelegt')
+        );
 
         this.saveNewTracklist.emit(0);
       },
       error: (err) => {
         if (err.status === 401) {
           // status 401 = user is not logged in anymore -> navigate to login page
-          this.userService.showNoAccessMessage();
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
           return;
         }
 
-        this.messageService.add({
-          life: 7000,
-          summary: 'Fehler beim Anlegen der Trackliste',
-          detail:
-            'Beim Anlegen der Trackliste ist leider ein Fehler aufgetreten. Bitte laden Sie die Seite und probieren Sie es erneut.',
-          severity: 'error',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Anlegen der Trackliste',
+            'Bitte lade die Seite neu und probiere es erneut.'
+          )
+        );
       },
     });
   };

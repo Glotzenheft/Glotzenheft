@@ -12,6 +12,7 @@ import { StringService } from '../../../service/string/string.service';
 import { TooltipModule } from 'primeng/tooltip';
 import { AvatarModule } from 'primeng/avatar';
 import { AvatarGroupModule } from 'primeng/avatargroup';
+import { getMessageObject } from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-user-menu',
@@ -50,11 +51,9 @@ export class UserMenuComponent implements OnInit {
           icon: 'pi pi-sign-out',
           command: () => {
             this.userService.logoutOfAccount();
-            this.messageService.add({
-              life: 7000,
-              severity: 'success',
-              summary: 'Erfolgreich ausgeloggt.',
-            });
+            this.messageService.add(
+              getMessageObject('success', 'Erfolgreich ausgeloggt')
+            );
             this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
           },
         },

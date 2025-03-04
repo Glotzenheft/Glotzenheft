@@ -18,6 +18,7 @@ import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { MessageService } from 'primeng/api';
 import { UserService } from '../../../service/user/user.service';
 import { ButtonModule } from 'primeng/button';
+import { getMessageObject } from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-multi-search',
@@ -164,13 +165,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   };
 
   showErrorDialog = () => {
-    this.messageService.add({
-      severity: 'warn',
-      life: 7000,
-      summary: 'Das Suchfeld darf nicht leer sein',
-      detail:
-        'Das Suchfeld muss mindestens ein Zeichen enthalten, um eine Suche durchführen zu können.',
-    });
+    this.messageService.add(
+      getMessageObject(
+        'warn',
+        'Das Suchfeld darf nicht leer sein.',
+        'Das Suchfeld muss mindestens ein Zeichen enthalten.'
+      )
+    );
   };
 
   closeErrorDialog = () => {
@@ -190,13 +191,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
               mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie'
             }`;
 
-            this.messageService.add({
-              life: 7000,
-              severity: 'error',
-              summary: summaryMessage,
-              detail:
-                'Es ist ein Fehler beim Weiterleiten zum Medium passiert. Bitte lade die Seite erneut und versuche es noch einmal.',
-            });
+            this.messageService.add(
+              getMessageObject(
+                'error',
+                summaryMessage,
+                'Bitte lade die Seite erneut und versuche es noch einmal.'
+              )
+            );
             return;
           }
 
@@ -220,13 +221,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
           }`;
 
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: message,
-            detail:
-              'Beim Weiterleiten ist ein Fehler aufgetreten. Bitte lade die Seite und versuche es erneut.',
-          });
+          this.messageService.add(
+            getMessageObject(
+              'error',
+              message,
+              'Bitte lade die Seite und versuche es erneut.'
+            )
+          );
         },
       });
   };
