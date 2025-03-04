@@ -1,6 +1,12 @@
 <div class="createTracklistEpisodeDIV">
   <div class="createTracklistEpisodeWrapperDIV">
-    <h1>Episode zur Trackliste hinzufügen</h1>
+    <h1>
+      {{
+        inpIsEpisodeEditing()
+          ? "Episode editieren"
+          : "Episode zur Trackliste hinzufügen"
+      }}
+    </h1>
     <div class="createTracklistEpisodeFormDIV">
       <form
         action="submit"
@@ -21,9 +27,35 @@
           />
           <label for="watch">wann geschaut? (optional)</label>
         </p-float-label>
+        <p-button
+          label="Datum löschen"
+          severity="contrast"
+          icon="pi pi-times"
+          (onClick)="deleteDate()"
+          pTooltip="aktuelles Datum löschen"
+        />
 
         <div class="formAcions">
-          <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" />
+          <p-button
+            *ngIf="!inpIsEpisodeEditing()"
+            label="Hinzufügen"
+            icon="pi pi-plus"
+            type="submit"
+          />
+          <p-button
+            *ngIf="inpIsEpisodeEditing()"
+            label="Speichern"
+            icon="pi pi-save"
+            (onClick)="saveEditedEpisode()"
+          />
+          <div *ngIf="inpIsEpisodeEditing()">
+            <p-button
+              label="Löschen"
+              icon="pi pi-trash"
+              severity="danger"
+              (onClick)="deleteEpisode()"
+            />
+          </div>
           <div>
             <p-button
               label="Abbrechen"

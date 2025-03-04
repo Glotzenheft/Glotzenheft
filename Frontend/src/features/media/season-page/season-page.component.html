@@ -1,12 +1,4 @@
 <ng-container *ngIf="isTracklistFormVisible === 0">
-  <div class="backButtonDIV">
-    <p-button
-      label="zurück zur Suche"
-      (onClick)="navigateToMultiSearch()"
-      severity="secondary"
-      icon="pi pi-arrow-left"
-    />
-  </div>
   <div *ngIf="hasError">
     <p-panel header="Fehler beim Laden der Seite" class="error">
       <p>
@@ -27,6 +19,9 @@
   </div>
 
   <div *ngIf="seasonData$ | async as seasonData">
+    <div class="headingDIV">
+      <h1>{{ seasonData.media.name }}</h1>
+    </div>
     <div class="seasonMeta">
       <div class="seasonPictureWrapper">
         <div class="seasonMetaPicture">
@@ -82,7 +77,7 @@
                 </div>
                 <div class="seasonMeta">
                   <div>
-                    <p *ngIf="season.overview">
+                    <p *ngIf="season.overview" class="descriptionP">
                       Beschreibung: <br />
                       {{ season.overview }}
                     </p>
@@ -135,17 +130,33 @@
                     ? tracklistSelectionForm.get('selectedTracklist')?.value
                     : null
                 "
-                (setEpisode)="setCurrentEpisode($event)"
+                [inpIsWithTracklist]="true"
+                (setEpisode)="setCurrentEpisode($event, false)"
+                (setEpisodeForEditing)="setCurrentEpisode($event, true)"
               />
 
-              <app-episode-list-without-tracklist
+              <app-episode-list
+                *ngIf="
+                  !tracklistSelectionForm.get('selectedTracklist')?.value ||
+                  tracklistSelectionForm.get('selectedTracklist')?.value ===
+                    EMPTY_TRACKLIST
+                "
+                [episodeList]="season.episodes"
+                [tracklistSelectionForm]="tracklistSelectionForm"
+                [selectedSeason]="null"
+                [tracklistsOfSeason]="[]"
+                [inpSelectedTracklist]="null"
+                [inpIsWithTracklist]="false"
+              />
+
+              <!-- <app-episode-list-without-tracklist
                 *ngIf="
                   !tracklistSelectionForm.get('selectedTracklist')?.value ||
                   tracklistSelectionForm.get('selectedTracklist')?.value ===
                     EMPTY_TRACKLIST
                 "
                 [inpEpisodeList]="season.episodes"
-              />
+              /> -->
             </p-accordion-content>
           </p-accordion-panel>
         </p-accordion>
@@ -168,6 +179,7 @@
     [mediaID]="seasonData.media.id"
     (cancelTracklistFormSubmission)="cancelTracklistForm()"
     (saveNewTracklist)="refreshPage()"
+    [inpTVName]="seasonData.media.name"
   />
 </ng-container>
 
@@ -179,7 +191,6 @@
   "
 >
   <app-update-tracklist-form
-    [inpSeasonTracklists]="seasonData.tracklists"
     [inpSelectedTracklist]="
       tracklistSelectionForm.get('selectedTracklist')?.value
     "
@@ -200,6 +211,25 @@
     [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
     [inpEpisode]="currentEpisode"
     [inpSeasonID]="currentSeason.id"
+    [inpIsEpisodeEditing]="false"
+    (saveEpisode)="refreshPage()"
+    (cancelEpisode)="cancelTracklistForm()"
+  />
+</ng-container>
+
+<ng-container
+  *ngIf="
+    isTracklistFormVisible === 4 &&
+    tracklistSelectionForm.get('selectedTracklist')?.value &&
+    currentEpisode &&
+    currentSeason
+  "
+>
+  <app-create-tracklist-episode-form
+    [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
+    [inpEpisode]="currentEpisode"
+    [inpSeasonID]="currentSeason.id"
+    [inpIsEpisodeEditing]="true"
     (saveEpisode)="refreshPage()"
     (cancelEpisode)="cancelTracklistForm()"
   />

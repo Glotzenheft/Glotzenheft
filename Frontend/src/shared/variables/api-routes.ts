@@ -1,5 +1,7 @@
-export const ROUTE_MULTI_SEARCH: string =
-  'https://127.0.0.1:8000/api/multi-search?q=';
+export const ROUTE_MULTI_SEARCH: string[] = [
+  'https://127.0.0.1:8000/api/multi-search?q=',
+  '&page=',
+];
 
 export const ROUTE_MEDIA_DETAILS_SEARCH: string[] = [
   'https://127.0.0.1:8000/api/tv?media_id=',
@@ -69,3 +71,24 @@ export const ROUTE_CREATE_TRACKLIST_EPISODE: string[] = [
   '&watch_date=',
   '&tracklist_id=',
 ];
+
+export const ROUTE_UPDATE_TRACKLIST_EPISODE: string[] = [
+  // for updating the watch date of an episode
+  'https://127.0.0.1:8000/api/tracklist-episode?tracklist_id=',
+  '&tracklist_season_id=',
+  '&tracklist_episode_id=',
+  '&watch_date=',
+];
+
+export const ROUTE_DELETE_TRACKLIST_EPISODE: string[] = [
+  'https://127.0.0.1:8000/api/tracklist-episode?tracklist_id=',
+  '&tracklist_season_id=',
+  '&tracklist_episode_id=',
+];
+
+// api routes for statistics ---------------------------------
+export const ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY: string =
+  'https://127.0.0.1:8000/api/statistic/watchtime-per-day';
+
+export const ROUTE_USER_ACTIVITIES: string =
+  'https://127.0.0.1:8000/api/user-activities?user_activity_page=';

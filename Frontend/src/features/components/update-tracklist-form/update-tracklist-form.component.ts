@@ -48,8 +48,6 @@ import { UserService } from '../../../service/user/user.service';
 })
 export class UpdateTracklistFormComponent implements OnInit {
   // input variables
-  public inpSeasonTracklists: InputSignal<SeasonTracklist[]> =
-    input.required<SeasonTracklist[]>();
 
   public inpSelectedTracklist: InputSignal<SeasonTracklist> =
     input.required<SeasonTracklist>();

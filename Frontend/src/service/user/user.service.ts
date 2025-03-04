@@ -21,12 +21,18 @@ import {
   ROUTE_DELETE_USER_ACCOUNT,
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
+  ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+  ROUTE_USER_ACTIVITIES,
 } from '../../shared/variables/api-routes';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
+import {
+  DeleteUserRequest,
+  UserActivity,
+} from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
+import { WatchTimeStatistic } from '../../shared/statistic-interfaces';
 
 @Injectable({
   providedIn: 'root',
@@ -36,6 +42,11 @@ export class UserService {
     new BehaviorSubject<boolean>(isUserLoggedIn());
   public isSearchBarVisible$: Observable<boolean> =
     this.isSearchBarVisible.asObservable();
+
+  private visibleUserName: BehaviorSubject<string> =
+    new BehaviorSubject<string>('');
+  public visibleUserName$: Observable<string> =
+    this.visibleUserName.asObservable();
 
   // variables for checking validation of user login
   private USER_KEY_LAST_LOGIN: string = 'lastLogin';
@@ -50,6 +61,7 @@ export class UserService {
     private mediaService: MediaService
   ) {}
 
+  // functions -----------------------------------------------------------------------
   loginIntoAccount = (
     loginData: LoginCredentials
   ): Observable<LoginAndMessageResponse> => {
@@ -58,6 +70,7 @@ export class UserService {
       .pipe(
         tap(() => {
           this.isSearchBarVisible.next(true);
+          this.visibleUserName.next(loginData.username);
         }),
         catchError((error: HttpErrorResponse) => {
           return throwError(() => error);
@@ -74,7 +87,11 @@ export class UserService {
         JSON.stringify(registerData)
       )
       .pipe(
-        tap(() => this.isSearchBarVisible.next(true)),
+        tap(() => {
+          this.isSearchBarVisible.next(true);
+          this.visibleUserName.next(registerData.username);
+        }),
+
         catchError((error: HttpErrorResponse) => {
           return throwError(() => error);
         })
@@ -87,6 +104,7 @@ export class UserService {
         localStorage.clear();
       }
       this.isSearchBarVisible.next(false);
+      this.visibleUserName.next('');
     }
   };
 
@@ -220,6 +238,80 @@ export class UserService {
           security_question: userData.security_question,
           security_answer: userData.security_answer,
         }),
+        headers: header,
+      })
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
+  };
+
+  /**
+   * Function for getting the username if the user is logged in
+   * @returns string | null
+   */
+  public getUserName = (): string | null => {
+    if (!isUserLoggedIn()) {
+      return null;
+    }
+
+    let userName: string = '';
+
+    if (isPlatformBrowser(this.platformId)) {
+      userName = localStorage.getItem('username') ?? '';
+
+      if (!userName.trim()) {
+        return null;
+      }
+
+      return userName;
+    }
+
+    return null;
+  };
+
+  /**
+   * Function for getting the user statistic data of the watch time.
+   * @returns Observable<WatchTimeStatistic> | null
+   */
+  public getUserStatisticWatchTime =
+    (): Observable<WatchTimeStatistic> | null => {
+      const header = this.mediaService.getHeader();
+
+      if (!header) {
+        return null;
+      }
+
+      return this.http
+        .get<WatchTimeStatistic>(ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, {
+          headers: header,
+        })
+        .pipe(
+          shareReplay(1),
+          catchError((error: HttpErrorResponse) => {
+            return throwError(() => error);
+          })
+        );
+    };
+
+  /**
+   * Function for getting the data of the recent user activities.
+   * @param responsePage number
+   * @returns Observable<UserActivity> | null
+   */
+  public getUserActivities = (
+    responsePage: number
+  ): Observable<UserActivity[]> | null => {
+    const header = this.mediaService.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    return this.http
+      .get<UserActivity[]>(ROUTE_USER_ACTIVITIES + responsePage, {
         headers: header,
       })
       .pipe(

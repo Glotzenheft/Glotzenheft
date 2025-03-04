@@ -45,7 +45,6 @@ import { TracklistFormComponent } from '../../components/tracklist-form/tracklis
 import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../components/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
-import { EpisodeListWithoutTracklistComponent } from '../../components/episodes/episode-list-without-tracklist/episode-list-without-tracklist.component';
 
 @Component({
   selector: 'app-season-page',
@@ -69,7 +68,6 @@ import { EpisodeListWithoutTracklistComponent } from '../../components/episodes/
     UpdateTracklistFormComponent,
     MenuModule,
     CreateTracklistEpisodeFormComponent,
-    EpisodeListWithoutTracklistComponent,
   ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
@@ -95,7 +93,7 @@ export class SeasonPageComponent implements OnInit {
   public currentTracklistSelection: SeasonTracklistType | null = null;
 
   // dialog and visibility variables --------------------------
-  // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist
+  // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist; = 4: edit episode of current tracklist
   public isTracklistFormVisible: number = 0;
 
   // variables for current object values
@@ -198,10 +196,6 @@ export class SeasonPageComponent implements OnInit {
     this.isTracklistFormVisible = 1;
   };
 
-  public navigateToMultiSearch = () => {
-    this.navigationService.navigateToMultiSearch();
-  };
-
   public hasErrorField = (field: string) => {
     const fieldControl = this.trackListForm.get(field);
 
@@ -240,12 +234,21 @@ export class SeasonPageComponent implements OnInit {
     this.isEditingButtonVisible = false;
   };
 
-  public setCurrentEpisode = (episode: SeasonEpisode) => {
+  public setCurrentEpisode = (
+    episode: SeasonEpisode,
+    isEpisodeForEditing: boolean
+  ) => {
     this.currentEpisode = episode;
-    this.setVisibility(3);
+
+    if (!isEpisodeForEditing) {
+      this.setVisibility(3);
+      return;
+    }
+    this.setVisibility(4);
   };
 
   public refreshPage = () => {
+    this.currentSeason = null;
     this.setVisibility(0);
     this.loadData();
   };

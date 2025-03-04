@@ -10,6 +10,7 @@ use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
 use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
@@ -54,7 +55,7 @@ readonly class JwtAuthenticator
         $authHeader = $request->headers->get('Authorization');
         if (!$authHeader || !str_starts_with($authHeader, 'Bearer '))
         {
-            $event->setController(fn () => new JsonResponse(['error' => 'Missing or invalid Authorization header'], 401));
+            $event->setController(fn () => new JsonResponse(['error' => 'Missing or invalid Authorization header'], Response::HTTP_UNAUTHORIZED));
             return;
         }
 
@@ -69,7 +70,7 @@ readonly class JwtAuthenticator
             $user = $this->entityManager->getRepository(User::class)->find($decoded->sub);
             if (!$user)
             {
-                $event->setController(fn () => new JsonResponse(['error' => 'User not found'], 401));
+                $event->setController(fn () => new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND));
                 return;
             }
 
@@ -80,7 +81,7 @@ readonly class JwtAuthenticator
         }
         catch (Exception $e)
         {
-            $event->setController(fn () => new JsonResponse(['error' => 'Invalid token: ' . $e->getMessage()], 401));
+            $event->setController(fn () => new JsonResponse(['error' => 'Invalid token: ' . $e->getMessage()], Response::HTTP_NOT_FOUND));
         }
         catch (NotFoundExceptionInterface|ContainerExceptionInterface $e)
         {

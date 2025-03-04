@@ -1,21 +1,191 @@
-.tracklistDIV {
-  width: 100%;
-  height: 4rem;
-  border: 0.1rem solid white;
-  border-radius: var(--border--radius);
+@media (max-width: 670px) {
+  img {
+    height: 100%;
+    border: 0.2rem solid black;
+  }
 
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
+  .tracklistDIV {
+    width: 100%;
+    height: 4rem;
+    border: 0.1rem solid white;
+    border-radius: var(--border--radius);
 
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
 
-  transition-duration: var(--transition--duration);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    transition-duration: var(--transition--duration);
+  }
+
+  .tracklistDIV:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+  }
+
+  .statusDIV {
+    height: 3rem;
+    width: 14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border--radius);
+    color: white;
+  }
+
+  .statusWatching {
+    background-color: #3e9c96;
+  }
+  .statusPausing {
+    background-color: #6b8e23;
+  }
+  .statusDropped {
+    background-color: #d32f2f;
+  }
+  .statusRewatching {
+    background-color: #028090;
+  }
+  .statusPlanToWatch {
+    background-color: #facc15;
+  }
+  .statusCompleted {
+    background-color: #059669;
+  }
+
+  .tracklistPanelMediaDetailsDIV {
+    width: 100%;
+  }
+
+  .seasonPictureWrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .seasonMetaPicture {
+    width: auto;
+  }
+
+  .seasonMetaPicture {
+    width: 15rem;
+    height: 15rem;
+    border: 0.4rem solid white;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .ratingDIV {
+    display: flex;
+    justify-content: flex-start;
+    flex-direction: column;
+
+    /* align-items: center; */
+    width: 20rem;
+    margin-bottom: 4rem;
+  }
+
+  .mediaButton {
+    margin-top: 1rem;
+    width: 100%;
+  }
 }
 
-.tracklistDIV:hover {
-  cursor: pointer;
-  background-color: white;
-  color: black;
+@media (min-width: 670px) {
+  img {
+    height: 100%;
+    border: 0.2rem solid black;
+  }
+
+  .tracklistDIV {
+    width: 100%;
+    height: 4rem;
+    border: 0.1rem solid white;
+    border-radius: var(--border--radius);
+
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    transition-duration: var(--transition--duration);
+  }
+
+  .tracklistDIV:hover {
+    cursor: pointer;
+    background-color: white;
+    color: black;
+  }
+
+  .statusDIV {
+    height: 3rem;
+    width: 14rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    border-radius: var(--border--radius);
+    color: white;
+  }
+
+  .statusWatching {
+    background-color: #3e9c96;
+  }
+  .statusPausing {
+    background-color: #6b8e23;
+  }
+  .statusDropped {
+    background-color: #d32f2f;
+  }
+  .statusRewatching {
+    background-color: #028090;
+  }
+  .statusPlanToWatch {
+    background-color: #facc15;
+  }
+  .statusCompleted {
+    background-color: #059669;
+  }
+
+  .tracklistPanelDIV {
+    display: flex;
+    justify-content: start;
+    align-items: center;
+  }
+
+  .tracklistPanelMediaDetailsDIV {
+    width: calc(100% - 15rem);
+  }
+
+  .seasonMetaPicture {
+    width: auto;
+  }
+
+  .seasonMetaPicture {
+    width: 15rem;
+    height: 15rem;
+    border: 0.4rem solid white;
+    margin-right: 1rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-bottom: 2rem;
+  }
+
+  .ratingDIV {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 20rem;
+  }
+
+  .mediaButton {
+    margin-top: 1rem;
+  }
 }

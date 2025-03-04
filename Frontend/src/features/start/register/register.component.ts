@@ -23,6 +23,7 @@ import { SecurityService } from '../../../service/security/security.service';
 import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
 import { SelectModule } from 'primeng/select';
 import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
+import { CheckboxModule } from 'primeng/checkbox';
 
 @Component({
   selector: 'app-register',
@@ -36,6 +37,7 @@ import { ValidationQuestion } from '../../../shared/interfaces/validation-questi
     Message,
     DialogModule,
     SelectModule,
+    CheckboxModule,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -67,6 +69,7 @@ export class RegisterComponent implements OnInit {
       passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
       validationQuestion: [{ name: '', code: '' }, [Validators.required]],
       validationAnswer: ['', [Validators.required]],
+      agbAccept: [false, Validators.requiredTrue],
     });
   }
 
@@ -104,6 +107,7 @@ export class RegisterComponent implements OnInit {
       security_question:
         this.registerGroup.get('validationQuestion')?.value.name,
       security_answer: this.registerGroup.get('validationAnswer')?.value,
+      agb_accept: true,
     };
 
     this.userService.registerAccount(registerData).subscribe({

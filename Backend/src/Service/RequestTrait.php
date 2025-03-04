@@ -55,6 +55,12 @@ trait RequestTrait
 
         $watchDate = $request->query->get('watch_date') ?: null;
 
+        $statisticPeriodStartDate = $request->query->get('period_start_date') ?: null;
+
+        $statisticPeriodEndDate = $request->query->get('period_end_date') ?: null;
+
+        $userActivityPage = filter_var($request->query->get('user_activity_page'), FILTER_VALIDATE_INT) ?: null;
+
         return [
             'user_id' => $userID,
             'security_question' => $userSecurityQuestion,
@@ -72,7 +78,10 @@ trait RequestTrait
             'tracklist_rating' => $tracklistRating,
             'tracklist_start_date' => $tracklistStartDate,
             'tracklist_finish_date' => $tracklistFinishDate,
-            'watch_date' => $watchDate
+            'watch_date' => $watchDate,
+            'period_start_date' => $statisticPeriodStartDate,
+            'period_end_date' => $statisticPeriodEndDate,
+            'user_activity_page' => $userActivityPage,
         ];
     }
 
@@ -81,6 +90,14 @@ trait RequestTrait
         return [
             'error' => 'Invalid request',
             'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnDatabaseError(): array
+    {
+        return [
+            'error' => 'Database error occurred.',
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR
         ];
     }
 
@@ -300,13 +317,6 @@ trait RequestTrait
         ];
     }
 
-    private function returnNoWatchDateProvided(): array
-    {
-        return [
-            'error' => 'No watch date provided when trying to update the watch date.',
-            'code' => Response::HTTP_BAD_REQUEST
-        ];
-    }
     private function validateRequest(): bool
     {
         if (!isset($this->data['user_id'], $this->data['security_question'], $this->data['security_answer']))

@@ -185,7 +185,7 @@ p {
   }
 
   .login {
-    height: 110%;
+    height: 120%;
     width: 100%;
 
     display: flex;
@@ -360,7 +360,28 @@ p {
 
   .createTracklistEpisodeFormDIV form .formAcions .p-button {
     width: 100%;
-    height: 3rem;
+    height: 2.5rem;
+  }
+
+  .userActivitiesTable {
+    /* border-radius: var(--border--radius); */
+    /* background-color: white; */
+    width: 100%;
+    /* height: 200rem; */
+    margin-bottom: 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .userActivitesTableDIV {
+    overflow-x: auto;
+    overflow-y: auto;
+    box-shadow: var(--box--shadow);
+  }
+
+  .userActivitiesTable .p-datatable {
+    width: 60rem;
   }
 }
 
@@ -459,7 +480,7 @@ p {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 110%;
   }
 
   .loginWindow {
@@ -590,6 +611,31 @@ p {
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
   }
+
+  .createTracklistEpisodeFormDIV form .formAcions .p-button {
+    width: 10rem;
+    height: 3rem;
+  }
+
+  .userActivitiesTable {
+    width: 100%;
+    margin-bottom: 10rem;
+    display: flex;
+    height: 100rem;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .userActivitesTableDIV {
+    overflow-x: auto;
+    overflow-y: auto;
+    box-shadow: var(--box--shadow);
+  }
+
+  .userActivitiesTable .p-datatable {
+    width: 60rem;
+    box-shadow: var(--box--shadow);
+  }
 }
 
 @media (min-width: 940px) {
@@ -687,7 +733,7 @@ p {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 100%;
+    height: 110%;
   }
 
   .p-message {
@@ -833,6 +879,32 @@ p {
 
   .tracklistActions .p-button {
     width: 10rem;
+  }
+
+  .createTracklistEpisodeFormDIV form .formAcions .p-button {
+    width: 12rem;
+    height: 3rem;
+  }
+
+  .userActivitiesTable {
+    border-radius: var(--border--radius);
+    /* background-color: white; */
+    width: 100%;
+    height: 40rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .userActivitesTableDIV {
+    overflow-x: auto;
+    overflow-y: auto;
+    box-shadow: var(--box--shadow);
+  }
+
+  .userActivitiesTable .p-datatable {
+    width: 100%;
   }
 }
 

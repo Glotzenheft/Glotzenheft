@@ -1,12 +1,67 @@
 <router-outlet />
-<p-panel
-  header="Meine letzen Aktivitäten"
-  class="userPanel"
-  [toggleable]="true"
->
-  <p>Bla</p>
-</p-panel>
 
-<p-panel header="Meine Serien und Filme" class="userPanel" [toggleable]="true">
-  <p>Bla</p>
-</p-panel>
+<div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
+  <h1>Meine Übersicht</h1>
+
+  <div class="diagramSelection">
+    <p-select
+      [options]="diagramSelection"
+      optionLabel="name"
+      (onChange)="handleDiagramSelectionChange($event)"
+    />
+  </div>
+
+  <div class="barChartDIVWrapper">
+    <div class="barChartDIV" *ngIf="selectedDiagramType.value === 0">
+      <p-chart type="bar" [data]="lineDiagramData" [options]="diagramOptions" />
+    </div>
+  </div>
+  <div class="pieChartDIV" *ngIf="selectedDiagramType.value === 1">
+    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
+  </div>
+
+  <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 2">
+    <div class="barChartDIV">
+      <p-chart
+        type="bar"
+        [data]="barChartForMediaStatistic"
+        [options]="barChartMediaStatisticOptions"
+      />
+    </div>
+  </div>
+</div>
+
+<div class="gapDIV"></div>
+
+<h2>Meine Aktivitäten</h2>
+<div
+  *ngIf="userActivitiesRequest$ | async as userActivitiesRequest"
+  class="userActivitiesTable"
+>
+  <div class="userActivitesTableDIV">
+    <p-table
+      [value]="userActivitiesRequest"
+      stripedRows
+      (onLazyLoad)="onUserActivitiesPageChange($event)"
+    >
+      <ng-template #header>
+        <tr>
+          <th>Datum</th>
+          <th>Episodennummer</th>
+          <th>Medienname</th>
+          <th>Tracklist-Name</th>
+          <th>Medientyp</th>
+        </tr>
+      </ng-template>
+      <ng-template #body let-tracklist>
+        <tr>
+          <td>{{ tracklist.date | dateFormatting }}</td>
+          <td>{{ tracklist.episodeNumber }}</td>
+          <td>{{ tracklist.mediaTitle }}</td>
+          <td>{{ tracklist.tracklistName }}</td>
+          <td>{{ tracklist.type }}</td>
+        </tr>
+      </ng-template>
+    </p-table>
+  </div>
+</div>

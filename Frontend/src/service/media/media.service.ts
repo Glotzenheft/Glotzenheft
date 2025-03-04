@@ -23,7 +23,6 @@ import {
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
-import { start } from 'repl';
 
 @Injectable({
   providedIn: 'root',
@@ -115,9 +114,16 @@ export class MediaService {
     );
   };
 
-  getMultiSearchResults = (searchString: string): Observable<any> => {
+  getMultiSearchResults = (
+    searchString: string,
+    page: number
+  ): Observable<any> => {
     return this.http
-      .get(`${ROUTE_MULTI_SEARCH}${encodeURIComponent(searchString)}`)
+      .get(
+        `${ROUTE_MULTI_SEARCH[0]}${encodeURIComponent(searchString)}${
+          ROUTE_MULTI_SEARCH[1]
+        }${page}`
+      )
       .pipe(shareReplay(1));
   };
 

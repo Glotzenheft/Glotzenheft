@@ -4,15 +4,24 @@ import { VisibleRoute } from '../../../shared/interfaces/route-list-item';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
+import { MenuModule } from 'primeng/menu';
 
 @Component({
   selector: 'app-footer',
-  imports: [CommonModule, ButtonModule],
+  imports: [CommonModule, ButtonModule, MenuModule],
   templateUrl: './footer.component.html',
   styleUrl: './footer.component.css',
 })
 export class FooterComponent {
-  footerLinkList: VisibleRoute[] = getVisibleRoutes();
+  footerLinkList: { label: string; command: () => void }[] =
+    getVisibleRoutes().map((route: VisibleRoute) => {
+      return {
+        label: route.description,
+        command: () => {
+          this.router.navigateByUrl(route.fullUrl);
+        },
+      };
+    });
 
   constructor(private router: Router) {}
 

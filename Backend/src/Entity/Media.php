@@ -78,12 +78,15 @@ class Media
     private ?MediaType $type = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    #[Groups(['media_details'])]
+    #[Groups(['media_details', 'tracklist_details'])]
     private ?string $posterPath = null;
 
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['media_details'])]
     private ?string $backdropPath = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $runtime = null;
 
     public function __construct()
     {
@@ -276,6 +279,18 @@ class Media
     public function setBackdropPath(?string $backdropPath): static
     {
         $this->backdropPath = $backdropPath;
+
+        return $this;
+    }
+
+    public function getRuntime(): ?int
+    {
+        return $this->runtime;
+    }
+
+    public function setRuntime(?int $runtime): static
+    {
+        $this->runtime = $runtime;
 
         return $this;
     }
