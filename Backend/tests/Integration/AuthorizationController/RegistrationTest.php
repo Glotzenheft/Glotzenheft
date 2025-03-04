@@ -1,0 +1,78 @@
+<?php declare(strict_types=1);
+
+namespace App\Tests\Integration\AuthorizationController;
+
+use App\Entity\User;
+use App\Enum\SecurityQuestions;
+use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\KernelBrowser;
+use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
+use Symfony\Component\HttpFoundation\Response;
+
+class RegistrationTest extends WebTestCase
+{
+    private User $user;
+    private EntityManagerInterface $entityManager;
+    private KernelBrowser $client;
+
+    private string $username = 'testDeleteUser';
+    private string $password = 'testDeletePassword123!';
+
+    protected function setUp(): void
+    {
+        $this->client = static::createClient();
+        $this->entityManager = static::getContainer()->get(EntityManagerInterface::class);
+
+        // delete user if already exists
+        $user = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $this->username]);
+        if ($user instanceof User)
+        {
+            $this->entityManager->remove($user);
+            $this->entityManager->flush();
+        }
+        // Create test user object
+        $this->user = new User();
+        $this->user->setUsername($this->username);
+        $this->user->setPassword($this->password);
+        $this->user->setSecurityQuestion(SecurityQuestions::PET_COLOR);
+        $this->user->setSecurityAnswer('Grey');
+    }
+
+    public function testRegistration(): void
+    {
+        // Arrange
+        $userData = [
+            'username' => $this->user->getUsername(),
+            'password' => $this->user->getPassword(),
+            'security_question' => $this->user->getSecurityQuestion(),
+            'security_answer' => $this->user->getSecurityAnswer(),
+        ];
+
+        // Act
+        $this->client->request('POST', '/api/register', [], [], ['CONTENT_TYPE' => 'application/json'], json_encode($userData));
+        $registerResponse = json_decode($this->client->getResponse()->getContent(), true);
+
+        // Assert
+        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User registration failed');
+        $this->assertArrayHasKey('message', $registerResponse, 'No token received after registration');
+
+        echo PHP_EOL . 'User registration successful.' . PHP_EOL;
+    }
+
+    public function tearDown(): void
+    {
+        if ($this->user instanceof User)
+        {
+            $managedUser = $this->entityManager->getRepository(User::class)->findOneBy(['username' => $this->username]);
+            if ($managedUser)
+            {
+                $this->entityManager->remove($managedUser);
+                $this->entityManager->flush();
+
+                echo PHP_EOL . 'Testuser deleted.' . PHP_EOL;
+            }
+        }
+
+        parent::tearDown();
+    }
+}
