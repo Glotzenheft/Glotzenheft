@@ -70,7 +70,7 @@ class AuthorizationControllerTest extends TestCase
 
         // Act
         $response = $this->controller->register($request, $this->entityManager, $this->passwordHasher);
-        echo $response->getContent();
+
         // Assert
         $this->assertEquals(409, $response->getStatusCode());
         $this->assertStringContainsString('User already exists', $response->getContent());
@@ -120,7 +120,7 @@ class AuthorizationControllerTest extends TestCase
 
         // Act
         $response = $this->controller->register($request, $this->entityManager, $this->passwordHasher);
-        echo $response->getContent();
+
         // Assert
         $this->assertEquals(200, $response->getStatusCode());
         $this->assertStringContainsString('User registered successfully', $response->getContent());

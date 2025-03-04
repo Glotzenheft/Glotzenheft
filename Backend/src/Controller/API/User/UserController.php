@@ -42,7 +42,7 @@ class UserController extends AbstractController
 
         if (isset($response['error']))
         {
-            return $this->json($response['error'], $response['code']);
+            return $this->json($response['error'], (int) $response['code']);
         }
 
         return $this->json($response['message']);
@@ -71,7 +71,7 @@ class UserController extends AbstractController
 
         if (isset($response['error']))
         {
-            return $this->json($response['error'], $response['code']);
+            return $this->json($response['error'], (int) $response['code']);
         }
 
         return $this->json($response['message']);
