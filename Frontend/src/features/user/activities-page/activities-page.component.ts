@@ -81,6 +81,54 @@ export class ActivitiesPageComponent implements OnInit {
         this.userActivitiesListWithDaySplitter = [];
 
         for (const userActivity of sortedUserActivities) {
+          if (index === 0) {
+            const dateAsDate: Date = new Date(userActivities[0].date);
+            let weekDay: string = '';
+
+            switch (dateAsDate.getDay()) {
+              case 0:
+                weekDay = 'Sonntag';
+                break;
+              case 1:
+                weekDay = 'Montag';
+                break;
+              case 2:
+                weekDay = 'Dienstag';
+                break;
+              case 3:
+                weekDay = 'Mittwoch';
+                break;
+              case 4:
+                weekDay = 'Donnerstag';
+                break;
+              case 5:
+                weekDay = 'Freitag';
+                break;
+              case 6:
+                weekDay = 'Samstag';
+                break;
+            }
+
+            this.userActivitiesListWithDaySplitter.push({
+              date: userActivity.date,
+              episodeID: null,
+              episodeNumber: null,
+              mediaID: 0,
+              mediaTitle: '',
+              posterPath: null,
+              seasonID: null,
+              seasonNumber: null,
+              stillPath: null,
+              tracklistEpisodeID: null,
+              tracklistID: -1,
+              tracklistName:
+                'Tag: ' + dateAsDate.toLocaleDateString() + ` (${weekDay})`,
+              tracklistSeasinID: null,
+              type: '',
+              isDateSplitter: true,
+            });
+          }
+
           if (
             index > 0 &&
             sortedUserActivities[index - 1].date.split(' ')[0] !==
@@ -118,7 +166,7 @@ export class ActivitiesPageComponent implements OnInit {
               episodeID: null,
               episodeNumber: null,
               mediaID: 0,
-              mediaTitle: '-------------',
+              mediaTitle: '',
               posterPath: null,
               seasonID: null,
               seasonNumber: null,
