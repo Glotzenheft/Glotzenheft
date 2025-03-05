@@ -133,7 +133,7 @@ export class CreateNewTracklistComponent implements OnInit {
       this.inputSeason().id,
       formattedStartDate,
       formattedEndDate,
-      this.trackListForm.get('status')?.value.name,
+      this.trackListForm.get('status')?.value.value,
       this.trackListForm.get('rating')?.value
     );
 

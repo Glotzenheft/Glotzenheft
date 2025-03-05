@@ -8,11 +8,11 @@ export type TracklistStatusType =
 
 export const TRACK_LIST_STATUS_LIST: string[] = [
   'watching',
-  'pausing',
-  'dropped',
+  'completed',
   'rewatching',
   'plan to watch',
-  'completed',
+  'dropped',
+  'pausing',
 ];
 
 export const convertTracklistStatusIntoGerman = (status: string): string => {
