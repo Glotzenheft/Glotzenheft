@@ -146,8 +146,6 @@ export class MediaService {
     let formattedDate: string = '';
     let formattedEndDate: string = '';
 
-    console.log('start date:', startDate, ', end date: ', endDate);
-
     if (startDate) {
       let startDateAsDate: Date = new Date(startDate);
       startDateAsDate.setDate(startDateAsDate.getDate() + 1);

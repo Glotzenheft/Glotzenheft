@@ -94,7 +94,6 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       episodeInTracklist.length === 1 && this.inpIsEpisodeEditing();
 
     if (episodeInTracklist[0] && episodeInTracklist[0].watchDate) {
-      console.log('condition');
       const watchDateAsDate = new Date(episodeInTracklist[0].watchDate);
       watchDateAsDate.setHours(watchDateAsDate.getHours() - 1);
       this.createEpisodeForm = this.formBuilder.group({
@@ -347,6 +346,5 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
   public setDeletionDialogVisibilityStatus = (status: boolean) => {
     this.isDeletionDialogVisible = status;
-    console.log('new status:', this.isDeletionDialogVisible);
   };
 }

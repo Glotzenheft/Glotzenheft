@@ -176,8 +176,6 @@ export class UserService {
         );
         localStorage.setItem(KEY_LOCAL_STORAGE_LOG_IN_TRIES, '0');
 
-        console.log(localStorage);
-
         return true;
       }
 

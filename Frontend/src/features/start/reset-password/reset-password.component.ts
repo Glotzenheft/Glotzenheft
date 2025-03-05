@@ -81,8 +81,6 @@ export class ResetPasswordComponent implements OnInit {
       new_password: this.resetPasswordGroup.get('newPassword')?.value,
     };
 
-    console.log(newPasswordData);
-
     this.resetPasswordData$ = this.userService.resetPassword(newPasswordData);
 
     if (!this.resetPasswordData$) {

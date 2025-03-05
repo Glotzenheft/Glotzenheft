@@ -76,7 +76,6 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    console.log('is login valid  ?:', this.userService.isUserLoginValid());
     if (!this.userService.isUserLoginValid()) {
       // user login is blocked
 
