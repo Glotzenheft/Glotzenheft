@@ -58,6 +58,7 @@ export class UserStartComponent implements OnInit {
   public diagramOptions: any;
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
+  public barChartYearlyStatisticOptions: any;
   public pieChartColors: string[] = [
     '#000000',
     '#32323c',
@@ -74,6 +75,7 @@ export class UserStartComponent implements OnInit {
   public barDiagramData: BarDiagram | null = null;
   public pieChartData: any;
   public barChartForMediaStatistic: BarDiagram | null = null;
+  public barChartForYearlyMediaStatistic: BarDiagram | null = null;
   public diagramSelection: { name: string; value: number }[] = [
     {
       name: 'Meine Bewertungen (Balkendiagramm)',
@@ -86,6 +88,10 @@ export class UserStartComponent implements OnInit {
     {
       name: 'Geschaute Zeit der letzten 30 Tage mit Aktivitäten (Balkendiagramm)',
       value: 2,
+    },
+    {
+      name: 'Geschaute Zeit nach Jahren in Stunden (Balkendiagramm)',
+      value: 3,
     },
   ];
   public selectedDiagramType: { name: string; value: number } =
@@ -246,6 +252,23 @@ export class UserStartComponent implements OnInit {
             },
           },
         };
+
+        this.barChartYearlyStatisticOptions = {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+          },
+          scales: {
+            x: {title: {display: true, text: 'Jahr'}},
+            y: {
+              title: {display: true, text: 'geschaute Zeit [h]'},
+              beginAtZero: true,
+              stepSize: 1,
+            },
+          },
+        };
       },
       error: (err: any) => {
         if (err.status === 401) {
@@ -277,6 +300,34 @@ export class UserStartComponent implements OnInit {
     this.userMediaStatistic$.subscribe({
       next: (res: WatchTimeStatistic) => {
         const resAsList: [string, number][] = Object.entries(res).slice(1, 31);
+        const yearlyDataMap = new Map<string, number>();
+
+        Object.entries(res).forEach(([date, time]) =>
+        {
+          if (date !== 'unknown_date')
+          {
+            const year = date.split('-')[0]; // Jahr extrahieren
+            yearlyDataMap.set(year, (yearlyDataMap.get(year) || 0) + time / 60);
+          }
+        });
+
+        const yearlyDataList: [string, number][] = Array.from(yearlyDataMap.entries());
+
+        // Erstellen des Balkendiagramms
+        this.barChartForYearlyMediaStatistic =
+        {
+          labels: yearlyDataList.map((val) => val[0]), // Nur die Jahre
+          datasets: [
+            {
+              label: 'Geschaute Zeit pro Jahr [h]',
+              data: yearlyDataList.map((val) => val[1]), // Summierte Werte pro Jahr
+              fill: true,
+              borderColor: '#059669',
+              tension: 0.4,
+              backgroundColor: '#059669',
+            }
+          ]
+        };
 
         this.barChartForMediaStatistic = {
           labels: resAsList
@@ -323,9 +374,12 @@ export class UserStartComponent implements OnInit {
   public handleDiagramSelectionChange = (e: any) => {
     this.selectedDiagramType = e.value;
 
-    if (e.value.value === 2) {
+    if (e.value.value >= 2)
+    {
       this.loadMediaWatchtimeStatistic();
-    } else {
+    }
+    else
+    {
       this.loadTracklistData();
     }
   };

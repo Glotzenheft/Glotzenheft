@@ -161,7 +161,7 @@ export class UpdateTracklistFormComponent implements OnInit {
     const updateTracklistData: UpdateTracklistRequest = {
       tracklist_id: this.selectedFullTracklist.id,
       tracklist_status:
-        this.updateTracklistForm.get('tracklist_status')?.value.name,
+        this.updateTracklistForm.get('tracklist_status')?.value.value,
       tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
       tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
       tracklist_start_date: formattedStartDate,
