@@ -4,11 +4,20 @@ import { TableModule } from 'primeng/table';
 import { UserService } from '../../../service/user/user.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { UserActivity } from '../../../shared/interfaces/user-interfaces';
+import {
+  UserActivity,
+  UserActivityWithDaySplitt,
+} from '../../../shared/interfaces/user-interfaces';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-activities-page',
@@ -27,6 +36,8 @@ export class ActivitiesPageComponent implements OnInit {
   // variables for user activities overview
   public userActivitiesRequest$: Observable<UserActivity[]> | null = null;
   public userActivitiesRequest: UserActivity[] = [];
+  public userActivitiesListWithDaySplitter: UserActivityWithDaySplitt[] = [];
+
   public currentPage: number = 1;
   public isLeftButtonDisabled: boolean = true;
   public isRightButtonDisabled: boolean = false;
@@ -40,7 +51,8 @@ export class ActivitiesPageComponent implements OnInit {
 
   constructor(
     private userService: UserService,
-    private messageService: MessageService
+    private messageService: MessageService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -59,6 +71,75 @@ export class ActivitiesPageComponent implements OnInit {
 
     this.userActivitiesRequest$?.subscribe({
       next: (userActivities: UserActivity[]) => {
+        let index: number = 0;
+        const sortedUserActivities: UserActivity[] = userActivities.sort(
+          (a: UserActivity, b: UserActivity) => {
+            return new Date(b.date).getTime() - new Date(a.date).getTime();
+          }
+        );
+
+        this.userActivitiesListWithDaySplitter = [];
+
+        for (const userActivity of sortedUserActivities) {
+          if (
+            index > 0 &&
+            sortedUserActivities[index - 1].date.split(' ')[0] !==
+              userActivity.date.split(' ')[0]
+          ) {
+            const dateAsDate: Date = new Date(userActivity.date);
+            let weekDay: string = '';
+
+            switch (dateAsDate.getDay()) {
+              case 0:
+                weekDay = 'Sonntag';
+                break;
+              case 1:
+                weekDay = 'Montag';
+                break;
+              case 2:
+                weekDay = 'Dienstag';
+                break;
+              case 3:
+                weekDay = 'Mittwoch';
+                break;
+              case 4:
+                weekDay = 'Donnerstag';
+                break;
+              case 5:
+                weekDay = 'Freitag';
+                break;
+              case 6:
+                weekDay = 'Samstag';
+                break;
+            }
+
+            this.userActivitiesListWithDaySplitter.push({
+              date: userActivity.date,
+              episodeID: null,
+              episodeNumber: null,
+              mediaID: 0,
+              mediaTitle: '-------------',
+              posterPath: null,
+              seasonID: null,
+              seasonNumber: null,
+              stillPath: null,
+              tracklistEpisodeID: null,
+              tracklistID: -1,
+              tracklistName:
+                'Tag: ' + dateAsDate.toLocaleDateString() + ` (${weekDay})`,
+              tracklistSeasinID: null,
+              type: '',
+              isDateSplitter: true,
+            });
+          }
+          this.userActivitiesListWithDaySplitter.push({
+            ...userActivity,
+            isDateSplitter: false,
+          });
+
+          index++;
+        }
+
         // logic for pagination -------------------------------------------------
         this.currentPage = page;
 
@@ -96,24 +177,21 @@ export class ActivitiesPageComponent implements OnInit {
       },
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Anfrage',
-            detail:
-              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-          });
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
         this.isError = true;
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Laden der Daten',
-          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Laden der Daten',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
 
@@ -151,5 +229,16 @@ export class ActivitiesPageComponent implements OnInit {
     } else {
       return currentActivity.stillPath;
     }
+  };
+
+  public onClickActivity = (activity: UserActivityWithDaySplitt) => {
+    if (activity.type === 'movie') {
+      this.router.navigateByUrl(
+        `${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`
+      );
+      return;
+    }
+
+    this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
   };
 }

@@ -22,6 +22,12 @@ import { Message } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { SecurityService } from '../../../service/security/security.service';
 import { PanelModule } from 'primeng/panel';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-login',
@@ -52,7 +58,8 @@ export class LoginComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private messageService: MessageService,
-    private securityService: SecurityService
+    private securityService: SecurityService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -73,13 +80,13 @@ export class LoginComponent implements OnInit {
     if (!this.userService.isUserLoginValid()) {
       // user login is blocked
 
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Ungültiger Loginversuch',
-        detail:
-          'Sie haben zu viele Anmeldeversuche unternommen und können sich daher in der nächsten Minute nicht anmelden.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Ungültiger Loginversuch',
+          'Du hast zu viele Anmeldeversuche unternommen und kannst dich daher für eine Minute nicht anmelden.'
+        )
+      );
       return;
     }
 
@@ -90,10 +97,9 @@ export class LoginComponent implements OnInit {
         this.loginGroup.get('username')?.value
       )
     ) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Ungültiger Nutzername',
-      });
+      this.messageService.add(
+        getMessageObject('error', 'Ungültiger Nutzername')
+      );
       return;
     }
 
@@ -113,16 +119,21 @@ export class LoginComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 401) {
-          this.userService.showLoginMessage();
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+
+          return;
         }
 
         this.hasLoginError = true;
-        this.messageService.add({
-          severity: 'error',
-          summary: 'Loginversuch fehlgeschlagen',
-          detail:
-            'Die eingegebenen Nutzerdaten (Nutzername oder Passwort) sind fehlerhaft. Bitte überprüfen Sie Ihre Eingaben und versuchen Sie es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Loginversuch fehlgeschlagen',
+            'Die eingegebenen Daten sind fehlerhaft. Bitte prüfe deine Eingaben und probiere es erneut.'
+          )
+        );
       },
     });
   };

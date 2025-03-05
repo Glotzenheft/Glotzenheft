@@ -27,9 +27,23 @@
   .barChartDIVWrapper {
     width: 100%;
     overflow: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
   .barChartDIV {
     width: 30rem;
+  }
+
+  .pieChartDIV {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .activitiesPage {
+    height: 15rem;
   }
 }
 
@@ -55,8 +69,13 @@
   }
 
   .pieChartDIV {
-    width: 50%;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .activitiesPage {
+    height: 10rem;
   }
 }
-
-

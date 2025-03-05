@@ -22,6 +22,10 @@ import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-reset-password',
@@ -82,42 +86,44 @@ export class ResetPasswordComponent implements OnInit {
     this.resetPasswordData$ = this.userService.resetPassword(newPasswordData);
 
     if (!this.resetPasswordData$) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Ändern des Passwortes',
-        detail:
-          'Beim Ändern des Passwortes ist ein Fehler aufgetreten. Bitte versuche es erneut.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Fehler beim Ändern des Passwortes',
+          'Bitte versuche es erneut.'
+        )
+      );
       return;
     }
 
     this.resetPasswordData$.subscribe({
       next: (res) => {
-        this.messageService.add({
-          life: 7000,
-          summary: 'Passwort erfolgreich geändert',
-          detail:
-            'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit diesem anmelden. Sie werden automatisch ausgeloggt',
-          severity: 'success',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'success',
+            'Passwort erfolgreich geändert',
+            'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit diesem anmelden. Sie werden automatisch ausgeloggt'
+          )
+        );
 
         this.userService.logoutOfAccount();
         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
       },
       error: (err) => {
         if (err.status === 401) {
-          this.userService.showLoginMessage();
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
           return;
         }
 
-        this.messageService.add({
-          life: 7000,
-          summary: 'Fehler beim Ändern des Passwortes',
-          detail:
-            'Beim Ändern Ihres Passwortes ist ein Fehler aufgetreten. Bitte versuchen Sie es erneut.',
-          severity: 'error',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Ändern des Passwortes',
+            'Bitte versuche es erneut.'
+          )
+        );
       },
     });
   };

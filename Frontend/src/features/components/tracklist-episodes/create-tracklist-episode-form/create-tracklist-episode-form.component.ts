@@ -24,6 +24,14 @@ import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
 import { CreateTracklistEpisode } from '../../../../shared/interfaces/tracklist-episode-interfaces';
 import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
+import { DeleteDialogComponent } from '../../delete-dialog/delete-dialog.component';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../../shared/variables/message-vars';
+import { UserService } from '../../../../service/user/user.service';
+import { Router } from '@angular/router';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-create-tracklist-episode-form',
@@ -37,6 +45,7 @@ import { TooltipModule } from 'primeng/tooltip';
     FloatLabelModule,
     SelectModule,
     TooltipModule,
+    DeleteDialogComponent,
   ],
   templateUrl: './create-tracklist-episode-form.component.html',
   styleUrl: './create-tracklist-episode-form.component.css',
@@ -60,10 +69,14 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   public updateEpisodeRequestData$: Observable<any> | null = null;
   public deleteEpisodeRequestData$: Observable<any> | null = null;
 
+  public isDeletionDialogVisible: boolean = false;
+
   constructor(
     private messageService: MessageService,
     private episodeService: EpisodeService,
-    private formBuilder: FormBuilder
+    private formBuilder: FormBuilder,
+    private userService: UserService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -163,6 +176,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
   };
 
   public deleteEpisode = () => {
+    this.setDeletionDialogVisibilityStatus(false);
+
     const episodeInTracklist =
       this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
         (epis: TracklistEpisode) => {
@@ -171,13 +186,13 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       );
 
     if (episodeInTracklist.length < 1) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Episode nicht gefunden',
-        detail:
-          'Die Episode wurde nicht gefunden und konnte daher nicht gelöscht werden. Bitte probiere es erneut.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Episode nicht gefunden',
+          'Das Löschen ist fehlgeschlagen. Bitte probiere es erneut.'
+        )
+      );
 
       return;
     }
@@ -226,41 +241,30 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.episodeService.createTracklistEpisode(episodeData);
 
       if (!this.createEpisodeRequestData$) {
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: errorMessageSummary,
-          detail: errorMessageDetail,
-        });
+        this.messageService.add(
+          getMessageObject('error', errorMessageSummary, errorMessageDetail)
+        );
         return;
       }
 
       this.createEpisodeRequestData$.subscribe({
         next: () => {
-          this.messageService.add({
-            life: 7000,
-            severity: 'success',
-            summary: 'Episode erfolgreich hinzugefügt',
-          });
+          this.messageService.add(
+            getMessageObject('success', 'Episode erfolgreich hinzugefügt')
+          );
           this.saveEpisode.emit(true);
         },
         error: (err: any) => {
           if (err.status === 401) {
-            this.messageService.add({
-              life: 7000,
-              severity: 'error',
-              summary: 'Ungültige Authentifizierung',
-              detail:
-                'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
-            });
+            // logout user of account
+            this.userService.logoutOfAccount();
+            this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+            this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
             return;
           }
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: errorMessageSummary,
-            detail: errorMessageDetail,
-          });
+          this.messageService.add(
+            getMessageObject('error', errorMessageSummary, errorMessageDetail)
+          );
         },
       });
 
@@ -271,41 +275,27 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.episodeService.updateTracklistEpisode(episodeData);
 
       if (!this.updateEpisodeRequestData$) {
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: errorMessageSummary,
-          detail: errorMessageDetail,
-        });
+        this.messageService.add(
+          getMessageObject('error', errorMessageSummary, errorMessageDetail)
+        );
         return;
       }
 
       this.updateEpisodeRequestData$.subscribe({
         next: () => {
-          this.messageService.add({
-            life: 7000,
-            severity: 'success',
-            summary: 'Episode erfolgreich gespeichert',
-          });
+          this.messageService.add(
+            getMessageObject('success', 'Episode erfolgreich gespeichert')
+          );
           this.saveEpisode.emit(true);
         },
         error: (err: any) => {
           if (err.status === 401) {
-            this.messageService.add({
-              life: 7000,
-              severity: 'error',
-              summary: 'Ungültige Authentifizierung',
-              detail:
-                'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
-            });
+            this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
             return;
           }
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: errorMessageSummary,
-            detail: errorMessageDetail,
-          });
+          this.messageService.add(
+            getMessageObject('error', errorMessageSummary, errorMessageDetail)
+          );
         },
       });
     } else if (episodeActionNumber === 2) {
@@ -318,41 +308,27 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         );
 
       if (!this.deleteEpisodeRequestData$) {
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: errorMessageSummary,
-          detail: errorMessageDetail,
-        });
+        this.messageService.add(
+          getMessageObject('error', errorMessageSummary, errorMessageDetail)
+        );
         return;
       }
 
       this.deleteEpisodeRequestData$.subscribe({
         next: () => {
-          this.messageService.add({
-            life: 7000,
-            severity: 'success',
-            summary: 'Episode erfolgreich gelöscht',
-          });
+          this.messageService.add(
+            getMessageObject('success', 'Episode erfolgreich gelöscht')
+          );
           this.saveEpisode.emit(true);
         },
         error: (err: any) => {
           if (err.status === 401) {
-            this.messageService.add({
-              life: 7000,
-              severity: 'error',
-              summary: 'Ungültige Authentifizierung',
-              detail:
-                'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
-            });
+            this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
             return;
           }
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: errorMessageSummary,
-            detail: errorMessageDetail,
-          });
+          this.messageService.add(
+            getMessageObject('error', errorMessageSummary, errorMessageDetail)
+          );
         },
       });
     }
@@ -360,5 +336,10 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
   public cancelEpisodeForm = () => {
     this.cancelEpisode.emit(true);
+  };
+
+  public setDeletionDialogVisibilityStatus = (status: boolean) => {
+    this.isDeletionDialogVisible = status;
+    console.log('new status:', this.isDeletionDialogVisible);
   };
 }

@@ -24,6 +24,10 @@ import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-quest
 import { SelectModule } from 'primeng/select';
 import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 import { CheckboxModule } from 'primeng/checkbox';
+import { Router } from '@angular/router';
+import { AgbComponent } from '../../components/agb/agb.component';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { getMessageObject } from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-register',
@@ -38,6 +42,7 @@ import { CheckboxModule } from 'primeng/checkbox';
     DialogModule,
     SelectModule,
     CheckboxModule,
+    AgbComponent,
   ],
   templateUrl: './register.component.html',
   styleUrl: './register.component.css',
@@ -46,6 +51,8 @@ export class RegisterComponent implements OnInit {
   registerGroup!: FormGroup;
   isFormSubmitted: boolean = false;
   isDialogVisible: boolean = false;
+  public isAGBDialogVisible: boolean = false;
+
   public questionList: ValidationQuestion[] = VALIDATION_QUESTIONS.map(
     (question) => ({
       name: question,
@@ -59,7 +66,8 @@ export class RegisterComponent implements OnInit {
     private formBuilder: FormBuilder,
     private userService: UserService,
     private messageService: MessageService,
-    private securityService: SecurityService
+    private securityService: SecurityService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -91,13 +99,15 @@ export class RegisterComponent implements OnInit {
     this.userName = this.registerGroup.get('username')?.value;
 
     if (!this.securityService.isValidUsername(this.userName)) {
-      this.messageService.add({
-        severity: 'error',
-        summary: 'Ungültiger Nutzername',
-        detail: `Nutzernamen dürfen keines der folgenden Zeichen aufweisen: ${this.securityService.INVALID_CHARS.join(
-          ', '
-        )}`,
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Ungültiger Nutzername',
+          `Nutzernamen dürfen keines der folgenden Zeichen enthalten: ${this.securityService.INVALID_CHARS.join(
+            ', '
+          )}`
+        )
+      );
       return;
     }
 
@@ -112,20 +122,23 @@ export class RegisterComponent implements OnInit {
 
     this.userService.registerAccount(registerData).subscribe({
       next: (res: LoginAndMessageResponse) => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('username', this.userName);
+        this.messageService.add(
+          getMessageObject('success', 'Nutzer erfolgreich angelegt.')
+        );
+
+        // navigate user to login page
+        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
       },
       error: () => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Registrieren',
-          detail:
-            'Beim Registrieren ist ein Fehler aufgetreten. Bitte versuche es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Registrieren',
+            'Bitte versuche es erneut.'
+          )
+        );
       },
     });
-    this.navigationService.navigateToUserStart();
   };
 
   hasError = (field: string): boolean => {
@@ -142,5 +155,9 @@ export class RegisterComponent implements OnInit {
 
   showDialog = () => {
     this.isDialogVisible = true;
+  };
+
+  public openAGBDialog = () => {
+    this.isAGBDialogVisible = true;
   };
 }

@@ -10,9 +10,8 @@
     class="menuDIV"
     [pTooltip]="isUserMenuVisible ? userName : 'nicht eingeloggt'"
   >
-    <p-avatar
-      [label]="isUserMenuVisible ? userName.substring(0, 2) : '?'"
-      shape="circle"
-    />
+    <span
+      [className]="isUserMenuVisible ? 'pi pi-user' : 'pi pi-sign-in'"
+    ></span>
   </div>
 </div>

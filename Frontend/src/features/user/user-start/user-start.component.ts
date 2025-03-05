@@ -27,6 +27,11 @@ import {
 import { Table, TableModule } from 'primeng/table';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-user-start',
@@ -42,8 +47,8 @@ import { PaginatorModule } from 'primeng/paginator';
     ReactiveFormsModule,
     SelectModule,
     TableModule,
-    DateFormattingPipe,
     PaginatorModule,
+    ButtonModule,
   ],
   templateUrl: './user-start.component.html',
   styleUrl: './user-start.component.css',
@@ -64,7 +69,19 @@ export class UserStartComponent implements OnInit {
   public diagramOptions: any;
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
-  public pieChartColors: string[] = ['#059669', '#d6e5e4'];
+  public pieChartColors: string[] = [
+    '#059669',
+    '#0a6045',
+    '#9be8cf',
+    '#121413',
+    '#19f709',
+    '#07d3ea',
+    '#babc34',
+    '#d19412',
+    '#d13d14',
+    '#f24b4b',
+    '#d6e5e4',
+  ];
   public barDiagramData: BarDiagram | null = null;
   public pieChartData: any;
   public barChartForMediaStatistic: BarDiagram | null = null;
@@ -78,7 +95,7 @@ export class UserStartComponent implements OnInit {
       value: 1,
     },
     {
-      name: 'Medien pro Tag (Balkendiagramm)',
+      name: 'Medien der letzten 4 Tage (Balkendiagramm)',
       value: 2,
     },
   ];
@@ -141,7 +158,7 @@ export class UserStartComponent implements OnInit {
           ],
           datasets: [
             {
-              label: 'Rating',
+              label: 'Bewertung',
               data: ratingValues,
               fill: true,
               borderColor: '#059669',
@@ -158,7 +175,7 @@ export class UserStartComponent implements OnInit {
           }),
           datasets: [
             {
-              label: 'Rating',
+              label: 'Bewertung',
               data: filteredTracklists.map((tracklist: Tracklist) =>
                 tracklist.rating !== null ? tracklist.rating : 1
               ),
@@ -171,12 +188,24 @@ export class UserStartComponent implements OnInit {
         };
 
         this.pieChartData = {
-          labels: ['mit Bewertung', 'ohne Bewertung'],
+          labels: [
+            '1 / 10',
+            '2 / 10',
+            '3 / 10',
+            '4 / 10',
+            '5 / 10',
+            '6 / 10',
+            '7 / 10',
+            '8 / 10',
+            '9 / 10',
+            '10 / 10',
+            'ohne Bewertung',
+          ],
           datasets: [
             {
               label: 'Bewertet',
               data: [
-                filteredTracklists.length,
+                ...ratingValues,
                 res.filter((tracklist: Tracklist) => tracklist.rating === null)
                   .length,
               ],
@@ -188,8 +217,10 @@ export class UserStartComponent implements OnInit {
 
         this.pieChartOptions = {
           responsive: true,
-          scales: {
-            x: { title: { display: true, text: 'Bewertung' } },
+          plugins: {
+            legend: {
+              position: 'right',
+            },
           },
         };
 
@@ -229,17 +260,10 @@ export class UserStartComponent implements OnInit {
       },
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Authentifizierung',
-            detail: 'Deine Authentifizierungsdaten sind ungültig.',
-          });
-
+          // logout user
           this.userService.logoutOfAccount();
-
-          // navigate to login page
-          this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(`/${ROUTES_LIST[10].fullUrl}`);
           return;
         }
 
@@ -263,14 +287,16 @@ export class UserStartComponent implements OnInit {
 
     this.userMediaStatistic$.subscribe({
       next: (res: WatchTimeStatistic) => {
-        const resAsList: [string, number][] = Object.entries(res).slice(0, 4);
+        const resAsList: [string, number][] = Object.entries(res).slice(0, 5);
 
         this.barChartForMediaStatistic = {
-          labels: resAsList.map((val: [string, number]) =>
-            val[0] === 'unknown_date'
-              ? 'unbekanntes Datum'
-              : new Date(val[0]).toLocaleDateString()
-          ),
+          labels: resAsList
+            .filter((val: [string, number]) => {
+              return val[0] !== 'unknown_date';
+            })
+            .map((val: [string, number]) =>
+              new Date(val[0]).toLocaleDateString()
+            ),
           datasets: [
             {
               label: 'geschaute Zeit [min]',
@@ -285,24 +311,21 @@ export class UserStartComponent implements OnInit {
       },
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Anfrage',
-            detail:
-              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-          });
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
         this.isError = true;
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Laden der Daten',
-          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Laden der Daten',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
   };
@@ -319,24 +342,21 @@ export class UserStartComponent implements OnInit {
       next: (userActivities: UserActivity[]) => {},
       error: (err: any) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Anfrage',
-            detail:
-              'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-          });
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
         this.isError = true;
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Laden der Daten',
-          detail: 'Es ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Laden der Seite',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
   };
@@ -358,5 +378,9 @@ export class UserStartComponent implements OnInit {
     const page = event.first / event.rows + 1;
 
     this.loadUserActivities(page);
+  };
+
+  public navigateToActivitiesPage = () => {
+    this.router.navigateByUrl(ROUTES_LIST[14].fullUrl);
   };
 }

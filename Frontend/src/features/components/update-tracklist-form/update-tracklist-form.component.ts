@@ -29,6 +29,11 @@ import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfa
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { UserService } from '../../../service/user/user.service';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../shared/variables/message-vars';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-update-tracklist-form',
@@ -42,6 +47,7 @@ import { UserService } from '../../../service/user/user.service';
     InputTextModule,
     DatePickerModule,
     RatingModule,
+    DeleteDialogComponent,
   ],
   templateUrl: './update-tracklist-form.component.html',
   styleUrl: './update-tracklist-form.component.css',
@@ -71,6 +77,8 @@ export class UpdateTracklistFormComponent implements OnInit {
   // request variables
   public updateResponseData$: Observable<any> | null = null;
   public deleteResponseData$: Observable<any> | null = null;
+
+  public isDeleteDialogVisible: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -157,47 +165,39 @@ export class UpdateTracklistFormComponent implements OnInit {
       this.mediaService.updateTracklist(updateTracklistData);
 
     if (!this.updateResponseData$) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Speichern',
-        detail:
-          'Beim Speichern ist ein Fehler aufgetreten. Bitte probiere es noch einmal.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Fehler beim Speichern',
+          'Bitte probiere es erneut.'
+        )
+      );
       return;
     }
 
     this.updateResponseData$.subscribe({
       next: (res) => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Erfolgreich gespeichert',
-        });
+        this.messageService.add(
+          getMessageObject('success', 'Erfolgreich gespeichert.')
+        );
         this.saveUpdatedTracklist.emit(true);
       },
       error: (err) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Authentifizierung',
-            detail:
-              'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
-          });
           this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
           this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Speichern',
-          detail:
-            'Beim Speichern ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Speichern',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
   };
@@ -216,53 +216,51 @@ export class UpdateTracklistFormComponent implements OnInit {
   };
 
   public deleteTracklist = () => {
+    this.isDeleteDialogVisible = false;
+
     this.deleteResponseData$ = this.mediaService.deleteTracklist(
       this.inpSelectedTracklist().id
     );
 
     if (!this.deleteResponseData$) {
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Löschen der Trackliste',
-        detail:
-          'Beim Löschen der Trackliste ist ein Fehler aufgetreten. Bitte probiere es noch einmal.',
-      });
+      this.messageService.add(
+        getMessageObject(
+          'error',
+          'Fehler beim Löschen der Trackliste',
+          'Bitte probiere es erneut.'
+        )
+      );
       return;
     }
 
     this.deleteResponseData$.subscribe({
       next: () => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Trackliste erfolgreich gelöscht',
-        });
+        this.messageService.add(
+          getMessageObject('success', 'Trackliste erfolgreich gelöscht')
+        );
         this.saveUpdatedTracklist.emit(true);
       },
       error: (err) => {
         if (err.status === 401) {
-          this.messageService.add({
-            life: 7000,
-            severity: 'error',
-            summary: 'Ungültige Authentifizierung',
-            detail:
-              'Deine Daten sind ungültig. Bitte logge dich ein, um Zugriff zu erhalten.',
-          });
           this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
           this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         }
 
-        this.messageService.add({
-          life: 7000,
-          severity: 'error',
-          summary: 'Fehler beim Löschen',
-          detail:
-            'Beim Löschen ist ein Fehler aufgetreten. Bitte probiere es erneut.',
-        });
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Löschen',
+            'Bitte probiere es erneut.'
+          )
+        );
       },
     });
+  };
+
+  public setDeleteDialogVisibility = (status: boolean) => {
+    this.isDeleteDialogVisible = status;
   };
 }

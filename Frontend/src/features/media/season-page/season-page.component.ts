@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import {
   Season,
   SeasonEpisode,
@@ -45,6 +45,8 @@ import { TracklistFormComponent } from '../../components/tracklist-form/tracklis
 import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../components/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
+import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-season-page',
@@ -121,12 +123,12 @@ export class SeasonPageComponent implements OnInit {
     public stringService: StringService,
     private route: ActivatedRoute,
     private mediaService: MediaService,
-    private navigationService: NavigationService,
     private securityService: SecurityService,
     private formBuilder: FormBuilder,
     private messageService: MessageService,
     private userService: UserService,
-    private tracklistService: TracklistService
+    private tracklistService: TracklistService,
+    private router: Router
   ) {}
 
   ngOnInit(): void {
@@ -153,13 +155,6 @@ export class SeasonPageComponent implements OnInit {
 
     if (!this.seasonData$) {
       this.hasError = true;
-      this.messageService.add({
-        life: 7000,
-        severity: 'error',
-        summary: 'Fehler beim Laden der Seite',
-        detail:
-          'Die Seite konnte aufgrund eines Authentifizierungsfehlers nicht geladen werden. Bitte prüfe, ob du angemeldet bist und probiere es bitte erneut.',
-      });
 
       return;
     }
@@ -183,7 +178,9 @@ export class SeasonPageComponent implements OnInit {
       },
       error: (err) => {
         if (err.status === 401) {
-          this.userService.showLoginMessage();
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
         }
 
         this.hasError = true;

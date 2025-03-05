@@ -15,6 +15,7 @@
       >
         <h2>{{ inpTracklist().tracklistName }}</h2>
         <p>Episodenname: {{ inpEpisode().name }}</p>
+        <p>Episodennummer: {{ inpEpisode().episodeNumber }}</p>
 
         <p-float-label variant="in">
           <p-date-picker
@@ -24,6 +25,7 @@
             dateFormat="dd.mm.yy"
             [showTime]="true"
             [hourFormat]="'24'"
+            [showOnFocus]="false"
           />
           <label for="watch">wann geschaut? (optional)</label>
         </p-float-label>
@@ -53,7 +55,7 @@
               label="Löschen"
               icon="pi pi-trash"
               severity="danger"
-              (onClick)="deleteEpisode()"
+              (onClick)="setDeletionDialogVisibilityStatus(true)"
             />
           </div>
           <div>
@@ -69,3 +71,11 @@
     </div>
   </div>
 </div>
+
+<app-delete-dialog
+  *ngIf="isDeletionDialogVisible"
+  [inpHeading]="'Episode löschen'"
+  [inpText]="'Willst du die Episode wirklich löschen?'"
+  (outDeleteMedia)="deleteEpisode()"
+  (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)"
+/>

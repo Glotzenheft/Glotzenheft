@@ -59,6 +59,7 @@
               dateFormat="dd.mm.yy"
               [showIcon]="true"
               inputId="end"
+              [showOnFocus]="false"
             />
             <label for="end">Enddatum</label>
           </p-float-label>
@@ -71,6 +72,7 @@
               dateFormat="dd.mm.yy"
               [showIcon]="true"
               inputId="start"
+              [showOnFocus]="false"
             />
             <label for="start">Startdatum</label>
           </p-float-label>
@@ -94,10 +96,18 @@
             label="Löschen"
             severity="danger"
             icon="pi pi-trash"
-            (onClick)="deleteTracklist()"
+            (onClick)="setDeleteDialogVisibility(true)"
           />
         </div>
       </form>
     </div>
   </div>
 </div>
+
+<app-delete-dialog
+  *ngIf="isDeleteDialogVisible"
+  [inpHeading]="'Trackliste löschen'"
+  [inpText]="'Willst du die Trackliste wirklich löschen?'"
+  (outCancelDeletion)="setDeleteDialogVisibility(false)"
+  (outDeleteMedia)="deleteTracklist()"
+/>

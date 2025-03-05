@@ -33,35 +33,11 @@
 
 <div class="gapDIV"></div>
 
-<h2>Meine Aktivitäten</h2>
-<div
-  *ngIf="userActivitiesRequest$ | async as userActivitiesRequest"
-  class="userActivitiesTable"
->
-  <div class="userActivitesTableDIV">
-    <p-table
-      [value]="userActivitiesRequest"
-      stripedRows
-      (onLazyLoad)="onUserActivitiesPageChange($event)"
-    >
-      <ng-template #header>
-        <tr>
-          <th>Datum</th>
-          <th>Episodennummer</th>
-          <th>Medienname</th>
-          <th>Tracklist-Name</th>
-          <th>Medientyp</th>
-        </tr>
-      </ng-template>
-      <ng-template #body let-tracklist>
-        <tr>
-          <td>{{ tracklist.date | dateFormatting }}</td>
-          <td>{{ tracklist.episodeNumber }}</td>
-          <td>{{ tracklist.mediaTitle }}</td>
-          <td>{{ tracklist.tracklistName }}</td>
-          <td>{{ tracklist.type }}</td>
-        </tr>
-      </ng-template>
-    </p-table>
-  </div>
+<div class="activitiesPage">
+  <h2>Meine Aktivitäten</h2>
+  <p-button
+    label="zu meinen Aktivitäten"
+    icon="pi pi-arrow-right"
+    (onClick)="navigateToActivitiesPage()"
+  />
 </div>

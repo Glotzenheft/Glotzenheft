@@ -107,6 +107,13 @@ export const ROUTES_LIST: RoutesListItem[] = [
     shortUrl: 'activities',
     showInLinkList: false,
   },
+  {
+    // 15
+    description: 'Nutzungsbedingungen',
+    fullUrl: 'terms-of-use',
+    shortUrl: 'terms-of-use',
+    showInLinkList: true,
+  },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {

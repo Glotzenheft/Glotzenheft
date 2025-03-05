@@ -15,7 +15,8 @@ import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
 import { UserLinksComponent } from '../features/components/user-links/user-links.component';
 import { UserService } from '../service/user/user.service';
-import { UserMenuComponent } from "../features/components/user-menu/user-menu.component";
+import { UserMenuComponent } from '../features/components/user-menu/user-menu.component';
+import { getMessageObject } from '../shared/variables/message-vars';
 
 @Component({
   selector: 'app-root',
@@ -31,8 +32,8 @@ import { UserMenuComponent } from "../features/components/user-menu/user-menu.co
     SearchBarComponent,
     ToastModule,
     UserLinksComponent,
-    UserMenuComponent
-],
+    UserMenuComponent,
+  ],
   templateUrl: './app.component.html',
   styleUrl: './app.component.css',
   providers: [MessageService],
@@ -58,13 +59,13 @@ export class AppComponent implements OnInit, OnDestroy {
     this.toastSubscription = this.authService.showToast$.subscribe(
       (show: boolean) => {
         if (show) {
-          this.messageService.add({
-            severity: 'error',
-            summary: 'Kein Zugriff',
-            detail:
-              'Sie haben zur Zeit keinen Zugriff auf diese Seite. Bitte melden Sie sich an, um Zugriff zu erhalten.',
-            life: 7000,
-          });
+          this.messageService.add(
+            getMessageObject(
+              'error',
+              'Kein Zugriff',
+              'Bitte melde dich an, um Zugriff zu erhalten.'
+            )
+          );
         }
       }
     );

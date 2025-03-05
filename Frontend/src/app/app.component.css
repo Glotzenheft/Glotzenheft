@@ -111,7 +111,7 @@
   .sidebarToggleDIV {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     width: 100%;
     height: 3rem;
   }
@@ -164,9 +164,6 @@
   }
 
   .closedSidebarToggleDIV {
-    display: flex;
-    align-items: center;
-    justify-content: center;
     width: 100%;
     height: 3rem;
   }
@@ -174,10 +171,9 @@
   .sidebarToggleDIV {
     display: flex;
     align-items: center;
-    justify-content: flex-end;
+    justify-content: space-between;
     width: 100%;
     height: 3rem;
-    /* height: 100%; */
   }
 
   .sidebarToggleDIV div,

@@ -10,19 +10,11 @@ import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { MessageService } from 'primeng/api';
 import { StringService } from '../../../service/string/string.service';
 import { TooltipModule } from 'primeng/tooltip';
-import { AvatarModule } from 'primeng/avatar';
-import { AvatarGroupModule } from 'primeng/avatargroup';
+import { getMessageObject } from '../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-user-menu',
-  imports: [
-    CommonModule,
-    MenuModule,
-    ButtonModule,
-    TooltipModule,
-    AvatarGroupModule,
-    AvatarModule,
-  ],
+  imports: [CommonModule, MenuModule, ButtonModule, TooltipModule],
   templateUrl: './user-menu.component.html',
   styleUrl: './user-menu.component.css',
 })
@@ -50,11 +42,9 @@ export class UserMenuComponent implements OnInit {
           icon: 'pi pi-sign-out',
           command: () => {
             this.userService.logoutOfAccount();
-            this.messageService.add({
-              life: 7000,
-              severity: 'success',
-              summary: 'Erfolgreich ausgeloggt.',
-            });
+            this.messageService.add(
+              getMessageObject('success', 'Erfolgreich ausgeloggt')
+            );
             this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
           },
         },

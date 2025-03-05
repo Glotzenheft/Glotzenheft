@@ -163,6 +163,10 @@ p {
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
     box-shadow: var(--box--shadow);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
 
   .content {
@@ -437,13 +441,18 @@ p {
   .closedSidebar {
     width: 4rem;
     height: 100%;
-    display: flex;
-    justify-content: center;
+
     background-color: black;
     box-shadow: var(--sidebar--box--shadow);
 
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
+  }
+
+  .closedSidebar div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .content {
@@ -690,13 +699,19 @@ p {
   .closedSidebar {
     width: 4rem;
     height: 100%;
-    display: flex;
-    justify-content: center;
+    /* display: flex;
+    justify-content: center; */
     background-color: black;
     box-shadow: var(--sidebar--box--shadow);
 
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
+  }
+
+  .closedSidebar div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
   }
 
   .content {
@@ -901,6 +916,7 @@ p {
     overflow-x: auto;
     overflow-y: auto;
     box-shadow: var(--box--shadow);
+    width: 100%;
   }
 
   .userActivitiesTable .p-datatable {

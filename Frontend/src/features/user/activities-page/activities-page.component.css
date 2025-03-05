@@ -13,3 +13,8 @@ img {
   height: 6rem;
   border: 0.2rem solid black;
 }
+
+.mediaRow:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}

@@ -33,6 +33,10 @@ import {
 } from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
 import { WatchTimeStatistic } from '../../shared/statistic-interfaces';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../shared/variables/message-vars';
 
 @Injectable({
   providedIn: 'root',
@@ -131,31 +135,20 @@ export class UserService {
   };
 
   public showLoginMessage = () => {
-    this.messageService.add({
-      life: 7000,
-      severity: 'error',
-      summary: 'Ungültige Anfrage',
-      detail:
-        'Dein Loginstatus für diesen Account ist abgelaufen. Bitte melde dich erneut an.',
-    });
-
-    // if (isPlatformBrowser(this.platformId)) {
-    //   // clear localStorage
-    //   localStorage.clear();
-    // }
+    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
 
     // navigate to login page
     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
   };
 
   public showNoAccessMessage = () => {
-    this.messageService.add({
-      severity: 'error',
-      summary: 'Kein Zugriff',
-      detail:
-        'Sie haben zur Zeit keinen Zugriff auf diese Seite. Bitte melden Sie sich an, um Zugriff zu erhalten.',
-      life: 7000,
-    });
+    this.messageService.add(
+      getMessageObject(
+        'error',
+        'Kein Zugriff',
+        'Bitte melde dich an, um Zugriff zu erhalten.'
+      )
+    );
   };
 
   // functions for checking if user login is valid (or blocked due to too many login tries)
