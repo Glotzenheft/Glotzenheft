@@ -22,7 +22,10 @@ import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+} from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
 import { Observable, Subscription } from 'rxjs';
 import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
@@ -70,7 +73,7 @@ export class UpdateTracklistFormComponent implements OnInit {
   public isFormSubmitted: boolean = false;
   public tracklistStatusOptions: { name: string; value: string }[] =
     TRACK_LIST_STATUS_LIST.map((status: string) => ({
-      name: status,
+      name: convertTracklistStatusIntoGerman(status),
       value: status,
     }));
 

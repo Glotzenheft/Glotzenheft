@@ -5,7 +5,9 @@
     <!-- user tracklists list -->
     <p-panel
       *ngFor="let tracklist of userTracklists"
-      [header]="tracklist.tracklistName + ' [' + tracklist.status + ']'"
+      [header]="
+        tracklist.tracklistName + ' [' + convertStatus(tracklist.status) + ']'
+      "
       [toggleable]="true"
       [collapsed]="true"
     >
@@ -30,7 +32,7 @@
           <div
             [className]="setTracklistStatus(tracklist.status) + ' statusDIV'"
           >
-            <p>Status: {{ tracklist.status }}</p>
+            <p>Status: {{ convertStatus(tracklist.status) }}</p>
           </div>
 
           <p *ngIf="tracklist.startDate">
