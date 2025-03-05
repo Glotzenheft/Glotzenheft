@@ -21,11 +21,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
 import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
 import {
-  UserActivitiesPageEvent,
   UserActivity,
 } from '../../../shared/interfaces/user-interfaces';
-import { Table, TableModule } from 'primeng/table';
-import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
+import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
 import {
@@ -70,17 +68,17 @@ export class UserStartComponent implements OnInit {
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
   public pieChartColors: string[] = [
-    '#059669',
-    '#0a6045',
-    '#9be8cf',
-    '#121413',
-    '#19f709',
-    '#07d3ea',
-    '#babc34',
-    '#d19412',
-    '#d13d14',
-    '#f24b4b',
-    '#d6e5e4',
+    '#000000',
+    '#32323c',
+    '#9c0000',
+    '#00009c',
+    '#009c00',
+    '#9c9c00',
+    '#ffff00',
+    '#00ff00',
+    '#0000ff',
+    '#ff0000',
+    'rgba(255,255,255,0.5)',
   ];
   public barDiagramData: BarDiagram | null = null;
   public pieChartData: any;
@@ -339,7 +337,7 @@ export class UserStartComponent implements OnInit {
     }
 
     this.userActivitiesRequest$?.subscribe({
-      next: (userActivities: UserActivity[]) => {},
+      next: () => {},
       error: (err: any) => {
         if (err.status === 401) {
           this.userService.logoutOfAccount();
