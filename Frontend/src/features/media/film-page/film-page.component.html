@@ -54,7 +54,7 @@
         [toggleable]="true"
         [collapsed]="true"
       >
-        <p>Status: {{ tracklist.status }}</p>
+        <p>Status: {{ convertStatus(tracklist.status) }}</p>
         <p-button
           label="Tracklist bearbeiten"
           icon="pi pi-pencil"

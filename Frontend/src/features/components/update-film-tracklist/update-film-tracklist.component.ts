@@ -32,7 +32,11 @@ import {
   UpdateTracklistRequest,
 } from '../../../shared/interfaces/media-interfaces';
 import { Observable } from 'rxjs';
-import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+  TracklistStatusType,
+} from '../../../shared/variables/tracklist';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { UserService } from '../../../service/user/user.service';
 import { TracklistService } from '../../../service/tracklist/tracklist.service';
@@ -40,7 +44,7 @@ import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../../shared/variables/message-vars';
-import { DeleteDialogComponent } from "../delete-dialog/delete-dialog.component";
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-update-film-tracklist',
@@ -54,8 +58,8 @@ import { DeleteDialogComponent } from "../delete-dialog/delete-dialog.component"
     SelectModule,
     RatingModule,
     DatePickerModule,
-    DeleteDialogComponent
-],
+    DeleteDialogComponent,
+  ],
   templateUrl: './update-film-tracklist.component.html',
   styleUrl: './update-film-tracklist.component.css',
 })
@@ -75,7 +79,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
   public isTracklistSubmitted: boolean = false;
   public tracklistStatusOptions: { name: string; value: string }[] =
     TRACK_LIST_STATUS_LIST.map((status: string) => ({
-      name: status,
+      name: convertTracklistStatusIntoGerman(status),
       value: status,
     }));
 
@@ -97,7 +101,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
         {
-          name: this.inpTracklist().status,
+          name: convertTracklistStatusIntoGerman(this.inpTracklist().status),
           value: this.inpTracklist().status,
         },
         Validators.required,

@@ -26,35 +26,37 @@
   <ng-container *ngIf="res.results.length > 0">
     <h3>Suchergebnisse:</h3>
 
-    <div class="cardContainer">
-      <div
-        *ngFor="let resItem of item"
-        class="multisearchCard"
-        (click)="navigateToMediaPage(resItem.id, resItem.media_type)"
-      >
-        <p *ngIf="resItem.media_type === 'tv'" [pTooltip]="resItem.name">
-          {{
-            resItem.name.length > MAX_STRING_LENGTH
-              ? resItem.name.substring(0, MAX_STRING_LENGTH) + " ..."
-              : resItem.name
-          }}
-        </p>
-        <p *ngIf="resItem.media_type === 'movie'" [pTooltip]="resItem.title">
-          {{
-            resItem.title.length > MAX_STRING_LENGTH
-              ? resItem.title.substring(0, MAX_STRING_LENGTH) + " ..."
-              : resItem.title
-          }}
-        </p>
-        <div class="multisearchCardImg">
-          <img
-            *ngIf="resItem.poster_path"
-            [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
-            [alt]="'Posterbild für ' + resItem.title"
-          />
-          <p *ngIf="!resItem.poster_path"><i>Kein Bild vorhanden</i></p>
+    <div class="cardContainerWrapper">
+      <div class="cardContainer">
+        <div
+          *ngFor="let resItem of item"
+          class="multisearchCard"
+          (click)="navigateToMediaPage(resItem.id, resItem.media_type)"
+        >
+          <p *ngIf="resItem.media_type === 'tv'" [pTooltip]="resItem.name">
+            {{
+              resItem.name.length > MAX_STRING_LENGTH
+                ? resItem.name.substring(0, MAX_STRING_LENGTH) + " ..."
+                : resItem.name
+            }}
+          </p>
+          <p *ngIf="resItem.media_type === 'movie'" [pTooltip]="resItem.title">
+            {{
+              resItem.title.length > MAX_STRING_LENGTH
+                ? resItem.title.substring(0, MAX_STRING_LENGTH) + " ..."
+                : resItem.title
+            }}
+          </p>
+          <div class="multisearchCardImg">
+            <img
+              *ngIf="resItem.poster_path"
+              [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
+              [alt]="'Posterbild für ' + resItem.title"
+            />
+            <p *ngIf="!resItem.poster_path"><i>Kein Bild vorhanden</i></p>
+          </div>
+          <p>{{ resItem.media_type === "tv" ? "Serie" : "Film" }}</p>
         </div>
-        <p>{{ resItem.media_type === "tv" ? "Serie" : "Film" }}</p>
       </div>
     </div>
   </ng-container>

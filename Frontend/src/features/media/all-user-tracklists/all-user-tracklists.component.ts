@@ -17,6 +17,7 @@ import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
 import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
+import { convertTracklistStatusIntoGerman } from '../../../shared/variables/tracklist';
 
 @Component({
   selector: 'app-all-user-tracklists',
@@ -46,7 +47,10 @@ export class AllUserTracklistsComponent implements OnInit {
   public tmdbPosterPath: string = TMDB_POSTER_PATH;
   public visibility: number = 0;
 
+  public convertStatus = convertTracklistStatusIntoGerman
+
   constructor(private mediaService: MediaService, private router: Router) {}
+  
 
   ngOnInit(): void {
     this.loadTracklists();
