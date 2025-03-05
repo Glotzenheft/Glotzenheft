@@ -95,7 +95,7 @@ export class UserStartComponent implements OnInit {
       value: 1,
     },
     {
-      name: 'Medien pro Tag (Balkendiagramm)',
+      name: 'Medien der letzten 4 Tage (Balkendiagramm)',
       value: 2,
     },
   ];
