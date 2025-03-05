@@ -24,7 +24,10 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
-import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+} from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
@@ -66,7 +69,7 @@ export class CreateMovieTracklistComponent implements OnInit {
   public createNewTracklist$: Observable<any> | null = null;
   public tracklistSelectionList: { name: string; value: string }[] =
     TRACK_LIST_STATUS_LIST.map((selection: string) => ({
-      name: selection,
+      name: convertTracklistStatusIntoGerman(selection),
       value: selection,
     }));
 
@@ -116,7 +119,7 @@ export class CreateMovieTracklistComponent implements OnInit {
     }
 
     this.createNewTracklist$.subscribe({
-      next: (res) => {
+      next: () => {
         this.messageService.add(
           getMessageObject('success', 'Trackliste erfolgreich angelegt')
         );

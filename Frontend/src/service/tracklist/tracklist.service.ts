@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
   Season,
   SeasonWithEpisodes,
@@ -12,6 +12,8 @@ import {
 } from '../../shared/interfaces/tracklist-interfaces';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
+import { isPlatformBrowser } from '@angular/common';
+import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/local-storage-keys';
 
 @Injectable({
   providedIn: 'root',
@@ -21,7 +23,7 @@ export class TracklistService {
   private filmRefreshSubject = new BehaviorSubject<void>(undefined);
   public refreshFilmPage$ = this.filmRefreshSubject.asObservable();
 
-  constructor() {}
+  constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
   /**
    * Function for converting a tv (with "media" and "tracklists") into a tv with the tracklists mapped to the seasons.
@@ -132,5 +134,24 @@ export class TracklistService {
   // functions for refreshing pages ---------------------------
   public refreshFilmPage = () => {
     this.filmRefreshSubject.next();
+  };
+
+  // functions for managing the current selected tracklist in season page component in local storage
+  public setSelectedTracklistInLocalStorage = (tracklistID: number) => {
+    // setting the current selected tracklist in the local storage
+    if (isPlatformBrowser(this.platformId)) {
+      localStorage.setItem(
+        KEY_LOCAL_STORAGE_SELECTED_TRACKLIST,
+        tracklistID.toString()
+      );
+    }
+  };
+
+  public getSelectedTracklistInLocalStorage = (): string | null => {
+    if (isPlatformBrowser(this.platformId)) {
+      return localStorage.getItem(KEY_LOCAL_STORAGE_SELECTED_TRACKLIST);
+    }
+
+    return null;
   };
 }
