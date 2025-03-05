@@ -1,33 +1,28 @@
-import { Component, OnInit } from '@angular/core';
-import { InputTextModule } from 'primeng/inputtext';
-import { IconFieldModule } from 'primeng/iconfield';
-import { InputIconModule } from 'primeng/inputicon';
-import { TooltipModule } from 'primeng/tooltip';
-import { Router, RouterOutlet } from '@angular/router';
-import { PanelModule } from 'primeng/panel';
-import { Observable } from 'rxjs';
-import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
-import { MediaService } from '../../../service/media/media.service';
-import { MessageService } from 'primeng/api';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { UserService } from '../../../service/user/user.service';
-import { CommonModule } from '@angular/common';
-import { ChartModule } from 'primeng/chart';
+import {Component, OnInit} from '@angular/core';
+import {InputTextModule} from 'primeng/inputtext';
+import {IconFieldModule} from 'primeng/iconfield';
+import {InputIconModule} from 'primeng/inputicon';
+import {TooltipModule} from 'primeng/tooltip';
+import {Router, RouterOutlet} from '@angular/router';
+import {PanelModule} from 'primeng/panel';
+import {Observable} from 'rxjs';
+import {Tracklist} from '../../../shared/interfaces/tracklist-interfaces';
+import {MediaService} from '../../../service/media/media.service';
+import {MessageService} from 'primeng/api';
+import {ROUTES_LIST} from '../../../shared/variables/routes-list';
+import {UserService} from '../../../service/user/user.service';
+import {CommonModule} from '@angular/common';
+import {ChartModule} from 'primeng/chart';
 import {
   BarDiagram,
   LineDiagram,
 } from '../../../shared/interfaces/diagram-interfaces';
-import { ReactiveFormsModule } from '@angular/forms';
-import { SelectModule } from 'primeng/select';
-import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
-import {
-  UserActivitiesPageEvent,
-  UserActivity,
-} from '../../../shared/interfaces/user-interfaces';
-import { Table, TableModule } from 'primeng/table';
-import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
-import { PaginatorModule } from 'primeng/paginator';
-import { ButtonModule } from 'primeng/button';
+import {ReactiveFormsModule} from '@angular/forms';
+import {SelectModule} from 'primeng/select';
+import {WatchTimeStatistic} from '../../../shared/statistic-interfaces';
+import {TableModule} from 'primeng/table';
+import {PaginatorModule} from 'primeng/paginator';
+import {ButtonModule} from 'primeng/button';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
@@ -57,12 +52,6 @@ export class UserStartComponent implements OnInit {
   public userTracklists$: Observable<Tracklist[]> | null = null;
   public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;
 
-  // variables for user activities overview
-  public userActivitiesRequest$: Observable<UserActivity[]> | null = null;
-  public userActivitiesRequest: UserActivity[] = [];
-  public first: number = 0;
-  public rows: number = 10;
-
   public isError: boolean = false;
 
   public lineDiagramData: LineDiagram | null = null;
@@ -70,32 +59,32 @@ export class UserStartComponent implements OnInit {
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
   public pieChartColors: string[] = [
-    '#059669',
-    '#0a6045',
-    '#9be8cf',
-    '#121413',
-    '#19f709',
-    '#07d3ea',
-    '#babc34',
-    '#d19412',
-    '#d13d14',
-    '#f24b4b',
-    '#d6e5e4',
+    '#000000',
+    '#32323c',
+    '#9c0000',
+    '#00009c',
+    '#009c00',
+    '#9c9c00',
+    '#ffff00',
+    '#00ff00',
+    '#0000ff',
+    '#ff0000',
+    'rgba(255,255,255,0.5)',
   ];
   public barDiagramData: BarDiagram | null = null;
   public pieChartData: any;
   public barChartForMediaStatistic: BarDiagram | null = null;
   public diagramSelection: { name: string; value: number }[] = [
     {
-      name: 'Meine Tracklistenratings (Balkendiagramm)',
+      name: 'Meine Bewertungen (Balkendiagramm)',
       value: 0,
     },
     {
-      name: 'Meine Tracklistenratings (Kreisdiagramm)',
+      name: 'Meine Bewertungen (Kreisdiagramm)',
       value: 1,
     },
     {
-      name: 'Medien der letzten 4 Tage (Balkendiagramm)',
+      name: 'Geschaute Zeit der letzten 30 Tage mit Aktivitäten (Balkendiagramm)',
       value: 2,
     },
   ];
@@ -110,11 +99,11 @@ export class UserStartComponent implements OnInit {
     private messageService: MessageService,
     private router: Router,
     private userService: UserService
-  ) {}
+  ) {
+  }
 
   ngOnInit(): void {
     this.loadTracklistData();
-    this.loadUserActivities(1);
   }
 
   public loadTracklistData = () => {
@@ -145,16 +134,16 @@ export class UserStartComponent implements OnInit {
         // create diagram
         this.lineDiagramData = {
           labels: [
-            '1 / 10',
-            '2 / 10',
-            '3 / 10',
-            '4 / 10',
-            '5 / 10',
-            '6 / 10',
-            '7 / 10',
-            '8 / 10',
-            '9 / 10',
-            '10 / 10',
+            '1 ☆',
+            '2 ☆',
+            '3 ☆',
+            '4 ☆',
+            '5 ☆',
+            '6 ☆',
+            '7 ☆',
+            '8 ☆',
+            '9 ☆',
+            '10 ☆',
           ],
           datasets: [
             {
@@ -189,16 +178,16 @@ export class UserStartComponent implements OnInit {
 
         this.pieChartData = {
           labels: [
-            '1 / 10',
-            '2 / 10',
-            '3 / 10',
-            '4 / 10',
-            '5 / 10',
-            '6 / 10',
-            '7 / 10',
-            '8 / 10',
-            '9 / 10',
-            '10 / 10',
+            '1 ☆',
+            '2 ☆',
+            '3 ☆',
+            '4 ☆',
+            '5 ☆',
+            '6 ☆',
+            '7 ☆',
+            '8 ☆',
+            '9 ☆',
+            '10 ☆',
             'ohne Bewertung',
           ],
           datasets: [
@@ -232,9 +221,9 @@ export class UserStartComponent implements OnInit {
             },
           },
           scales: {
-            x: { title: { display: true, text: 'Bewertung' } },
+            x: {title: {display: true, text: 'Bewertung'}},
             y: {
-              title: { display: true, text: 'Anzahl der Tracklisten' },
+              title: {display: true, text: 'Anzahl der Bewertungen'},
               beginAtZero: true,
               stepSize: 1,
             },
@@ -249,9 +238,9 @@ export class UserStartComponent implements OnInit {
             },
           },
           scales: {
-            x: { title: { display: true, text: 'Datum (geschaut)' } },
+            x: {title: {display: true, text: 'Datum (geschaut)'}},
             y: {
-              title: { display: true, text: 'geschaute Zeit [min]' },
+              title: {display: true, text: 'geschaute Zeit [min]'},
               beginAtZero: true,
               stepSize: 1,
             },
@@ -287,7 +276,7 @@ export class UserStartComponent implements OnInit {
 
     this.userMediaStatistic$.subscribe({
       next: (res: WatchTimeStatistic) => {
-        const resAsList: [string, number][] = Object.entries(res).slice(0, 5);
+        const resAsList: [string, number][] = Object.entries(res).slice(1, 31);
 
         this.barChartForMediaStatistic = {
           labels: resAsList
@@ -330,36 +319,6 @@ export class UserStartComponent implements OnInit {
     });
   };
 
-  public loadUserActivities = (page: number) => {
-    this.userActivitiesRequest$ = this.userService.getUserActivities(page);
-
-    if (!this.userActivitiesRequest$) {
-      this.isError = true;
-      return;
-    }
-
-    this.userActivitiesRequest$?.subscribe({
-      next: (userActivities: UserActivity[]) => {},
-      error: (err: any) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-
-          return;
-        }
-
-        this.isError = true;
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Laden der Seite',
-            'Bitte probiere es erneut.'
-          )
-        );
-      },
-    });
-  };
 
   public handleDiagramSelectionChange = (e: any) => {
     this.selectedDiagramType = e.value;
@@ -369,15 +328,6 @@ export class UserStartComponent implements OnInit {
     } else {
       this.loadTracklistData();
     }
-  };
-
-  public onUserActivitiesPageChange = (event: any) => {
-    this.first = event.first;
-    this.rows = event.rows;
-
-    const page = event.first / event.rows + 1;
-
-    this.loadUserActivities(page);
   };
 
   public navigateToActivitiesPage = () => {
