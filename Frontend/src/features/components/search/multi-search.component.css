@@ -69,12 +69,18 @@
 }
 
 @media (min-width: 400px) and (max-width: 840px) {
-  .cardContainer {
+  .cardContainerWrapper {
+    width: 100%;
     display: flex;
-    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .cardContainer {
     gap: 1rem;
     margin-bottom: 6rem;
+    width: 50%;
   }
+
   img {
     height: 90%;
     width: auto;
@@ -88,8 +94,11 @@
     border: 0.1rem solid white;
     background-color: white;
     border-radius: 0.6rem;
+
     padding-left: 1rem;
     padding-right: 1rem;
+    margin-bottom: 1rem;
+
     box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
     transition-duration: var(--transition--duration);
     display: flex;
