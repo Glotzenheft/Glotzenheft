@@ -33,6 +33,7 @@ import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../../shared/variables/message-vars';
+import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-update-tracklist-form',
@@ -46,6 +47,7 @@ import {
     InputTextModule,
     DatePickerModule,
     RatingModule,
+    DeleteDialogComponent,
   ],
   templateUrl: './update-tracklist-form.component.html',
   styleUrl: './update-tracklist-form.component.css',
@@ -75,6 +77,8 @@ export class UpdateTracklistFormComponent implements OnInit {
   // request variables
   public updateResponseData$: Observable<any> | null = null;
   public deleteResponseData$: Observable<any> | null = null;
+
+  public isDeleteDialogVisible: boolean = false;
 
   constructor(
     private formBuilder: FormBuilder,
@@ -212,6 +216,8 @@ export class UpdateTracklistFormComponent implements OnInit {
   };
 
   public deleteTracklist = () => {
+    this.isDeleteDialogVisible = false;
+
     this.deleteResponseData$ = this.mediaService.deleteTracklist(
       this.inpSelectedTracklist().id
     );
@@ -252,5 +258,9 @@ export class UpdateTracklistFormComponent implements OnInit {
         );
       },
     });
+  };
+
+  public setDeleteDialogVisibility = (status: boolean) => {
+    this.isDeleteDialogVisible = status;
   };
 }

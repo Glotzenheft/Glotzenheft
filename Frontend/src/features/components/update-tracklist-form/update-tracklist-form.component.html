@@ -102,3 +102,13 @@
     </div>
   </div>
 </div>
+
+<app-delete-dialog
+  *ngIf="isDeleteDialogVisible"
+  [inpHeading]="'Trackliste löschen'"
+  [inpText]="
+    'Willst du diese Trackliste wirklich löschen? Dies kann nicht mehr rückgängig gemacht werden.'
+  "
+  (outCancelDeletion)="setDeleteDialogVisibility(false)"
+  (outDeleteMedia)="deleteTracklist()"
+/>
