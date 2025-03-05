@@ -37,6 +37,10 @@ import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../shared/variables/message-vars';
+import {
+  KEY_LOCAL_STORAGE_LAST_LOG_IN,
+  KEY_LOCAL_STORAGE_LOG_IN_TRIES,
+} from '../../shared/variables/local-storage-keys';
 
 @Injectable({
   providedIn: 'root',
@@ -52,9 +56,7 @@ export class UserService {
   public visibleUserName$: Observable<string> =
     this.visibleUserName.asObservable();
 
-  // variables for checking validation of user login
-  private USER_KEY_LAST_LOGIN: string = 'lastLogin';
-  private USER_KEY_LOGIN_TRIES: string = 'loginTries';
+  // variables for checking validation of user logins
   private USER_LOGIN_LIMIT: number = 3;
 
   constructor(
@@ -161,18 +163,18 @@ export class UserService {
 
     if (isPlatformBrowser(this.platformId)) {
       const lastLogin: string | null = localStorage.getItem(
-        this.USER_KEY_LAST_LOGIN
+        KEY_LOCAL_STORAGE_LAST_LOG_IN
       );
       const loginTries: string | null = localStorage.getItem(
-        this.USER_KEY_LOGIN_TRIES
+        KEY_LOCAL_STORAGE_LAST_LOG_IN
       );
 
       if (!lastLogin || !loginTries) {
         localStorage.setItem(
-          this.USER_KEY_LAST_LOGIN,
+          KEY_LOCAL_STORAGE_LAST_LOG_IN,
           new Date().toISOString()
         );
-        localStorage.setItem(this.USER_KEY_LOGIN_TRIES, '0');
+        localStorage.setItem(KEY_LOCAL_STORAGE_LOG_IN_TRIES, '0');
 
         console.log(localStorage);
 
@@ -201,16 +203,16 @@ export class UserService {
   public increaseLoginTries = () => {
     if (isPlatformBrowser(this.platformId)) {
       const loginTries: string | null = localStorage.getItem(
-        this.USER_KEY_LOGIN_TRIES
+        KEY_LOCAL_STORAGE_LOG_IN_TRIES
       );
 
       if (!loginTries) {
-        localStorage.setItem(this.USER_KEY_LOGIN_TRIES, '0');
+        localStorage.setItem(KEY_LOCAL_STORAGE_LOG_IN_TRIES, '0');
         return;
       }
 
       localStorage.setItem(
-        this.USER_KEY_LOGIN_TRIES,
+        KEY_LOCAL_STORAGE_LOG_IN_TRIES,
         `${Number(loginTries) + 1}`
       );
     }

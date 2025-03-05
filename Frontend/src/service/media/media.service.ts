@@ -23,6 +23,7 @@ import {
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
+import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 
 @Injectable({
   providedIn: 'root',
@@ -37,7 +38,7 @@ export class MediaService {
     let userToken: string = '';
 
     if (isPlatformBrowser(this.platformId)) {
-      userToken = localStorage.getItem('token') ?? '';
+      userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
     }
 
     if (!userToken.trim()) {
