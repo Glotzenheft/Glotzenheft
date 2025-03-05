@@ -29,6 +29,17 @@
       />
     </div>
   </div>
+
+  <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 3">
+    <div class="barChartDIV">
+      <p-chart
+        type="bar"
+        [data]="barChartForYearlyMediaStatistic"
+        [options]="barChartYearlyStatisticOptions"
+      />
+    </div>
+  </div>
+
 </div>
 
 <div class="gapDIV"></div>
