@@ -95,7 +95,6 @@ export class EpisodeListComponent {
       return;
     }
 
-    console.log('update from episode list');
     this.setEpisodeForEditing.emit(episode);
   };
 }

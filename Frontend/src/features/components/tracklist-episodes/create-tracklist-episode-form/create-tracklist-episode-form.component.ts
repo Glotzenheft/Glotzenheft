@@ -32,6 +32,7 @@ import {
 import { UserService } from '../../../../service/user/user.service';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { TracklistService } from '../../../../service/tracklist/tracklist.service';
 
 @Component({
   selector: 'app-create-tracklist-episode-form',
@@ -76,7 +77,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     private episodeService: EpisodeService,
     private formBuilder: FormBuilder,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private tracklistService: TracklistService
   ) {}
 
   ngOnInit(): void {
@@ -92,7 +94,6 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
       episodeInTracklist.length === 1 && this.inpIsEpisodeEditing();
 
     if (episodeInTracklist[0] && episodeInTracklist[0].watchDate) {
-      console.log('condition');
       const watchDateAsDate = new Date(episodeInTracklist[0].watchDate);
       watchDateAsDate.setHours(watchDateAsDate.getHours() - 1);
       this.createEpisodeForm = this.formBuilder.group({
@@ -110,6 +111,11 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     this.createEpisodeForm = this.formBuilder.group({
       watchDate: [!this.inpIsEpisodeEditing() ? new Date() : null],
     });
+
+    // set local storage tracklist to selected tracklist
+    this.tracklistService.setSelectedTracklistInLocalStorage(
+      this.inpTracklist().id
+    );
   }
 
   public deleteDate = () => {
@@ -340,6 +346,5 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
   public setDeletionDialogVisibilityStatus = (status: boolean) => {
     this.isDeletionDialogVisible = status;
-    console.log('new status:', this.isDeletionDialogVisible);
   };
 }

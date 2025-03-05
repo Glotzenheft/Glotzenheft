@@ -35,6 +35,7 @@ import { AccordionModule } from 'primeng/accordion';
 import {
   SeasonTracklist,
   SeasonTracklistType,
+  Tracklist,
   TVSeasonWithTracklist,
   TVWithTracklist,
 } from '../../../shared/interfaces/tracklist-interfaces';
@@ -208,11 +209,33 @@ export class SeasonPageComponent implements OnInit {
     if (season.id !== this.currentSeason?.id) {
       // set form to the first tracklist value of all tracklists that belong to this season
       // do not set form if the current selected season is equal to the parameter "season" -> otherwise the selection won't work anymore!
+      let currentTracklistInLocalStorage: SeasonTracklist | null = null;
+
+      const currentTracklistInLocalStorageID: number | null =
+        this.tracklistService.getSelectedTracklistInLocalStorage()
+          ? Number(this.tracklistService.getSelectedTracklistInLocalStorage())
+          : null;
+
+      if (
+        // checking if current tracklist in local storage is in this season
+        currentTracklistInLocalStorageID &&
+        season.tracklistsForSeason
+          .map((tracklist: SeasonTracklist) => tracklist.id)
+          .includes(currentTracklistInLocalStorageID)
+      ) {
+        currentTracklistInLocalStorage = season.tracklistsForSeason.filter(
+          (tracklist: SeasonTracklist) =>
+            tracklist.id === currentTracklistInLocalStorageID
+        )[0];
+      }
+
       this.tracklistSelectionForm
         .get('selectedTracklist')
         ?.setValue(
           season.tracklistsForSeason.length > 0
-            ? season.tracklistsForSeason[0]
+            ? currentTracklistInLocalStorage
+              ? currentTracklistInLocalStorage
+              : season.tracklistsForSeason[0]
             : this.EMPTY_TRACKLIST
         );
     }

@@ -76,7 +76,6 @@ export class LoginComponent implements OnInit {
       return;
     }
 
-    console.log('is login valid  ?:', this.userService.isUserLoginValid());
     if (!this.userService.isUserLoginValid()) {
       // user login is blocked
 
@@ -120,7 +119,19 @@ export class LoginComponent implements OnInit {
       error: (err) => {
         if (err.status === 401) {
           this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+
+          if (err.error.error === 'Invalid credentials') {
+            this.messageService.add(
+              getMessageObject(
+                'error',
+                'Fehlerhafte Daten',
+                'Wir haben keinen Nutzer mit diesen Daten gefunden. Bitte probiere es erneut.'
+              )
+            );
+          } else {
+            this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          }
+
           this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;

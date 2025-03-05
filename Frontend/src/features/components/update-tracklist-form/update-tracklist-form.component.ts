@@ -37,6 +37,7 @@ import {
   getMessageObject,
 } from '../../../shared/variables/message-vars';
 import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { TracklistService } from '../../../service/tracklist/tracklist.service';
 
 @Component({
   selector: 'app-update-tracklist-form',
@@ -88,13 +89,17 @@ export class UpdateTracklistFormComponent implements OnInit {
     private mediaService: MediaService,
     private messageService: MessageService,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private tracklistService: TracklistService
   ) {}
 
   ngOnInit(): void {
     this.loadFilmData();
 
-    console.log(this.inpSelectedTracklist().status);
+    // set local storage selected tracklist to this tracklist
+    this.tracklistService.setSelectedTracklistInLocalStorage(
+      this.inpSelectedTracklist().id
+    );
   }
 
   public loadFilmData = () => {

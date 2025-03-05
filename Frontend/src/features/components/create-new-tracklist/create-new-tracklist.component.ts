@@ -2,7 +2,6 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  Input,
   input,
   InputSignal,
   OnInit,
@@ -29,7 +28,10 @@ import {
   convertTracklistStatusIntoGerman,
   TRACK_LIST_STATUS_LIST,
 } from '../../../shared/variables/tracklist';
-import { TVSeasonWithTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import {
+  Tracklist,
+  TVSeasonWithTracklist,
+} from '../../../shared/interfaces/tracklist-interfaces';
 import { RatingModule } from 'primeng/rating';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
@@ -37,6 +39,7 @@ import {
 } from '../../../shared/variables/message-vars';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { TracklistService } from '../../../service/tracklist/tracklist.service';
 
 @Component({
   selector: 'app-create-new-tracklist',
@@ -86,7 +89,8 @@ export class CreateNewTracklistComponent implements OnInit {
     private mediaService: MediaService,
     private formBuilder: FormBuilder,
     private router: Router,
-    private userService: UserService
+    private userService: UserService,
+    private tracklistService: TracklistService
   ) {}
 
   ngOnInit(): void {
@@ -100,7 +104,6 @@ export class CreateNewTracklistComponent implements OnInit {
       endDate: [''],
       rating: [null],
     });
-    console.log('season id', this.inputSeason().id);
   }
 
   public createNewTrackList = () => {
@@ -116,15 +119,12 @@ export class CreateNewTracklistComponent implements OnInit {
       formattedStartDate = new Date(this.trackListForm.get('startDate')?.value)
         .toISOString()
         .split('T')[0];
-
-      console.log('start date if:', formattedStartDate);
     }
 
     if (this.trackListForm.get('endDate')?.value) {
       formattedEndDate = new Date(this.trackListForm.get('endDate')?.value)
         .toISOString()
         .split('T')[0];
-      console.log('end date if', formattedEndDate);
     }
 
     this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
@@ -149,10 +149,13 @@ export class CreateNewTracklistComponent implements OnInit {
     }
 
     this.createNewTracklist$.subscribe({
-      next: (res) => {
+      next: (res: Tracklist) => {
         this.messageService.add(
           getMessageObject('success', 'Tracklist erfolgreich angelegt')
         );
+
+        // set current tracklist to local storage
+        this.tracklistService.setSelectedTracklistInLocalStorage(res.id);
 
         this.saveUpdatedTracklist.emit(true);
       },

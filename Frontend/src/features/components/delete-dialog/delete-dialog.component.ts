@@ -30,7 +30,6 @@ export class DeleteDialogComponent implements OnInit {
 
   ngOnInit(): void {
     this.isDialogVisible = true;
-    console.log('dd');
   }
 
   // functions ---------------------------------
