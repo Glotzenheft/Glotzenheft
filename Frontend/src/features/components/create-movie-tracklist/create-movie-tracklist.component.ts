@@ -100,7 +100,7 @@ export class CreateMovieTracklistComponent implements OnInit {
       this.mediaID(),
       this.tracklistForm.get('startDate')?.value,
       this.tracklistForm.get('endDate')?.value,
-      this.tracklistForm.get('status')?.value.name,
+      this.tracklistForm.get('status')?.value.value,
       this.tracklistForm.get('rating')?.value
     );
 
