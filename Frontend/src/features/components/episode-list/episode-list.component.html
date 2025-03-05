@@ -58,6 +58,7 @@
         *ngIf="currentEpisodeForDialog.stillPath"
         [src]="posterPath + currentEpisodeForDialog.stillPath"
         [alt]="'Poster für ' + currentEpisodeForDialog.name"
+        loading="lazy"
       />
       <p *ngIf="!currentEpisodeForDialog.stillPath">
         <i>kein Poster vorhanden</i>

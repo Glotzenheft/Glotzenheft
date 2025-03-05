@@ -30,6 +30,7 @@
             *ngIf="seasonData.media.posterPath !== null"
             [src]="posterPath + seasonData.media.posterPath"
             [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
+            loading="lazy"
           />
         </div>
       </div>
@@ -73,6 +74,7 @@
                     *ngIf="seasonData.media.posterPath !== null"
                     [src]="posterPath + season.posterPath"
                     [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
+                    loading="lazy"
                   />
                 </div>
                 <div class="seasonMeta">
