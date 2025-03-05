@@ -18,7 +18,7 @@ export const TRACK_LIST_STATUS_LIST: string[] = [
 export const convertTracklistStatusIntoGerman = (status: string): string => {
   switch (status) {
     case 'watching':
-      return 'Am schauen';
+      return 'Am glotzen';
     case 'completed':
       return 'Abgeschlossen';
     case 'dropped':
@@ -28,7 +28,7 @@ export const convertTracklistStatusIntoGerman = (status: string): string => {
     case 'plan to watch':
       return 'Geplant';
     case 'rewatching':
-      return 'wiederanschauend';
+      return 'Erneut glotzen';
   }
 
   return '';
