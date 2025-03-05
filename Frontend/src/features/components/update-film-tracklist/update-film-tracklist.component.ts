@@ -101,7 +101,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
         {
-          name: this.inpTracklist().status,
+          name: convertTracklistStatusIntoGerman(this.inpTracklist().status),
           value: this.inpTracklist().status,
         },
         Validators.required,

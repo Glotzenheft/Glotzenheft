@@ -25,7 +25,10 @@ import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
-import { TRACK_LIST_STATUS_LIST } from '../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+} from '../../../shared/variables/tracklist';
 import { TVSeasonWithTracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import { RatingModule } from 'primeng/rating';
 import {
@@ -71,9 +74,12 @@ export class CreateNewTracklistComponent implements OnInit {
   public createNewTracklist$: Observable<any> | null = null;
   public tracklistSelectionList: { name: string; value: string }[] =
     TRACK_LIST_STATUS_LIST.map((selection: string) => ({
-      name: selection,
+      name: convertTracklistStatusIntoGerman(selection),
       value: selection,
     }));
+
+  // other variables
+  public convertStatus = convertTracklistStatusIntoGerman;
 
   constructor(
     private messageService: MessageService,

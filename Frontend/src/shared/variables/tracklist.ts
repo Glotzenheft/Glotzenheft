@@ -18,15 +18,15 @@ export const TRACK_LIST_STATUS_LIST: string[] = [
 export const convertTracklistStatusIntoGerman = (status: string): string => {
   switch (status) {
     case 'watching':
-      return 'schauend';
+      return 'Am schauen';
     case 'completed':
-      return 'abgeschlossen';
+      return 'Abgeschlossen';
     case 'dropped':
-      return 'abgebrochen';
+      return 'Abgebrochen';
     case 'pausing':
-      return 'pausiert';
+      return 'Pausiert';
     case 'plan to watch':
-      return 'Schauen geplant';
+      return 'Geplant';
     case 'rewatching':
       return 'wiederanschauend';
   }

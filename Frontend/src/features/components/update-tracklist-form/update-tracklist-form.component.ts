@@ -27,7 +27,7 @@ import {
   TRACK_LIST_STATUS_LIST,
 } from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
-import { Observable, Subscription } from 'rxjs';
+import { Observable } from 'rxjs';
 import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
@@ -93,6 +93,8 @@ export class UpdateTracklistFormComponent implements OnInit {
 
   ngOnInit(): void {
     this.loadFilmData();
+
+    console.log(this.inpSelectedTracklist().status);
   }
 
   public loadFilmData = () => {
@@ -101,7 +103,9 @@ export class UpdateTracklistFormComponent implements OnInit {
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
         {
-          name: this.inpSelectedTracklist().status,
+          name: convertTracklistStatusIntoGerman(
+            this.inpSelectedTracklist().status
+          ),
           value: this.inpSelectedTracklist().status,
         },
         Validators.required,

@@ -34,6 +34,7 @@ import {
   getMessageObject,
 } from '../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { convertTracklistStatusIntoGerman } from '../../../shared/variables/tracklist';
 
 @Component({
   selector: 'app-film-page',
@@ -66,6 +67,8 @@ export class FilmPageComponent implements OnInit {
   public isTracklistSubmitted: boolean = false;
   public visibilityStatus: number = 0;
   public selectedTracklist: SeasonTracklist | null = null;
+
+  public convertStatus = convertTracklistStatusIntoGerman;
 
   // variable for controlling the toggle status of the tracklist panels
   public activePanel: number | null = null;
