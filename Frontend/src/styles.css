@@ -916,6 +916,7 @@ p {
     overflow-x: auto;
     overflow-y: auto;
     box-shadow: var(--box--shadow);
+    width: 100%;
   }
 
   .userActivitiesTable .p-datatable {

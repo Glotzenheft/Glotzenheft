@@ -4,3 +4,7 @@
   padding-top: var(--padding--top-bottom);
   padding-bottom: var(--padding--top-bottom);
 }
+
+.about article {
+  text-align: justify;
+}

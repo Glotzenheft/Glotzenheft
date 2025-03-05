@@ -31,6 +31,24 @@ export interface UserActivity {
   type: string;
 }
 
+export interface UserActivityWithDaySplitt {
+  date: string;
+  episodeID: number | null;
+  episodeNumber: number | null;
+  mediaID: number;
+  mediaTitle: string;
+  posterPath: string | null;
+  seasonID: number | null;
+  seasonNumber: number | null;
+  stillPath: string | null; // if episode
+  tracklistEpisodeID: number | null;
+  tracklistID: number;
+  tracklistName: string;
+  tracklistSeasinID: number | null;
+  type: string;
+  isDateSplitter: boolean;
+}
+
 export interface UserActivitiesPageEvent {
   first: number;
   rows: number;
