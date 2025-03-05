@@ -81,6 +81,9 @@
         <div class="ratingDIV">
           <p>Bewertung</p>
           <p-rating [stars]="10" formControlName="tracklist_rating" />
+          <p *ngIf="updateTracklistForm.get('tracklist_rating')?.value">
+            {{ updateTracklistForm.get("tracklist_rating")?.value }} / 10
+          </p>
         </div>
 
         <div class="tracklistActions">
