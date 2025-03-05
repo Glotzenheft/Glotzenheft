@@ -230,4 +230,15 @@ export class ActivitiesPageComponent implements OnInit {
       return currentActivity.stillPath;
     }
   };
+
+  public onClickActivity = (activity: UserActivityWithDaySplitt) => {
+    if (activity.type === 'movie') {
+      this.router.navigateByUrl(
+        `${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`
+      );
+      return;
+    }
+
+    this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+  };
 }
