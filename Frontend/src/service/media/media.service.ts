@@ -136,7 +136,7 @@ export class MediaService {
     endDate: string | null,
     status: string | null,
     rating: number | null
-  ): Observable<any> | null => {
+  ): Observable<Tracklist> | null => {
     const header = this.getHeader();
 
     if (!header) {
@@ -178,7 +178,7 @@ export class MediaService {
       ROUTE_CREATE_NEW_TRACKLIST[7] +
       `${rating ? rating : ''}`;
 
-    return this.http.post<any>(url, {}, { headers: header }).pipe(
+    return this.http.post<Tracklist>(url, {}, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => error);
@@ -254,7 +254,7 @@ export class MediaService {
 
   public updateTracklist = (
     tracklistData: UpdateTracklistRequest
-  ): Observable<any> | null => {
+  ): Observable<Tracklist> | null => {
     const header = this.getHeader();
 
     if (!header) {
@@ -292,7 +292,7 @@ export class MediaService {
       ROUTE_UPDATE_TRACKLIST[5] +
       formattedEndDate;
 
-    return this.http.patch<any>(url, {}, { headers: header }).pipe(
+    return this.http.patch<Tracklist>(url, {}, { headers: header }).pipe(
       shareReplay(1),
       catchError((error: HttpErrorResponse) => {
         return throwError(() => error);

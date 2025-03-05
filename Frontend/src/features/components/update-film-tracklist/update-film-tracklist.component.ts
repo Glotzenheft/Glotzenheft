@@ -23,23 +23,15 @@ import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
 import { MediaService } from '../../../service/media/media.service';
-import {
-  SeasonTracklist,
-  Tracklist,
-} from '../../../shared/interfaces/tracklist-interfaces';
-import {
-  Film,
-  UpdateTracklistRequest,
-} from '../../../shared/interfaces/media-interfaces';
+import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
 import { Observable } from 'rxjs';
 import {
   convertTracklistStatusIntoGerman,
   TRACK_LIST_STATUS_LIST,
-  TracklistStatusType,
 } from '../../../shared/variables/tracklist';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { UserService } from '../../../service/user/user.service';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
