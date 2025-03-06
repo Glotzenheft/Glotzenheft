@@ -18,6 +18,7 @@ import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
 import { convertTracklistStatusIntoGerman } from '../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../service/media/media.service';
 import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-all-user-tracklists',
@@ -34,6 +35,7 @@ import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
     ButtonModule,
     UpdateFilmTracklistComponent,
     UpdateTracklistFormComponent,
+    ProgressSpinnerModule,
   ],
   templateUrl: './all-user-tracklists.component.html',
   styleUrl: './all-user-tracklists.component.css',
@@ -47,16 +49,18 @@ export class AllUserTracklistsComponent implements OnInit {
   public tmdbPosterPath: string = TMDB_POSTER_PATH;
   public visibility: number = 0;
 
-  public convertStatus = convertTracklistStatusIntoGerman
+  public isLoading: boolean = false;
+
+  public convertStatus = convertTracklistStatusIntoGerman;
 
   constructor(private mediaService: MediaService, private router: Router) {}
-  
 
   ngOnInit(): void {
     this.loadTracklists();
   }
 
   public loadTracklists = () => {
+    this.isLoading = true;
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
     if (!this.userTracklists$) {
@@ -64,11 +68,14 @@ export class AllUserTracklistsComponent implements OnInit {
     }
 
     this.userTracklists$.subscribe({
-      next: () => {},
+      next: () => {
+        this.isLoading = false;
+      },
       error: (err) => {
         if (err.status === 401) {
           this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
         }
+        this.isLoading = false;
       },
     });
   };

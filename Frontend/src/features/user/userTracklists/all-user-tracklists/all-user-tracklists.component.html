@@ -1,104 +1,124 @@
-<ng-container
-  *ngIf="visibility === 0 && (userTracklists$ | async) as userTracklists"
->
-  <div class="userTracklistsWrapper">
-    <!-- user tracklists list -->
-    <p-panel
-      *ngFor="let tracklist of userTracklists"
-      [header]="
-        tracklist.tracklistName + ' [' + convertStatus(tracklist.status) + ']'
-      "
-      [toggleable]="true"
-      [collapsed]="true"
-    >
-      <div class="tracklistPanelDIV">
-        <div class="seasonPictureWrapper">
-          <div class="seasonMetaPicture">
-            <!-- poster of tracklist media if poster exists -->
-            <p *ngIf="tracklist.media.posterPath === null">
-              kein Bild vorhanden
+<div *ngIf="isLoading" class="loadingWrapper">
+  <h1>Laden ...</h1>
+  <p-progress-spinner
+    ariaLabel="loading"
+    strokeWidth="8"
+    [style]="{ width: '5rem', height: '5rem' }"
+  />
+</div>
+
+<ng-container *ngIf="!isLoading">
+  <ng-container
+    *ngIf="visibility === 0 && (userTracklists$ | async) as userTracklists"
+  >
+    <div class="userTracklistsWrapper" *ngIf="userTracklists.length > 0">
+      <!-- user tracklists list -->
+      <p-panel
+        *ngFor="let tracklist of userTracklists"
+        [header]="
+          tracklist.tracklistName + ' [' + convertStatus(tracklist.status) + ']'
+        "
+        [toggleable]="true"
+        [collapsed]="true"
+      >
+        <div class="tracklistPanelDIV">
+          <div class="seasonPictureWrapper">
+            <div class="seasonMetaPicture">
+              <!-- poster of tracklist media if poster exists -->
+              <p *ngIf="tracklist.media.posterPath === null">
+                kein Bild vorhanden
+              </p>
+              <img
+                *ngIf="tracklist.media.posterPath !== null"
+                [src]="tmdbPosterPath + tracklist.media.posterPath"
+                [alt]="'Dies ist das Bild für von ' + tracklist.tracklistName"
+                loading="lazy"
+              />
+            </div>
+          </div>
+
+          <!-- metadata about the tracklist ---------------------------------------------------------------------- -->
+          <div class="tracklistPanelMediaDetailsDIV">
+            <p>{{ tracklist.media.type === "movie" ? "Film" : "Serie" }}</p>
+            <div
+              [className]="setTracklistStatus(tracklist.status) + ' statusDIV'"
+            >
+              <p>Status: {{ convertStatus(tracklist.status) }}</p>
+            </div>
+
+            <p *ngIf="tracklist.startDate">
+              Startdatum:
+              {{ tracklist.startDate | dateFormatting }}
             </p>
-            <img
-              *ngIf="tracklist.media.posterPath !== null"
-              [src]="tmdbPosterPath + tracklist.media.posterPath"
-              [alt]="'Dies ist das Bild für von ' + tracklist.tracklistName"
-              loading="lazy"
-            />
-          </div>
-        </div>
+            <p *ngIf="!tracklist.startDate">
+              Startdatum:
+              <i>nicht vorhanden</i>
+            </p>
 
-        <!-- metadata about the tracklist ---------------------------------------------------------------------- -->
-        <div class="tracklistPanelMediaDetailsDIV">
-          <p>{{ tracklist.media.type === "movie" ? "Film" : "Serie" }}</p>
-          <div
-            [className]="setTracklistStatus(tracklist.status) + ' statusDIV'"
-          >
-            <p>Status: {{ convertStatus(tracklist.status) }}</p>
-          </div>
+            <p *ngIf="tracklist.finishDate">
+              Enddatum:
+              {{ tracklist.finishDate | dateFormatting }}
+            </p>
+            <p *ngIf="!tracklist.finishDate">
+              Enddatum: <i>nicht vorhanden</i>
+            </p>
 
-          <p *ngIf="tracklist.startDate">
-            Startdatum:
-            {{ tracklist.startDate | dateFormatting }}
-          </p>
-          <p *ngIf="!tracklist.startDate">
-            Startdatum:
-            <i>nicht vorhanden</i>
-          </p>
+            <div class="ratingDIV">
+              <p>Bewertung:</p>
+              <p-rating
+                [stars]="10"
+                [disabled]="true"
+                [(ngModel)]="tracklist.rating"
+              />
+            </div>
+            <p *ngIf="tracklist.rating">{{ tracklist.rating }} / 10</p>
 
-          <p *ngIf="tracklist.finishDate">
-            Enddatum:
-            {{ tracklist.finishDate | dateFormatting }}
-          </p>
-          <p *ngIf="!tracklist.finishDate">Enddatum: <i>nicht vorhanden</i></p>
-
-          <div class="ratingDIV">
-            <p>Bewertung:</p>
-            <p-rating
-              [stars]="10"
-              [disabled]="true"
-              [(ngModel)]="tracklist.rating"
-            />
-          </div>
-          <p *ngIf="tracklist.rating">{{ tracklist.rating }} / 10</p>
-
-          <!-- tracklist actions -------------------------------------------------------------------------------------------- -->
-          <p-button
-            label="Bearbeiten"
-            icon="pi pi-pencil"
-            (onClick)="
-              editTracklist(tracklist, tracklist.media.type === 'movie')
-            "
-          />
-          <div class="mediaButton">
+            <!-- tracklist actions -------------------------------------------------------------------------------------------- -->
             <p-button
-              label="zum Medium gehen"
-              icon="pi pi-arrow-right"
-              severity="contrast"
+              label="Bearbeiten"
+              icon="pi pi-pencil"
               (onClick)="
-                navigateToDetailspage(tracklist.media.id, tracklist.media.type)
+                editTracklist(tracklist, tracklist.media.type === 'movie')
               "
             />
+            <div class="mediaButton">
+              <p-button
+                label="zum Medium gehen"
+                icon="pi pi-arrow-right"
+                severity="contrast"
+                (onClick)="
+                  navigateToDetailspage(
+                    tracklist.media.id,
+                    tracklist.media.type
+                  )
+                "
+              />
+            </div>
           </div>
         </div>
-      </div>
-    </p-panel>
-  </div>
-</ng-container>
+      </p-panel>
+    </div>
 
-<!-- page for updating a tracklist for a film -------------------------------------------------------- -->
-<ng-container *ngIf="currentTracklist">
-  <app-update-film-tracklist
-    *ngIf="currentTracklist.media.type === 'movie' && visibility === 1"
-    [inpTracklist]="currentTracklist"
-    (cancelTracklistForm)="refreshPage(true)"
-    (refreshFilmPage)="refreshPage(false)"
-  />
+    <div *ngIf="userTracklists.length < 1" class="loadingWrapper">
+      <h1>Keine Tracklisten gefunden.</h1>
+    </div>
+  </ng-container>
 
-  <!-- page for updating a tracklist for a tv ------------------------------------------------------------- -->
-  <app-update-tracklist-form
-    *ngIf="currentTracklist.media.type === 'tv' && visibility === 2"
-    [inpSelectedTracklist]="currentTracklist"
-    (cancelTracklistEditing)="refreshPage(true)"
-    (saveUpdatedTracklist)="refreshPage(false)"
-  />
+  <!-- page for updating a tracklist for a film -------------------------------------------------------- -->
+  <ng-container *ngIf="currentTracklist">
+    <app-update-film-tracklist
+      *ngIf="currentTracklist.media.type === 'movie' && visibility === 1"
+      [inpTracklist]="currentTracklist"
+      (cancelTracklistForm)="refreshPage(true)"
+      (refreshFilmPage)="refreshPage(false)"
+    />
+
+    <!-- page for updating a tracklist for a tv ------------------------------------------------------------- -->
+    <app-update-tracklist-form
+      *ngIf="currentTracklist.media.type === 'tv' && visibility === 2"
+      [inpSelectedTracklist]="currentTracklist"
+      (cancelTracklistEditing)="refreshPage(true)"
+      (saveUpdatedTracklist)="refreshPage(false)"
+    />
+  </ng-container>
 </ng-container>

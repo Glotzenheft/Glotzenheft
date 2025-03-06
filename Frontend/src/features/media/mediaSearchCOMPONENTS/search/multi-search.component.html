@@ -1,5 +1,3 @@
-<p-progress-spinner ariaLabel="loading" *ngIf="isLoading" />
-
 <h1>Suche</h1>
 
 <div class="pagination">
@@ -22,9 +20,18 @@
   />
 </div>
 
+<div *ngIf="isLoading" class="loadingWrapper">
+  <h1>Laden ...</h1>
+  <p-progress-spinner
+    ariaLabel="loading"
+    strokeWidth="8"
+    [style]="{ width: '5rem', height: '5rem' }"
+  />
+</div>
+
 <div *ngIf="results$ && (results$ | async) as res" class="results-container">
   <div *ngIf="res.results.length < 1" class="noDataFoundDIV">
-    <p>Keine Treffer gefunden</p>
+    <h1>Keine Treffer gefunden</h1>
   </div>
 
   <ng-container *ngIf="res.results.length > 0">
