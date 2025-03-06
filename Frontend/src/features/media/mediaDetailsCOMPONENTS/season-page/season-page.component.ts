@@ -46,6 +46,7 @@ import { UserService } from '../../../../service/user/user.service';
 import { TracklistService } from '../../../../service/tracklist/tracklist.service';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-season-page',
@@ -68,8 +69,9 @@ import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
     MenuModule,
     CreateTracklistEpisodeFormComponent,
     TracklistFormComponent,
-    UpdateTracklistFormComponent
-],
+    UpdateTracklistFormComponent,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
 })
@@ -118,6 +120,8 @@ export class SeasonPageComponent implements OnInit {
     tracklistSeasons: [],
   };
 
+  public isLoading: boolean = false;
+
   constructor(
     public stringService: StringService,
     private route: ActivatedRoute,
@@ -137,6 +141,7 @@ export class SeasonPageComponent implements OnInit {
   // functions -----------------------------------------------------
 
   public loadData = () => {
+    this.isLoading = true;
     this.tvSeriesID = this.route.snapshot.paramMap.get('id');
 
     if (!this.tvSeriesID) {
@@ -174,6 +179,8 @@ export class SeasonPageComponent implements OnInit {
           selectedTracklist: [this.EMPTY_TRACKLIST],
         });
         this.tracklistsOfSeason = res.tracklists;
+
+        this.isLoading = false;
       },
       error: (err) => {
         if (err.status === 401) {
@@ -183,6 +190,8 @@ export class SeasonPageComponent implements OnInit {
         }
 
         this.hasError = true;
+
+        this.isLoading = false;
       },
     });
   };

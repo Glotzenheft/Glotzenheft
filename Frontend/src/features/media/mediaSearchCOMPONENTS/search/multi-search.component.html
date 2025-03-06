@@ -23,6 +23,10 @@
 </div>
 
 <div *ngIf="results$ && (results$ | async) as res" class="results-container">
+  <div *ngIf="res.results.length < 1" class="noDataFoundDIV">
+    <p>Keine Treffer gefunden</p>
+  </div>
+
   <ng-container *ngIf="res.results.length > 0">
     <h3>Suchergebnisse:</h3>
 
