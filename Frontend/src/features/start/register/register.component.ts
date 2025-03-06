@@ -75,7 +75,7 @@ export class RegisterComponent implements OnInit {
       username: ['', [Validators.required, Validators.minLength(2)]],
       password: ['', [Validators.required, Validators.minLength(8)]],
       passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
-      validationQuestion: [{ name: '', code: '' }, [Validators.required]],
+      validationQuestion: [null, [Validators.required]],
       validationAnswer: ['', [Validators.required]],
       agbAccept: [false, Validators.requiredTrue],
     });
@@ -129,7 +129,18 @@ export class RegisterComponent implements OnInit {
         // navigate user to login page
         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
       },
-      error: () => {
+      error: (err: any) => {
+        if (err.status === 409 && err.error.error === 'User already exists') {
+          this.messageService.add(
+            getMessageObject(
+              'error',
+              'Nutzer existiert bereits',
+              'Bitte wähle einen anderen Namen'
+            )
+          );
+
+          return;
+        }
         this.messageService.add(
           getMessageObject(
             'error',
