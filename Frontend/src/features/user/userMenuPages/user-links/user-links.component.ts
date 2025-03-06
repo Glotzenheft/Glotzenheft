@@ -1,13 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthService } from '../../../service/auth/auth.service';
 import { CommonModule } from '@angular/common';
-import {
-  getVisibleRoutes,
-  getVisibleRoutesForUser,
-} from '../../../shared/variables/routes-list';
-import { VisibleRoute } from '../../../shared/interfaces/route-list-item';
-import { isUserLoggedIn } from '../../../guards/auth.guard';
-import { UserService } from '../../../service/user/user.service';
+import { VisibleRoute } from '../../../../shared/interfaces/route-list-item';
+import { getVisibleRoutesForUser } from '../../../../shared/variables/routes-list';
+import { AuthService } from '../../../../service/auth/auth.service';
+import { UserService } from '../../../../service/user/user.service';
+
 
 @Component({
   selector: 'app-user-links',

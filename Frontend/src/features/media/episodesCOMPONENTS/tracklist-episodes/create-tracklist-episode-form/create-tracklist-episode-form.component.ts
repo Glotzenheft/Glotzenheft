@@ -6,10 +6,6 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import {
-  SeasonTracklist,
-  TracklistEpisode,
-} from '../../../../shared/interfaces/tracklist-interfaces';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
@@ -19,20 +15,24 @@ import { ButtonModule } from 'primeng/button';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { SelectModule } from 'primeng/select';
 import { MessageService } from 'primeng/api';
-import { EpisodeService } from '../../../../service/episode/episode.service';
-import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
-import { CreateTracklistEpisode } from '../../../../shared/interfaces/tracklist-episode-interfaces';
 import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
-import { DeleteDialogComponent } from '../../delete-dialog/delete-dialog.component';
+import { Router } from '@angular/router';
+import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
+import {
+  SeasonTracklist,
+  TracklistEpisode,
+} from '../../../../../shared/interfaces/tracklist-interfaces';
+import { SeasonEpisode } from '../../../../../shared/interfaces/media-interfaces';
+import { EpisodeService } from '../../../../../service/episode/episode.service';
+import { UserService } from '../../../../../service/user/user.service';
+import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
+import { CreateTracklistEpisode } from '../../../../../shared/interfaces/tracklist-episode-interfaces';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
-} from '../../../../shared/variables/message-vars';
-import { UserService } from '../../../../service/user/user.service';
-import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
-import { TracklistService } from '../../../../service/tracklist/tracklist.service';
+} from '../../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-create-tracklist-episode-form',
@@ -230,10 +230,6 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         : episodeActionNumber === 1
         ? 'Fehler beim Speichern der Episode'
         : 'Fehler beim Löschen der Episode';
-
-    // episodeActionNumber === 1
-    //   ? 'Fehler beim Speichern der Episode' : episodeActionNumber === 2 ?
-    //    'Fehler beim Hinzufügen der Episode';
 
     const errorMessageDetail: string =
       episodeActionNumber === 0

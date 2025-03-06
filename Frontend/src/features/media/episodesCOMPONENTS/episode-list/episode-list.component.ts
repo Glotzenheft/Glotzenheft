@@ -1,26 +1,24 @@
 import {
   Component,
   EventEmitter,
-  Input,
   input,
   InputSignal,
-  OnInit,
   Output,
 } from '@angular/core';
-import { SeasonEpisode } from '../../../shared/interfaces/media-interfaces';
 import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
-import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { FormGroup } from '@angular/forms';
+import { ButtonModule } from 'primeng/button';
+import { TooltipModule } from 'primeng/tooltip';
+import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
+import { SeasonEpisode } from '../../../../shared/interfaces/media-interfaces';
 import {
   SeasonTracklist,
   TracklistEpisode,
   TVSeasonWithTracklist,
-} from '../../../shared/interfaces/tracklist-interfaces';
-import { ButtonModule } from 'primeng/button';
-import { TooltipModule } from 'primeng/tooltip';
-import { StringService } from '../../../service/string/string.service';
-import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
+} from '../../../../shared/interfaces/tracklist-interfaces';
+import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
+import { StringService } from '../../../../service/string/string.service';
 
 @Component({
   selector: 'app-episode-list',
@@ -77,13 +75,6 @@ export class EpisodeListComponent {
       return true;
     }
     return false;
-
-    // return this.tracklistService.isEpisodeInCurrenTracklist(
-    //   episodeID,
-    //   this.selectedSeason(),
-    //   this.tracklistsOfSeason(),
-    //   this.tracklistSelectionForm()
-    // );
   };
 
   public selectEpisode = (

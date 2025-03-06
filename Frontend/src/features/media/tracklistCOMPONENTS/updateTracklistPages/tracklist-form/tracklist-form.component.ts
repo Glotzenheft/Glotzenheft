@@ -2,20 +2,18 @@ import { CommonModule } from '@angular/common';
 import {
   Component,
   EventEmitter,
-  Input,
   input,
   InputSignal,
   OnInit,
   Output,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
-import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
-import { CreateNewTracklistComponent } from '../create-new-tracklist/create-new-tracklist.component';
-import { TVSeasonWithTracklist } from '../../../shared/interfaces/tracklist-interfaces';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
+import { CreateNewTracklistComponent } from '../../createTracklistPages/create-new-tracklist/create-new-tracklist.component';
+import { TVSeasonWithTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
+import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
 
 @Component({
   selector: 'app-tracklist-form',

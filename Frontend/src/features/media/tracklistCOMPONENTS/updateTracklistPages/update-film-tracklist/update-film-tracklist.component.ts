@@ -22,21 +22,15 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
-import { MediaService } from '../../../service/media/media.service';
-import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
-import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
 import { Observable } from 'rxjs';
-import {
-  convertTracklistStatusIntoGerman,
-  TRACK_LIST_STATUS_LIST,
-} from '../../../shared/variables/tracklist';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { UserService } from '../../../service/user/user.service';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
+import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
+import { SeasonTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../shared/variables/tracklist';
+import { MediaService } from '../../../../../service/media/media.service';
+import { UserService } from '../../../../../service/user/user.service';
+import { UpdateTracklistRequest } from '../../../../../shared/interfaces/media-interfaces';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-update-film-tracklist',

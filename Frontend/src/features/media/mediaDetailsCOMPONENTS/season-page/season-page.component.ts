@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-import {
-  Season,
-  SeasonEpisode,
-  SeasonWithEpisodes,
-} from '../../../shared/interfaces/media-interfaces';
+
 import { Observable } from 'rxjs';
-import { MediaService } from '../../../service/media/media.service';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { RatingModule } from 'primeng/rating';
 import { ButtonModule } from 'primeng/button';
-import { StringService } from '../../../service/string/string.service';
+import { FloatLabelModule } from 'primeng/floatlabel';
+import { InputTextModule } from 'primeng/inputtext';
+import { MessageModule } from 'primeng/message';
+import { MessageService } from 'primeng/api';
+import { AccordionModule } from 'primeng/accordion';
+import { SelectModule } from 'primeng/select';
 import {
   FormBuilder,
   FormGroup,
@@ -21,33 +21,31 @@ import {
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { NavigationService } from '../../../service/navigation/navigation.service';
-import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
-import { SecurityService } from '../../../service/security/security.service';
-import { FloatLabelModule } from 'primeng/floatlabel';
-import { InputTextModule } from 'primeng/inputtext';
-import { MessageModule } from 'primeng/message';
-import { MessageService } from 'primeng/api';
-import { EpisodeListComponent } from '../../components/episode-list/episode-list.component';
-import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
-import { UserService } from '../../../service/user/user.service';
-import { AccordionModule } from 'primeng/accordion';
+import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
+import { EpisodeListComponent } from '../../episodesCOMPONENTS/episode-list/episode-list.component';
+import { TracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/tracklist-form/tracklist-form.component';
+import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
+import { MenuModule } from 'primeng/menu';
+import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
+import {
+  Season,
+  SeasonEpisode,
+  SeasonWithEpisodes,
+} from '../../../../shared/interfaces/media-interfaces';
 import {
   SeasonTracklist,
   SeasonTracklistType,
-  Tracklist,
   TVSeasonWithTracklist,
   TVWithTracklist,
-} from '../../../shared/interfaces/tracklist-interfaces';
-
-import { SelectModule } from 'primeng/select';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
-import { TracklistFormComponent } from '../../components/tracklist-form/tracklist-form.component';
-import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
-import { MenuModule } from 'primeng/menu';
-import { CreateTracklistEpisodeFormComponent } from '../../components/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
-import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+} from '../../../../shared/interfaces/tracklist-interfaces';
+import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
+import { StringService } from '../../../../service/string/string.service';
+import { MediaService } from '../../../../service/media/media.service';
+import { SecurityService } from '../../../../service/security/security.service';
+import { UserService } from '../../../../service/user/user.service';
+import { TracklistService } from '../../../../service/tracklist/tracklist.service';
+import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-season-page',
@@ -67,8 +65,6 @@ import { ROUTES_LIST } from '../../../shared/variables/routes-list';
     EpisodeListComponent,
     AccordionModule,
     SelectModule,
-    TracklistFormComponent,
-    UpdateTracklistFormComponent,
     MenuModule,
     CreateTracklistEpisodeFormComponent,
   ],

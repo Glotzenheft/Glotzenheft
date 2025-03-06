@@ -18,28 +18,22 @@ import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
-import { MediaService } from '../../../service/media/media.service';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
+import { RatingModule } from 'primeng/rating';
+import { Router } from '@angular/router';
+import { Tracklist, TVSeasonWithTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
 import {
   convertTracklistStatusIntoGerman,
   TRACK_LIST_STATUS_LIST,
-} from '../../../shared/variables/tracklist';
-import {
-  Tracklist,
-  TVSeasonWithTracklist,
-} from '../../../shared/interfaces/tracklist-interfaces';
-import { RatingModule } from 'primeng/rating';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
-import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
+} from '../../../../../shared/variables/tracklist';
+import { MediaService } from '../../../../../service/media/media.service';
+import { UserService } from '../../../../../service/user/user.service';
+import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-create-new-tracklist',

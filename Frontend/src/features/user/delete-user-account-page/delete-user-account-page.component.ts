@@ -19,11 +19,11 @@ import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-quest
 import { DeleteUserRequest } from '../../../shared/interfaces/user-interfaces';
 import { Observable } from 'rxjs';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../../shared/variables/message-vars';
+import { DeleteDialogComponent } from '../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 
 @Component({
   selector: 'app-delete-user-account-page',

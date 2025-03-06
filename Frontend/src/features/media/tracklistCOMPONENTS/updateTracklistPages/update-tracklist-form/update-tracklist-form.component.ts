@@ -6,14 +6,12 @@ import {
   OnInit,
   Output,
 } from '@angular/core';
-import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { MediaService } from '../../../service/media/media.service';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -22,22 +20,18 @@ import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { DatePickerModule } from 'primeng/datepicker';
-import {
-  convertTracklistStatusIntoGerman,
-  TRACK_LIST_STATUS_LIST,
-} from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
 import { Observable } from 'rxjs';
-import { UpdateTracklistRequest } from '../../../shared/interfaces/media-interfaces';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { UserService } from '../../../service/user/user.service';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
-import { DeleteDialogComponent } from '../delete-dialog/delete-dialog.component';
-import { TracklistService } from '../../../service/tracklist/tracklist.service';
+import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
+import { SeasonTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../shared/variables/tracklist';
+import { MediaService } from '../../../../../service/media/media.service';
+import { UserService } from '../../../../../service/user/user.service';
+import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
+import { UpdateTracklistRequest } from '../../../../../shared/interfaces/media-interfaces';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-update-tracklist-form',

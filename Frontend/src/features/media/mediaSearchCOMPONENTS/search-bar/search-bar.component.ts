@@ -4,12 +4,12 @@ import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { SearchService } from '../../../service/search/search.service';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { CommonModule } from '@angular/common';
-import { UserService } from '../../../service/user/user.service';
 import { TooltipModule } from 'primeng/tooltip';
+import { isUserLoggedIn } from '../../../../guards/auth.guard';
+import { SearchService } from '../../../../service/search/search.service';
+import { UserService } from '../../../../service/user/user.service';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-search-bar',

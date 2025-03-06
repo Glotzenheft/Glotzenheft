@@ -7,14 +7,12 @@ import {
   Output,
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
-import { MediaService } from '../../../service/media/media.service';
 import {
   FormBuilder,
   FormGroup,
   ReactiveFormsModule,
   Validators,
 } from '@angular/forms';
-import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
@@ -24,17 +22,13 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { DialogModule } from 'primeng/dialog';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
-import {
-  convertTracklistStatusIntoGerman,
-  TRACK_LIST_STATUS_LIST,
-} from '../../../shared/variables/tracklist';
 import { RatingModule } from 'primeng/rating';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../shared/variables/tracklist';
+import { MediaService } from '../../../../../service/media/media.service';
+import { UserService } from '../../../../../service/user/user.service';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-create-movie-tracklist',

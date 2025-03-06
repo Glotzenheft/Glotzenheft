@@ -12,29 +12,25 @@ import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
 import { PanelModule } from 'primeng/panel';
 import { RatingModule } from 'primeng/rating';
-import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { ActivatedRoute, Router } from '@angular/router';
-import { StringService } from '../../../service/string/string.service';
-import { NavigationService } from '../../../service/navigation/navigation.service';
-import { SecurityService } from '../../../service/security/security.service';
 import { Observable } from 'rxjs';
-import { Film } from '../../../shared/interfaces/media-interfaces';
-import { MediaService } from '../../../service/media/media.service';
-import { MEDIA_ID_NOT_EXISTS } from '../../../shared/variables/navigation-vars';
-import { UserService } from '../../../service/user/user.service';
-import { CreateMovieTracklistComponent } from '../../components/create-movie-tracklist/create-movie-tracklist.component';
-import { SeasonTracklist } from '../../../shared/interfaces/tracklist-interfaces';
-import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { convertTracklistStatusIntoGerman } from '../../../shared/variables/tracklist';
+import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
+import { CreateMovieTracklistComponent } from '../../tracklistCOMPONENTS/createTracklistPages/create-movie-tracklist/create-movie-tracklist.component';
+import { UpdateFilmTracklistComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
+import { Film } from '../../../../shared/interfaces/media-interfaces';
+import { SeasonTracklist } from '../../../../shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman } from '../../../../shared/variables/tracklist';
+import { StringService } from '../../../../service/string/string.service';
+import { SecurityService } from '../../../../service/security/security.service';
+import { MediaService } from '../../../../service/media/media.service';
+import { UserService } from '../../../../service/user/user.service';
+import { MEDIA_ID_NOT_EXISTS } from '../../../../shared/variables/navigation-vars';
+import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-film-page',
@@ -51,8 +47,6 @@ import { convertTracklistStatusIntoGerman } from '../../../shared/variables/trac
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-    CreateMovieTracklistComponent,
-    UpdateFilmTracklistComponent,
   ],
   templateUrl: './film-page.component.html',
   styleUrl: './film-page.component.css',

@@ -52,7 +52,6 @@ export class ResetPasswordComponent implements OnInit {
 
   constructor(
     private formBuilder: FormBuilder,
-    private securityService: SecurityService,
     private messageService: MessageService,
     private userService: UserService,
     public navigationService: NavigationService,
@@ -95,7 +94,7 @@ export class ResetPasswordComponent implements OnInit {
     }
 
     this.resetPasswordData$.subscribe({
-      next: (res) => {
+      next: () => {
         this.messageService.add(
           getMessageObject(
             'success',

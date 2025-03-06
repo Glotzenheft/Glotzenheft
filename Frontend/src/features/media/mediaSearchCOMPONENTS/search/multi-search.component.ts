@@ -1,24 +1,24 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { MediaService } from '../../../service/media/media.service';
 import { Observable, Subscription } from 'rxjs';
-import {
-  MediaIDResponse,
-  MediaResult,
-  MultiSearchResponse,
-} from '../../../shared/interfaces/media-interfaces';
-import { SearchService } from '../../../service/search/search.service';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { MessageService } from 'primeng/api';
-import { UserService } from '../../../service/user/user.service';
 import { ButtonModule } from 'primeng/button';
-import { getMessageObject } from '../../../shared/variables/message-vars';
+import {
+  MediaIDResponse,
+  MediaResult,
+  MultiSearchResponse,
+} from '../../../../shared/interfaces/media-interfaces';
+import { MediaService } from '../../../../service/media/media.service';
+import { SearchService } from '../../../../service/search/search.service';
+import { UserService } from '../../../../service/user/user.service';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { getMessageObject } from '../../../../shared/variables/message-vars';
 
 @Component({
   selector: 'app-multi-search',
@@ -103,11 +103,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   }
 
   public loadMultiSearchResults = (page: number, searchTerm: string) => {
-    // if (!this.currentSearchTerm.trim()) {
-    //   this.isNextPageButtonDisabled = true;
-    //   this.isPrevPageButtonDisabled = true;
-    // }
-
     this.results$ = this.mediaService.getMultiSearchResults(
       searchTerm,
       this.currentPage

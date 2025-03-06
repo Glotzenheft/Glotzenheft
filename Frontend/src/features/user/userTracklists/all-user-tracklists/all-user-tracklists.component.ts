@@ -1,23 +1,23 @@
 import { Component, OnInit } from '@angular/core';
-import { MediaService } from '../../../service/media/media.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { CommonModule } from '@angular/common';
-import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
 import { CardModule } from 'primeng/card';
-import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { DialogModule } from 'primeng/dialog';
 import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
-import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import { PanelModule } from 'primeng/panel';
 import { RatingModule } from 'primeng/rating';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { UpdateFilmTracklistComponent } from '../../components/update-film-tracklist/update-film-tracklist.component';
-import { UpdateTracklistFormComponent } from '../../components/update-tracklist-form/update-tracklist-form.component';
-import { convertTracklistStatusIntoGerman } from '../../../shared/variables/tracklist';
+import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
+import { UpdateFilmTracklistComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
+import { UpdateTracklistFormComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
+import { Tracklist } from '../../../../shared/interfaces/tracklist-interfaces';
+import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
+import { convertTracklistStatusIntoGerman } from '../../../../shared/variables/tracklist';
+import { MediaService } from '../../../../service/media/media.service';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 
 @Component({
   selector: 'app-all-user-tracklists',

@@ -2,15 +2,15 @@ import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
-import { UserMenuList } from '../../../shared/interfaces/user-interfaces';
-import { UserService } from '../../../service/user/user.service';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { MessageService } from 'primeng/api';
-import { StringService } from '../../../service/string/string.service';
 import { TooltipModule } from 'primeng/tooltip';
-import { getMessageObject } from '../../../shared/variables/message-vars';
+import { UserMenuList } from '../../../../shared/interfaces/user-interfaces';
+import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { getMessageObject } from '../../../../shared/variables/message-vars';
+import { UserService } from '../../../../service/user/user.service';
+import { StringService } from '../../../../service/string/string.service';
+import { isUserLoggedIn } from '../../../../guards/auth.guard';
 
 @Component({
   selector: 'app-user-menu',
