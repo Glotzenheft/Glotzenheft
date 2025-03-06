@@ -2,15 +2,15 @@ import { Routes } from '@angular/router';
 import { StartMainComponent } from '../features/start/start-main/start-main.component';
 import { LoginComponent } from '../features/start/login/login.component';
 import { RegisterComponent } from '../features/start/register/register.component';
-import { ImpressumComponent } from '../features/components/impressum/impressum.component';
-import { AboutComponent } from '../features/components/about/about.component';
-import { PrivacyPolicyComponent } from '../features/components/privacy-policy/privacy-policy.component';
 import { ROUTES_LIST } from '../shared/variables/routes-list';
-import { MultiSearchComponent } from '../features/components/search/multi-search.component';
 import { authGuard } from '../guards/auth.guard';
 import { ResetPasswordComponent } from '../features/start/reset-password/reset-password.component';
-import { AllUserTracklistsComponent } from '../features/media/all-user-tracklists/all-user-tracklists.component';
-import { AgbComponent } from '../features/components/agb/agb.component';
+import { ImpressumComponent } from '../features/footerCOMPONENTS/impressum/impressum.component';
+import { AboutComponent } from '../features/footerCOMPONENTS/about/about.component';
+import { PrivacyPolicyComponent } from '../features/footerCOMPONENTS/privacy-policy/privacy-policy.component';
+import { MultiSearchComponent } from '../features/media/mediaSearchCOMPONENTS/search/multi-search.component';
+import { AllUserTracklistsComponent } from '../features/user/userTracklists/all-user-tracklists/all-user-tracklists.component';
+import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
 
 export const routes: Routes = [
   {

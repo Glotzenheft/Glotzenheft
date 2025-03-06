@@ -25,9 +25,9 @@ import { SelectModule } from 'primeng/select';
 import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Router } from '@angular/router';
-import { AgbComponent } from '../../components/agb/agb.component';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { getMessageObject } from '../../../shared/variables/message-vars';
+import { AgbComponent } from '../../footerCOMPONENTS/agb/agb.component';
 
 @Component({
   selector: 'app-register',

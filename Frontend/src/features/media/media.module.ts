@@ -1,17 +1,15 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { MediaPageComponent } from './media-page/media-page.component';
-import { FilmPageComponent } from './film-page/film-page.component';
-import { TvPageComponent } from './tv-page/tv-page.component';
-import { SeasonPageComponent } from './season-page/season-page.component';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-import { MultiSearchComponent } from '../components/search/multi-search.component';
+import { FilmPageComponent } from './mediaDetailsCOMPONENTS/film-page/film-page.component';
+import { SeasonPageComponent } from './mediaDetailsCOMPONENTS/season-page/season-page.component';
+import { MultiSearchComponent } from './mediaSearchCOMPONENTS/search/multi-search.component';
 
 const mediaRoutes: Routes = [
   {
     path: 'all', // overview over all media (= films + tv shows)
-    component: MediaPageComponent,
+    component: FilmPageComponent,
   },
   {
     path: ROUTES_LIST[5].shortUrl + '/:id',

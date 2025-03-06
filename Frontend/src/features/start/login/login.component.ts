@@ -149,7 +149,7 @@ export class LoginComponent implements OnInit {
     });
   };
 
-  hasError = (field: string, error: string): boolean => {
+  hasError = (field: string): boolean => {
     const control = this.loginGroup.get(field);
 
     return (
