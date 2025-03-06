@@ -47,7 +47,9 @@ import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
     InputTextModule,
     MessageModule,
     ReactiveFormsModule,
-  ],
+    CreateMovieTracklistComponent,
+    UpdateFilmTracklistComponent
+],
   templateUrl: './film-page.component.html',
   styleUrl: './film-page.component.css',
 })

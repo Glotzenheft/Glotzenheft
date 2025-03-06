@@ -67,7 +67,9 @@ import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
     SelectModule,
     MenuModule,
     CreateTracklistEpisodeFormComponent,
-  ],
+    TracklistFormComponent,
+    UpdateTracklistFormComponent
+],
   templateUrl: './season-page.component.html',
   styleUrl: './season-page.component.css',
 })

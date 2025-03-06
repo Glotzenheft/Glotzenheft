@@ -4,8 +4,8 @@ import { Route, RouterModule, Routes } from '@angular/router';
 import { UserStartComponent } from './user-start/user-start.component';
 import { UserLayoutComponent } from './user-layout/user-layout.component';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-import { DeleteUserAccountPageComponent } from '../components/delete-user-account-page/delete-user-account-page.component';
 import { ActivitiesPageComponent } from './activities-page/activities-page.component';
+import { DeleteUserAccountPageComponent } from './delete-user-account-page/delete-user-account-page.component';
 
 const userModuleRoutes: Routes = [
   {
