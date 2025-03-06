@@ -69,124 +69,79 @@ export class ActivitiesPageComponent implements OnInit {
       return;
     }
 
-    this.userActivitiesRequest$?.subscribe({
-      next: (userActivities: UserActivity[]) => {
-        let index: number = 0;
+    this.userActivitiesRequest$?.subscribe(
+    {
+      next: (userActivities: UserActivity[]) =>
+      {
         const sortedUserActivities: UserActivity[] = userActivities.sort(
-          (a: UserActivity, b: UserActivity) => {
+          (a: UserActivity, b: UserActivity) =>
+          {
             return new Date(b.date).getTime() - new Date(a.date).getTime();
           }
         );
 
         this.userActivitiesListWithDaySplitter = [];
 
-        for (const userActivity of sortedUserActivities) {
-          if (index === 0) {
-            const dateAsDate: Date = new Date(userActivities[0].date);
-            let weekDay: string = '';
+        const weekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+        const dailyStats = new Map<string, { totalRuntime: number; mediaCount: number }>();
 
-            switch (dateAsDate.getDay()) {
-              case 0:
-                weekDay = 'Sonntag';
-                break;
-              case 1:
-                weekDay = 'Montag';
-                break;
-              case 2:
-                weekDay = 'Dienstag';
-                break;
-              case 3:
-                weekDay = 'Mittwoch';
-                break;
-              case 4:
-                weekDay = 'Donnerstag';
-                break;
-              case 5:
-                weekDay = 'Freitag';
-                break;
-              case 6:
-                weekDay = 'Samstag';
-                break;
-            }
+        sortedUserActivities.forEach(userActivity =>
+        {
+          const dateKey = userActivity.date.split(' ')[0];
 
-            this.userActivitiesListWithDaySplitter.push({
-              date: userActivity.date,
-              episodeID: null,
+          if (!dailyStats.has(dateKey))
+          {
+            dailyStats.set(dateKey, { totalRuntime: 0, mediaCount: 0 });
+          }
+
+          const stats = dailyStats.get(dateKey)!;
+          stats.totalRuntime += userActivity.runtime || 0;
+          stats.mediaCount += 1;
+        });
+
+        let lastDateKey = '';
+
+        sortedUserActivities.forEach(userActivity =>
+        {
+          const dateAsDate = new Date(userActivity.date);
+          const formattedDate = dateAsDate.toLocaleDateString();
+          const weekDay = weekDays[dateAsDate.getDay()];
+          const dateKey = userActivity.date.split(' ')[0];
+
+          if (dateKey !== lastDateKey)
+          {
+            const stats = dailyStats.get(dateKey)!;
+
+            this.userActivitiesListWithDaySplitter.push(
+            {
+              date: `${weekDay} ${formattedDate} `,
+              episodeID: stats.mediaCount,
               episodeNumber: null,
               mediaID: 0,
               mediaTitle: '',
               posterPath: null,
+              runtime: stats.totalRuntime,
               seasonID: null,
               seasonNumber: null,
               stillPath: null,
               tracklistEpisodeID: null,
               tracklistID: -1,
-              tracklistName:
-                'Tag: ' + dateAsDate.toLocaleDateString() + ` (${weekDay})`,
+              tracklistName: '',
               tracklistSeasinID: null,
               type: '',
               isDateSplitter: true,
             });
+
+            lastDateKey = dateKey;
           }
 
-          if (
-            index > 0 &&
-            sortedUserActivities[index - 1].date.split(' ')[0] !==
-              userActivity.date.split(' ')[0]
-          ) {
-            const dateAsDate: Date = new Date(userActivity.date);
-            let weekDay: string = '';
-
-            switch (dateAsDate.getDay()) {
-              case 0:
-                weekDay = 'Sonntag';
-                break;
-              case 1:
-                weekDay = 'Montag';
-                break;
-              case 2:
-                weekDay = 'Dienstag';
-                break;
-              case 3:
-                weekDay = 'Mittwoch';
-                break;
-              case 4:
-                weekDay = 'Donnerstag';
-                break;
-              case 5:
-                weekDay = 'Freitag';
-                break;
-              case 6:
-                weekDay = 'Samstag';
-                break;
-            }
-
-            this.userActivitiesListWithDaySplitter.push({
-              date: userActivity.date,
-              episodeID: null,
-              episodeNumber: null,
-              mediaID: 0,
-              mediaTitle: '',
-              posterPath: null,
-              seasonID: null,
-              seasonNumber: null,
-              stillPath: null,
-              tracklistEpisodeID: null,
-              tracklistID: -1,
-              tracklistName:
-                'Tag: ' + dateAsDate.toLocaleDateString() + ` (${weekDay})`,
-              tracklistSeasinID: null,
-              type: '',
-              isDateSplitter: true,
-            });
-          }
-          this.userActivitiesListWithDaySplitter.push({
+          // Füge die eigentliche Aktivität hinzu
+          this.userActivitiesListWithDaySplitter.push(
+          {
             ...userActivity,
             isDateSplitter: false,
           });
-
-          index++;
-        }
+        });
 
         // logic for pagination -------------------------------------------------
         this.currentPage = page;
