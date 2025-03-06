@@ -4,6 +4,7 @@ namespace App\Tests\Integration\IntegrationTestTrait;
 
 use App\Entity\User;
 use App\Enum\SecurityQuestions;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use RuntimeException;
 use Symfony\Bundle\FrameworkBundle\KernelBrowser;
@@ -18,6 +19,8 @@ trait TestUserTrait
     private string $securityAnswer = 'Grey';
     private string $username = 'testuser';
     private string $password = 'p123456677!';
+
+    private bool $termsAccepted = true;
 
     private ?string $token = null;
 
@@ -41,6 +44,8 @@ trait TestUserTrait
             $this->user->setPassword($hashedPassword);
             $this->user->setSecurityQuestion(SecurityQuestions::PET_COLOR);
             $this->user->setSecurityAnswer($hashedSecurityAnswer);
+            $this->user->setTermsAccepted($this->termsAccepted);
+            $this->user->setTermsAcceptedAt(new DateTimeImmutable());
 
             $this->entityManager->persist($this->user);
             $this->entityManager->flush();
