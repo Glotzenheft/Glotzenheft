@@ -117,7 +117,7 @@ export class RegisterComponent implements OnInit {
       security_question:
         this.registerGroup.get('validationQuestion')?.value.name,
       security_answer: this.registerGroup.get('validationAnswer')?.value,
-      agb_accept: true,
+      terms_accepted: true,
     };
 
     this.userService.registerAccount(registerData).subscribe({
