@@ -52,6 +52,7 @@
               *ngIf="resItem.poster_path"
               [src]="'https://image.tmdb.org/t/p/w500' + resItem.poster_path"
               [alt]="'Posterbild für ' + resItem.title"
+              loading="lazy"
             />
             <p *ngIf="!resItem.poster_path"><i>Kein Bild vorhanden</i></p>
           </div>

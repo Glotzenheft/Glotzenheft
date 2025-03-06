@@ -21,6 +21,7 @@ export interface UserActivity {
   mediaID: number;
   mediaTitle: string;
   posterPath: string | null;
+  runtime: number | null;
   seasonID: number | null;
   seasonNumber: number | null;
   stillPath: string | null; // if episode
@@ -38,6 +39,7 @@ export interface UserActivityWithDaySplitt {
   mediaID: number;
   mediaTitle: string;
   posterPath: string | null;
+  runtime: number | null;
   seasonID: number | null;
   seasonNumber: number | null;
   stillPath: string | null; // if episode

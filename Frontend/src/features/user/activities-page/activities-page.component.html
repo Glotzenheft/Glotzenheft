@@ -38,12 +38,14 @@
           <th>Tracklist-Name</th>
         </tr>
       </ng-template>
+
       <ng-template #body let-tracklist>
         <tr *ngIf="!tracklist.isDateSplitter">
           <td *ngIf="getPicture(tracklist)">
             <img
               [src]="posterPath + getPicture(tracklist)"
               [alt]="'Poster für ' + tracklist.mediaTitle"
+              loading="lazy"
             />
           </td>
           <td *ngIf="!getPicture(tracklist)">
@@ -65,12 +67,16 @@
 
         <tr *ngIf="tracklist.isDateSplitter">
           <td>
-            <b>{{ tracklist.tracklistName }}</b>
+            <b>{{ tracklist.date }}</b>
           </td>
           <td></td>
           <td></td>
-          <td></td>
-          <td></td>
+          <td>
+            <b>Geschaut: {{ tracklist.episodeID }}x</b>
+          </td>
+          <td>
+            <b>{{ tracklist.runtime }} Minuten</b>
+          </td>
         </tr>
       </ng-template>
     </p-table>

@@ -22,6 +22,7 @@
               *ngIf="tracklist.media.posterPath !== null"
               [src]="tmdbPosterPath + tracklist.media.posterPath"
               [alt]="'Dies ist das Bild für von ' + tracklist.tracklistName"
+              loading="lazy"
             />
           </div>
         </div>

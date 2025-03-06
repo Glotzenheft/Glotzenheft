@@ -9,6 +9,13 @@
   width: 100%;
 }
 
+@media (min-width: 940px) {
+  .gapDIV {
+    height: 0;
+    width: 100%;
+  }
+}
+
 img {
   height: 6rem;
   border: 0.2rem solid black;
