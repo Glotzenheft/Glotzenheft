@@ -82,7 +82,7 @@ export class ActivitiesPageComponent implements OnInit {
 
         this.userActivitiesListWithDaySplitter = [];
 
-        const weekDays = ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'];
+        const weekDays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
         const dailyStats = new Map<string, { totalRuntime: number; mediaCount: number }>();
 
         sortedUserActivities.forEach(userActivity =>
@@ -104,7 +104,11 @@ export class ActivitiesPageComponent implements OnInit {
         sortedUserActivities.forEach(userActivity =>
         {
           const dateAsDate = new Date(userActivity.date);
-          const formattedDate = dateAsDate.toLocaleDateString();
+          const formattedDate = dateAsDate.toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric'
+          });
           const weekDay = weekDays[dateAsDate.getDay()];
           const dateKey = userActivity.date.split(' ')[0];
 
