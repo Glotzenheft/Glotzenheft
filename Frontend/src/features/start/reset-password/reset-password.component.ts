@@ -26,6 +26,7 @@ import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../../shared/variables/message-vars';
+import { ValidationService } from '../../../service/validation/validation.service';
 
 @Component({
   selector: 'app-reset-password',
@@ -55,15 +56,23 @@ export class ResetPasswordComponent implements OnInit {
     private messageService: MessageService,
     private userService: UserService,
     public navigationService: NavigationService,
-    private router: Router
+    private router: Router,
+    private validationService: ValidationService
   ) {}
 
   ngOnInit(): void {
-    this.resetPasswordGroup = this.formBuilder.group({
-      validationQuestion: [{ name: '', code: '' }, Validators.required],
-      validationAnswer: ['', Validators.required],
-      newPassword: ['', [Validators.required, Validators.minLength(8)]],
-    });
+    this.resetPasswordGroup = this.formBuilder.group(
+      {
+        validationQuestion: [null, Validators.required],
+        validationAnswer: ['', Validators.required],
+        newPassword: ['', [Validators.required, Validators.minLength(8)]],
+        repeatPassword: ['', [Validators.required, Validators.minLength(8)]],
+      },
+      {
+        validators:
+          this.validationService.passwordMatchValidatorForResetPassword,
+      }
+    );
   }
 
   public submitForm = () => {
@@ -131,5 +140,9 @@ export class ResetPasswordComponent implements OnInit {
     return (
       control! && (control.dirty || control.touched || this.isFormSubmitted)
     );
+  };
+
+  public passwordMismatch = (): boolean => {
+    return this.resetPasswordGroup.hasError('passwordMismatch');
   };
 }
