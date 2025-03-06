@@ -943,3 +943,11 @@ p {
 .p-dialog {
   width: 90%;
 }
+
+/* for loading state */
+.loadingWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

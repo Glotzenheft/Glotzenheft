@@ -31,6 +31,7 @@ import { UserService } from '../../../../service/user/user.service';
 import { MEDIA_ID_NOT_EXISTS } from '../../../../shared/variables/navigation-vars';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-film-page',
@@ -48,8 +49,9 @@ import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
     MessageModule,
     ReactiveFormsModule,
     CreateMovieTracklistComponent,
-    UpdateFilmTracklistComponent
-],
+    UpdateFilmTracklistComponent,
+    ProgressSpinnerModule,
+  ],
   templateUrl: './film-page.component.html',
   styleUrl: './film-page.component.css',
 })
@@ -69,6 +71,8 @@ export class FilmPageComponent implements OnInit {
   // variable for controlling the toggle status of the tracklist panels
   public activePanel: number | null = null;
 
+  public isLoading: boolean = false;
+
   constructor(
     private messageService: MessageService,
     private route: ActivatedRoute,
@@ -86,6 +90,7 @@ export class FilmPageComponent implements OnInit {
   }
 
   public loadData = () => {
+    this.isLoading = true;
     this.movieID = this.route.snapshot.paramMap.get('id');
 
     if (!this.movieID) {
@@ -116,6 +121,8 @@ export class FilmPageComponent implements OnInit {
           // replacing the url with "media_id" if necessary
           this.location.replaceState(`/media/movie/${res.media.id}`);
         }
+
+        this.isLoading = false;
       },
       error: (err) => {
         if (err.status === 401) {
@@ -126,6 +133,7 @@ export class FilmPageComponent implements OnInit {
         }
 
         this.hasError = true;
+        this.isLoading = false;
       },
     });
   };
