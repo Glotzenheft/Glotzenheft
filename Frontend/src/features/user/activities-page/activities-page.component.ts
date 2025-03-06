@@ -1,4 +1,4 @@
-import { Component, OnInit} from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { UserService } from '../../../service/user/user.service';
@@ -215,8 +215,6 @@ export class ActivitiesPageComponent implements OnInit {
     if (this.isLeftButtonDisabled) {
       return;
     }
-
-    // this.isRightLimit = false;
 
     this.currentPage -= 1;
     this.loadUserActivities(this.currentPage);

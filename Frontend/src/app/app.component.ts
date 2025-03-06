@@ -3,20 +3,20 @@ import { RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { FooterComponent } from '../features/components/footer/footer.component';
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
-import { SearchBarComponent } from '../features/components/search-bar/search-bar.component';
 import { Subscription } from 'rxjs';
 import { SearchService } from '../service/search/search.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
 import { AuthService } from '../service/auth/auth.service';
-import { UserLinksComponent } from '../features/components/user-links/user-links.component';
 import { UserService } from '../service/user/user.service';
-import { UserMenuComponent } from '../features/components/user-menu/user-menu.component';
 import { getMessageObject } from '../shared/variables/message-vars';
+import { FooterComponent } from '../features/footerCOMPONENTS/footer/footer.component';
+import { SearchBarComponent } from '../features/media/mediaSearchCOMPONENTS/search-bar/search-bar.component';
+import { UserLinksComponent } from '../features/user/userMenuPages/user-links/user-links.component';
+import { UserMenuComponent } from '../features/user/userMenuPages/user-menu/user-menu.component';
 
 @Component({
   selector: 'app-root',
