@@ -46,6 +46,7 @@ class RegistrationTest extends WebTestCase
             'password' => $this->user->getPassword(),
             'security_question' => $this->user->getSecurityQuestion(),
             'security_answer' => $this->user->getSecurityAnswer(),
+            'terms_accepted' => true
         ];
 
         // Act
@@ -53,8 +54,8 @@ class RegistrationTest extends WebTestCase
         $registerResponse = json_decode($this->client->getResponse()->getContent(), true);
 
         // Assert
-        $this->assertResponseStatusCodeSame(Response::HTTP_OK, 'User registration failed');
-        $this->assertArrayHasKey('message', $registerResponse, 'No token received after registration');
+        $this->assertResponseStatusCodeSame(Response::HTTP_CREATED, 'User registration failed');
+        $this->assertResponseIsSuccessful();
 
         echo PHP_EOL . 'User registration successful.' . PHP_EOL;
     }

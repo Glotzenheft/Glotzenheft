@@ -21,9 +21,15 @@ trait RequestTrait
     {
         $body = json_decode($request->getContent(), true);
 
+        $userName = $body['username'] ?? null;
+
+        $userPassword = $body['password'] ?? null;
+
         $userSecurityQuestion = $body['security_question'] ?? null;
 
         $userSecurityAnswer = $body['security_answer'] ?? null;
+
+        $termsAccepted = $body['terms_accepted'] ?? null;
 
         $newPassword = $body['new_password'] ?? null;
 
@@ -63,8 +69,11 @@ trait RequestTrait
 
         return [
             'user_id' => $userID,
+            'user_name' => $userName,
+            'user_password' => $userPassword,
             'security_question' => $userSecurityQuestion,
             'security_answer' => $userSecurityAnswer,
+            'terms_accepted' => $termsAccepted,
             'new_password' => $newPassword,
             'tracklist_name' => $tracklistName,
             'tracklist_id' => $tracklistID,
@@ -93,6 +102,14 @@ trait RequestTrait
         ];
     }
 
+    private function returnInternalServerError(): array
+    {
+        return [
+            'error' => 'Internal server error',
+            'code' => Response::HTTP_INTERNAL_SERVER_ERROR
+        ];
+    }
+
     private function returnDatabaseError(): array
     {
         return [
@@ -106,6 +123,46 @@ trait RequestTrait
         return [
             'error' => 'User not found',
             'code' => Response::HTTP_NOT_FOUND
+        ];
+    }
+
+    private function returnUserAlreadyExists(): array
+    {
+        return [
+            'error' => 'User already exists',
+            'code' => Response::HTTP_CONFLICT
+        ];
+    }
+
+    private function returnInvalidSecurityQuestion(): array
+    {
+        return [
+            'error' => 'Invalid security question',
+            'code' => Response::HTTP_BAD_REQUEST
+        ];
+    }
+
+    private function returnTermsNotAccepted(): array
+    {
+        return [
+            'error' => 'Terms not accepted',
+            'code' => Response::HTTP_FORBIDDEN
+        ];
+    }
+
+    private function returnUserRegisteredSuccessfully(): array
+    {
+        return [
+            'message' => 'User registered successfully',
+            'code' => Response::HTTP_CREATED
+        ];
+    }
+
+    private function returnInvalidCredentials(): array
+    {
+        return [
+            'error' => 'Invalid credentials',
+            'code' => Response::HTTP_UNAUTHORIZED
         ];
     }
 
