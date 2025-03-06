@@ -70,6 +70,7 @@ trait MediaDetailTrait
         }
 
         $numberOfSeasons = 0;
+        $seasons = null;
         switch ($type)
         {
             case MediaType::TV:
@@ -79,9 +80,10 @@ trait MediaDetailTrait
                     return $result;
                 }
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
-                $name = $result['name'];
-                $originalName = $result['original_name'];
-                $numberOfSeasons = $result['number_of_seasons'];
+                $name = $result['name'] ?? null;
+                $originalName = $result['original_name'] ?? null;
+                $numberOfSeasons = $result['number_of_seasons'] ?? null;
+                $seasons = $result['seasons'] ?? null;
                 break;
             case MediaType::Movie:
                 $result = $this->movieService->getMovieDetails($tmdbID, $language);
@@ -90,8 +92,8 @@ trait MediaDetailTrait
                     return $result;
                 }
                 $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
-                $name = $result['title'];
-                $originalName = $result['original_title'];
+                $name = $result['title'] ?? null;
+                $originalName = $result['original_title'] ?? null;
                 break;
             case MediaType::ANIME:
                 return [
@@ -119,20 +121,22 @@ trait MediaDetailTrait
         {
             $id = $genre['id'];
             $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy(['tmdbGenreID' => $id]);
+            if (!$tmdbGenre instanceof TMDBGenre) continue;
+
             $media->addTmdbGenre($tmdbGenre);
         }
 
         $this->entityManager->persist($media);
 
-        if ($type === MediaType::TV && $numberOfSeasons > 0)
+        if ($type === MediaType::TV && $numberOfSeasons > 0 && $seasons !== null)
         {
-            $seasonNumber = 1;
-            do
+            foreach ($seasons as $season)
             {
+                $seasonNumber = $season['season_number'] ?? null;
+                if ($seasonNumber === null) continue;
+
                 $this->seasonService->handleSeasonDetails($tmdbID, $seasonNumber, $media, $language);
-                $seasonNumber++;
             }
-            while($seasonNumber <= $numberOfSeasons);
         }
 
         $this->entityManager->flush();
