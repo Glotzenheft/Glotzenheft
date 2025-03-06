@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Enum\SecurityQuestions;
 use App\Repository\UserRepository;
+use DateTimeImmutable;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
@@ -46,6 +47,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(length: 255)]
     private ?string $securityAnswer = null;
+
+    #[ORM\Column]
+    private ?bool $termsAccepted = null;
+
+    #[ORM\Column]
+    private ?DateTimeImmutable $termsAcceptedAt = null;
 
     public function __construct()
     {
@@ -155,6 +162,30 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setSecurityAnswer(string $securityAnswer): static
     {
         $this->securityAnswer = $securityAnswer;
+
+        return $this;
+    }
+
+    public function isTermsAccepted(): ?bool
+    {
+        return $this->termsAccepted;
+    }
+
+    public function setTermsAccepted(bool $termsAccepted): static
+    {
+        $this->termsAccepted = $termsAccepted;
+
+        return $this;
+    }
+
+    public function getTermsAcceptedAt(): ?DateTimeImmutable
+    {
+        return $this->termsAcceptedAt;
+    }
+
+    public function setTermsAcceptedAt(DateTimeImmutable $termsAcceptedAt): static
+    {
+        $this->termsAcceptedAt = $termsAcceptedAt;
 
         return $this;
     }
