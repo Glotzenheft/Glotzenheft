@@ -19,6 +19,9 @@ import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/loc
   providedIn: 'root',
 })
 export class TracklistService {
+  getTracklistUpdateResponse() {
+      throw new Error('Method not implemented.');
+  }
   // variables for rerender of season page/ film page
   private filmRefreshSubject = new BehaviorSubject<void>(undefined);
   public refreshFilmPage$ = this.filmRefreshSubject.asObservable();

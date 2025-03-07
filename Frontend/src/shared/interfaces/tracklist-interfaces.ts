@@ -29,6 +29,7 @@ export interface TracklistSeason {
 }
 
 export interface Tracklist {
+  asObservable(): import("rxjs").Observable<any> | null;
   id: number;
   rating: null | number;
   status: TracklistStatusType;

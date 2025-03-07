@@ -5,7 +5,18 @@ import {
   Season,
   UpdateTracklistRequest,
 } from '../../shared/interfaces/media-interfaces';
-import { catchError, Observable, shareReplay, throwError } from 'rxjs';
+import {
+  catchError,
+  debounceTime,
+  EMPTY,
+  exhaustMap,
+  Observable,
+  shareReplay,
+  Subject,
+  switchMap,
+  throttleTime,
+  throwError,
+} from 'rxjs';
 import {
   HttpClient,
   HttpErrorResponse,
@@ -29,10 +40,24 @@ import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-
   providedIn: 'root',
 })
 export class MediaService {
+  private updateTracklistSubject = new Subject<UpdateTracklistRequest>();
+  private tracklistUpdateResponseSubject = new Subject<Tracklist>();
+
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
-  ) {}
+  ) {
+    this.updateTracklistSubject
+      .pipe(
+        throttleTime(10000), // 20 Sekunden warten
+        exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
+        shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
+      )
+      .subscribe({
+        next: (response) => this.tracklistUpdateResponseSubject.next(response), // Antwort an den Component weitergeben
+        error: (error) => this.tracklistUpdateResponseSubject.error(error), // Fehler an den Component weitergeben
+      });
+  }
 
   public getHeader = (): HttpHeaders | null => {
     let userToken: string = '';
@@ -250,13 +275,26 @@ export class MediaService {
       );
   };
 
+  public triggerUpdateTracklist(tracklistData: UpdateTracklistRequest): void {
+    console.log('getriggert');
+    this.updateTracklistSubject.next(tracklistData); // Schicke die Daten an den Subject
+  }
+
+  // Diese Methode gibt das Observable der Antwort zurück, um es im Component zu abonnieren
+  public getTracklistUpdateResponse(): Observable<Tracklist> {
+    console.log();
+    return this.tracklistUpdateResponseSubject.asObservable();
+  }
+
   public updateTracklist = (
     tracklistData: UpdateTracklistRequest
-  ): Observable<Tracklist> | null => {
+  ): Observable<Tracklist> => {
     const header = this.getHeader();
 
+    console.log('updated tracklist');
+
     if (!header) {
-      return null;
+      return EMPTY;
     }
 
     let formattedStartDate: string = '';
