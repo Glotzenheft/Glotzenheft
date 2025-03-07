@@ -82,13 +82,10 @@ class TracklistEpisodeService
         $watchDate = null;
         if (isset($this->data['watch_date']))
         {
-            try
+            $watchDate = DateTime::createFromFormat('Y-m-d H:i:s', $this->data['watch_date']);
+            if (!$watchDate instanceof DateTime)
             {
-                $watchDate = new DateTime($this->data['watch_date']);
-            }
-            catch (DateMalformedStringException $e)
-            {
-                return $this->returnWatchDateError();
+                $watchDate = null;
             }
         }
 
