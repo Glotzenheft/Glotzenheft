@@ -95,7 +95,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
     if (episodeInTracklist[0] && episodeInTracklist[0].watchDate) {
       const watchDateAsDate = new Date(episodeInTracklist[0].watchDate);
-      watchDateAsDate.setHours(watchDateAsDate.getHours() - 1);
+      watchDateAsDate.setHours(watchDateAsDate.getHours());
       this.createEpisodeForm = this.formBuilder.group({
         watchDate: [
           isEpisodeInTracklist &&
@@ -134,8 +134,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     if (watchDate !== null) {
       const watchDateAsDate = new Date(watchDate);
 
-      // increasing date hours by 1 hour
-      watchDateAsDate.setHours(watchDateAsDate.getHours() + 1);
+      // increasing date hours by 2 hour to match German time
+      watchDateAsDate.setHours(watchDateAsDate.getHours() + 2);
 
       formattedDate = watchDateAsDate.toISOString();
     }
@@ -158,8 +158,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     if (watchDate !== null) {
       const watchDateAsDate = new Date(watchDate);
 
-      // increasing date hours by 1 hour
-      watchDateAsDate.setHours(watchDateAsDate.getHours() + 1);
+      // increase date hours by 2 hour to match German time
+      watchDateAsDate.setHours(watchDateAsDate.getHours() + 2);
 
       formattedDate = watchDateAsDate.toISOString();
     }
