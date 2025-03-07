@@ -34,6 +34,7 @@
           <th>Vorschau/Poster</th>
           <th>Datum</th>
           <th>Episode</th>
+          <th>Laufzeit</th>
           <th>Film/Serie</th>
           <th>Tracklist-Name</th>
         </tr>
@@ -41,21 +42,26 @@
 
       <ng-template #body let-tracklist>
         <tr *ngIf="!tracklist.isDateSplitter">
-          <td *ngIf="getPicture(tracklist)">
-            <img
-              [src]="posterPath + getPicture(tracklist)"
-              [alt]="'Poster für ' + tracklist.mediaTitle"
-              loading="lazy"
-            />
-          </td>
-          <td *ngIf="!getPicture(tracklist)">
-            <i>kein Bild vorhanden</i>
+          <td>
+            <ng-container *ngIf="getPicture(tracklist) as picture; else noImage">
+              <img
+                [src]="posterPath + picture"
+                [alt]="'Cover von ' + tracklist.mediaTitle + (tracklist.episodeNumber ? (' - Episode ' + tracklist.episodeNumber) : '')"
+                loading="lazy"
+              />
+            </ng-container>
+            <ng-template #noImage>
+              <i>kein Bild vorhanden</i>
+            </ng-template>
           </td>
           <td>
             {{ tracklist.date | dateFormatting }}
           </td>
           <td>
-            {{ tracklist.episodeNumber }}
+            {{ tracklist.episodeNumber !== null ? 'E' + tracklist.episodeNumber.toString().padStart(2, '0') : '-' }}
+          </td>
+          <td>
+            {{ tracklist.runtime }} min
           </td>
           <td>
             <p class="mediaRow" (click)="onClickActivity(tracklist)">
@@ -69,6 +75,7 @@
           <td>
             <b>{{ tracklist.date }}</b>
           </td>
+          <td></td>
           <td></td>
           <td></td>
           <td>
