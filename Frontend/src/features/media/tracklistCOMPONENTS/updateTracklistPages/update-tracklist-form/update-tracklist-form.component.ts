@@ -121,6 +121,30 @@ export class UpdateTracklistFormComponent implements OnInit {
       },
     });
 
+    this.mediaService.getTracklistDeleteResponse().subscribe({
+      next: () => {
+        this.messageService.add(
+          getMessageObject('success', 'Trackliste erfolgreich gelöscht')
+        );
+        this.saveUpdatedTracklist.emit(true);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Löschen',
+            'Bitte probiere es erneut.'
+          )
+        );
+      },
+    });
+
     this.loadFilmData();
 
     // set local storage selected tracklist to this tracklist
@@ -219,46 +243,7 @@ export class UpdateTracklistFormComponent implements OnInit {
   public deleteTracklist = () => {
     this.isDeleteDialogVisible = false;
 
-    this.deleteResponseData$ = this.mediaService.deleteTracklist(
-      this.inpSelectedTracklist().id
-    );
-
-    if (!this.deleteResponseData$) {
-      this.messageService.add(
-        getMessageObject(
-          'error',
-          'Fehler beim Löschen der Trackliste',
-          'Bitte probiere es erneut.'
-        )
-      );
-      return;
-    }
-
-    this.deleteResponseData$.subscribe({
-      next: () => {
-        this.messageService.add(
-          getMessageObject('success', 'Trackliste erfolgreich gelöscht')
-        );
-        this.saveUpdatedTracklist.emit(true);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-
-          return;
-        }
-
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Löschen',
-            'Bitte probiere es erneut.'
-          )
-        );
-      },
-    });
+    this.mediaService.triggerDeleteTracklist(this.inpSelectedTracklist().id);
   };
 
   public setDeleteDialogVisibility = (status: boolean) => {

@@ -43,19 +43,34 @@ export class MediaService {
   private updateTracklistSubject = new Subject<UpdateTracklistRequest>();
   private tracklistUpdateResponseSubject = new Subject<Tracklist>();
 
+  private deleteTracklistSubject = new Subject<number>();
+  private tracklistDeleteResponseSubject = new Subject<any>();
+
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
     this.updateTracklistSubject
       .pipe(
-        throttleTime(10000), // 20 Sekunden warten
+        throttleTime(20000), // wait 10 s
         exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
         shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
       )
       .subscribe({
         next: (response) => this.tracklistUpdateResponseSubject.next(response), // Antwort an den Component weitergeben
         error: (error) => this.tracklistUpdateResponseSubject.error(error), // Fehler an den Component weitergeben
+      });
+
+    // deleting tracklist
+    this.deleteTracklistSubject
+      .pipe(
+        throttleTime(20000),
+        exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
+        shareReplay(1)
+      )
+      .subscribe({
+        next: (response) => this.tracklistDeleteResponseSubject.next(response),
+        error: (error) => this.tracklistDeleteResponseSubject.error(error),
       });
   }
 
@@ -276,17 +291,15 @@ export class MediaService {
   };
 
   public triggerUpdateTracklist(tracklistData: UpdateTracklistRequest): void {
-    console.log('getriggert');
     this.updateTracklistSubject.next(tracklistData); // Schicke die Daten an den Subject
   }
 
   // Diese Methode gibt das Observable der Antwort zurück, um es im Component zu abonnieren
   public getTracklistUpdateResponse(): Observable<Tracklist> {
-    console.log();
     return this.tracklistUpdateResponseSubject.asObservable();
   }
 
-  public updateTracklist = (
+  private updateTracklist = (
     tracklistData: UpdateTracklistRequest
   ): Observable<Tracklist> => {
     const header = this.getHeader();
@@ -336,11 +349,21 @@ export class MediaService {
     );
   };
 
-  public deleteTracklist = (tracklistID: number): Observable<any> | null => {
+  // functions for deleting traclists ----------------------------------------------------------------
+
+  public triggerDeleteTracklist = (tracklistID: number) => {
+    this.deleteTracklistSubject.next(tracklistID);
+  };
+
+  public getTracklistDeleteResponse = (): Observable<any> => {
+    return this.tracklistDeleteResponseSubject.asObservable();
+  };
+
+  private deleteTracklist = (tracklistID: number): Observable<any> => {
     const header = this.getHeader();
 
     if (!header) {
-      return null;
+      return EMPTY;
     }
 
     const url: string = ROUTE_DELETE_TRACKLIST + tracklistID;

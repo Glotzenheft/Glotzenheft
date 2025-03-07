@@ -25,11 +25,17 @@ import { SelectModule } from 'primeng/select';
 import { Observable } from 'rxjs';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import { SeasonTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+} from '../../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../../service/media/media.service';
 import { UserService } from '../../../../../service/user/user.service';
 import { UpdateTracklistRequest } from '../../../../../shared/interfaces/media-interfaces';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
@@ -84,6 +90,32 @@ export class UpdateFilmTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.mediaService.getTracklistUpdateResponse().subscribe({
+      next: () => {
+        this.messageService.add({
+          life: 7000,
+          severity: 'success',
+          summary: 'Erfolgreich gespeichert',
+        });
+        this.refreshFilmPage.emit(true);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Speichern',
+            'Bitte probiere es erneut.'
+          )
+        );
+      },
+    });
+
     this.updateTracklistForm = this.formBuilder.group({
       tracklist_status: [
         {
@@ -104,6 +136,31 @@ export class UpdateFilmTracklistComponent implements OnInit {
           ? new Date(this.inpTracklist().finishDate!)
           : null,
       ],
+    });
+
+    // delete tracklist -------------------------------------------
+    this.mediaService.getTracklistDeleteResponse().subscribe({
+      next: () => {
+        this.messageService.add(
+          getMessageObject('success', 'Trackliste erfolgreich gelöscht')
+        );
+        this.refreshFilmPage.emit(true);
+      },
+      error: (err: any) => {
+        if (err.status === 401) {
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Löschen',
+            'Bitte probiere es erneut.'
+          )
+        );
+      },
     });
   }
 
@@ -143,48 +200,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
       tracklist_finish_date: formattedEndDate,
     };
 
-    this.updateResponseData$ =
-      this.mediaService.updateTracklist(updateTracklistData);
-
-    if (!this.updateResponseData$) {
-      this.messageService.add(
-        getMessageObject(
-          'error',
-          'Fehler beim Speichern',
-          'Bitte probiere es noch einmal.'
-        )
-      );
-      return;
-    }
-
-    this.updateResponseData$.subscribe({
-      next: (res) => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Erfolgreich gespeichert',
-        });
-
-        this.refreshFilmPage.emit(true);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-
-          return;
-        }
-
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Speichern',
-            'Bitte probiere es erneut.'
-          )
-        );
-      },
-    });
+    this.mediaService.triggerUpdateTracklist(updateTracklistData);
   };
 
   public hasErrorField = (field: string) => {
@@ -203,46 +219,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
   };
 
   public deleteTracklist = () => {
-    this.deleteTracklistResponseData$ = this.mediaService.deleteTracklist(
-      this.inpTracklist().id
-    );
-
-    if (!this.deleteTracklistResponseData$) {
-      this.messageService.add(
-        getMessageObject(
-          'error',
-          'Fehler beim Löschen der Trackliste',
-          'Bitte probiere es erneut.'
-        )
-      );
-      return;
-    }
-
-    this.deleteTracklistResponseData$.subscribe({
-      next: () => {
-        this.messageService.add(
-          getMessageObject('success', 'Trackliste erfolgreich gelöscht')
-        );
-        this.refreshFilmPage.emit(true);
-      },
-      error: (err: any) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-
-          return;
-        }
-
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Löschen',
-            'Bitte probiere es erneut.'
-          )
-        );
-      },
-    });
+    this.mediaService.triggerDeleteTracklist(this.inpTracklist().id);
   };
 
   public setDeleteDialogVisibility = (status: boolean) => {
