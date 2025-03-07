@@ -134,10 +134,14 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     if (watchDate !== null) {
       const watchDateAsDate = new Date(watchDate);
 
-      // increasing date hours by 2 hour to match German time
-      watchDateAsDate.setHours(watchDateAsDate.getHours() + 2);
+      const year = watchDateAsDate.getFullYear();
+      const month = String(watchDateAsDate.getMonth() + 1).padStart(2, '0');
+      const day = String(watchDateAsDate.getDate()).padStart(2, '0');
+      const hours = String(watchDateAsDate.getHours()).padStart(2, '0');
+      const minutes = String(watchDateAsDate.getMinutes()).padStart(2, '0');
+      const seconds = String(watchDateAsDate.getSeconds()).padStart(2, '0');
 
-      formattedDate = watchDateAsDate.toISOString();
+      formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
     const createEpisodeData: CreateTracklistEpisode = {
@@ -158,10 +162,14 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     if (watchDate !== null) {
       const watchDateAsDate = new Date(watchDate);
 
-      // increase date hours by 2 hour to match German time
-      watchDateAsDate.setHours(watchDateAsDate.getHours() + 2);
+      const year = watchDateAsDate.getFullYear();
+      const month = String(watchDateAsDate.getMonth() + 1).padStart(2, '0');
+      const day = String(watchDateAsDate.getDate()).padStart(2, '0');
+      const hours = String(watchDateAsDate.getHours()).padStart(2, '0');
+      const minutes = String(watchDateAsDate.getMinutes()).padStart(2, '0');
+      const seconds = String(watchDateAsDate.getSeconds()).padStart(2, '0');
 
-      formattedDate = watchDateAsDate.toISOString();
+      formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
     }
 
     const episodeInTracklist =
