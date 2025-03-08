@@ -18,6 +18,7 @@ import {
 } from '../../../shared/variables/message-vars';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-activities-page',
@@ -28,6 +29,7 @@ import { ROUTES_LIST } from '../../../shared/variables/routes-list';
     CommonModule,
     ButtonModule,
     TooltipModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './activities-page.component.html',
   styleUrl: './activities-page.component.css',
@@ -49,6 +51,8 @@ export class ActivitiesPageComponent implements OnInit {
 
   public posterPath: string = TMDB_POSTER_PATH;
 
+  public isLoading: boolean = false;
+
   constructor(
     private userService: UserService,
     private messageService: MessageService,
@@ -61,6 +65,7 @@ export class ActivitiesPageComponent implements OnInit {
 
   // functions --------------------------------------------------
   public loadUserActivities = (page: number) => {
+    this.isLoading = true;
     this.isTableLoading = true;
     this.userActivitiesRequest$ = this.userService.getUserActivities(page);
 
@@ -69,13 +74,10 @@ export class ActivitiesPageComponent implements OnInit {
       return;
     }
 
-    this.userActivitiesRequest$?.subscribe(
-    {
-      next: (userActivities: UserActivity[]) =>
-      {
+    this.userActivitiesRequest$.subscribe({
+      next: (userActivities: UserActivity[]) => {
         const sortedUserActivities: UserActivity[] = userActivities.sort(
-          (a: UserActivity, b: UserActivity) =>
-          {
+          (a: UserActivity, b: UserActivity) => {
             return new Date(b.date).getTime() - new Date(a.date).getTime();
           }
         );
@@ -83,14 +85,15 @@ export class ActivitiesPageComponent implements OnInit {
         this.userActivitiesListWithDaySplitter = [];
 
         const weekDays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
-        const dailyStats = new Map<string, { totalRuntime: number; mediaCount: number }>();
+        const dailyStats = new Map<
+          string,
+          { totalRuntime: number; mediaCount: number }
+        >();
 
-        sortedUserActivities.forEach(userActivity =>
-        {
+        sortedUserActivities.forEach((userActivity) => {
           const dateKey = userActivity.date.split(' ')[0];
 
-          if (!dailyStats.has(dateKey))
-          {
+          if (!dailyStats.has(dateKey)) {
             dailyStats.set(dateKey, { totalRuntime: 0, mediaCount: 0 });
           }
 
@@ -101,23 +104,20 @@ export class ActivitiesPageComponent implements OnInit {
 
         let lastDateKey = '';
 
-        sortedUserActivities.forEach(userActivity =>
-        {
+        sortedUserActivities.forEach((userActivity) => {
           const dateAsDate = new Date(userActivity.date);
           const formattedDate = dateAsDate.toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',
-            year: 'numeric'
+            year: 'numeric',
           });
           const weekDay = weekDays[dateAsDate.getDay()];
           const dateKey = userActivity.date.split(' ')[0];
 
-          if (dateKey !== lastDateKey)
-          {
+          if (dateKey !== lastDateKey) {
             const stats = dailyStats.get(dateKey)!;
 
-            this.userActivitiesListWithDaySplitter.push(
-            {
+            this.userActivitiesListWithDaySplitter.push({
               date: `${weekDay} ${formattedDate} `,
               episodeID: stats.mediaCount,
               episodeNumber: null,
@@ -140,8 +140,7 @@ export class ActivitiesPageComponent implements OnInit {
           }
 
           // Füge die eigentliche Aktivität hinzu
-          this.userActivitiesListWithDaySplitter.push(
-          {
+          this.userActivitiesListWithDaySplitter.push({
             ...userActivity,
             isDateSplitter: false,
           });
@@ -181,6 +180,7 @@ export class ActivitiesPageComponent implements OnInit {
             this.isLeftButtonDisabled = this.currentPage === 1;
           }
         }
+        this.isLoading = false;
       },
       error: (err: any) => {
         if (err.status === 401) {
@@ -199,6 +199,8 @@ export class ActivitiesPageComponent implements OnInit {
             'Bitte probiere es erneut.'
           )
         );
+
+        this.isLoading = false;
       },
     });
 
