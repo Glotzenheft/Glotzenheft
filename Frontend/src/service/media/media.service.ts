@@ -44,52 +44,57 @@ import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-
   providedIn: 'root',
 })
 export class MediaService {
-  private updateTracklistSubject: Subject<UpdateTracklistRequest> =
+  // tracklist update subject triggers new http request and controls request frequence (via throttle time)
+  private tracklistUPDATESubject: Subject<UpdateTracklistRequest> =
     new Subject<UpdateTracklistRequest>();
-  private tracklistUpdateResponseSubject: Subject<Tracklist> =
+  // getting the response for the update tracklist request (new value whenever update subject is renewed)
+  private tracklistUPDATEResponseSubject: Subject<Tracklist> =
     new Subject<Tracklist>();
 
-  private deleteTracklistSubject: Subject<number> = new Subject<number>();
-  private tracklistDeleteResponseSubject: Subject<any> = new Subject<any>();
+  private tracklistDELETESubject: Subject<number> = new Subject<number>();
+  private tracklistDELETEResponseSubject: Subject<any> = new Subject<any>();
 
-  private createMovieTracklistSubject: Subject<CreateMovieTracklistData> =
+  private tracklistCREATEMOVIESubject: Subject<CreateMovieTracklistData> =
     new Subject<CreateMovieTracklistData>();
-  private tracklistMovieCreateResponseSubject: Subject<any> =
+  private tracklistCREATEMOVIEResponseSubject: Subject<any> =
     new Subject<any>();
 
-  private createSeasonTracklistSubject: Subject<CreateSeasonTracklistData> =
+  private tracklistCREATESEASONSubject: Subject<CreateSeasonTracklistData> =
     new Subject<CreateSeasonTracklistData>();
-  private tracklistCreateSeasonResponseSubject: Subject<Tracklist> =
+  private tracklistCREATESEASONResponseSubject: Subject<Tracklist> =
     new Subject<Tracklist>();
 
   constructor(
     private http: HttpClient,
     @Inject(PLATFORM_ID) private platformId: Object
   ) {
-    this.updateTracklistSubject
+    // controlling the request frequence (via throttle time)
+    this.tracklistUPDATESubject
       .pipe(
         throttleTime(20000), // wait 10 s
         exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
         shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
       )
       .subscribe({
-        next: (response) => this.tracklistUpdateResponseSubject.next(response), // Antwort an den Component weitergeben
-        error: (error) => this.tracklistUpdateResponseSubject.error(error), // Fehler an den Component weitergeben
+        // updating the response subject (response subject will return new response value to the components)
+        next: (response) => this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
+        error: (error) => this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
       });
 
-    // deleting tracklist
-    this.deleteTracklistSubject
+    // deleting tracklist --------------------------------------------------
+    this.tracklistDELETESubject
       .pipe(
         throttleTime(20000),
         exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
         shareReplay(1)
       )
       .subscribe({
-        next: (response) => this.tracklistDeleteResponseSubject.next(response),
-        error: (error) => this.tracklistDeleteResponseSubject.error(error),
+        next: (response) => this.tracklistDELETEResponseSubject.next(response),
+        error: (error) => this.tracklistDELETEResponseSubject.error(error),
       });
 
-    this.createMovieTracklistSubject
+    // creating a new movie tracklist ---------------------------------------------------
+    this.tracklistCREATEMOVIESubject
       .pipe(
         throttleTime(20000), // 20.000 ms
         exhaustMap((tracklistData: CreateMovieTracklistData) =>
@@ -98,12 +103,13 @@ export class MediaService {
         shareReplay(1)
       )
       .subscribe({
-        next: (res: any) => this.tracklistMovieCreateResponseSubject.next(res),
+        next: (res: any) => this.tracklistCREATEMOVIEResponseSubject.next(res),
         error: (err: any) =>
-          this.tracklistMovieCreateResponseSubject.error(err),
+          this.tracklistCREATEMOVIEResponseSubject.error(err),
       });
 
-    this.createSeasonTracklistSubject
+    // create a new season tracklist ----------------------------------------------
+    this.tracklistCREATESEASONSubject
       .pipe(
         throttleTime(20000),
         exhaustMap((tracklistData: CreateSeasonTracklistData) =>
@@ -113,11 +119,13 @@ export class MediaService {
       )
       .subscribe({
         next: (res: Tracklist) =>
-          this.tracklistCreateSeasonResponseSubject.next(res),
+          this.tracklistCREATESEASONResponseSubject.next(res),
         error: (err: any) =>
-          this.tracklistCreateSeasonResponseSubject.error(err),
+          this.tracklistCREATESEASONResponseSubject.error(err),
       });
   }
+
+  // functions ---------------------------------------------------------------------------------------
 
   public getHeader = (): HttpHeaders | null => {
     let userToken: string = '';
@@ -215,17 +223,22 @@ export class MediaService {
 
   // functions for creating a new season tracklist ------------------------------------------------------------------
 
-  public triggerCreateSeasonTracklist = (
+  public triggerTracklistCREATESEASONSubject = (
+    // function for triggering a new request for creating a new season tracklist
     tracklistData: CreateSeasonTracklistData
   ) => {
-    this.createSeasonTracklistSubject.next(tracklistData);
+    // updating the subject with the new data -> new request will be triggered
+    this.tracklistCREATESEASONSubject.next(tracklistData);
   };
 
-  public getTracklistCreateSeasonResponse = (): Observable<Tracklist> => {
-    return this.tracklistCreateSeasonResponseSubject.asObservable();
-  };
+  public getTracklistCREATESEASONResponseSubject =
+    (): Observable<Tracklist> => {
+      // function for getting the current response value from the create tracklist request as observable
+      return this.tracklistCREATESEASONResponseSubject.asObservable();
+    };
 
   private createNewSeasonTracklist = (
+    // function for making the request to the backend for creating a new season tracklist
     data: CreateSeasonTracklistData
   ): Observable<Tracklist> => {
     const header = this.getHeader();
@@ -277,14 +290,14 @@ export class MediaService {
 
   // functions for creating a new movie tracklist --------------------------------------------
 
-  public triggerCreateMovieTracklist = (
+  public triggerTracklistCREATEMOVIESubject = (
     tracklistData: CreateMovieTracklistData
   ) => {
-    this.createMovieTracklistSubject.next(tracklistData);
+    this.tracklistCREATEMOVIESubject.next(tracklistData);
   };
 
-  public getTracklistMovieCreationResponse = (): Observable<any> => {
-    return this.tracklistMovieCreateResponseSubject.asObservable();
+  public getTracklistCREATEMOVIESubjectResponse = (): Observable<any> => {
+    return this.tracklistCREATEMOVIEResponseSubject.asObservable();
   };
 
   private createNewMovieTracklist = (
@@ -329,34 +342,17 @@ export class MediaService {
     );
   };
 
-  public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
-    const header = this.getHeader();
-
-    if (!header) {
-      return null;
-    }
-
-    return this.http
-      .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
-        headers: header,
-      })
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
-  };
-
   // update tracklist functions -----------------------------------------------------------------------------------
 
-  public triggerUpdateTracklist = (tracklistData: UpdateTracklistRequest) => {
-    this.updateTracklistSubject.next(tracklistData); // Schicke die Daten an den Subject
+  public triggerTracklistUPDATESubject = (
+    tracklistData: UpdateTracklistRequest
+  ) => {
+    this.tracklistUPDATESubject.next(tracklistData); // Schicke die Daten an den Subject
   };
 
   // Diese Methode gibt das Observable der Antwort zurück, um es im Component zu abonnieren
-  public getTracklistUpdateResponse = (): Observable<Tracklist> => {
-    return this.tracklistUpdateResponseSubject.asObservable();
+  public getTracklistUPDATEResponseSubject = (): Observable<Tracklist> => {
+    return this.tracklistUPDATEResponseSubject.asObservable();
   };
 
   private updateTracklist = (
@@ -411,12 +407,12 @@ export class MediaService {
 
   // functions for deleting traclists ----------------------------------------------------------------
 
-  public triggerDeleteTracklist = (tracklistID: number) => {
-    this.deleteTracklistSubject.next(tracklistID);
+  public triggerTracklistDELETESubject = (tracklistID: number) => {
+    this.tracklistDELETESubject.next(tracklistID);
   };
 
-  public getTracklistDeleteResponse = (): Observable<any> => {
-    return this.tracklistDeleteResponseSubject.asObservable();
+  public getTracklistDELETEResponseSubject = (): Observable<any> => {
+    return this.tracklistDELETEResponseSubject.asObservable();
   };
 
   private deleteTracklist = (tracklistID: number): Observable<any> => {
@@ -434,5 +430,26 @@ export class MediaService {
         return throwError(() => error);
       })
     );
+  };
+
+  // other functions --------------------------------------------------------------------------------
+
+  public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
+    const header = this.getHeader();
+
+    if (!header) {
+      return null;
+    }
+
+    return this.http
+      .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
+        headers: header,
+      })
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   };
 }

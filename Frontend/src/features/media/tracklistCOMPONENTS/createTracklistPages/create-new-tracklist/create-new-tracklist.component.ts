@@ -94,7 +94,7 @@ export class CreateNewTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.mediaService.getTracklistCreateSeasonResponse().subscribe({
+    this.mediaService.getTracklistCREATESEASONResponseSubject().subscribe({
       next: (res: Tracklist) => {
         this.messageService.add(
           getMessageObject('success', 'Tracklist erfolgreich angelegt')
@@ -154,7 +154,7 @@ export class CreateNewTracklistComponent implements OnInit {
         .split('T')[0];
     }
 
-    this.mediaService.triggerCreateSeasonTracklist({
+    this.mediaService.triggerTracklistCREATESEASONSubject({
       name: this.trackListForm.get('trackListName')?.value,
       mediaID: this.mediaID(),
       seasonID: this.inputSeason().id,

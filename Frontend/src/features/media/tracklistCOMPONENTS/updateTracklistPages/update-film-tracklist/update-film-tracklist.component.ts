@@ -90,7 +90,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.mediaService.getTracklistUpdateResponse().subscribe({
+    this.mediaService.getTracklistUPDATEResponseSubject().subscribe({
       next: () => {
         this.messageService.add({
           life: 7000,
@@ -139,7 +139,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
     });
 
     // delete tracklist -------------------------------------------
-    this.mediaService.getTracklistDeleteResponse().subscribe({
+    this.mediaService.getTracklistDELETEResponseSubject().subscribe({
       next: () => {
         this.messageService.add(
           getMessageObject('success', 'Trackliste erfolgreich gelöscht')
@@ -200,7 +200,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
       tracklist_finish_date: formattedEndDate,
     };
 
-    this.mediaService.triggerUpdateTracklist(updateTracklistData);
+    this.mediaService.triggerTracklistUPDATESubject(updateTracklistData);
   };
 
   public hasErrorField = (field: string) => {
@@ -219,7 +219,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
   };
 
   public deleteTracklist = () => {
-    this.mediaService.triggerDeleteTracklist(this.inpTracklist().id);
+    this.mediaService.triggerTracklistDELETESubject(this.inpTracklist().id);
   };
 
   public setDeleteDialogVisibility = (status: boolean) => {

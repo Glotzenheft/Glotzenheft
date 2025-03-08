@@ -82,7 +82,7 @@ export class CreateMovieTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.mediaService.getTracklistMovieCreationResponse().subscribe({
+    this.mediaService.getTracklistCREATEMOVIESubjectResponse().subscribe({
       next: () => {
         this.messageService.add(
           getMessageObject('success', 'Trackliste erfolgreich angelegt')
@@ -123,7 +123,7 @@ export class CreateMovieTracklistComponent implements OnInit {
       return;
     }
 
-    this.mediaService.triggerCreateMovieTracklist({
+    this.mediaService.triggerTracklistCREATEMOVIESubject({
       name: this.tracklistForm.get('trackListName')?.value,
       mediaID: this.mediaID(),
       startDate: this.tracklistForm.get('startDate')?.value,

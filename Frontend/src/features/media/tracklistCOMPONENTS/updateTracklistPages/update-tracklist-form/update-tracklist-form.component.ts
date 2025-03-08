@@ -97,7 +97,7 @@ export class UpdateTracklistFormComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.mediaService.getTracklistUpdateResponse().subscribe({
+    this.mediaService.getTracklistUPDATEResponseSubject().subscribe({
       next: () => {
         this.messageService.add(
           getMessageObject('success', 'Erfolgreich gespeichert.')
@@ -121,7 +121,7 @@ export class UpdateTracklistFormComponent implements OnInit {
       },
     });
 
-    this.mediaService.getTracklistDeleteResponse().subscribe({
+    this.mediaService.getTracklistDELETEResponseSubject().subscribe({
       next: () => {
         this.messageService.add(
           getMessageObject('success', 'Trackliste erfolgreich gelöscht')
@@ -224,7 +224,7 @@ export class UpdateTracklistFormComponent implements OnInit {
       tracklist_finish_date: formattedEndDate,
     };
 
-    this.mediaService.triggerUpdateTracklist(updateTracklistData);
+    this.mediaService.triggerTracklistUPDATESubject(updateTracklistData);
   };
 
   public hasErrorField = (field: string) => {
@@ -243,7 +243,9 @@ export class UpdateTracklistFormComponent implements OnInit {
   public deleteTracklist = () => {
     this.isDeleteDialogVisible = false;
 
-    this.mediaService.triggerDeleteTracklist(this.inpSelectedTracklist().id);
+    this.mediaService.triggerTracklistDELETESubject(
+      this.inpSelectedTracklist().id
+    );
   };
 
   public setDeleteDialogVisibility = (status: boolean) => {
