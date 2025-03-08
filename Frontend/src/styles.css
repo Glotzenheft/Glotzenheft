@@ -489,7 +489,7 @@ p {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 110%;
+    height: 120%;
   }
 
   .loginWindow {
@@ -748,7 +748,7 @@ p {
     justify-content: center;
     align-items: center;
     width: 100%;
-    height: 110%;
+    height: 115%;
   }
 
   .p-message {
@@ -938,4 +938,16 @@ p {
 
 .userMenuButton .p-button {
   background-color: transparent;
+}
+
+.p-dialog {
+  width: 90%;
+}
+
+/* for loading state */
+.loadingWrapper {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }

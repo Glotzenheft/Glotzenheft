@@ -1,54 +1,68 @@
 <router-outlet />
 
-<div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
-  <h1>Meine Übersicht</h1>
-
-  <div class="diagramSelection">
-    <p-select
-      [options]="diagramSelection"
-      optionLabel="name"
-      (onChange)="handleDiagramSelectionChange($event)"
-    />
-  </div>
-
-  <div class="barChartDIVWrapper">
-    <div class="barChartDIV" *ngIf="selectedDiagramType.value === 0">
-      <p-chart type="bar" [data]="lineDiagramData" [options]="diagramOptions" />
-    </div>
-  </div>
-  <div class="pieChartDIV" *ngIf="selectedDiagramType.value === 1">
-    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
-  </div>
-
-  <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 2">
-    <div class="barChartDIV">
-      <p-chart
-        type="bar"
-        [data]="barChartForMediaStatistic"
-        [options]="barChartMediaStatisticOptions"
-      />
-    </div>
-  </div>
-
-  <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 3">
-    <div class="barChartDIV">
-      <p-chart
-        type="bar"
-        [data]="barChartForYearlyMediaStatistic"
-        [options]="barChartYearlyStatisticOptions"
-      />
-    </div>
-  </div>
-
-</div>
-
-<div class="gapDIV"></div>
-
-<div class="activitiesPage">
-  <h2>Meine Aktivitäten</h2>
-  <p-button
-    label="zu meinen Aktivitäten"
-    icon="pi pi-arrow-right"
-    (onClick)="navigateToActivitiesPage()"
+<div *ngIf="isLoading" class="loadingWrapper">
+  <h1>Laden ...</h1>
+  <p-progress-spinner
+    ariaLabel="loading"
+    strokeWidth="8"
+    [style]="{ width: '5rem', height: '5rem' }"
   />
 </div>
+
+<ng-container *ngIf="!isLoading">
+  <div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
+    <h1>Meine Übersicht</h1>
+
+    <div class="diagramSelection">
+      <p-select
+        [options]="diagramSelection"
+        optionLabel="name"
+        (onChange)="handleDiagramSelectionChange($event)"
+      />
+    </div>
+
+    <div class="barChartDIVWrapper">
+      <div class="barChartDIV" *ngIf="selectedDiagramType.value === 0">
+        <p-chart
+          type="bar"
+          [data]="lineDiagramData"
+          [options]="diagramOptions"
+        />
+      </div>
+    </div>
+    <div class="pieChartDIV" *ngIf="selectedDiagramType.value === 1">
+      <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
+    </div>
+
+    <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 2">
+      <div class="barChartDIV">
+        <p-chart
+          type="bar"
+          [data]="barChartForMediaStatistic"
+          [options]="barChartMediaStatisticOptions"
+        />
+      </div>
+    </div>
+
+    <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 3">
+      <div class="barChartDIV">
+        <p-chart
+          type="bar"
+          [data]="barChartForYearlyMediaStatistic"
+          [options]="barChartYearlyStatisticOptions"
+        />
+      </div>
+    </div>
+  </div>
+
+  <div class="gapDIV"></div>
+
+  <div class="activitiesPage">
+    <h2>Meine Aktivitäten</h2>
+    <p-button
+      label="zu meinen Aktivitäten"
+      icon="pi pi-arrow-right"
+      (onClick)="navigateToActivitiesPage()"
+    />
+  </div>
+</ng-container>

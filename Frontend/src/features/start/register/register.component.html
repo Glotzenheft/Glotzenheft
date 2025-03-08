@@ -1,9 +1,3 @@
-<p-button
-  icon="pi pi-directions"
-  label="Hier die AGB lesen"
-  (onClick)="openAGBDialog()"
-/>
-
 <div class="login">
   <div class="register">
     <form
@@ -39,6 +33,10 @@
             fluid
             formControlName="password"
             name="password"
+            [weakLabel]="'geringe Sicherheit'"
+            [mediumLabel]="'mittlere Sicherheit'"
+            [strongLabel]="'hohe Sicherheit'"
+            [toggleMask]="true"
           ></p-password>
           <label for="password">Passwort</label>
         </p-floatlabel>
@@ -62,6 +60,7 @@
             formControlName="passwordConfirm"
             name="passwordConfirm"
             [feedback]="false"
+            [toggleMask]="true"
           ></p-password>
           <label for="passwordConfirm">Passwort bestätigen</label>
         </p-floatlabel>
@@ -122,6 +121,7 @@
         <label for="agb" class="agbLabel">
           Ich habe die AGB gelesen und akzeptiere diese.</label
         >
+
         <p-message
           severity="error"
           size="small"
@@ -131,6 +131,12 @@
           >Die AGB müssen akzeptiert werden.</p-message
         >
       </div>
+      <p-button
+        icon="pi pi-directions"
+        label="Hier die AGB lesen"
+        (onClick)="openAGBDialog()"
+        [link]="true"
+      />
 
       <div class="loginActions">
         <p-button
@@ -160,6 +166,8 @@
   </p>
 </p-dialog>
 
-<p-dialog [(visible)]="isAGBDialogVisible">
-  <app-agb />
-</p-dialog>
+<ng-container class="agbDialogWrapper">
+  <p-dialog [(visible)]="isAGBDialogVisible">
+    <app-agb />
+  </p-dialog>
+</ng-container>

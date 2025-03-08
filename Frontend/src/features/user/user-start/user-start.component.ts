@@ -1,32 +1,33 @@
-import {Component, OnInit} from '@angular/core';
-import {InputTextModule} from 'primeng/inputtext';
-import {IconFieldModule} from 'primeng/iconfield';
-import {InputIconModule} from 'primeng/inputicon';
-import {TooltipModule} from 'primeng/tooltip';
-import {Router, RouterOutlet} from '@angular/router';
-import {PanelModule} from 'primeng/panel';
-import {Observable} from 'rxjs';
-import {Tracklist} from '../../../shared/interfaces/tracklist-interfaces';
-import {MediaService} from '../../../service/media/media.service';
-import {MessageService} from 'primeng/api';
-import {ROUTES_LIST} from '../../../shared/variables/routes-list';
-import {UserService} from '../../../service/user/user.service';
-import {CommonModule} from '@angular/common';
-import {ChartModule} from 'primeng/chart';
+import { Component, OnInit } from '@angular/core';
+import { InputTextModule } from 'primeng/inputtext';
+import { IconFieldModule } from 'primeng/iconfield';
+import { InputIconModule } from 'primeng/inputicon';
+import { TooltipModule } from 'primeng/tooltip';
+import { Router, RouterOutlet } from '@angular/router';
+import { PanelModule } from 'primeng/panel';
+import { Observable } from 'rxjs';
+import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import { MediaService } from '../../../service/media/media.service';
+import { MessageService } from 'primeng/api';
+import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { UserService } from '../../../service/user/user.service';
+import { CommonModule } from '@angular/common';
+import { ChartModule } from 'primeng/chart';
 import {
   BarDiagram,
   LineDiagram,
 } from '../../../shared/interfaces/diagram-interfaces';
-import {ReactiveFormsModule} from '@angular/forms';
-import {SelectModule} from 'primeng/select';
-import {WatchTimeStatistic} from '../../../shared/statistic-interfaces';
-import {TableModule} from 'primeng/table';
-import {PaginatorModule} from 'primeng/paginator';
-import {ButtonModule} from 'primeng/button';
+import { ReactiveFormsModule } from '@angular/forms';
+import { SelectModule } from 'primeng/select';
+import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
+import { TableModule } from 'primeng/table';
+import { PaginatorModule } from 'primeng/paginator';
+import { ButtonModule } from 'primeng/button';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
 } from '../../../shared/variables/message-vars';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
   selector: 'app-user-start',
@@ -44,6 +45,7 @@ import {
     TableModule,
     PaginatorModule,
     ButtonModule,
+    ProgressSpinnerModule,
   ],
   templateUrl: './user-start.component.html',
   styleUrl: './user-start.component.css',
@@ -98,25 +100,27 @@ export class UserStartComponent implements OnInit {
     this.diagramSelection[0];
   public chartSelectionCondition: boolean = true;
 
-  // services
+  public isLoading: boolean = false;
 
   constructor(
     private mediaService: MediaService,
     private messageService: MessageService,
     private router: Router,
     private userService: UserService
-  ) {
-  }
+  ) {}
 
   ngOnInit(): void {
     this.loadTracklistData();
   }
 
   public loadTracklistData = () => {
+
     if (this.userTracklists$) {
       // data is already loaded
       return;
     }
+
+    this.isLoading = true;
 
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
@@ -227,9 +231,9 @@ export class UserStartComponent implements OnInit {
             },
           },
           scales: {
-            x: {title: {display: true, text: 'Bewertung'}},
+            x: { title: { display: true, text: 'Bewertung' } },
             y: {
-              title: {display: true, text: 'Anzahl der Bewertungen'},
+              title: { display: true, text: 'Anzahl der Bewertungen' },
               beginAtZero: true,
               stepSize: 1,
             },
@@ -244,9 +248,9 @@ export class UserStartComponent implements OnInit {
             },
           },
           scales: {
-            x: {title: {display: true, text: 'Datum (geschaut)'}},
+            x: { title: { display: true, text: 'Datum (geschaut)' } },
             y: {
-              title: {display: true, text: 'geschaute Zeit [min]'},
+              title: { display: true, text: 'geschaute Zeit [min]' },
               beginAtZero: true,
               stepSize: 1,
             },
@@ -261,14 +265,16 @@ export class UserStartComponent implements OnInit {
             },
           },
           scales: {
-            x: {title: {display: true, text: 'Jahr'}},
+            x: { title: { display: true, text: 'Jahr' } },
             y: {
-              title: {display: true, text: 'geschaute Zeit [h]'},
+              title: { display: true, text: 'geschaute Zeit [h]' },
               beginAtZero: true,
               stepSize: 1,
             },
           },
         };
+
+        this.isLoading = false;
       },
       error: (err: any) => {
         if (err.status === 401) {
@@ -280,6 +286,7 @@ export class UserStartComponent implements OnInit {
         }
 
         this.isError = true;
+        this.isLoading = false;
       },
     });
   };
@@ -302,20 +309,19 @@ export class UserStartComponent implements OnInit {
         const resAsList: [string, number][] = Object.entries(res).slice(1, 31);
         const yearlyDataMap = new Map<string, number>();
 
-        Object.entries(res).forEach(([date, time]) =>
-        {
-          if (date !== 'unknown_date')
-          {
+        Object.entries(res).forEach(([date, time]) => {
+          if (date !== 'unknown_date') {
             const year = date.split('-')[0]; // Jahr extrahieren
             yearlyDataMap.set(year, (yearlyDataMap.get(year) || 0) + time / 60);
           }
         });
 
-        const yearlyDataList: [string, number][] = Array.from(yearlyDataMap.entries());
+        const yearlyDataList: [string, number][] = Array.from(
+          yearlyDataMap.entries()
+        );
 
         // Erstellen des Balkendiagramms
-        this.barChartForYearlyMediaStatistic =
-        {
+        this.barChartForYearlyMediaStatistic = {
           labels: yearlyDataList.map((val) => val[0]), // Nur die Jahre
           datasets: [
             {
@@ -325,8 +331,8 @@ export class UserStartComponent implements OnInit {
               borderColor: '#059669',
               tension: 0.4,
               backgroundColor: '#059669',
-            }
-          ]
+            },
+          ],
         };
 
         this.barChartForMediaStatistic = {
@@ -370,16 +376,12 @@ export class UserStartComponent implements OnInit {
     });
   };
 
-
   public handleDiagramSelectionChange = (e: any) => {
     this.selectedDiagramType = e.value;
 
-    if (e.value.value >= 2)
-    {
+    if (e.value.value >= 2) {
       this.loadMediaWatchtimeStatistic();
-    }
-    else
-    {
+    } else {
       this.loadTracklistData();
     }
   };

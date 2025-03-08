@@ -6,6 +6,25 @@ export interface TrackListCreation {
   tmdbId: number;
 }
 
+export interface CreateMovieTracklistData {
+  name: string;
+  mediaID: number;
+  startDate: string | null;
+  endDate: string | null;
+  status: string;
+  rating: number | null;
+}
+
+export interface CreateSeasonTracklistData {
+  name: string;
+  mediaID: number;
+  seasonID: number;
+  startDate: string;
+  endDate: string | null;
+  status: string | null;
+  rating: number | null;
+}
+
 // tracklists for season -----------------------------------------
 
 export interface TracklistSeasonEpisode {
@@ -29,6 +48,7 @@ export interface TracklistSeason {
 }
 
 export interface Tracklist {
+  asObservable(): import('rxjs').Observable<any> | null;
   id: number;
   rating: null | number;
   status: TracklistStatusType;

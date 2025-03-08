@@ -24,7 +24,10 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import { Tracklist, TVSeasonWithTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
+import {
+  Tracklist,
+  TVSeasonWithTracklist,
+} from '../../../../../shared/interfaces/tracklist-interfaces';
 import {
   convertTracklistStatusIntoGerman,
   TRACK_LIST_STATUS_LIST,
@@ -32,7 +35,10 @@ import {
 import { MediaService } from '../../../../../service/media/media.service';
 import { UserService } from '../../../../../service/user/user.service';
 import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
@@ -88,6 +94,33 @@ export class CreateNewTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.mediaService.getTracklistCREATESEASONResponseSubject().subscribe({
+      next: (res: Tracklist) => {
+        this.messageService.add(
+          getMessageObject('success', 'Tracklist erfolgreich angelegt')
+        );
+        // set current tracklist to local storage
+        this.tracklistService.setSelectedTracklistInLocalStorage(res.id);
+        this.saveUpdatedTracklist.emit(true);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          // status 401 = user is not logged in anymore -> navigate to login page
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Anlegen der Trackliste',
+            'Bitte lade die Seite neu und probiere es erneut.'
+          )
+        );
+      },
+    });
+
     this.trackListForm = this.formBuilder.group({
       trackListName: [
         `${this.inpTVName()} - Staffel ${this.inputSeason().seasonNumber}`,
@@ -121,55 +154,14 @@ export class CreateNewTracklistComponent implements OnInit {
         .split('T')[0];
     }
 
-    this.createNewTracklist$ = this.mediaService.createNewSeasonTracklist(
-      this.trackListForm.get('trackListName')?.value,
-      this.mediaID(),
-      this.inputSeason().id,
-      formattedStartDate,
-      formattedEndDate,
-      this.trackListForm.get('status')?.value.value,
-      this.trackListForm.get('rating')?.value
-    );
-
-    if (!this.createNewTracklist$) {
-      this.messageService.add(
-        getMessageObject(
-          'error',
-          'Fehler beim Anlegen der Trackliste',
-          'Bitte lade die Seite neu und versuche es noch einmal.'
-        )
-      );
-      return;
-    }
-
-    this.createNewTracklist$.subscribe({
-      next: (res: Tracklist) => {
-        this.messageService.add(
-          getMessageObject('success', 'Tracklist erfolgreich angelegt')
-        );
-
-        // set current tracklist to local storage
-        this.tracklistService.setSelectedTracklistInLocalStorage(res.id);
-
-        this.saveUpdatedTracklist.emit(true);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          // status 401 = user is not logged in anymore -> navigate to login page
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-          return;
-        }
-
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Anlegen der Trackliste',
-            'Bitte lade die Seite neu und probiere es erneut.'
-          )
-        );
-      },
+    this.mediaService.triggerTracklistCREATESEASONSubject({
+      name: this.trackListForm.get('trackListName')?.value,
+      mediaID: this.mediaID(),
+      seasonID: this.inputSeason().id,
+      startDate: formattedStartDate,
+      endDate: formattedEndDate,
+      status: this.trackListForm.get('status')?.value.value,
+      rating: this.trackListForm.get('rating')?.value,
     });
   };
 

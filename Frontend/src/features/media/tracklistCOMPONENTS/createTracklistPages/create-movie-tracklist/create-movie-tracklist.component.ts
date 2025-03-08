@@ -24,10 +24,16 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+} from '../../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../../service/media/media.service';
 import { UserService } from '../../../../../service/user/user.service';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../shared/variables/message-vars';
+import {
+  ERR_OBJECT_INVALID_AUTHENTICATION,
+  getMessageObject,
+} from '../../../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 
 @Component({
@@ -76,6 +82,31 @@ export class CreateMovieTracklistComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    this.mediaService.getTracklistCREATEMOVIESubjectResponse().subscribe({
+      next: () => {
+        this.messageService.add(
+          getMessageObject('success', 'Trackliste erfolgreich angelegt')
+        );
+        this.saveNewTracklist.emit(0);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          // status 401 = user is not logged in anymore -> navigate to login page
+          this.userService.logoutOfAccount();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            'Fehler beim Anlegen der Trackliste',
+            'Bitte lade die Seite neu und probiere es erneut.'
+          )
+        );
+      },
+    });
+
     this.tracklistForm = this.formBuilder.group({
       trackListName: [this.mediaName().toString(), [Validators.required]],
       startDate: [null],
@@ -92,51 +123,13 @@ export class CreateMovieTracklistComponent implements OnInit {
       return;
     }
 
-    this.createNewTracklist$ = this.mediaService.createNewMovieTracklist(
-      this.tracklistForm.get('trackListName')?.value,
-      this.mediaID(),
-      this.tracklistForm.get('startDate')?.value,
-      this.tracklistForm.get('endDate')?.value,
-      this.tracklistForm.get('status')?.value.value,
-      this.tracklistForm.get('rating')?.value
-    );
-
-    if (!this.createNewTracklist$) {
-      this.messageService.add(
-        getMessageObject(
-          'error',
-          'Fehler beim Anlegen der Trackliste',
-          'Bitte probiere es erneut nach einem Laden der Seite.'
-        )
-      );
-      return;
-    }
-
-    this.createNewTracklist$.subscribe({
-      next: () => {
-        this.messageService.add(
-          getMessageObject('success', 'Trackliste erfolgreich angelegt')
-        );
-
-        this.saveNewTracklist.emit(0);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          // status 401 = user is not logged in anymore -> navigate to login page
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-          return;
-        }
-
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Anlegen der Trackliste',
-            'Bitte lade die Seite neu und probiere es erneut.'
-          )
-        );
-      },
+    this.mediaService.triggerTracklistCREATEMOVIESubject({
+      name: this.tracklistForm.get('trackListName')?.value,
+      mediaID: this.mediaID(),
+      startDate: this.tracklistForm.get('startDate')?.value,
+      endDate: this.tracklistForm.get('endDate')?.value,
+      status: this.tracklistForm.get('status')?.value.value,
+      rating: this.tracklistForm.get('rating')?.value,
     });
   };
 

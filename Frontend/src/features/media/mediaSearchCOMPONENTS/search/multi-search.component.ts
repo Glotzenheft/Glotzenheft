@@ -152,8 +152,11 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             this.isPrevPageButtonDisabled = this.currentPage === 1;
           }
         }
+        this.isLoading = false;
       },
-      error: () => {},
+      error: () => {
+        this.isLoading = false;
+      },
     });
     this.searchQuery = searchTerm;
     this.isLoading = false;
