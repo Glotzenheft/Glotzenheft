@@ -33,6 +33,7 @@ import {
   getMessageObject,
 } from '../../../../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
+import { MediaService } from '../../../../../service/media/media.service';
 
 @Component({
   selector: 'app-create-tracklist-episode-form',
@@ -48,6 +49,7 @@ import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
     TooltipModule,
     DeleteDialogComponent,
   ],
+  providers: [MediaService],
   templateUrl: './create-tracklist-episode-form.component.html',
   styleUrl: './create-tracklist-episode-form.component.css',
 })

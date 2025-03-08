@@ -52,6 +52,7 @@ import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
     DatePickerModule,
     DeleteDialogComponent,
   ],
+  providers: [MediaService],
   templateUrl: './update-film-tracklist.component.html',
   styleUrl: './update-film-tracklist.component.css',
 })

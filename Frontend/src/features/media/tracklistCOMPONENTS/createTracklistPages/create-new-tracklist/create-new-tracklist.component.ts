@@ -55,6 +55,7 @@ import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
     SelectModule,
     RatingModule,
   ],
+  providers: [MediaService],
   templateUrl: './create-new-tracklist.component.html',
   styleUrl: './create-new-tracklist.component.css',
 })

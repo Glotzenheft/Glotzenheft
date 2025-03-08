@@ -7,13 +7,11 @@ import {
 } from '../../shared/interfaces/media-interfaces';
 import {
   catchError,
-  debounceTime,
   EMPTY,
   exhaustMap,
   Observable,
   shareReplay,
   Subject,
-  switchMap,
   throttleTime,
   throwError,
 } from 'rxjs';
@@ -39,6 +37,7 @@ import {
   Tracklist,
 } from '../../shared/interfaces/tracklist-interfaces';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
+import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
 
 @Injectable({
   providedIn: 'root',
@@ -71,7 +70,7 @@ export class MediaService {
     // controlling the request frequence (via throttle time)
     this.tracklistUPDATESubject
       .pipe(
-        throttleTime(20000), // wait 10 s
+        throttleTime(REQUEST_THROTTLE_TIME), // wait 10 s
         exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
         shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
       )
@@ -84,7 +83,7 @@ export class MediaService {
     // deleting tracklist --------------------------------------------------
     this.tracklistDELETESubject
       .pipe(
-        throttleTime(20000),
+        throttleTime(REQUEST_THROTTLE_TIME),
         exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
         shareReplay(1)
       )
@@ -96,7 +95,7 @@ export class MediaService {
     // creating a new movie tracklist ---------------------------------------------------
     this.tracklistCREATEMOVIESubject
       .pipe(
-        throttleTime(20000), // 20.000 ms
+        throttleTime(REQUEST_THROTTLE_TIME), // 20.000 ms
         exhaustMap((tracklistData: CreateMovieTracklistData) =>
           this.createNewMovieTracklist(tracklistData)
         ),
@@ -111,7 +110,7 @@ export class MediaService {
     // create a new season tracklist ----------------------------------------------
     this.tracklistCREATESEASONSubject
       .pipe(
-        throttleTime(20000),
+        throttleTime(REQUEST_THROTTLE_TIME),
         exhaustMap((tracklistData: CreateSeasonTracklistData) =>
           this.createNewSeasonTracklist(tracklistData)
         ),

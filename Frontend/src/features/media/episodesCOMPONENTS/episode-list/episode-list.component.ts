@@ -19,6 +19,7 @@ import {
 } from '../../../../shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
 import { StringService } from '../../../../service/string/string.service';
+import { MediaService } from '../../../../service/media/media.service';
 
 @Component({
   selector: 'app-episode-list',
@@ -29,6 +30,7 @@ import { StringService } from '../../../../service/string/string.service';
     ButtonModule,
     TooltipModule,
   ],
+  providers: [MediaService],
   templateUrl: './episode-list.component.html',
   styleUrl: './episode-list.component.css',
 })
