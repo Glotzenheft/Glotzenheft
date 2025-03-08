@@ -15,6 +15,16 @@ export interface CreateMovieTracklistData {
   rating: number | null;
 }
 
+export interface CreateSeasonTracklistData {
+  name: string;
+  mediaID: number;
+  seasonID: number;
+  startDate: string;
+  endDate: string | null;
+  status: string | null;
+  rating: number | null;
+}
+
 // tracklists for season -----------------------------------------
 
 export interface TracklistSeasonEpisode {
