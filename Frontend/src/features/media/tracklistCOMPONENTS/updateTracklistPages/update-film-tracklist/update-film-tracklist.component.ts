@@ -223,7 +223,6 @@ export class UpdateFilmTracklistComponent implements OnInit {
   };
 
   public setDeleteDialogVisibility = (status: boolean) => {
-    console.log('triggert');
     this.isDeleteDialogVisible = status;
   };
 }

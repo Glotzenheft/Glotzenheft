@@ -114,12 +114,13 @@ export class UserStartComponent implements OnInit {
   }
 
   public loadTracklistData = () => {
-    this.isLoading = true;
 
     if (this.userTracklists$) {
       // data is already loaded
       return;
     }
+
+    this.isLoading = true;
 
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 

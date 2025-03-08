@@ -149,14 +149,14 @@ export class MediaService {
 
   /**
    * For getting the mediaID from the database.
-   
+
    *
    * @param tmdbID string
    * @param isMovie boolean
    * @returns
    */
   public getMediaIdForMedia = (
-    /* 
+    /*
     Function in the app: on multi search, the user clicks on the media (movie or tv) but there is only tmdb id available at this moment
     -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
     */
@@ -359,8 +359,6 @@ export class MediaService {
     tracklistData: UpdateTracklistRequest
   ): Observable<Tracklist> => {
     const header = this.getHeader();
-
-    console.log('updated tracklist');
 
     if (!header) {
       return EMPTY;
