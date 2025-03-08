@@ -33,18 +33,28 @@ import {
   ROUTE_UPDATE_TRACKLIST,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
-import { Tracklist } from '../../shared/interfaces/tracklist-interfaces';
+import {
+  CreateMovieTracklistData,
+  Tracklist,
+} from '../../shared/interfaces/tracklist-interfaces';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 
 @Injectable({
   providedIn: 'root',
 })
 export class MediaService {
-  private updateTracklistSubject = new Subject<UpdateTracklistRequest>();
-  private tracklistUpdateResponseSubject = new Subject<Tracklist>();
+  private updateTracklistSubject: Subject<UpdateTracklistRequest> =
+    new Subject<UpdateTracklistRequest>();
+  private tracklistUpdateResponseSubject: Subject<Tracklist> =
+    new Subject<Tracklist>();
 
-  private deleteTracklistSubject = new Subject<number>();
-  private tracklistDeleteResponseSubject = new Subject<any>();
+  private deleteTracklistSubject: Subject<number> = new Subject<number>();
+  private tracklistDeleteResponseSubject: Subject<any> = new Subject<any>();
+
+  private createMovieTracklistSubject: Subject<CreateMovieTracklistData> =
+    new Subject<CreateMovieTracklistData>();
+  private tracklistMovieCreateResponseSubject: Subject<any> =
+    new Subject<any>();
 
   constructor(
     private http: HttpClient,
@@ -71,6 +81,20 @@ export class MediaService {
       .subscribe({
         next: (response) => this.tracklistDeleteResponseSubject.next(response),
         error: (error) => this.tracklistDeleteResponseSubject.error(error),
+      });
+
+    this.createMovieTracklistSubject
+      .pipe(
+        throttleTime(20000), // 20.000 ms
+        exhaustMap((tracklistData: CreateMovieTracklistData) =>
+          this.createNewMovieTracklist(tracklistData)
+        ),
+        shareReplay(1)
+      )
+      .subscribe({
+        next: (res: any) => this.tracklistMovieCreateResponseSubject.next(res),
+        error: (err: any) =>
+          this.tracklistMovieCreateResponseSubject.error(err),
       });
   }
 
@@ -224,44 +248,51 @@ export class MediaService {
     );
   };
 
-  public createNewMovieTracklist = (
-    name: string,
-    mediaID: number,
-    startDate: string | null,
-    endDate: string | null,
-    status: string,
-    rating: number | null
-  ): Observable<any> | null => {
+  // functions for creating a new movie tracklist --------------------------------------------
+
+  public triggerCreateMovieTracklist = (
+    tracklistData: CreateMovieTracklistData
+  ) => {
+    this.createMovieTracklistSubject.next(tracklistData);
+  };
+
+  public getTracklistMovieCreationResponse = (): Observable<any> => {
+    return this.tracklistMovieCreateResponseSubject.asObservable();
+  };
+
+  private createNewMovieTracklist = (
+    data: CreateMovieTracklistData
+  ): Observable<any> => {
     const header = this.getHeader();
 
     if (!header) {
-      return null;
+      return EMPTY;
     }
 
     let formattedDate: string = '';
     let formattedEndDate: string = '';
 
-    if (startDate) {
-      let startDateAsDate: Date = new Date(startDate);
+    if (data.startDate) {
+      let startDateAsDate: Date = new Date(data.startDate);
       startDateAsDate.setDate(startDateAsDate.getDate() + 1);
       formattedDate = startDateAsDate.toISOString().split('T')[0];
     }
 
-    if (endDate) {
-      let endDateAsDate: Date = new Date(endDate);
+    if (data.endDate) {
+      let endDateAsDate: Date = new Date(data.endDate);
       endDateAsDate.setDate(endDateAsDate.getDate() + 1);
       formattedEndDate = endDateAsDate.toISOString().split('T')[0];
     }
 
     const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${encodeURIComponent(
-      name
-    )}${ROUTE_CREATE_NEW_TRACKLIST[1]}${status}${
+      data.name
+    )}${ROUTE_CREATE_NEW_TRACKLIST[1]}${data.status}${
       ROUTE_CREATE_NEW_TRACKLIST[2]
-    }${mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${
+    }${data.mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${
       ROUTE_CREATE_NEW_TRACKLIST[5]
     }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${
       ROUTE_CREATE_NEW_TRACKLIST[7]
-    }${rating ? rating : ''}`;
+    }${data.rating ? data.rating : ''}`;
 
     return this.http.post<any>(url, {}, { headers: header }).pipe(
       shareReplay(1),
@@ -290,14 +321,16 @@ export class MediaService {
       );
   };
 
-  public triggerUpdateTracklist(tracklistData: UpdateTracklistRequest): void {
+  // update tracklist functions -----------------------------------------------------------------------------------
+
+  public triggerUpdateTracklist = (tracklistData: UpdateTracklistRequest) => {
     this.updateTracklistSubject.next(tracklistData); // Schicke die Daten an den Subject
-  }
+  };
 
   // Diese Methode gibt das Observable der Antwort zurück, um es im Component zu abonnieren
-  public getTracklistUpdateResponse(): Observable<Tracklist> {
+  public getTracklistUpdateResponse = (): Observable<Tracklist> => {
     return this.tracklistUpdateResponseSubject.asObservable();
-  }
+  };
 
   private updateTracklist = (
     tracklistData: UpdateTracklistRequest
