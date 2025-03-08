@@ -14,6 +14,7 @@ import { RatingModule } from 'primeng/rating';
 import { CreateNewTracklistComponent } from '../../createTracklistPages/create-new-tracklist/create-new-tracklist.component';
 import { TVSeasonWithTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
 import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
+import { MediaService } from '../../../../../service/media/media.service';
 
 @Component({
   selector: 'app-tracklist-form',
@@ -25,6 +26,7 @@ import { TracklistService } from '../../../../../service/tracklist/tracklist.ser
     CommonModule,
     CreateNewTracklistComponent,
   ],
+  providers: [MediaService],
   templateUrl: './tracklist-form.component.html',
   styleUrl: './tracklist-form.component.css',
 })

@@ -24,10 +24,7 @@ import { RatingModule } from 'primeng/rating';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import {
-  SeasonTracklist,
-  Tracklist,
-} from '../../../../../shared/interfaces/tracklist-interfaces';
+import { SeasonTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
 import {
   convertTracklistStatusIntoGerman,
   TRACK_LIST_STATUS_LIST,
@@ -56,6 +53,7 @@ import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
     RatingModule,
     DeleteDialogComponent,
   ],
+  providers: [MediaService],
   templateUrl: './update-tracklist-form.component.html',
   styleUrl: './update-tracklist-form.component.css',
 })

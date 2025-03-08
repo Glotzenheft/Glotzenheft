@@ -50,6 +50,7 @@ import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
     SelectModule,
     RatingModule,
   ],
+  providers: [MediaService],
   templateUrl: './create-movie-tracklist.component.html',
   styleUrl: './create-movie-tracklist.component.css',
 })

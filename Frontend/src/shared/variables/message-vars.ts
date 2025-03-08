@@ -22,3 +22,5 @@ export const getMessageObject = (
     detail,
   };
 };
+
+export const REQUEST_THROTTLE_TIME: number = 10000; // in ms
