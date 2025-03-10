@@ -1,8 +1,7 @@
 @media (max-width: 850px) {
   .createMovieTracklistWrapper {
     width: 100%;
-    height: 60rem;
-    /* overflow-y: auto; */
+    height: 70rem;
     overflow-x: hidden;
     overflow-y: hidden;
     padding-bottom: var(--padding--top-bottom);
@@ -17,9 +16,6 @@
     padding-right: calc(0.5 * var(--padding--left-right));
 
     border-radius: var(--border--radius);
-
-    /* padding-top: var(--padding--top-bottom);
-              padding-bottom: var(--padding--top-bottom); */
   }
 
   .createNewTracklist form {
@@ -36,18 +32,6 @@
     align-items: center;
     justify-content: flex-start;
   }
-
-  /* .movieListDIV {
-          width: 100%;
-          height: 50%;
-      
-          display: flex;
-          flex-direction: column;
-          justify-content: space-evenly;
-      
-          padding-left: var(--padding--left-right);
-          padding-right: var(--padding--left-right);
-        } */
 
   .ratingDIV {
     height: 4rem;
@@ -82,8 +66,7 @@
 @media (min-width: 850px) {
   .createMovieTracklistWrapper {
     width: 100%;
-    height: 50rem;
-    /* overflow-y: auto; */
+    height: 60rem;
     overflow-x: hidden;
     overflow-y: hidden;
     padding-bottom: var(--padding--top-bottom);

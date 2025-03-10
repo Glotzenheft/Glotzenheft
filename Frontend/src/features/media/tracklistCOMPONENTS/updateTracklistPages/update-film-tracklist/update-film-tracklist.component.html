@@ -60,6 +60,7 @@
               [showIcon]="true"
               inputId="end"
               [showOnFocus]="false"
+              [minDate]="updateTracklistForm.get('tracklist_start_date')?.value"
             />
             <label for="end">Enddatum</label>
           </p-float-label>

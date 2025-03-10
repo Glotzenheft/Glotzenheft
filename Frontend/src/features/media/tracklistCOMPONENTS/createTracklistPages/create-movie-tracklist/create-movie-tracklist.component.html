@@ -61,9 +61,11 @@
                 inputId="end"
                 [showIcon]="true"
                 [showOnFocus]="false"
+                [minDate]="tracklistForm.get('startDate')?.value"
               />
               <label for="end">Enddatum</label>
             </p-float-label>
+            <div class="gapDIV"></div>
             <p-float-label variant="in">
               <p-date-picker
                 formControlName="startDate"
