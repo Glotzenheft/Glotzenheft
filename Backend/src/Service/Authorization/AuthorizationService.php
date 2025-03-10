@@ -129,6 +129,9 @@ class AuthorizationService
         {
             return $this->returnInvalidCredentials();
         }
+        $user->setLastLogin(new DateTimeImmutable());
+        $this->entityManager->persist($user);
+        $this->entityManager->flush();
 
         if ($this->hasError)
         {
