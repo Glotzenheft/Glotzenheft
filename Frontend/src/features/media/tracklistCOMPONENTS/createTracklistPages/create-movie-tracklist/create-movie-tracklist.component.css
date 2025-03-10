@@ -1,7 +1,7 @@
 @media (max-width: 850px) {
   .createMovieTracklistWrapper {
     width: 100%;
-    height: 60rem;
+    height: 70rem;
     /* overflow-y: auto; */
     overflow-x: hidden;
     overflow-y: hidden;
@@ -37,18 +37,6 @@
     justify-content: flex-start;
   }
 
-  /* .movieListDIV {
-    width: 100%;
-    height: 50%;
-
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  } */
-
   .ratingDIV {
     height: 4rem;
 
@@ -82,8 +70,7 @@
 @media (min-width: 850px) {
   .createMovieTracklistWrapper {
     width: 100%;
-    height: 50rem;
-    /* overflow-y: auto; */
+    height: 55rem;
     overflow-x: hidden;
     overflow-y: hidden;
     padding-bottom: var(--padding--top-bottom);
@@ -126,18 +113,6 @@
     align-items: center;
   }
 
-  /* .movieListDIV {
-      width: 100%;
-      height: 50%;
-  
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-  
-      padding-left: var(--padding--left-right);
-      padding-right: var(--padding--left-right);
-    } */
-
   .ratingDIV {
     height: 4rem;
 
@@ -160,4 +135,8 @@
     display: flex;
     justify-content: space-evenly;
   }
+}
+
+.gapDIV {
+  height: 1rem;
 }
