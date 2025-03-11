@@ -1,5 +1,4 @@
 @media (max-width: 850px) {
-  /*
   .diagrammDIV {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: var(--border--radius);
@@ -12,7 +11,7 @@
     box-shadow: var(--box--shadow-button);
 
     height: 30rem;
-  }*/
+  }
 
   /* Anpassungen für die Heatmap */
   .heatmap-container {
@@ -118,7 +117,8 @@
     margin: 1rem auto;
   }
 
-  .heatmap th, .heatmap td {
+  .heatmap th,
+  .heatmap td {
     padding: 8px;
     text-align: center;
     border: 1px solid #ffffff;
@@ -130,7 +130,7 @@
     font-weight: 600;
   }
 
-  .heatmap-Years{
+  .heatmap-Years {
     background-color: #059669;
   }
 

@@ -29,7 +29,8 @@
   }
 
   .seasonMetaPicture {
-    background-color: red;
+    background-color: white;
+    color: black;
     width: auto;
   }
 
