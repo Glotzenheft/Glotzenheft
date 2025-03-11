@@ -491,18 +491,13 @@ export class UserStartComponent implements OnInit {
     this.heatmapData = Array.from(heatmap.entries()).sort(([a], [b]) => b - a); // Neuere Jahre zuerst
   };
 
-  public getHeatmapColor(hours: number, isBackgroundColor: boolean): string {
+  public getHeatmapColor(hours: number): string {
     if (this.maxHours === 0) return '#ffffff';
 
     const intensity = Math.sqrt(hours / this.maxHours); // Quadratwurzel für bessere Verteilung
     const colorValue = Math.floor(205 * intensity) + 50; // Werte zwischen 50-255
 
-    if (isBackgroundColor) {
-      return `rgb(50, ${colorValue}, 50)`; // Grüner Farbverlauf
-    } else {
-      // is color of letters
-      return colorValue < 200 ? 'white' : 'black';
-    }
+    return `rgb(50, ${colorValue}, 50)`; // Grüner Farbverlauf
   }
 
   public handleDiagramSelectionChange = (e: any) => {

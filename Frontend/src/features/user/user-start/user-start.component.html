@@ -78,8 +78,7 @@
               <td class="heatmap-Years">{{ entry[0] }}</td>
               <td
                 *ngFor="let hours of entry[1]"
-                [style.backgroundColor]="getHeatmapColor(hours, true)"
-                [style.color]="getHeatmapColor(hours, false)"
+                [style.background]="getHeatmapColor(hours)"
                 [title]="hours.toFixed(1) + ' Stunden'"
               >
                 {{ hours > 0 ? hours.toFixed(1) : "" }}
