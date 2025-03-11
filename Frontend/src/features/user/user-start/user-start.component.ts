@@ -61,6 +61,7 @@ export class UserStartComponent implements OnInit {
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
   public barChartYearlyStatisticOptions: any;
+  public barChartForMostWatchedDaysMediaStatisticOptions: any;
   public pieChartColors: string[] = [
     '#000000',
     '#32323c',
@@ -78,6 +79,7 @@ export class UserStartComponent implements OnInit {
   public pieChartData: any;
   public barChartForMediaStatistic: BarDiagram | null = null;
   public barChartForYearlyMediaStatistic: BarDiagram | null = null;
+  public barChartForMostWatchedDaysMediaStatistic: BarDiagram | null = null;
   public diagramSelection: { name: string; value: number }[] = [
     {
       name: 'Meine Bewertungen (Balkendiagramm)',
@@ -94,6 +96,10 @@ export class UserStartComponent implements OnInit {
     {
       name: 'Geschaute Zeit nach Jahren in Stunden (Balkendiagramm)',
       value: 3,
+    },
+    {
+      name: 'Meistgeschautesten 30 Tage in Minuten (Balkendiagramm)',
+      value: 4,
     },
   ];
   public selectedDiagramType: { name: string; value: number } =
@@ -125,7 +131,7 @@ export class UserStartComponent implements OnInit {
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
     if (!this.userTracklists$) {
-      this.isError;
+      this.isError = true;
       return;
     }
 
@@ -274,6 +280,23 @@ export class UserStartComponent implements OnInit {
           },
         };
 
+        this.barChartForMostWatchedDaysMediaStatisticOptions = {
+          responsive: true,
+          plugins: {
+            legend: {
+              position: 'top',
+            },
+          },
+          scales: {
+            x: { title: { display: true, text: 'Tag' } },
+            y: {
+              title: { display: true, text: 'geschaute Zeit [min]' },
+              beginAtZero: true,
+              stepSize: 1,
+            },
+          },
+        }
+
         this.isLoading = false;
       },
       error: (err: any) => {
@@ -347,6 +370,27 @@ export class UserStartComponent implements OnInit {
             {
               label: 'geschaute Zeit [min]',
               data: resAsList.map((val: [string, number]) => val[1]),
+              fill: true,
+              borderColor: '#059669',
+              tension: 0.4,
+              backgroundColor: '#059669',
+            },
+          ],
+        };
+
+        const mostWatchedDays = Object.entries(res)
+          .filter(([date]) => date !== 'unknown_date') // Entferne "unknown_date"
+          .sort((a, b) => b[1] - a[1]) // Sortiere nach geschauter Zeit (absteigend)
+          .slice(0, 30); // Nimm die Top 30
+
+        this.barChartForMostWatchedDaysMediaStatistic = {
+          labels: mostWatchedDays.map(([date]) =>
+            new Date(date).toLocaleDateString()
+          ),
+          datasets: [
+            {
+              label: 'Geschaute Zeit [min]',
+              data: mostWatchedDays.map(([, time]) => time),
               fill: true,
               borderColor: '#059669',
               tension: 0.4,
