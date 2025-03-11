@@ -13,30 +13,40 @@
     height: 30rem;
   }
 
-  /* Anpassungen für die Heatmap */
   .heatmap-container {
-    margin: 1rem -0.5rem; /* Negative Margin für besseres Scrollverhalten */
-    padding: 0.5rem;
-    width: calc(100% + 1rem); /* Kompensiert negative Margin */
+    margin: 2rem 0;
+    overflow-x: auto;
   }
 
   .heatmap table {
-    font-size: 1rem; /* Kleinere Schrift */
-    margin: 0.5rem auto;
+    border-collapse: collapse;
+    margin: 1rem auto;
   }
 
   .heatmap th,
   .heatmap td {
-    padding: 4px; /* Kleinere Abstände */
-    min-width: 45px; /* Schmalere Zellen */
-    max-width: 55px;
-    white-space: nowrap; /* Verhindert Zeilenumbrüche */
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ffffff;
+    min-width: 60px;
   }
 
+  .heatmap th {
+    background-color: #059669;
+    font-weight: 600;
+  }
+
+  .heatmap-Years {
+    background-color: #059669;
+  }
+
+  .heatmap td {
+    transition: background-color 0.2s;
+  }
   .diagrammDIV {
-    height: auto; /* Höhe an Inhalt anpassen */
-    min-height: 30rem; /* Mindesthöhe beibehalten */
-    overflow: visible; /* Scrollen im Container erlauben */
+    height: auto;
+    min-height: 30rem;
+    overflow: visible;
   }
 
   .diagramSelection {

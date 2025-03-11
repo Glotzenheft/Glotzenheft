@@ -115,8 +115,18 @@ export class UserStartComponent implements OnInit {
   public heatmapData: any;
   public years: number[] = [];
   public months: string[] = [
-    'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
-    'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+    'Jan',
+    'Feb',
+    'Mär',
+    'Apr',
+    'Mai',
+    'Jun',
+    'Jul',
+    'Aug',
+    'Sep',
+    'Okt',
+    'Nov',
+    'Dez',
   ];
   public maxHours: number = 0;
 
@@ -132,7 +142,6 @@ export class UserStartComponent implements OnInit {
   }
 
   public loadTracklistData = () => {
-
     if (this.userTracklists$) {
       // data is already loaded
       return;
@@ -307,7 +316,7 @@ export class UserStartComponent implements OnInit {
               stepSize: 1,
             },
           },
-        }
+        };
 
         this.isLoading = false;
       },
@@ -434,8 +443,7 @@ export class UserStartComponent implements OnInit {
   };
 
   private prepareHeatmapData = (statistic: WatchTimeStatistic) => {
-    if (this.heatmapData)
-    {
+    if (this.heatmapData) {
       return;
     }
 
@@ -443,7 +451,7 @@ export class UserStartComponent implements OnInit {
     let minYear = Infinity;
     let maxYear = -Infinity;
 
-    // Daten aggregieren
+    // aggregate data
     Object.entries(statistic).forEach(([dateStr, minutes]) => {
       if (dateStr === 'unknown_date') return;
 
@@ -476,20 +484,25 @@ export class UserStartComponent implements OnInit {
     this.maxHours = Math.max(
       ...Array.from(heatmap.values())
         .flat()
-        .map(h => Math.ceil(h))
+        .map((h) => Math.ceil(h))
     );
 
     // Konvertiere für die Anzeige
-    this.heatmapData = Array.from(heatmap.entries())
-      .sort(([a], [b]) => b - a); // Neuere Jahre zuerst
-
+    this.heatmapData = Array.from(heatmap.entries()).sort(([a], [b]) => b - a); // Neuere Jahre zuerst
   };
 
-  public getHeatmapColor(hours: number): string {
+  public getHeatmapColor(hours: number, isBackgroundColor: boolean): string {
     if (this.maxHours === 0) return '#ffffff';
+
     const intensity = Math.sqrt(hours / this.maxHours); // Quadratwurzel für bessere Verteilung
     const colorValue = Math.floor(205 * intensity) + 50; // Werte zwischen 50-255
-    return `rgb(50, ${colorValue}, 50)`; // Grüner Farbverlauf
+
+    if (isBackgroundColor) {
+      return `rgb(50, ${colorValue}, 50)`; // Grüner Farbverlauf
+    } else {
+      // is color of letters
+      return colorValue < 200 ? 'white' : 'black';
+    }
   }
 
   public handleDiagramSelectionChange = (e: any) => {
