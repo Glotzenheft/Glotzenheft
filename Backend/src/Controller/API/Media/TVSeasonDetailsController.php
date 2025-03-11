@@ -23,7 +23,7 @@ class TVSeasonDetailsController extends AbstractController
      * @param Request $request
      * @return JsonResponse
      */
-    #[Route('/api/tv/season')]
+    #[Route('/api/tv/season', name: 'get_tv_season_details', methods: ['GET'])]
     public function getTVSeasonDetails(Request $request): JsonResponse
     {
         $tmdbID = (int)$request->query->get('tmdbID');

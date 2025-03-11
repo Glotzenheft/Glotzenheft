@@ -8,6 +8,7 @@ use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
+use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: TracklistEpisodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
@@ -28,6 +29,7 @@ class TracklistEpisode
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['tracklist_details', 'tracklist_episode'])]
+    #[Context(['datetime_format' => 'Y-m-d H:i:s'])]
     private ?DateTimeInterface $watchDate = null;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistEpisodes')]
