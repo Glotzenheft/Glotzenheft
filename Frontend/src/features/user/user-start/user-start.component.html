@@ -63,6 +63,29 @@
         />
       </div>
     </div>
+
+    <div *ngIf="selectedDiagramType.value === 5" class="heatmap-container">
+      <div class="heatmap">
+        <table>
+          <thead>
+          <tr>
+            <th>Jahr</th>
+            <th *ngFor="let month of months">{{ month }}</th>
+          </tr>
+          </thead>
+          <tbody>
+          <tr *ngFor="let entry of heatmapData">
+            <td class="heatmap-Years">{{ entry[0] }}</td>
+            <td *ngFor="let hours of entry[1]"
+                [style.background]="getHeatmapColor(hours)"
+                [title]="hours.toFixed(1) + ' Stunden'">
+              {{ hours > 0 ? hours.toFixed(1) : '' }}
+            </td>
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
   </div>
 
   <div class="gapDIV"></div>
