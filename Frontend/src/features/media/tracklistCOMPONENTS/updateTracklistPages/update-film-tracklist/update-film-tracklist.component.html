@@ -74,6 +74,9 @@
               [showIcon]="true"
               inputId="start"
               [showOnFocus]="false"
+              [maxDate]="
+                updateTracklistForm.get('tracklist_finish_date')?.value
+              "
             />
             <label for="start">Startdatum</label>
           </p-float-label>
