@@ -35,7 +35,9 @@
       <div class="seasonMeta">
         <div class="seasonPictureWrapper">
           <div class="seasonMetaPicture">
-            <p *ngIf="!seasonData.media.posterPath">kein Bild vorhanden</p>
+            <p *ngIf="!seasonData.media.posterPath">
+              <i>kein Bild vorhanden</i>
+            </p>
             <img
               *ngIf="seasonData.media.posterPath !== null"
               [src]="posterPath + seasonData.media.posterPath"
