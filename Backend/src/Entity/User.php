@@ -2,11 +2,14 @@
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampsTrait;
 use App\Enum\SecurityQuestions;
 use App\Repository\UserRepository;
 use DateTimeImmutable;
+use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
+use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -14,8 +17,11 @@ use Symfony\Component\Security\Core\User\UserInterface;
 #[ORM\Entity(repositoryClass: UserRepository::class)]
 #[ORM\Table(name: '`user`')]
 #[ORM\UniqueConstraint(name: 'UNIQ_IDENTIFIER_USERNAME', fields: ['username'])]
+#[ORM\HasLifecycleCallbacks]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
+    use TimestampsTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -53,6 +59,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column]
     private ?DateTimeImmutable $termsAcceptedAt = null;
+
+    #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
+    private ?DateTimeInterface $lastLogin = null;
 
     public function __construct()
     {
@@ -186,6 +195,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setTermsAcceptedAt(DateTimeImmutable $termsAcceptedAt): static
     {
         $this->termsAcceptedAt = $termsAcceptedAt;
+
+        return $this;
+    }
+
+    public function getLastLogin(): ?DateTimeInterface
+    {
+        return $this->lastLogin;
+    }
+
+    public function setLastLogin(?DateTimeInterface $lastLogin): static
+    {
+        $this->lastLogin = $lastLogin;
 
         return $this;
     }

@@ -53,6 +53,16 @@
         />
       </div>
     </div>
+
+    <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 4">
+      <div class="barChartDIV">
+        <p-chart
+          type="bar"
+          [data]="barChartForMostWatchedDaysMediaStatistic"
+          [options]="barChartForMostWatchedDaysMediaStatisticOptions"
+        />
+      </div>
+    </div>
   </div>
 
   <div class="gapDIV"></div>

@@ -4,6 +4,7 @@ namespace App\Service\User;
 
 use App\Entity\User;
 use App\Service\RequestTrait;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -60,7 +61,10 @@ class UserService
         }
 
         $hashedPassword = $this->passwordHasher->hashPassword($this->data['user'], $this->data['new_password']);
-        $this->data['user']->setPassword($hashedPassword);
+        $this->data['user']
+            ->setPassword($hashedPassword)
+            ->setUpdatedAt(new DateTimeImmutable())
+        ;
 
         $this->entityManager->persist($this->data['user']);
         $this->entityManager->flush();
