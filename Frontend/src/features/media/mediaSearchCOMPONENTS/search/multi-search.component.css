@@ -63,6 +63,11 @@
     justify-content: center;
     align-items: center;
   }
+
+  .selectMediaTypeFORM {
+    width: 80%;
+    height: 6rem;
+  }
 }
 
 @media (min-width: 400px) and (max-width: 840px) {
@@ -110,6 +115,11 @@
     justify-content: center;
     align-items: center;
   }
+
+  .selectMediaTypeFORM {
+    width: 50%;
+    height: 6rem;
+  }
 }
 
 @media (min-width: 840px) {
@@ -152,6 +162,11 @@
     display: flex;
     justify-content: center;
     align-items: center;
+  }
+
+  .selectMediaTypeFORM {
+    width: 35%;
+    height: 6rem;
   }
 }
 
