@@ -55,6 +55,7 @@ export class UserStartComponent implements OnInit {
   public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;
 
   public isError: boolean = false;
+  public isLoading: boolean = false;
 
   public lineDiagramData: LineDiagram | null = null;
   public diagramOptions: any;
@@ -101,12 +102,23 @@ export class UserStartComponent implements OnInit {
       name: 'Meistgeschautesten 30 Tage in Minuten (Balkendiagramm)',
       value: 4,
     },
+    {
+      name: 'Monatlich geschaute Zeit in Stunden (Heatmap)',
+      value: 5,
+    },
   ];
   public selectedDiagramType: { name: string; value: number } =
     this.diagramSelection[0];
   public chartSelectionCondition: boolean = true;
 
-  public isLoading: boolean = false;
+  // In der Komponenten-Klasse
+  public heatmapData: any;
+  public years: number[] = [];
+  public months: string[] = [
+    'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+    'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+  ];
+  public maxHours: number = 0;
 
   constructor(
     private mediaService: MediaService,
@@ -331,6 +343,7 @@ export class UserStartComponent implements OnInit {
       next: (res: WatchTimeStatistic) => {
         const resAsList: [string, number][] = Object.entries(res).slice(1, 31);
         const yearlyDataMap = new Map<string, number>();
+        this.prepareHeatmapData(res);
 
         Object.entries(res).forEach(([date, time]) => {
           if (date !== 'unknown_date') {
@@ -419,6 +432,65 @@ export class UserStartComponent implements OnInit {
       },
     });
   };
+
+  private prepareHeatmapData = (statistic: WatchTimeStatistic) => {
+    if (this.heatmapData)
+    {
+      return;
+    }
+
+    const heatmap = new Map<number, number[]>();
+    let minYear = Infinity;
+    let maxYear = -Infinity;
+
+    // Daten aggregieren
+    Object.entries(statistic).forEach(([dateStr, minutes]) => {
+      if (dateStr === 'unknown_date') return;
+
+      const date = new Date(dateStr);
+      const year = date.getFullYear();
+      const month = date.getMonth();
+      const hours = minutes / 60;
+
+      minYear = Math.min(minYear, year);
+      maxYear = Math.max(maxYear, year);
+
+      if (!heatmap.has(year)) {
+        heatmap.set(year, new Array(12).fill(0));
+      }
+
+      const yearData = heatmap.get(year)!;
+      yearData[month] += hours;
+    });
+
+    // Fülle Lücken zwischen den Jahren
+    this.years = [];
+    for (let year = minYear; year <= maxYear; year++) {
+      this.years.push(year);
+      if (!heatmap.has(year)) {
+        heatmap.set(year, new Array(12).fill(0));
+      }
+    }
+
+    // Berechne Maximum für Farbskala
+    this.maxHours = Math.max(
+      ...Array.from(heatmap.values())
+        .flat()
+        .map(h => Math.ceil(h))
+    );
+
+    // Konvertiere für die Anzeige
+    this.heatmapData = Array.from(heatmap.entries())
+      .sort(([a], [b]) => b - a); // Neuere Jahre zuerst
+
+  };
+
+  public getHeatmapColor(hours: number): string {
+    if (this.maxHours === 0) return '#ffffff';
+    const intensity = Math.sqrt(hours / this.maxHours); // Quadratwurzel für bessere Verteilung
+    const colorValue = Math.floor(205 * intensity) + 50; // Werte zwischen 50-255
+    return `rgb(50, ${colorValue}, 50)`; // Grüner Farbverlauf
+  }
 
   public handleDiagramSelectionChange = (e: any) => {
     this.selectedDiagramType = e.value;

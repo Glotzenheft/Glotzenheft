@@ -1,4 +1,5 @@
 @media (max-width: 850px) {
+  /*
   .diagrammDIV {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: var(--border--radius);
@@ -11,6 +12,32 @@
     box-shadow: var(--box--shadow-button);
 
     height: 30rem;
+  }*/
+
+  /* Anpassungen für die Heatmap */
+  .heatmap-container {
+    margin: 1rem -0.5rem; /* Negative Margin für besseres Scrollverhalten */
+    padding: 0.5rem;
+    width: calc(100% + 1rem); /* Kompensiert negative Margin */
+  }
+
+  .heatmap table {
+    font-size: 1rem; /* Kleinere Schrift */
+    margin: 0.5rem auto;
+  }
+
+  .heatmap th,
+  .heatmap td {
+    padding: 4px; /* Kleinere Abstände */
+    min-width: 45px; /* Schmalere Zellen */
+    max-width: 55px;
+    white-space: nowrap; /* Verhindert Zeilenumbrüche */
+  }
+
+  .diagrammDIV {
+    height: auto; /* Höhe an Inhalt anpassen */
+    min-height: 30rem; /* Mindesthöhe beibehalten */
+    overflow: visible; /* Scrollen im Container erlauben */
   }
 
   .diagramSelection {
@@ -18,7 +45,7 @@
   }
 
   .diagrammDIV h1 {
-    color: black;
+    color: rgba(255, 255, 255, 0.8);
   }
   .gapDIV {
     height: 4rem;
@@ -33,6 +60,8 @@
   }
   .barChartDIV {
     width: 30rem;
+    min-width: 300px;
+    min-height: 30rem;
   }
 
   .pieChartDIV {
@@ -77,5 +106,54 @@
 
   .activitiesPage {
     height: 10rem;
+  }
+
+  .heatmap-container {
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .heatmap table {
+    border-collapse: collapse;
+    margin: 1rem auto;
+  }
+
+  .heatmap th, .heatmap td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ffffff;
+    min-width: 60px;
+  }
+
+  .heatmap th {
+    background-color: #059669;
+    font-weight: 600;
+  }
+
+  .heatmap-Years{
+    background-color: #059669;
+  }
+
+  .heatmap td {
+    transition: background-color 0.2s;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-color {
+    width: 30px;
+    height: 20px;
+    border: 1px solid #ddd;
   }
 }
