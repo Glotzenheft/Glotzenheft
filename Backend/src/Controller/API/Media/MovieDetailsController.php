@@ -31,9 +31,9 @@ class MovieDetailsController extends AbstractController
     {
         $requestData = $this->handleRequest($request);
 
-        if (isset($response['error']))
+        if (isset($requestData['error']))
         {
-            return $this->json($response['error'], $response['code']);
+            return $this->json($requestData['error'], $requestData['code']);
         }
 
         $media = $this->handleTMDBMediaDetail($requestData, MediaType::Movie);

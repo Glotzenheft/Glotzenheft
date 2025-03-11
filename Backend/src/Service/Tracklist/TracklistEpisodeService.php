@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Service\RequestTrait;
 use DateMalformedStringException;
 use DateTime;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 
 class TracklistEpisodeService
@@ -127,7 +128,10 @@ class TracklistEpisodeService
             }
         }
 
-        $tracklistEpisode->setWatchDate($watchDate);
+        $tracklistEpisode
+            ->setWatchDate($watchDate)
+            ->setUpdatedAt(new DateTimeImmutable())
+        ;
         $this->entityManager->persist($tracklistEpisode);
         $this->entityManager->flush();
 

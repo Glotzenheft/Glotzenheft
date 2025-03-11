@@ -10,6 +10,7 @@ use App\Entity\User;
 use App\Enum\TracklistStatus;
 use App\Service\RequestTrait;
 use DateTime;
+use DateTimeImmutable;
 use Symfony\Component\HttpFoundation\Request;
 use ValueError;
 
@@ -267,6 +268,7 @@ class TracklistService
             }
         }
         $tracklist->setFinishDate($finishDate);
+        $tracklist->setUpdatedAt(new DateTimeImmutable());
 
         return $tracklist;
     }
