@@ -1,5 +1,10 @@
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Observable, Subscription } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
@@ -19,6 +24,8 @@ import { SearchService } from '../../../../service/search/search.service';
 import { UserService } from '../../../../service/user/user.service';
 import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 import { getMessageObject } from '../../../../shared/variables/message-vars';
+import { SelectModule } from 'primeng/select';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-multi-search',
@@ -32,14 +39,36 @@ import { getMessageObject } from '../../../../shared/variables/message-vars';
     CardModule,
     TooltipModule,
     ButtonModule,
+    SelectModule,
+    FloatLabelModule,
+    ReactiveFormsModule,
   ],
   styleUrls: ['./multi-search.component.css'],
   //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit, OnDestroy {
   public searchQuery: string = ''; // Suchtext aus der Eingabe
-  public results: any = null; // JSON-Ergebnisse
   public results$: Observable<MultiSearchResponse> | null = null;
+
+  // variables for sorting the results
+  public resultsForCurrentPage: MediaResult[] | null = null;
+  public sortedResults: MediaResult[] | null = null;
+  public tracklistMediaSelectionList: { german: string; value: string }[] = [
+    {
+      german: 'Alle Medien',
+      value: 'all',
+    },
+    {
+      german: 'Serien',
+      value: 'tv',
+    },
+    {
+      german: 'Filme',
+      value: 'movie',
+    },
+  ];
+  public tracklistFilterForm!: FormGroup;
+
   public item: MediaResult[] = [];
   public error: string | null = null; // Fehleranzeige
   public userSearchQuery: string = '';
@@ -60,10 +89,15 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     private searchService: SearchService,
     private router: Router,
     private messageService: MessageService,
-    private userService: UserService
+    private userService: UserService,
+    private formBuilder: FormBuilder
   ) {}
 
   ngOnInit(): void {
+    this.tracklistFilterForm = this.formBuilder.group({
+      tracklistMediaTypeSelection: this.tracklistMediaSelectionList[0],
+    });
+
     this.searchSubscription = this.searchService.searchTerm$.subscribe({
       next: (searchTerm) => {
         if (!searchTerm.trim()) {
@@ -114,6 +148,12 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
           (r) => r.media_type === 'tv' || r.media_type === 'movie'
         );
 
+        this.resultsForCurrentPage = res.results.filter(
+          (r) => r.media_type === 'tv' || r.media_type === 'movie'
+        );
+
+        this.setFilteredResults();
+
         // pages limit is delivered in every response
         this.nextPagesLimit = res.total_pages + 1;
 
@@ -152,6 +192,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             this.isPrevPageButtonDisabled = this.currentPage === 1;
           }
         }
+
         this.isLoading = false;
       },
       error: () => {
@@ -248,5 +289,39 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
     this.currentPage--;
     this.loadMultiSearchResults(this.currentPage, this.currentSearchTerm);
+  };
+
+  public setFilteredResults = () => {
+    console.log('res', this.resultsForCurrentPage);
+    if (!this.resultsForCurrentPage) {
+      return;
+    }
+
+    console.log(
+      'bla',
+      this.tracklistFilterForm.get('tracklistMediaTypeSelection')?.value
+    );
+
+    this.sortedResults = this.resultsForCurrentPage.filter(
+      (result: MediaResult) => {
+        if (
+          this.tracklistFilterForm.get('tracklistMediaTypeSelection')?.value
+            .value === 'all'
+        ) {
+          return true;
+        } else {
+          console.log(
+            result.media_type ===
+              this.tracklistFilterForm.get('tracklistMediaTypeSelection')?.value
+                .value
+          );
+          return (
+            this.tracklistFilterForm
+              .get('tracklistMediaTypeSelection')
+              ?.value.value.trim() === result.media_type.trim()
+          );
+        }
+      }
+    );
   };
 }

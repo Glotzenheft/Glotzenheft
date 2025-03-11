@@ -94,6 +94,17 @@
     margin-top: 1rem;
     width: 100%;
   }
+
+  .filterFORM {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 8rem;
+  }
+
+  .filterFORM div {
+    width: 80%;
+  }
 }
 
 @media (min-width: 670px) {
@@ -187,6 +198,16 @@
 
   .mediaButton {
     margin-top: 1rem;
+  }
+
+  .filterFORM {
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+  }
+
+  .filterFORM div {
+    width: 30%;
   }
 }
 

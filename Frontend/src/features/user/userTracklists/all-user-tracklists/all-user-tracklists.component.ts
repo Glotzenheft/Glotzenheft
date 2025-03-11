@@ -8,17 +8,29 @@ import { TableModule } from 'primeng/table';
 import { AccordionModule } from 'primeng/accordion';
 import { PanelModule } from 'primeng/panel';
 import { RatingModule } from 'primeng/rating';
-import { FormsModule } from '@angular/forms';
+import {
+  FormBuilder,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+} from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { UpdateFilmTracklistComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
 import { UpdateTracklistFormComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
 import { Tracklist } from '../../../../shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
-import { convertTracklistStatusIntoGerman } from '../../../../shared/variables/tracklist';
+import {
+  convertTracklistStatusIntoGerman,
+  TRACK_LIST_STATUS_LIST,
+  TRACK_LIST_STATUS_LIST_AS_OBJECT,
+  TracklistStatusType,
+} from '../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../service/media/media.service';
 import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { SelectModule } from 'primeng/select';
+import { FloatLabelModule } from 'primeng/floatlabel';
 
 @Component({
   selector: 'app-all-user-tracklists',
@@ -36,12 +48,40 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     UpdateFilmTracklistComponent,
     UpdateTracklistFormComponent,
     ProgressSpinnerModule,
+    SelectModule,
+    ReactiveFormsModule,
+    FloatLabelModule,
   ],
   templateUrl: './all-user-tracklists.component.html',
   styleUrl: './all-user-tracklists.component.css',
 })
 export class AllUserTracklistsComponent implements OnInit {
   public userTracklists$: Observable<Tracklist[]> | null = null;
+  public allTracklists: Tracklist[] | null = null;
+  public sortedUserTracklists: Tracklist[] | null = null;
+
+  public currentFilterForm!: FormGroup;
+
+  public tracklistStatusFilterList: { german: string; value: string }[] =
+    TRACK_LIST_STATUS_LIST_AS_OBJECT;
+  public currentFilterStatus: TracklistStatusType = 'watching';
+
+  public tracklistMediaTypeFilterList: { german: string; value: string }[] = [
+    {
+      german: 'Alle Medien',
+      value: 'all',
+    },
+    {
+      german: 'Filme',
+      value: 'movie',
+    },
+    {
+      german: 'Serien',
+      value: 'tv',
+    },
+  ];
+  public currentFilterMediaType: 'all' | 'movie' | 'tv' = 'all';
+
   public posterPath: string = TMDB_POSTER_PATH;
   public isDialogVisible: boolean = false;
   public currentTracklist: Tracklist | null = null;
@@ -53,9 +93,18 @@ export class AllUserTracklistsComponent implements OnInit {
 
   public convertStatus = convertTracklistStatusIntoGerman;
 
-  constructor(private mediaService: MediaService, private router: Router) {}
+  constructor(
+    private mediaService: MediaService,
+    private router: Router,
+    private formBuilder: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    this.currentFilterForm = this.formBuilder.group({
+      statusFilter: this.tracklistStatusFilterList[0],
+      mediaFilter: this.tracklistMediaTypeFilterList[0],
+    });
+
     this.loadTracklists();
   }
 
@@ -68,8 +117,13 @@ export class AllUserTracklistsComponent implements OnInit {
     }
 
     this.userTracklists$.subscribe({
-      next: () => {
+      next: (res: Tracklist[]) => {
         this.isLoading = false;
+        this.sortedUserTracklists = res.filter((tracklist: Tracklist) => {
+          return tracklist.status === 'watching';
+        });
+
+        this.allTracklists = res;
       },
       error: (err) => {
         if (err.status === 401) {
@@ -147,5 +201,30 @@ export class AllUserTracklistsComponent implements OnInit {
       // refresh page if user has updated tracklist
       this.loadTracklists();
     }
+  };
+
+  public setSortedTracklistList = () => {
+    // sorting the list with the current values of the selections
+    if (!this.allTracklists) {
+      return;
+    }
+
+    this.sortedUserTracklists = this.allTracklists
+      .filter((tracklist: Tracklist) => {
+        return (
+          tracklist.status ===
+          this.currentFilterForm.get('statusFilter')?.value.value
+        );
+      })
+      .filter((tracklist: Tracklist) => {
+        if (this.currentFilterForm.get('mediaFilter')?.value.value === 'all') {
+          return true;
+        }
+
+        return (
+          tracklist.media.type ===
+          this.currentFilterForm.get('mediaFilter')?.value.value
+        );
+      });
   };
 }

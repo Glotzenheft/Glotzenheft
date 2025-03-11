@@ -8,13 +8,44 @@
 </div>
 
 <ng-container *ngIf="!isLoading">
+  <form [formGroup]="currentFilterForm" class="filterFORM">
+    <div>
+      <p-float-label variant="in">
+        <p-select
+          [options]="tracklistStatusFilterList"
+          optionLabel="german"
+          formControlName="statusFilter"
+          (onClick)="setSortedTracklistList()"
+          id="tracklistStatusFilter"
+        />
+        <label for="tracklistStatusFilter">Tracklist-Status-Filter</label>
+      </p-float-label>
+    </div>
+    <div>
+      <p-float-label variant="in">
+        <p-select
+          [options]="tracklistMediaTypeFilterList"
+          optionLabel="german"
+          formControlName="mediaFilter"
+          (onClick)="setSortedTracklistList()"
+          id="tracklistMediaFilter"
+        />
+        <label for="tracklistMediaFilter">Medien-Filter</label>
+      </p-float-label>
+    </div>
+  </form>
+
   <ng-container
-    *ngIf="visibility === 0 && (userTracklists$ | async) as userTracklists"
+    *ngIf="
+      visibility === 0 &&
+      sortedUserTracklists &&
+      (userTracklists$ | async) as userTracklists
+    "
   >
-    <div class="userTracklistsWrapper" *ngIf="userTracklists.length > 0">
+    <div class="userTracklistsWrapper" *ngIf="sortedUserTracklists.length > 0">
       <!-- user tracklists list -->
       <p-panel
-        *ngFor="let tracklist of userTracklists"
+        *ngFor="let tracklist of sortedUserTracklists"
         [header]="
           tracklist.tracklistName + ' [' + convertStatus(tracklist.status) + ']'
         "
@@ -97,6 +128,10 @@
           </div>
         </div>
       </p-panel>
+    </div>
+
+    <div *ngIf="sortedUserTracklists.length < 1" class="loadingWrapper">
+      <h1>Keine Tracklisten zu diesem Filter gefunden</h1>
     </div>
 
     <div *ngIf="userTracklists.length < 1" class="loadingWrapper">

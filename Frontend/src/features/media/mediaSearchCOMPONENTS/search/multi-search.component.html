@@ -37,10 +37,23 @@
   <ng-container *ngIf="res.results.length > 0">
     <h3>Suchergebnisse:</h3>
 
-    <div class="cardContainerWrapper">
+    <form [formGroup]="tracklistFilterForm" class="selectMediaTypeFORM">
+      <p-float-label variant="in">
+        <p-select
+          [options]="tracklistMediaSelectionList"
+          optionLabel="german"
+          formControlName="tracklistMediaTypeSelection"
+          (onClick)="setFilteredResults()"
+          id="mediaTypeSelection"
+        />
+        <label for="mediaTypeSelection">Medientyp</label>
+      </p-float-label>
+    </form>
+
+    <div class="cardContainerWrapper" *ngIf="sortedResults">
       <div class="cardContainer">
         <div
-          *ngFor="let resItem of item"
+          *ngFor="let resItem of sortedResults"
           class="multisearchCard"
           (click)="navigateToMediaPage(resItem.id, resItem.media_type)"
         >

@@ -68,20 +68,23 @@
       <div class="heatmap">
         <table>
           <thead>
-          <tr>
-            <th>Jahr</th>
-            <th *ngFor="let month of months">{{ month }}</th>
-          </tr>
+            <tr>
+              <th>Jahr</th>
+              <th *ngFor="let month of months">{{ month }}</th>
+            </tr>
           </thead>
           <tbody>
-          <tr *ngFor="let entry of heatmapData">
-            <td class="heatmap-Years">{{ entry[0] }}</td>
-            <td *ngFor="let hours of entry[1]"
-                [style.background]="getHeatmapColor(hours)"
-                [title]="hours.toFixed(1) + ' Stunden'">
-              {{ hours > 0 ? hours.toFixed(1) : '' }}
-            </td>
-          </tr>
+            <tr *ngFor="let entry of heatmapData">
+              <td class="heatmap-Years">{{ entry[0] }}</td>
+              <td
+                *ngFor="let hours of entry[1]"
+                [style.background-color]="getHeatmapColor(hours, true)"
+                [style.color]="getHeatmapColor(hours, false)"
+                [title]="hours.toFixed(1) + ' Stunden'"
+              >
+                {{ hours > 0 ? hours.toFixed(1) : "" }}
+              </td>
+            </tr>
           </tbody>
         </table>
       </div>

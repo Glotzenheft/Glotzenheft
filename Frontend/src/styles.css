@@ -1,4 +1,4 @@
-@import url('https://fonts.bunny.net/css?family=open-sans:300,400,700');
+@import url("https://fonts.bunny.net/css?family=open-sans:300,400,700");
 @import "primeicons/primeicons.css";
 
 input {
@@ -622,7 +622,7 @@ p {
   }
 
   .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 10rem;
+    width: 100%;
     height: 3rem;
   }
 
@@ -897,7 +897,7 @@ p {
   }
 
   .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 12rem;
+    width: 120%;
     height: 3rem;
   }
 

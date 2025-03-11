@@ -35,7 +35,9 @@
       <div class="seasonMeta">
         <div class="seasonPictureWrapper">
           <div class="seasonMetaPicture">
-            <p *ngIf="!seasonData.media.posterPath">kein Bild vorhanden</p>
+            <p *ngIf="!seasonData.media.posterPath">
+              <i>kein Bild vorhanden</i>
+            </p>
             <img
               *ngIf="seasonData.media.posterPath !== null"
               [src]="posterPath + seasonData.media.posterPath"
@@ -47,7 +49,12 @@
         <div class="seasonMetaContent">
           <div>
             <h2>Beschreibung</h2>
-            <p class="descriptionP">{{ seasonData.media.description }}</p>
+            <p class="descriptionP" *ngIf="seasonData.media.description">
+              {{ seasonData.media.description }}
+            </p>
+            <p class="descriptionP" *ngIf="!seasonData.media.description">
+              <i>keine Beschreibung vorhanden</i>
+            </p>
             <p>
               Ausstrahlung am
               {{ seasonData.media.firstAirDate | dateFormatting }}
@@ -84,7 +91,7 @@
                       kein Bild vorhanden
                     </p>
                     <img
-                      *ngIf="seasonData.media.posterPath !== null"
+                      *ngIf="season.posterPath !== null"
                       [src]="posterPath + season.posterPath"
                       [alt]="
                         'Dies ist das Bild für von ' + seasonData.media.name
