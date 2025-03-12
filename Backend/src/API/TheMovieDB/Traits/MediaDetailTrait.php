@@ -12,6 +12,7 @@ use App\Enum\MediaType;
 use App\Repository\TracklistRepository;
 use App\Service\Tracklist\TracklistService;
 use DateTime;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -61,85 +62,94 @@ trait MediaDetailTrait
                 'tmdbID' => $tmdbID,
                 'type' => $type,
             ]);
-        }
 
-
-        if (!$media instanceof Media)
-        {
-            $media = new Media();
-        }
-
-        $numberOfSeasons = 0;
-        $seasons = null;
-        switch ($type)
-        {
-            case MediaType::TV:
-                $result = $this->tvService->getTVSeriesDetails($tmdbID, $language);
-                if (isset($result['error']))
-                {
-                    return $result;
-                }
-                $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
-                $name = $result['name'] ?? null;
-                $originalName = $result['original_name'] ?? null;
-                $numberOfSeasons = $result['number_of_seasons'] ?? null;
-                $seasons = $result['seasons'] ?? null;
-                break;
-            case MediaType::Movie:
-                $result = $this->movieService->getMovieDetails($tmdbID, $language);
-                if (isset($result['error']))
-                {
-                    return $result;
-                }
-                $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
-                $name = $result['title'] ?? null;
-                $originalName = $result['original_title'] ?? null;
-                break;
-            case MediaType::ANIME:
-                return [
-                    'error' => 'Not supported media type',
-                    'code' => 404,
-                ];
-        }
-
-        $genreArray = $result['genres'] ?? null;
-
-        $media
-            ->setName($name ?? '')
-            ->setOriginalName($originalName ?? '')
-            ->setDescription($result['overview'] ?? '')
-            ->setFirstAirDate($firstAirDate ?? null)
-            ->setImdbID($result['external_ids']['imdb_id'] ?? null)
-            ->setPosterPath($result['poster_path'] ?? null)
-            ->setBackdropPath($result['backdrop_path'] ?? null)
-            ->setType($type)
-            ->setTmdbID($tmdbID)
-            ->setRuntime($result['runtime'] ?? null)
-        ;
-
-        foreach ($genreArray as $genre)
-        {
-            $id = $genre['id'];
-            $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy(['tmdbGenreID' => $id]);
-            if (!$tmdbGenre instanceof TMDBGenre) continue;
-
-            $media->addTmdbGenre($tmdbGenre);
-        }
-
-        $this->entityManager->persist($media);
-
-        if ($type === MediaType::TV && $numberOfSeasons > 0 && $seasons !== null)
-        {
-            foreach ($seasons as $season)
+            if (!$media instanceof Media)
             {
-                $seasonNumber = $season['season_number'] ?? null;
-                if ($seasonNumber === null) continue;
-
-                $this->seasonService->handleSeasonDetails($tmdbID, $seasonNumber, $media, $language);
+                $media = new Media();
             }
         }
 
-        $this->entityManager->flush();
+        $lastUpdate = $media->getUpdatedAt();
+        $now = new DateTimeImmutable();
+
+        /**
+         * Only fetch media details from tmdb if last update is not within the last 5 minutes.
+         */
+        if (!$lastUpdate instanceof DateTimeImmutable || $now->getTimestamp() - $lastUpdate->getTimestamp() > 300)
+        {
+            $numberOfSeasons = 0;
+            $seasons = null;
+            switch ($type)
+            {
+                case MediaType::TV:
+                    $result = $this->tvService->getTVSeriesDetails($tmdbID, $language);
+                    if (isset($result['error']))
+                    {
+                        return $result;
+                    }
+                    $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['first_air_date']);
+                    $name = $result['name'] ?? null;
+                    $originalName = $result['original_name'] ?? null;
+                    $numberOfSeasons = $result['number_of_seasons'] ?? null;
+                    $seasons = $result['seasons'] ?? null;
+                    break;
+                case MediaType::Movie:
+                    $result = $this->movieService->getMovieDetails($tmdbID, $language);
+                    if (isset($result['error']))
+                    {
+                        return $result;
+                    }
+                    $firstAirDate = DateTime::createFromFormat('Y-m-d', $result['release_date']);
+                    $name = $result['title'] ?? null;
+                    $originalName = $result['original_title'] ?? null;
+                    break;
+                case MediaType::ANIME:
+                    return [
+                        'error' => 'Not supported media type',
+                        'code' => 404,
+                    ];
+            }
+
+            $genreArray = $result['genres'] ?? null;
+
+            $media
+                ->setName($name ?? '')
+                ->setOriginalName($originalName ?? '')
+                ->setDescription($result['overview'] ?? '')
+                ->setFirstAirDate($firstAirDate ?? null)
+                ->setImdbID($result['external_ids']['imdb_id'] ?? null)
+                ->setPosterPath($result['poster_path'] ?? null)
+                ->setBackdropPath($result['backdrop_path'] ?? null)
+                ->setType($type)
+                ->setTmdbID($tmdbID)
+                ->setRuntime($result['runtime'] ?? null)
+                ->setUpdatedAt(new DateTimeImmutable())
+            ;
+
+            foreach ($genreArray as $genre)
+            {
+                $id = $genre['id'];
+                $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy(['tmdbGenreID' => $id]);
+                if (!$tmdbGenre instanceof TMDBGenre) continue;
+
+                $media->addTmdbGenre($tmdbGenre);
+            }
+
+            $this->entityManager->persist($media);
+
+            if ($type === MediaType::TV && $numberOfSeasons > 0 && $seasons !== null)
+            {
+                foreach ($seasons as $season)
+                {
+                    $seasonNumber = $season['season_number'] ?? null;
+                    if ($seasonNumber === null) continue;
+
+                    $this->seasonService->handleSeasonDetails($tmdbID, $seasonNumber, $media, $language);
+                }
+            }
+
+            $this->entityManager->flush();
+        }
 
         $tracklists = [];
         if (isset($requestData['user_id']))
@@ -154,7 +164,6 @@ trait MediaDetailTrait
             }
             $tracklists = $this->tracklistRepository->findByUserAndMediaWithSeasonsAndEpisodes($user, $media);
         }
-
 
         return [
             'media' => $media,
