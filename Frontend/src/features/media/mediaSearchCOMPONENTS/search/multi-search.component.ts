@@ -219,7 +219,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
   navigateToMediaPage = (id: number, mediaGenre: string) => {
     this.mediaService
-      .getMediaIdForMedia(id, mediaGenre === 'movie' ? true : false)
+      .getMediaIdForMedia(id, mediaGenre === 'movie')
       .subscribe({
         next: (res: MediaIDResponse) => {
           let url: string = '';
@@ -292,15 +292,9 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   };
 
   public setFilteredResults = () => {
-    console.log('res', this.resultsForCurrentPage);
     if (!this.resultsForCurrentPage) {
       return;
     }
-
-    console.log(
-      'bla',
-      this.tracklistFilterForm.get('tracklistMediaTypeSelection')?.value
-    );
 
     this.sortedResults = this.resultsForCurrentPage.filter(
       (result: MediaResult) => {
@@ -310,11 +304,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         ) {
           return true;
         } else {
-          console.log(
-            result.media_type ===
-              this.tracklistFilterForm.get('tracklistMediaTypeSelection')?.value
-                .value
-          );
           return (
             this.tracklistFilterForm
               .get('tracklistMediaTypeSelection')
