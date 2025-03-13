@@ -81,10 +81,17 @@ readonly class JwtAuthenticator
         }
         catch (Exception $e)
         {
-            $event->setController(fn () => new JsonResponse(['error' => 'Invalid token: ' . $e->getMessage()], Response::HTTP_NOT_FOUND));
+            $event->setController(fn () => new JsonResponse(
+                ['error' => 'Invalid token: ' . $e->getMessage()],
+                Response::HTTP_UNAUTHORIZED
+            ));
         }
         catch (NotFoundExceptionInterface|ContainerExceptionInterface $e)
         {
+            $event->setController(fn () => new JsonResponse(
+                ['error' => 'Internal error: ' . $e->getMessage()],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            ));
         }
     }
 }
