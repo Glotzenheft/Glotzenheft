@@ -162,7 +162,7 @@ export class MediaService {
     tmdbID: number,
     isMovie: boolean
   ): Observable<MediaIDResponse> => {
-    const movieType: string = isMovie === true ? 'movie' : 'tv';
+    const movieType: string = isMovie ? 'movie' : 'tv';
     const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
     return this.http.get<MediaIDResponse>(url).pipe(
