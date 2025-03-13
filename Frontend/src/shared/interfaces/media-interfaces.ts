@@ -74,6 +74,7 @@ export interface TV {
 
 export interface MediaResult {
   // attention: title is only available in movies and name only in tv
+  release_date: string;
   backdrop_path: string;
   id: number;
   name: string;

@@ -63,6 +63,9 @@
                 ? resItem.name.substring(0, MAX_STRING_LENGTH) + " ..."
                 : resItem.name
             }}
+            <span *ngIf="resItem.first_air_date">
+              ({{ resItem.first_air_date.substring(0, 4) }})
+            </span>
           </p>
           <p *ngIf="resItem.media_type === 'movie'" [pTooltip]="resItem.title">
             {{
@@ -70,6 +73,9 @@
                 ? resItem.title.substring(0, MAX_STRING_LENGTH) + " ..."
                 : resItem.title
             }}
+            <span *ngIf="resItem.release_date">
+              ({{ resItem.release_date.substring(0, 4) }})
+            </span>
           </p>
           <div class="multisearchCardImg">
             <img
