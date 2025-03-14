@@ -119,9 +119,25 @@ export class AllUserTracklistsComponent implements OnInit {
     this.userTracklists$.subscribe({
       next: (res: Tracklist[]) => {
         this.isLoading = false;
-        this.sortedUserTracklists = res.filter((tracklist: Tracklist) => {
-          return tracklist.status === 'watching';
-        });
+        this.sortedUserTracklists = res
+          .filter((tracklist: Tracklist) => {
+            return (
+              tracklist.status ===
+              this.currentFilterForm.get('statusFilter')?.value.value
+            );
+          })
+          .filter((tracklist: Tracklist) => {
+            if (
+              this.currentFilterForm.get('mediaFilter')?.value.value === 'all'
+            ) {
+              return true;
+            } else {
+              return (
+                tracklist.media.type ===
+                this.currentFilterForm.get('mediaFilter')?.value.value
+              );
+            }
+          });
 
         this.allTracklists = res;
       },

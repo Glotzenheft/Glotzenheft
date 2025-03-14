@@ -8,7 +8,11 @@
 </div>
 
 <ng-container *ngIf="!isLoading">
-  <form [formGroup]="currentFilterForm" class="filterFORM">
+  <form
+    *ngIf="visibility === 0"
+    [formGroup]="currentFilterForm"
+    class="filterFORM"
+  >
     <div>
       <p-float-label variant="in">
         <p-select
