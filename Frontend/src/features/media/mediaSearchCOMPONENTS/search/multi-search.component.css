@@ -27,7 +27,7 @@
   font-weight: bold;
 }
 
-@media (max-width: 400px) {
+@media (max-width: 550px) {
   .cardContainer {
     display: flex;
     flex-wrap: wrap;
@@ -70,7 +70,7 @@
   }
 }
 
-@media (min-width: 400px) and (max-width: 840px) {
+@media (min-width: 550px) and (max-width: 840px) {
   .cardContainerWrapper {
     width: 100%;
     display: flex;
