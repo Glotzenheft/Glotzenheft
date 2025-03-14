@@ -27,13 +27,14 @@
   font-weight: bold;
 }
 
-@media (max-width: 550px) {
+@media (max-width: 400px) {
   .cardContainer {
     display: flex;
     flex-wrap: wrap;
     gap: 1rem;
     margin-bottom: 6rem;
   }
+
   img {
     height: auto;
     width: 60%;
@@ -70,7 +71,58 @@
   }
 }
 
-@media (min-width: 550px) and (max-width: 840px) {
+@media (min-width: 400px) and (max-width: 600px) {
+  .cardContainerWrapper {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+  }
+
+  .cardContainer {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 10rem;
+    width: 70%;
+  }
+
+  img {
+    height: auto;
+    width: 60%;
+    border-radius: 0.4rem;
+    border: 0.1rem solid black;
+  }
+  .multisearchCard {
+    color: black;
+    height: 33%;
+    width: 20rem;
+    border: 0.1rem solid white;
+    background-color: white;
+    border-radius: 0.6rem;
+    padding-left: 1rem;
+    padding-right: 1rem;
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    transition-duration: var(--transition--duration);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  .multisearchCardImg {
+    width: auto;
+    height: 20%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .selectMediaTypeFORM {
+    width: 80%;
+    height: 6rem;
+  }
+}
+
+@media (min-width: 600px) and (max-width: 840px) {
   .cardContainerWrapper {
     width: 100%;
     display: flex;
