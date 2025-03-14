@@ -56,6 +56,7 @@ export class UserStartComponent implements OnInit {
 
   public isError: boolean = false;
   public isLoading: boolean = false;
+  public serverNotAvailablePage: boolean = false;
 
   public lineDiagramData: LineDiagram | null = null;
   public diagramOptions: any;
@@ -142,6 +143,8 @@ export class UserStartComponent implements OnInit {
   }
 
   public loadTracklistData = () => {
+    this.serverNotAvailablePage = false;
+
     if (this.userTracklists$) {
       // data is already loaded
       return;
@@ -327,6 +330,8 @@ export class UserStartComponent implements OnInit {
           this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
           this.router.navigateByUrl(`/${ROUTES_LIST[10].fullUrl}`);
           return;
+        } else if (err.status === 0) {
+          this.serverNotAvailablePage = true;
         }
 
         this.isError = true;

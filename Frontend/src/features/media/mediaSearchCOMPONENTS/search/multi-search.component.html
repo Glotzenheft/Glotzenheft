@@ -29,7 +29,14 @@
   />
 </div>
 
-<div *ngIf="results$ && (results$ | async) as res" class="results-container">
+<div *ngIf="hasError" class="serverNotAvailableDIV">
+  <h1>Server nicht erreichbar</h1>
+</div>
+
+<div
+  *ngIf="!hasError && results$ && (results$ | async) as res"
+  class="results-container"
+>
   <div *ngIf="res.results.length < 1" class="noDataFoundDIV">
     <h1>Keine Treffer gefunden</h1>
   </div>
@@ -91,9 +98,4 @@
       </div>
     </div>
   </ng-container>
-</div>
-
-<!-- Fehlermeldung -->
-<div *ngIf="error" class="error-container">
-  <p class="error">{{ error }}</p>
 </div>

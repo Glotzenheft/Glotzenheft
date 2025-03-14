@@ -9,7 +9,11 @@
   />
 </div>
 
-<ng-container *ngIf="!isLoading">
+<div *ngIf="serverNotAvailablePage" class="serverNotAvailableDIV">
+  <h1>Server nicht erreichbar</h1>
+</div>
+
+<ng-container *ngIf="!isLoading && !serverNotAvailablePage">
   <div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
     <h1>Meine Übersicht</h1>
 

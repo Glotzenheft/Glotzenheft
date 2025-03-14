@@ -48,6 +48,7 @@ export class ActivitiesPageComponent implements OnInit {
 
   public isTableLoading: boolean = false;
   public isError: boolean = false;
+  public serverNotAvailablePage: boolean = false;
 
   public posterPath: string = TMDB_POSTER_PATH;
 
@@ -65,6 +66,7 @@ export class ActivitiesPageComponent implements OnInit {
 
   // functions --------------------------------------------------
   public loadUserActivities = (page: number) => {
+    this.serverNotAvailablePage = false;
     this.isLoading = true;
     this.isTableLoading = true;
     this.userActivitiesRequest$ = this.userService.getUserActivities(page);
@@ -189,6 +191,8 @@ export class ActivitiesPageComponent implements OnInit {
           this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
+        } else if (err.status === 0) {
+          this.serverNotAvailablePage = true;
         }
 
         this.isError = true;

@@ -83,6 +83,7 @@ export class SeasonPageComponent implements OnInit {
   public posterPath: string = TMDB_POSTER_PATH;
 
   public hasError: boolean = false;
+  public serverNotAvailablePage: boolean = false;
   public isInvalidID: boolean = false;
 
   public visibleSeason: SeasonWithEpisodes | null = null;
@@ -141,6 +142,7 @@ export class SeasonPageComponent implements OnInit {
   // functions -----------------------------------------------------
 
   public loadData = () => {
+    this.serverNotAvailablePage = false;
     this.isLoading = true;
     this.tvSeriesID = this.route.snapshot.paramMap.get('id');
 
@@ -187,6 +189,8 @@ export class SeasonPageComponent implements OnInit {
           this.userService.logoutOfAccount();
           this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
           this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+        } else if (err.status === 0) {
+          this.serverNotAvailablePage = true;
         }
 
         this.hasError = true;

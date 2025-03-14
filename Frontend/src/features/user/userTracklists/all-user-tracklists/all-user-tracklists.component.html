@@ -7,8 +7,16 @@
   />
 </div>
 
-<ng-container *ngIf="!isLoading">
-  <form [formGroup]="currentFilterForm" class="filterFORM">
+<div class="serverNotAvailableDIV" *ngIf="serverNotAvailablePage">
+  <h1>Server nicht erreichbar</h1>
+</div>
+
+<ng-container *ngIf="!isLoading && !serverNotAvailablePage">
+  <form
+    *ngIf="visibility === 0"
+    [formGroup]="currentFilterForm"
+    class="filterFORM"
+  >
     <div>
       <p-float-label variant="in">
         <p-select

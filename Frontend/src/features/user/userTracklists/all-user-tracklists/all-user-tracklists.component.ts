@@ -90,6 +90,7 @@ export class AllUserTracklistsComponent implements OnInit {
   public visibility: number = 0;
 
   public isLoading: boolean = false;
+  public serverNotAvailablePage: boolean = false;
 
   public convertStatus = convertTracklistStatusIntoGerman;
 
@@ -109,6 +110,7 @@ export class AllUserTracklistsComponent implements OnInit {
   }
 
   public loadTracklists = () => {
+    this.serverNotAvailablePage = false;
     this.isLoading = true;
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
@@ -119,16 +121,35 @@ export class AllUserTracklistsComponent implements OnInit {
     this.userTracklists$.subscribe({
       next: (res: Tracklist[]) => {
         this.isLoading = false;
-        this.sortedUserTracklists = res.filter((tracklist: Tracklist) => {
-          return tracklist.status === 'watching';
-        });
+        this.sortedUserTracklists = res
+          .filter((tracklist: Tracklist) => {
+            return (
+              tracklist.status ===
+              this.currentFilterForm.get('statusFilter')?.value.value
+            );
+          })
+          .filter((tracklist: Tracklist) => {
+            if (
+              this.currentFilterForm.get('mediaFilter')?.value.value === 'all'
+            ) {
+              return true;
+            } else {
+              return (
+                tracklist.media.type ===
+                this.currentFilterForm.get('mediaFilter')?.value.value
+              );
+            }
+          });
 
         this.allTracklists = res;
       },
       error: (err) => {
         if (err.status === 401) {
           this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
+        } else if (err.status === 0) {
+          this.serverNotAvailablePage = true;
         }
+
         this.isLoading = false;
       },
     });
