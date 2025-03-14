@@ -9,7 +9,7 @@
   .createNewTracklist {
     width: 100%;
     height: 82%;
-    overflow: hidden;
+    /*overflow: hidden;*/
     background-color: rgba(255, 255, 255, 0.8);
 
     padding-left: calc(0.5 * var(--padding--left-right));
@@ -21,7 +21,7 @@
   .createNewTracklist form {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    /*overflow: hidden;*/
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -74,7 +74,7 @@
   .createNewTracklist {
     width: 80%;
     height: 80%;
-    overflow: hidden;
+    /*overflow: hidden;*/
     background-color: rgba(255, 255, 255, 0.8);
 
     padding-left: var(--padding--left-right);
@@ -89,7 +89,7 @@
   .createNewTracklist form {
     height: 100%;
     width: 100%;
-    overflow: hidden;
+    /*overflow: hidden;*/
     display: flex;
     flex-direction: column;
     justify-content: space-evenly;
@@ -112,11 +112,11 @@
   /* .movieListDIV {
             width: 100%;
             height: 50%;
-        
+
             display: flex;
             flex-direction: column;
             justify-content: space-evenly;
-        
+
             padding-left: var(--padding--left-right);
             padding-right: var(--padding--left-right);
           } */
