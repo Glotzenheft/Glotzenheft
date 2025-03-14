@@ -27,6 +27,22 @@ export const appConfig: ApplicationConfig = {
       theme: {
         preset: Aura,
       },
+      translation: {
+        today: 'Heute',
+        clear: 'Löschen',
+        dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+        dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+        dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
+        monthNames: [
+          'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
+          'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+        ],
+        monthNamesShort: [
+          'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
+          'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+        ],
+        firstDayOfWeek: 1,
+      },
     }),
     provideHttpClient(),
     MessageService,
