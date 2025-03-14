@@ -120,10 +120,6 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     );
   }
 
-  public deleteDate = () => {
-    this.createEpisodeForm.get('watchDate')?.setValue(null);
-  };
-
   /**
    * Function for add a new episode of the current selected season to the current selected episode.
    * @returns void
