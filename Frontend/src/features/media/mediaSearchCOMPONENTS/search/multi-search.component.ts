@@ -70,7 +70,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   public tracklistFilterForm!: FormGroup;
 
   public item: MediaResult[] = [];
-  public error: string | null = null; // Fehleranzeige
+  public hasError: boolean = false;
   public userSearchQuery: string = '';
   private searchSubscription!: Subscription;
   public isErrorDialogVisible: boolean = false;
@@ -137,6 +137,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   }
 
   public loadMultiSearchResults = (page: number, searchTerm: string) => {
+    this.hasError = false;
     this.results$ = this.mediaService.getMultiSearchResults(
       searchTerm,
       this.currentPage
@@ -195,8 +196,12 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
         this.isLoading = false;
       },
-      error: () => {
+      error: (err: any) => {
         this.isLoading = false;
+
+        if (err.status === 0) {
+          this.hasError = true;
+        }
       },
     });
     this.searchQuery = searchTerm;
@@ -218,57 +223,55 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
   };
 
   navigateToMediaPage = (id: number, mediaGenre: string) => {
-    this.mediaService
-      .getMediaIdForMedia(id, mediaGenre === 'movie')
-      .subscribe({
-        next: (res: MediaIDResponse) => {
-          let url: string = '';
+    this.mediaService.getMediaIdForMedia(id, mediaGenre === 'movie').subscribe({
+      next: (res: MediaIDResponse) => {
+        let url: string = '';
 
-          if (res.media_id === undefined || res.media_id === null) {
-            // if no media_id exists in the db -> because media is not already saved
-            const summaryMessage: string = `Fehler beim Weiterleiten ${
-              mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie'
-            }`;
-
-            this.messageService.add(
-              getMessageObject(
-                'error',
-                summaryMessage,
-                'Bitte lade die Seite erneut und versuche es noch einmal.'
-              )
-            );
-            return;
-          }
-
-          // media_id already exists
-          url =
-            mediaGenre === 'movie'
-              ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
-              : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
-
-          this.router.navigateByUrl(url);
-        },
-        error: (err) => {
-          if (err.status === 401) {
-            // 401 = user token is not logged in anymore -> navigate to login page
-            this.userService.showLoginMessage();
-            this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-            return;
-          }
-
-          const message: string = `Fehler beim Weiterleiten ${
-            mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
+        if (res.media_id === undefined || res.media_id === null) {
+          // if no media_id exists in the db -> because media is not already saved
+          const summaryMessage: string = `Fehler beim Weiterleiten ${
+            mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie'
           }`;
 
           this.messageService.add(
             getMessageObject(
               'error',
-              message,
-              'Bitte lade die Seite und versuche es erneut.'
+              summaryMessage,
+              'Bitte lade die Seite erneut und versuche es noch einmal.'
             )
           );
-        },
-      });
+          return;
+        }
+
+        // media_id already exists
+        url =
+          mediaGenre === 'movie'
+            ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
+            : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
+
+        this.router.navigateByUrl(url);
+      },
+      error: (err) => {
+        if (err.status === 401) {
+          // 401 = user token is not logged in anymore -> navigate to login page
+          this.userService.showLoginMessage();
+          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          return;
+        }
+
+        const message: string = `Fehler beim Weiterleiten ${
+          mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
+        }`;
+
+        this.messageService.add(
+          getMessageObject(
+            'error',
+            message,
+            'Bitte lade die Seite und versuche es erneut.'
+          )
+        );
+      },
+    });
   };
 
   public changeToNextPage = () => {

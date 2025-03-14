@@ -217,7 +217,12 @@ export class MediaService {
           ROUTE_MULTI_SEARCH[1]
         }${page}`
       )
-      .pipe(shareReplay(1));
+      .pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) => {
+          return throwError(() => error);
+        })
+      );
   };
 
   // functions for creating a new season tracklist ------------------------------------------------------------------

@@ -90,6 +90,7 @@ export class AllUserTracklistsComponent implements OnInit {
   public visibility: number = 0;
 
   public isLoading: boolean = false;
+  public serverNotAvailablePage: boolean = false;
 
   public convertStatus = convertTracklistStatusIntoGerman;
 
@@ -109,6 +110,7 @@ export class AllUserTracklistsComponent implements OnInit {
   }
 
   public loadTracklists = () => {
+    this.serverNotAvailablePage = false;
     this.isLoading = true;
     this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
@@ -144,7 +146,10 @@ export class AllUserTracklistsComponent implements OnInit {
       error: (err) => {
         if (err.status === 401) {
           this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
+        } else if (err.status === 0) {
+          this.serverNotAvailablePage = true;
         }
+
         this.isLoading = false;
       },
     });

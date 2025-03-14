@@ -58,6 +58,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 export class FilmPageComponent implements OnInit {
   public movieID: string | null = null;
   public hasError: boolean = false;
+  public serverNotAvailablePage: boolean = false;
   public isInvalidID: boolean = false;
 
   public filmData$: Observable<Film> | null = null;
@@ -90,6 +91,7 @@ export class FilmPageComponent implements OnInit {
   }
 
   public loadData = () => {
+    this.serverNotAvailablePage = false;
     this.isLoading = true;
     this.movieID = this.route.snapshot.paramMap.get('id');
 
@@ -130,6 +132,8 @@ export class FilmPageComponent implements OnInit {
           this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
           this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
           return;
+        } else if (err.status === 0) {
+          this.serverNotAvailablePage = true;
         }
 
         this.hasError = true;
