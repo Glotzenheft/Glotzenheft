@@ -4,7 +4,6 @@
   <div class="createMovieWindow">
     <div class="createNewTracklist">
       <form
-        action="submit"
         (ngSubmit)="createNewTrackList()"
         [formGroup]="trackListForm"
       >
@@ -61,8 +60,9 @@
               inputId="end"
               [showOnFocus]="false"
               [minDate]="trackListForm.get('startDate')?.value"
+              [showButtonBar]="true"
             />
-            <label for="end">Enddatum</label>
+            <label [for]="'end'">Enddatum</label>
           </p-float-label>
         </div>
 
@@ -75,8 +75,9 @@
               inputId="start"
               [showOnFocus]="false"
               [maxDate]="trackListForm.get('endDate')?.value"
+              [showButtonBar]="true"
             />
-            <label for="start">Startdatum</label>
+            <label [for]="'start'">Startdatum</label>
           </p-float-label>
         </div>
 
