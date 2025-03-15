@@ -92,3 +92,6 @@ export const ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY: string =
 
 export const ROUTE_USER_ACTIVITIES: string =
   'https://127.0.0.1:8000/api/user-activities?user_activity_page=';
+
+export const ROUTE_STATISTICS_GET_USER_RATINGS: string =
+  'https://127.0.0.1:8000/api/statistic/user-ratings';

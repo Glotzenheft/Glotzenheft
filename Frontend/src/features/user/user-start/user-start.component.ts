@@ -6,7 +6,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Router, RouterOutlet } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
 import { Observable } from 'rxjs';
-import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import { MediaService } from '../../../service/media/media.service';
 import { MessageService } from 'primeng/api';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
@@ -15,11 +14,10 @@ import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import {
   BarDiagram,
-  LineDiagram,
 } from '../../../shared/interfaces/diagram-interfaces';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
-import { WatchTimeStatistic } from '../../../shared/statistic-interfaces';
+import {RatingStatistic, WatchTimeStatistic} from '../../../shared/statistic-interfaces';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
@@ -51,14 +49,13 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
   styleUrl: './user-start.component.css',
 })
 export class UserStartComponent implements OnInit {
-  public userTracklists$: Observable<Tracklist[]> | null = null;
   public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;
+  public userRatings$?: Observable<RatingStatistic> | null;
 
   public isError: boolean = false;
   public isLoading: boolean = false;
   public serverNotAvailablePage: boolean = false;
 
-  public lineDiagramData: LineDiagram | null = null;
   public diagramOptions: any;
   public pieChartOptions: any;
   public barChartMediaStatisticOptions: any;
@@ -77,7 +74,7 @@ export class UserStartComponent implements OnInit {
     '#ff0000',
     'rgba(255,255,255,0.5)',
   ];
-  public barDiagramData: BarDiagram | null = null;
+  public ratingBarChart: BarDiagram | null = null;
   public pieChartData: any;
   public barChartForMediaStatistic: BarDiagram | null = null;
   public barChartForYearlyMediaStatistic: BarDiagram | null = null;
@@ -110,7 +107,6 @@ export class UserStartComponent implements OnInit {
   ];
   public selectedDiagramType: { name: string; value: number } =
     this.diagramSelection[0];
-  public chartSelectionCondition: boolean = true;
 
   // In der Komponenten-Klasse
   public heatmapData: any;
@@ -139,40 +135,39 @@ export class UserStartComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.loadTracklistData();
+    this.loadUserRatings();
   }
 
-  public loadTracklistData = () => {
+  public loadUserRatings = () => {
     this.serverNotAvailablePage = false;
 
-    if (this.userTracklists$) {
+    if (this.userRatings$) {
       // data is already loaded
       return;
     }
 
     this.isLoading = true;
 
-    this.userTracklists$ = this.mediaService.getAllUserTracklists();
+    this.userRatings$ = this.userService.getUserRatings();
 
-    if (!this.userTracklists$) {
+    if (!this.userRatings$) {
       this.isError = true;
       return;
     }
 
-    this.userTracklists$.subscribe({
-      next: (res: Tracklist[]) => {
-        const filteredTracklists: Tracklist[] = res.filter(
-          (tracklist: Tracklist) => tracklist.rating !== null
-        );
+    this.userRatings$.subscribe({
+      next: (ratingStats: RatingStatistic) => {
+        const ratingValues: number[] = [];
 
-        const ratingValues: number[] = [0, 0, 0, 0, 0, 0, 0, 0, 0, 0];
-
-        for (const tracklist of filteredTracklists) {
-          ratingValues[tracklist.rating! - 1] += 1;
+        // Erstelle das Array in der richtigen Reihenfolge 1-10
+        for (let i = 1; i <= 10; i++) {
+          ratingValues.push(ratingStats[i] || 0);
         }
 
+        const noRatingCount = ratingStats['no_rating'] || 0;
+
         // create diagram
-        this.lineDiagramData = {
+        this.ratingBarChart = {
           labels: [
             '1 ☆',
             '2 ☆',
@@ -192,26 +187,7 @@ export class UserStartComponent implements OnInit {
               fill: true,
               borderColor: '#059669',
               tension: 0.4,
-              hoverBackgroundColor: '#059669',
               backgroundColor: '#059669',
-            },
-          ],
-        };
-
-        this.barDiagramData = {
-          labels: filteredTracklists.map((tracklist: Tracklist) => {
-            return tracklist.tracklistName;
-          }),
-          datasets: [
-            {
-              label: 'Bewertung',
-              data: filteredTracklists.map((tracklist: Tracklist) =>
-                tracklist.rating !== null ? tracklist.rating : 1
-              ),
-              backgroundColor: '#059669',
-              borderColor: '#059669',
-              fill: true,
-              tension: 0.4,
             },
           ],
         };
@@ -233,11 +209,7 @@ export class UserStartComponent implements OnInit {
           datasets: [
             {
               label: 'Bewertet',
-              data: [
-                ...ratingValues,
-                res.filter((tracklist: Tracklist) => tracklist.rating === null)
-                  .length,
-              ],
+              data: [...ratingValues, noRatingCount],
               fill: true,
               backgroundColor: this.pieChartColors,
             },
@@ -520,7 +492,7 @@ export class UserStartComponent implements OnInit {
     if (e.value.value >= 2) {
       this.loadMediaWatchtimeStatistic();
     } else {
-      this.loadTracklistData();
+      this.loadUserRatings();
     }
   };
 

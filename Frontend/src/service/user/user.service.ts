@@ -9,7 +9,6 @@ import {
 import {
   BehaviorSubject,
   catchError,
-  last,
   Observable,
   shareReplay,
   tap,
@@ -21,7 +20,7 @@ import {
   ROUTE_DELETE_USER_ACCOUNT,
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
-  ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+  ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, ROUTE_STATISTICS_GET_USER_RATINGS,
   ROUTE_USER_ACTIVITIES,
 } from '../../shared/variables/api-routes';
 import { MessageService } from 'primeng/api';
@@ -32,7 +31,7 @@ import {
   UserActivity,
 } from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
-import { WatchTimeStatistic } from '../../shared/statistic-interfaces';
+import {RatingStatistic, WatchTimeStatistic} from '../../shared/statistic-interfaces';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
@@ -185,12 +184,7 @@ export class UserService {
 
       if (isLoginLimitExceeded) {
         // if login tries of user exceeds the number of valid login tries before locking out from login
-
-        if (calculateTimeDifference(lastLoginDate) < 1) {
-          // login not valid
-          return false;
-        }
-        return true;
+        return calculateTimeDifference(lastLoginDate) >= 1;
       }
       return true;
     } else {
@@ -314,4 +308,28 @@ export class UserService {
         })
       );
   };
+
+  public getUserRatings = (): Observable<RatingStatistic> | null => {
+    const header = this.mediaService.getHeader();
+    if (!header)
+    {
+      return null;
+    }
+
+    return this.http.get<RatingStatistic>(
+      ROUTE_STATISTICS_GET_USER_RATINGS,
+        { headers: header }
+      ).pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) =>
+        {
+          return throwError(() => this.handleError(error));
+        })
+      );
+  }
+
+  private handleError(error: HttpErrorResponse): Error {
+    // Custom Error Handling
+    return new Error(`API request failed: ${error.message}`);
+  }
 }
