@@ -68,9 +68,10 @@
     align-items: center;
   }
   .barChartDIV {
-    width: 30rem;
-    min-width: 300px;
-    min-height: 30rem;
+    width: 50rem;
+    /* min-width: 10rem; */
+    min-height: 10rem;
+    height: 16rem;
   }
 
   .pieChartDIV {
@@ -97,6 +98,14 @@
 
     box-shadow: var(--box--shadow-button);
     width: 100%;
+  }
+
+  .barChartDIV {
+    width: 30rem;
+    min-width: 100%;
+    min-height: 20rem;
+    height: 20rem;
+    position: relative;
   }
 
   .diagrammDIV h1 {
