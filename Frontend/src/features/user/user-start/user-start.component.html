@@ -14,7 +14,7 @@
 </div>
 
 <ng-container *ngIf="!isLoading && !serverNotAvailablePage">
-  <div *ngIf="userTracklists$ | async as userTracklists" class="diagrammDIV">
+  <div *ngIf="userRatings$" class="diagrammDIV">
     <h1>Meine Übersicht</h1>
 
     <div class="diagramSelection">
@@ -29,7 +29,7 @@
       <div class="barChartDIV" *ngIf="selectedDiagramType.value === 0">
         <p-chart
           type="bar"
-          [data]="lineDiagramData"
+          [data]="ratingBarChart"
           [options]="diagramOptions"
         />
       </div>
