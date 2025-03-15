@@ -86,7 +86,7 @@
   }
 }
 
-@media (min-width: 850px) {
+@media (min-width: 850px) and (max-width: 1000px) {
   .diagrammDIV {
     background-color: rgba(255, 255, 255, 0.8);
     border-radius: var(--border--radius);
@@ -103,8 +103,99 @@
   .barChartDIV {
     width: 30rem;
     min-width: 100%;
-    min-height: 20rem;
-    height: 20rem;
+    min-height: 30rem;
+    height: 30rem;
+    position: relative;
+  }
+
+  .diagrammDIV h1 {
+    color: black;
+  }
+  .gapDIV {
+    height: 4rem;
+  }
+
+  .pieChartDIV {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .activitiesPage {
+    height: 10rem;
+  }
+
+  .heatmap-container {
+    margin: 2rem 0;
+    overflow-x: auto;
+  }
+
+  .heatmap table {
+    border-collapse: collapse;
+    margin: 1rem auto;
+  }
+
+  .heatmap th,
+  .heatmap td {
+    padding: 8px;
+    text-align: center;
+    border: 1px solid #ffffff;
+    min-width: 60px;
+  }
+
+  .heatmap th {
+    background-color: #059669;
+    font-weight: 600;
+  }
+
+  .heatmap-Years {
+    background-color: #059669;
+  }
+
+  .heatmap td {
+    transition: background-color 0.2s;
+  }
+
+  .legend {
+    display: flex;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .legend-color {
+    width: 30px;
+    height: 20px;
+    border: 1px solid #ddd;
+  }
+}
+
+@media (min-width: 1000px) {
+  .diagrammDIV {
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: var(--border--radius);
+
+    padding-left: calc(0.5 * var(--padding--left-right));
+    padding-right: calc(0.5 * var(--padding--left-right));
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    box-shadow: var(--box--shadow-button);
+    width: 100%;
+  }
+
+  .barChartDIV {
+    width: 30rem;
+    min-width: 100%;
+    min-height: 50rem;
+    height: 50rem;
     position: relative;
   }
 
