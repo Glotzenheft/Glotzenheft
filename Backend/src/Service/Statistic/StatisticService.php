@@ -108,4 +108,41 @@ class StatisticService
 
         return $filteredWatchTimeArray;
     }
+
+    public function getUserRatings(Request $request): array
+    {
+        $this->data = $this->handleRequest($request);
+
+        $ratings = [];
+        $ratings['no_rating'] = 0;
+
+        $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
+        if (!$user instanceof User)
+        {
+            return $this->returnUserNotFound();
+        }
+
+        $tracklists = $user->getTracklists();
+        foreach ($tracklists as $tracklist)
+        {
+            $rating = $tracklist->getRating();
+            if (!$rating)
+            {
+                $ratings['no_rating']++;
+            }
+            else
+            {
+                if (!isset($ratings[$rating]))
+                {
+                    $ratings[$rating] = 0;
+                }
+
+                $ratings[$rating]++;
+            }
+        }
+
+        ksort($ratings);
+
+        return $ratings;
+    }
 }
