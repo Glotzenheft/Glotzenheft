@@ -246,6 +246,7 @@ export class UserStartComponent implements OnInit {
 
         this.pieChartOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'right',
@@ -255,6 +256,7 @@ export class UserStartComponent implements OnInit {
 
         this.diagramOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
@@ -272,6 +274,7 @@ export class UserStartComponent implements OnInit {
 
         this.barChartMediaStatisticOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
@@ -289,6 +292,7 @@ export class UserStartComponent implements OnInit {
 
         this.barChartYearlyStatisticOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
@@ -306,6 +310,7 @@ export class UserStartComponent implements OnInit {
 
         this.barChartForMostWatchedDaysMediaStatisticOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
