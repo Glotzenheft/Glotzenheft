@@ -66,7 +66,7 @@ p {
 }
 
 /* media query for smart phones and tablets */
-@media (max-width: 850px) {
+@media (max-width: 500px) {
   html,
   body {
     margin: 0;
@@ -127,10 +127,6 @@ p {
   p {
     text-align: justify;
   }
-
-  /* button {
-    width: 6rem;
-  } */
 
   .button {
     margin: 1rem;
@@ -264,11 +260,321 @@ p {
     height: 50%;
   }
 
-  /* .loginActions {
+  .userInput {
+    width: 100%;
+  }
+
+  .p-panel {
+    box-shadow: var(--box--shadow);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .error .p-panel {
+    background-color: rgba(227, 17, 63, 0.655);
+    color: white;
+  }
+
+  .error .p-panel-header {
+    color: white;
+  }
+
+  .resCard .p-card {
+    height: 5rem;
+    width: 5rem;
+    margin-bottom: 2rem;
+  }
+  .card {
+    width: 100%;
+    height: 3rem;
+    margin-bottom: 1rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 0.1rem solid white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
     display: flex;
-    justify-content: space-around;
+    justify-content: space-evenly;
     align-items: center;
-  } */
+
+    transition-duration: var(--transition--duration);
+
+    border-radius: var(--border--radius);
+  }
+
+  .card:hover {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+  }
+
+  .dialog .p-dialog {
+    width: 90%;
+    height: auto;
+  }
+
+  .dialogActions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    bottom: 0;
+  }
+
+  .heading {
+    height: 4rem;
+  }
+
+  .heading p {
+    background-color: var(--link--color);
+    box-shadow: var(--box--shadow-button);
+    height: 100%;
+
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    width: 10rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .tracklistActions .p-button {
+    width: 100%;
+    height: 3rem;
+  }
+
+  .createTracklistEpisodeFormDIV form .formAcions .p-button {
+    width: 100%;
+    height: 2.5rem;
+  }
+
+  .userActivitiesTable {
+    width: 100%;
+    margin-bottom: 10rem;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .userActivitesTableDIV {
+    overflow-x: auto;
+    overflow-y: auto;
+    box-shadow: var(--box--shadow);
+  }
+
+  .userActivitiesTable .p-datatable {
+    width: 60rem;
+  }
+
+  .barChartDIV p-chart {
+    display: block !important;
+    width: 30rem !important;
+    height: 100% !important;
+    margin-left: 12rem;
+  }
+
+  .barChartDIV p-chart div {
+    display: block !important;
+    width: 130% !important;
+    height: 100% !important;
+  }
+}
+
+/* media query for smart phones and tablets */
+@media (min-width: 500px) and (max-width: 850px) {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+
+    font-family: "Open Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+
+    color: white;
+  }
+
+  :root {
+    --transition--duration: 0.3s;
+
+    --content-background-color: rgba(38, 148, 141, 0.655);
+    --content-background-color2: rgba(0, 0, 0, 0.8);
+    --padding--left-right: 1.2rem;
+    --padding--top-bottom: 0.8rem;
+    --border--radius: 0.6rem;
+    --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
+    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+
+    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+
+    --link--color: rgb(5, 150, 105);
+    --link--color--hover: rgb(26, 109, 83);
+  }
+
+  input {
+    width: 100%;
+  }
+
+  h1 {
+    font-size: x-large;
+  }
+
+  ul {
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
+  }
+
+  a {
+    color: var(--link--color);
+    text-decoration: none;
+    font-weight: bolder;
+  }
+
+  a:hover {
+    text-decoration: underline;
+  }
+
+  p {
+    text-align: justify;
+  }
+
+  .button {
+    margin: 1rem;
+  }
+
+  .button2 {
+    width: 8rem;
+  }
+
+  .buttonShadow {
+    box-shadow: var(--box--shadow-button);
+  }
+
+  .sidebar {
+    width: 100%;
+    height: 100%;
+    background-color: black;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+  }
+
+  .closedSidebar {
+    height: 4rem;
+    width: 100%;
+    background-color: black;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    box-shadow: var(--box--shadow);
+
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .content {
+    width: 100%;
+    height: 100%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+  .mainDIV {
+    margin-top: 4rem;
+    margin-bottom: 15rem;
+  }
+
+  .marginRight {
+    margin-right: 1rem;
+  }
+
+  .login {
+    height: 120%;
+    width: 100%;
+
+    display: flex;
+    justify-content: center;
+  }
+
+  .loginWindow {
+    width: 100%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .loginWindow form .loginActions {
+    display: block;
+  }
+
+  .loginWindow form .loginActions .marginBottom {
+    margin-bottom: 0.5rem;
+  }
+
+  .register {
+    width: 100%;
+    height: 90%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+    background-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    border-radius: 0.6rem;
+  }
+
+  .register form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+  }
+  .loginWindow div,
+  .p-password {
+    width: 100%;
+  }
+
+  .register .loginActions {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    height: 8rem;
+  }
+
+  .register .loginActions .button2 {
+    width: 100%;
+  }
+
+  .loginTall {
+    height: 60%;
+  }
+
+  .loginSmall {
+    height: 50%;
+  }
 
   .userInput {
     width: 100%;
@@ -349,14 +655,6 @@ p {
     align-items: center;
   }
 
-  /* .episodes {
-    height: 30rem;
-    overflow-x: hidden;
-    overflow-y: auto;
-
-    margin-bottom: 10rem;
-  } */
-
   .tracklistActions .p-button {
     width: 100%;
     height: 3rem;
@@ -383,6 +681,19 @@ p {
 
   .userActivitiesTable .p-datatable {
     width: 60rem;
+  }
+
+  .barChartDIV p-chart {
+    display: block !important;
+    width: 30rem !important;
+    height: 100% !important;
+    margin-left: 2rem;
+  }
+
+  .barChartDIV p-chart div {
+    display: block !important;
+    width: 130% !important;
+    height: 100% !important;
   }
 }
 
@@ -642,9 +953,21 @@ p {
     width: 60rem;
     box-shadow: var(--box--shadow);
   }
+
+  p-chart {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  p-chart div {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
 }
 
-@media (min-width: 940px) {
+@media (min-width: 940px) and (max-width: 1000px) {
   html,
   body {
     margin: 0;
@@ -696,8 +1019,6 @@ p {
   .closedSidebar {
     width: 4rem;
     height: 100%;
-    /* display: flex;
-    justify-content: center; */
     background-color: black;
     box-shadow: var(--sidebar--box--shadow);
 
@@ -918,6 +1239,305 @@ p {
 
   .userActivitiesTable .p-datatable {
     width: 100%;
+  }
+
+  p-chart {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  p-chart div {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+}
+
+@media (min-width: 1000px) {
+  html,
+  body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+
+    font-family: "Open Sans", serif;
+    font-optical-sizing: auto;
+    font-weight: 300;
+    font-style: normal;
+
+    color: white;
+  }
+
+  :root {
+    --transition--duration: 0.3s;
+
+    --content-background-color: rgba(38, 148, 141, 0.655);
+    --content-background-color2: rgba(0, 0, 0, 0.8);
+    --padding--left-right: 1.2rem;
+    --padding--top-bottom: 0.8rem;
+    --border--radius: 0.6rem;
+    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+
+    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+
+    --link--color: rgb(5, 150, 105);
+    --link--color--hover: rgb(26, 109, 83);
+  }
+  .sidebar {
+    background-color: black;
+    height: 100%;
+    width: 20%;
+    left: 0;
+    color: white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    box-shadow: var(--sidebar--box--shadow);
+  }
+
+  .closedSidebar {
+    width: 4rem;
+    height: 100%;
+    background-color: black;
+    box-shadow: var(--sidebar--box--shadow);
+
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+  }
+
+  .closedSidebar div {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .content {
+    height: 100%;
+    width: calc(100% - 2 * var(--padding--left-right));
+    background: linear-gradient(
+      var(--content-background-color),
+      var(--content-background-color2)
+    );
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    color: white;
+
+    overflow-x: hidden;
+    overflow-y: auto;
+  }
+
+  .mainDIV {
+    margin-top: 4rem;
+    margin-bottom: 1rem;
+  }
+
+  .marginRight {
+    margin-right: 1rem;
+  }
+
+  /* specific classes */
+
+  .login {
+    padding-top: var(--padding--top-bottom);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 115%;
+  }
+
+  .p-message {
+    background-color: white;
+  }
+
+  .loginWindow {
+    width: 50%;
+    height: 50%;
+    background-color: rgba(255, 255, 255, 0.8);
+    border-radius: 0.6rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+  }
+
+  .loginWindow form {
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+  }
+
+  .register {
+    background-color: rgba(255, 255, 255, 0.8);
+    width: 80%;
+    height: 98%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+
+    border-radius: var(--border--radius);
+    box-shadow: var(--box--shadow);
+  }
+
+  .register form {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    width: 100%;
+    height: 100%;
+  }
+
+  .loginTall {
+    height: 60%;
+  }
+
+  .loginSmall {
+    height: 50%;
+  }
+
+  .loginActions {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .userInput {
+    width: 100%;
+  }
+
+  .loginWindow div,
+  .p-password {
+    width: 100%;
+  }
+
+  .p-panel {
+    box-shadow: var(--box--shadow);
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+  }
+
+  .error .p-panel {
+    background-color: rgba(227, 17, 63, 0.655);
+    color: white;
+  }
+
+  .error .p-panel-header {
+    color: white;
+  }
+
+  .card {
+    width: 100%;
+    height: 3rem;
+    margin-bottom: 1rem;
+    background-color: rgba(0, 0, 0, 0.3);
+    border: 0.1rem solid white;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    transition-duration: var(--transition--duration);
+
+    border-radius: var(--border--radius);
+  }
+
+  .card:hover {
+    background-color: white;
+    color: black;
+    cursor: pointer;
+  }
+
+  .dialog .p-dialog {
+    width: 90%;
+    height: 100%;
+  }
+
+  .dialogActions {
+    width: 100%;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    bottom: 0;
+  }
+
+  .heading {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 4rem;
+    margin-bottom: 8rem;
+  }
+
+  .heading p {
+    background-color: var(--link--color);
+    box-shadow: var(--box--shadow-button);
+    height: 100%;
+
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+  }
+
+  .tracklistDialog .p-dialog {
+    width: 90%;
+    height: 90%;
+  }
+
+  .tracklistActions .p-button {
+    width: 10rem;
+  }
+
+  .createTracklistEpisodeFormDIV form .formAcions .p-button {
+    width: 120%;
+    height: 3rem;
+  }
+
+  .userActivitiesTable {
+    border-radius: var(--border--radius);
+    /* background-color: white; */
+    width: 100%;
+    height: 85%;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    overflow-y: auto;
+  }
+
+  .userActivitesTableDIV {
+    overflow-x: auto;
+    overflow-y: auto;
+    box-shadow: var(--box--shadow);
+    width: 100%;
+  }
+
+  .userActivitiesTable .p-datatable {
+    width: 100%;
+  }
+
+  p-chart {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
+  }
+
+  p-chart div {
+    display: block !important;
+    width: 100% !important;
+    height: 100% !important;
   }
 }
 
