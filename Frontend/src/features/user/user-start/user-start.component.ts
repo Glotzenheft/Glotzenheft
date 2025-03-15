@@ -50,7 +50,7 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 })
 export class UserStartComponent implements OnInit {
   public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;
-  public userRatings$?: Observable<RatingStatistic>;
+  public userRatings$?: Observable<RatingStatistic> | null;
 
   public isError: boolean = false;
   public isLoading: boolean = false;
@@ -218,6 +218,7 @@ export class UserStartComponent implements OnInit {
 
         this.pieChartOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'right',
@@ -227,6 +228,7 @@ export class UserStartComponent implements OnInit {
 
         this.diagramOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
@@ -244,6 +246,7 @@ export class UserStartComponent implements OnInit {
 
         this.barChartMediaStatisticOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
@@ -261,6 +264,7 @@ export class UserStartComponent implements OnInit {
 
         this.barChartYearlyStatisticOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',
@@ -278,6 +282,7 @@ export class UserStartComponent implements OnInit {
 
         this.barChartForMostWatchedDaysMediaStatisticOptions = {
           responsive: true,
+          maintainAspectRatio: false,
           plugins: {
             legend: {
               position: 'top',

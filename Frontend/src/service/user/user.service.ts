@@ -9,7 +9,6 @@ import {
 import {
   BehaviorSubject,
   catchError,
-  last,
   Observable,
   shareReplay,
   tap,
@@ -185,12 +184,7 @@ export class UserService {
 
       if (isLoginLimitExceeded) {
         // if login tries of user exceeds the number of valid login tries before locking out from login
-
-        if (calculateTimeDifference(lastLoginDate) < 1) {
-          // login not valid
-          return false;
-        }
-        return true;
+        return calculateTimeDifference(lastLoginDate) >= 1;
       }
       return true;
     } else {
@@ -315,14 +309,12 @@ export class UserService {
       );
   };
 
-  public getUserRatings(): Observable<RatingStatistic>
-  {
+  public getUserRatings = (): Observable<RatingStatistic> | null => {
     const header = this.mediaService.getHeader();
     if (!header)
     {
-      return throwError(() => new Error('Authorization header missing'));
+      return null;
     }
-    console.log('Ok lets go');
 
     return this.http.get<RatingStatistic>(
       ROUTE_STATISTICS_GET_USER_RATINGS,
