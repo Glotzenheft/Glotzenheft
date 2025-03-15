@@ -21,7 +21,7 @@ import {
   ROUTE_DELETE_USER_ACCOUNT,
   ROUTE_LOGIN,
   ROUTE_RESET_PASSWORD,
-  ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+  ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, ROUTE_STATISTICS_GET_USER_RATINGS,
   ROUTE_USER_ACTIVITIES,
 } from '../../shared/variables/api-routes';
 import { MessageService } from 'primeng/api';
@@ -32,7 +32,7 @@ import {
   UserActivity,
 } from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
-import { WatchTimeStatistic } from '../../shared/statistic-interfaces';
+import {RatingStatistic, WatchTimeStatistic} from '../../shared/statistic-interfaces';
 import {
   ERR_OBJECT_INVALID_AUTHENTICATION,
   getMessageObject,
@@ -314,4 +314,30 @@ export class UserService {
         })
       );
   };
+
+  public getUserRatings(): Observable<RatingStatistic>
+  {
+    const header = this.mediaService.getHeader();
+    if (!header)
+    {
+      return throwError(() => new Error('Authorization header missing'));
+    }
+    console.log('Ok lets go');
+
+    return this.http.get<RatingStatistic>(
+      ROUTE_STATISTICS_GET_USER_RATINGS,
+        { headers: header }
+      ).pipe(
+        shareReplay(1),
+        catchError((error: HttpErrorResponse) =>
+        {
+          return throwError(() => this.handleError(error));
+        })
+      );
+  }
+
+  private handleError(error: HttpErrorResponse): Error {
+    // Custom Error Handling
+    return new Error(`API request failed: ${error.message}`);
+  }
 }
