@@ -59,10 +59,15 @@
             <p class="descriptionP" *ngIf="!seasonData.media.description">
               <i>keine Beschreibung vorhanden</i>
             </p>
-            <p>
+
+            <p *ngIf="seasonData.media.firstAirDate">
               Ausstrahlung am
               {{ seasonData.media.firstAirDate | dateFormatting }}
             </p>
+            <p *ngIf="!seasonData.media.firstAirDate">
+              <i>kein Ausstrahlungsdatum vorhanden</i>
+            </p>
+
             <p *ngIf="seasonData.media.seasons.length > 0">
               Anzahl der Staffeln: {{ seasonData.media.seasons.length }}
             </p>
@@ -112,7 +117,12 @@
                       <p *ngIf="!season.overview">
                         Beschreibung: <i>keine Beschreibung vorhanden</i>
                       </p>
-                      <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+                      <p *ngIf="season.airDate">
+                        Ausstrahlung: {{ season.airDate | dateFormatting }}
+                      </p>
+                      <p *ngIf="!season.airDate">
+                        <i>kein Ausstrahlungsdatum vorhanden</i>
+                      </p>
                     </div>
                   </div>
                 </div>
