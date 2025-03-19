@@ -78,6 +78,7 @@ trait MediaDetailTrait
         if (!$lastUpdate instanceof DateTimeImmutable || $now->getTimestamp() - $lastUpdate->getTimestamp() > 300)
         {
             $numberOfSeasons = 0;
+            $firstAirDate = false;
             $seasons = null;
             switch ($type)
             {
@@ -116,7 +117,7 @@ trait MediaDetailTrait
                 ->setName($name ?? '')
                 ->setOriginalName($originalName ?? '')
                 ->setDescription($result['overview'] ?? '')
-                ->setFirstAirDate($firstAirDate ?? null)
+                ->setFirstAirDate($firstAirDate ?: null)
                 ->setImdbID($result['external_ids']['imdb_id'] ?? null)
                 ->setPosterPath($result['poster_path'] ?? null)
                 ->setBackdropPath($result['backdrop_path'] ?? null)
