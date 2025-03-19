@@ -53,10 +53,20 @@
         <div class="seasonMetaContent">
           <div>
             <h2>Beschreibung</h2>
-            <p class="descriptionP">{{ filmData.media.description }}</p>
-            <p>
+            <p *ngIf="filmData.media.description" class="descriptionP">
+              {{ filmData.media.description }}
+            </p>
+            <p *ngIf="!filmData.media.description" class="descriptionP">
+              <i>keine Beschreibung vorhanden</i>
+            </p>
+
+            <p *ngIf="filmData.media.firstAirDate">
               Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}
             </p>
+            <p *ngIf="!filmData.media.firstAirDate">
+              <i>kein Ausstrahlungsdatum vorhanden</i>
+            </p>
+
             <p *ngIf="filmData.media.seasons.length > 0">
               Anzahl der Staffeln: {{ filmData.media.seasons.length }}
             </p>
