@@ -5,8 +5,8 @@ namespace App\Service\Statistic;
 use App\Entity\User;
 use App\Enum\MediaType;
 use App\Service\RequestTrait;
-use DateMalformedStringException;
 use DateTimeImmutable;
+use Exception;
 use Symfony\Component\HttpFoundation\Request;
 
 class StatisticService
@@ -29,7 +29,7 @@ class StatisticService
                 ? new DateTimeImmutable($this->data['period_end_date'])
                 : new DateTimeImmutable();
         }
-        catch (DateMalformedStringException $e)
+        catch (Exception)
         {
             return $this->returnInvalidDate();
         }
