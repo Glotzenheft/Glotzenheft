@@ -13,17 +13,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class TMDBMultiSearchService implements TMDBMultiSearchInterface
 {
-    public function __construct
-    (
+    public function __construct(
         #[Autowire('%env(TMDB_TOKEN)%')]
         private string $tmdbToken,
         #[Autowire('%env(TMDB_MULTI_SEARCH_URL)%')]
         private string $multiSearchUrl,
         private HttpClientInterface $httpClient,
         private LoggerInterface $logger
-    )
-    {
-    }
+    ){}
 
     public function multiSearch(string $q, int $page = 1, $language = 'de-DE'): array
     {
@@ -34,6 +31,7 @@ readonly class TMDBMultiSearchService implements TMDBMultiSearchInterface
                     'query' => $q,
                     'page' => $page,
                     'language' => $language,
+                    'include_adult' => 'true'
                 ],
                 'headers' => [
                     'Authorization' => 'Bearer ' . $this->tmdbToken,

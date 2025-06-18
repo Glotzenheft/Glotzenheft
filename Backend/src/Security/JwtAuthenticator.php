@@ -18,13 +18,10 @@ use ReflectionMethod;
 
 readonly class JwtAuthenticator
 {
-    public function __construct
-    (
+    public function __construct(
         private EntityManagerInterface $entityManager,
         private ContainerBagInterface $params
-    )
-    {
-    }
+    ){}
 
     /**
      * @throws ReflectionException

@@ -20,8 +20,7 @@ use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 trait MediaDetailTrait
 {
-    public function __construct
-    (
+    public function __construct(
         private readonly TMDBTVSeriesDetailsService $tvService,
         private readonly TMDBMovieDetailsService $movieService,
         private readonly TMDBTVSeasonDetailsService $seasonService,
@@ -30,9 +29,7 @@ trait MediaDetailTrait
         private readonly TracklistService $tracklistService,
         private readonly TracklistRepository $tracklistRepository,
         private readonly NormalizerInterface $normalizer,
-    )
-    {
-    }
+    ){}
 
     /**
      * @param array $requestData

@@ -12,12 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class AuthorizationController extends AbstractController
 {
-    public function __construct
-    (
+    public function __construct(
         private readonly AuthorizationService $authorizationService,
-    )
-    {
-    }
+    ){}
 
     #[Route('/api/register', name: 'register', methods: ['POST'])]
     public function registerUser(Request $request): JsonResponse

@@ -9,12 +9,9 @@ use Symfony\Component\HttpFoundation\Response;
 
 trait RequestTrait
 {
-    public function __construct
-    (
-        private readonly EntityManagerInterface $entityManager
-    )
-    {
-    }
+    public function __construct(
+        private readonly EntityManagerInterface $entityManager,
+    ){}
 
     private array $data = [];
     private function handleRequest(Request $request): array

@@ -12,13 +12,10 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class UserService
 {
     use RequestTrait;
-    public function __construct
-    (
+    public function __construct(
         private readonly EntityManagerInterface $entityManager,
         private readonly UserPasswordHasherInterface $passwordHasher
-    )
-    {
-    }
+    ){}
 
     /**
      * @param Request $request

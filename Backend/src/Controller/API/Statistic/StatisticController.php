@@ -13,12 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class StatisticController extends AbstractController
 {
-    public function __construct
-    (
+    public function __construct(
         private readonly StatisticService $statisticService
-    )
-    {
-    }
+    ){}
 
     /**
      * Get all watch hours for each day from a user.
