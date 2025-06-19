@@ -1,76 +1,45 @@
 <div class="createTracklistEpisodeDIV">
-  <div class="createTracklistEpisodeWrapperDIV">
-    <h1>
-      {{
-        inpIsEpisodeEditing()
-          ? "Episode in der Trackliste editieren"
-          : "Episode zur Trackliste hinzufügen"
-      }}
-    </h1>
-    <div class="createTracklistEpisodeFormDIV">
-      <form
-        [formGroup]="createEpisodeForm"
-        (submit)="submitForm()"
-      >
-        <h2>{{ inpTracklist().tracklistName }}</h2>
-        <p>Episodenname: {{ inpEpisode().name }}</p>
-        <p>Laufzeit: {{ inpEpisode().runtime ? inpEpisode().runtime + ' min': " nicht vorhanden" }}</p>
-        <p>Erscheinungsdatum: {{ inpEpisode().airDate ? (inpEpisode().airDate | date:'dd.MM.yyyy') : " nicht vorhanden" }}</p>
-        <p>Episodennummer: {{ inpEpisode().episodeNumber }}</p>
+    <div class="createTracklistEpisodeWrapperDIV">
+        <h1>
+            {{
+            inpIsEpisodeEditing()
+            ? "Episode in der Trackliste editieren"
+            : "Episode zur Trackliste hinzufügen"
+            }}
+        </h1>
+        <div class="createTracklistEpisodeFormDIV">
+            <form [formGroup]="createEpisodeForm" (submit)="submitForm()">
+                <h2>{{ inpTracklist().tracklistName }}</h2>
+                <p>Episodenname: {{ inpEpisode().name }}</p>
+                <p>Laufzeit: {{ inpEpisode().runtime ? inpEpisode().runtime + ' min': " nicht vorhanden" }}</p>
+                <p>Erscheinungsdatum: {{ inpEpisode().airDate ? (inpEpisode().airDate | date:'dd.MM.yyyy') : " nicht
+                    vorhanden" }}</p>
+                <p>Episodennummer: {{ inpEpisode().episodeNumber }}</p>
 
-        <p-float-label variant="in">
-          <p-date-picker
-            inputId="watch"
-            [showIcon]="true"
-            formControlName="watchDate"
-            dateFormat="dd.mm.yy"
-            [showTime]="true"
-            [hourFormat]="'24'"
-            [showOnFocus]="false"
-            [showButtonBar]="true"
-          />
-          <label [for]="'watch'">Wann geschaut? (optional)</label>
-        </p-float-label>
+                <p-float-label variant="in">
+                    <p-date-picker inputId="watch" [showIcon]="true" formControlName="watchDate" dateFormat="dd.mm.yy"
+                        [showTime]="true" [hourFormat]="'24'" [showOnFocus]="false" [showButtonBar]="true" />
+                    <label [for]="'watch'">Wann geschaut? (optional)</label>
+                </p-float-label>
 
-        <div class="formAcions">
-          <p-button
-            *ngIf="!inpIsEpisodeEditing()"
-            label="Hinzufügen"
-            icon="pi pi-plus"
-            type="submit"
-          />
-          <p-button
-            *ngIf="inpIsEpisodeEditing()"
-            label="Speichern"
-            icon="pi pi-save"
-            (onClick)="saveEditedEpisode()"
-          />
-          <div *ngIf="inpIsEpisodeEditing()">
-            <p-button
-              label="Löschen"
-              icon="pi pi-trash"
-              severity="danger"
-              (onClick)="setDeletionDialogVisibilityStatus(true)"
-            />
-          </div>
-          <div>
-            <p-button
-              label="Abbrechen"
-              icon="pi pi-times"
-              severity="secondary"
-              (onClick)="cancelEpisodeForm()"
-            />
-          </div>
+                <div class="formAcions">
+                    <p-button *ngIf="!inpIsEpisodeEditing()" label="Hinzufügen" icon="pi pi-plus" type="submit" />
+                    <p-button *ngIf="inpIsEpisodeEditing()" label="Speichern" icon="pi pi-save"
+                        (onClick)="saveEditedEpisode()" />
+                    <div *ngIf="inpIsEpisodeEditing()">
+                        <p-button label="Löschen" icon="pi pi-trash" severity="danger"
+                            (onClick)="setDeletionDialogVisibilityStatus(true)" />
+                    </div>
+                    <div>
+                        <p-button label="Abbrechen" icon="pi pi-times" severity="secondary"
+                            (onClick)="cancelEpisodeForm()" />
+                    </div>
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
 </div>
 
-<app-delete-dialog
-  *ngIf="isDeletionDialogVisible"
-  [inpHeading]="'Episode löschen'"
-  [inpText]="'Willst du die Episode wirklich löschen?'"
-  (outDeleteMedia)="deleteEpisode()"
-  (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)"
-/>
+<app-delete-dialog *ngIf="isDeletionDialogVisible" [inpHeading]="'Episode löschen'"
+    [inpText]="'Willst du die Episode wirklich löschen?'" (outDeleteMedia)="deleteEpisode()"
+    (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />

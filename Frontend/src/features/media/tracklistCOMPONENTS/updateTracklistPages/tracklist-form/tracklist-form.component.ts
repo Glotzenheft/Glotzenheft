@@ -1,11 +1,11 @@
 import { CommonModule } from '@angular/common';
 import {
-  Component,
-  EventEmitter,
-  input,
-  InputSignal,
-  OnInit,
-  Output,
+    Component,
+    EventEmitter,
+    input,
+    InputSignal,
+    OnInit,
+    Output,
 } from '@angular/core';
 import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -17,44 +17,44 @@ import { TracklistService } from '../../../../../service/tracklist/tracklist.ser
 import { MediaService } from '../../../../../service/media/media.service';
 
 @Component({
-  selector: 'app-tracklist-form',
-  imports: [
-    ReactiveFormsModule,
-    ButtonModule,
-    RatingModule,
-    MessageModule,
-    CommonModule,
-    CreateNewTracklistComponent,
-  ],
-  providers: [MediaService],
-  templateUrl: './tracklist-form.component.html',
-  styleUrl: './tracklist-form.component.css',
+    selector: 'app-tracklist-form',
+    imports: [
+        ReactiveFormsModule,
+        ButtonModule,
+        RatingModule,
+        MessageModule,
+        CommonModule,
+        CreateNewTracklistComponent,
+    ],
+    providers: [MediaService],
+    templateUrl: './tracklist-form.component.html',
+    styleUrl: './tracklist-form.component.css',
 })
 export class TracklistFormComponent implements OnInit {
-  // input variables
-  public isNewTracklistForm: InputSignal<boolean> = input.required<boolean>();
-  public inputTVSeason: InputSignal<TVSeasonWithTracklist> =
-    input.required<TVSeasonWithTracklist>();
-  public isNewTracklistOfTypeTV: InputSignal<boolean> =
-    input.required<boolean>();
-  public mediaID: InputSignal<number> = input.required<number>();
-  public inpTVName: InputSignal<string> = input.required<string>();
+    // input variables
+    public isNewTracklistForm: InputSignal<boolean> = input.required<boolean>();
+    public inputTVSeason: InputSignal<TVSeasonWithTracklist> =
+        input.required<TVSeasonWithTracklist>();
+    public isNewTracklistOfTypeTV: InputSignal<boolean> =
+        input.required<boolean>();
+    public mediaID: InputSignal<number> = input.required<number>();
+    public inpTVName: InputSignal<string> = input.required<string>();
 
-  // output variables
-  @Output() cancelTracklistFormSubmission: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
-  @Output() saveNewTracklist: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
+    // output variables
+    @Output() cancelTracklistFormSubmission: EventEmitter<boolean> =
+        new EventEmitter<boolean>();
+    @Output() saveNewTracklist: EventEmitter<boolean> =
+        new EventEmitter<boolean>();
 
-  constructor(private tracklistService: TracklistService) {}
+    constructor(private tracklistService: TracklistService) { }
 
-  ngOnInit(): void {}
+    ngOnInit(): void { }
 
-  // functions ----------------------
-  public saveNewUpdatedTracklist = () => {
-    this.saveNewTracklist.emit(true);
-  };
-  public cancelTracklistForm = () => {
-    this.cancelTracklistFormSubmission.emit(false);
-  };
+    // functions ----------------------
+    public saveNewUpdatedTracklist = () => {
+        this.saveNewTracklist.emit(true);
+    };
+    public cancelTracklistForm = () => {
+        this.cancelTracklistFormSubmission.emit(false);
+    };
 }

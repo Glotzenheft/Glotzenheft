@@ -1,11 +1,11 @@
 import { CommonModule, Location } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
-  Validators,
+    FormBuilder,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+    Validators,
 } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
@@ -34,137 +34,137 @@ import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 
 @Component({
-  selector: 'app-film-page',
-  imports: [
-    CommonModule,
-    PanelModule,
-    CardModule,
-    DialogModule,
-    RatingModule,
-    FormsModule,
-    ButtonModule,
-    DateFormattingPipe,
-    FloatLabelModule,
-    InputTextModule,
-    MessageModule,
-    ReactiveFormsModule,
-    CreateMovieTracklistComponent,
-    UpdateFilmTracklistComponent,
-    ProgressSpinnerModule,
-  ],
-  templateUrl: './film-page.component.html',
-  styleUrl: './film-page.component.css',
+    selector: 'app-film-page',
+    imports: [
+        CommonModule,
+        PanelModule,
+        CardModule,
+        DialogModule,
+        RatingModule,
+        FormsModule,
+        ButtonModule,
+        DateFormattingPipe,
+        FloatLabelModule,
+        InputTextModule,
+        MessageModule,
+        ReactiveFormsModule,
+        CreateMovieTracklistComponent,
+        UpdateFilmTracklistComponent,
+        ProgressSpinnerModule,
+    ],
+    templateUrl: './film-page.component.html',
+    styleUrl: './film-page.component.css',
 })
 export class FilmPageComponent implements OnInit {
-  public movieID: string | null = null;
-  public hasError: boolean = false;
-  public serverNotAvailablePage: boolean = false;
-  public isInvalidID: boolean = false;
+    public movieID: string | null = null;
+    public hasError: boolean = false;
+    public serverNotAvailablePage: boolean = false;
+    public isInvalidID: boolean = false;
 
-  public filmData$: Observable<Film> | null = null;
-  public trackListForm!: FormGroup;
-  public isTracklistSubmitted: boolean = false;
-  public visibilityStatus: number = 0;
-  public selectedTracklist: SeasonTracklist | null = null;
+    public filmData$: Observable<Film> | null = null;
+    public trackListForm!: FormGroup;
+    public isTracklistSubmitted: boolean = false;
+    public visibilityStatus: number = 0;
+    public selectedTracklist: SeasonTracklist | null = null;
 
-  public convertStatus = convertTracklistStatusIntoGerman;
+    public convertStatus = convertTracklistStatusIntoGerman;
 
-  // variable for controlling the toggle status of the tracklist panels
-  public activePanel: number | null = null;
+    // variable for controlling the toggle status of the tracklist panels
+    public activePanel: number | null = null;
 
-  public isLoading: boolean = false;
+    public isLoading: boolean = false;
 
-  constructor(
-    private messageService: MessageService,
-    private route: ActivatedRoute,
-    public stringService: StringService,
-    private securityService: SecurityService,
-    private formBuilder: FormBuilder,
-    private mediaService: MediaService,
-    private location: Location,
-    private userService: UserService,
-    private router: Router
-  ) {}
+    constructor(
+        private messageService: MessageService,
+        private route: ActivatedRoute,
+        public stringService: StringService,
+        private securityService: SecurityService,
+        private formBuilder: FormBuilder,
+        private mediaService: MediaService,
+        private location: Location,
+        private userService: UserService,
+        private router: Router
+    ) { }
 
-  ngOnInit(): void {
-    this.loadData();
-  }
-
-  public loadData = () => {
-    this.serverNotAvailablePage = false;
-    this.isLoading = true;
-    this.movieID = this.route.snapshot.paramMap.get('id');
-
-    if (!this.movieID) {
-      this.hasError = true;
-      return;
+    ngOnInit(): void {
+        this.loadData();
     }
 
-    if (!this.securityService.validateMediaURL(this.movieID)) {
-      this.isInvalidID = true;
-      return;
-    }
+    public loadData = () => {
+        this.serverNotAvailablePage = false;
+        this.isLoading = true;
+        this.movieID = this.route.snapshot.paramMap.get('id');
 
-    this.filmData$ = this.mediaService.getFilmDetails(this.movieID);
+        if (!this.movieID) {
+            this.hasError = true;
+            return;
+        }
 
-    if (!this.filmData$) {
-      this.hasError = true;
+        if (!this.securityService.validateMediaURL(this.movieID)) {
+            this.isInvalidID = true;
+            return;
+        }
 
-      return;
-    }
+        this.filmData$ = this.mediaService.getFilmDetails(this.movieID);
 
-    this.filmData$.subscribe({
-      next: (res: Film) => {
-        this.trackListForm = this.formBuilder.group({
-          trackListName: [res.media.name, Validators.required],
+        if (!this.filmData$) {
+            this.hasError = true;
+
+            return;
+        }
+
+        this.filmData$.subscribe({
+            next: (res: Film) => {
+                this.trackListForm = this.formBuilder.group({
+                    trackListName: [res.media.name, Validators.required],
+                });
+
+                if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.media.id) {
+                    // replacing the url with "media_id" if necessary
+                    this.location.replaceState(`/media/movie/${res.media.id}`);
+                }
+
+                this.isLoading = false;
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    this.userService.logoutOfAccount();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                } else if (err.status === 0) {
+                    this.serverNotAvailablePage = true;
+                }
+
+                this.hasError = true;
+                this.isLoading = false;
+            },
         });
+    };
 
-        if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.media.id) {
-          // replacing the url with "media_id" if necessary
-          this.location.replaceState(`/media/movie/${res.media.id}`);
-        }
+    public hasErrorField = (field: string) => {
+        const fieldControl = this.trackListForm.get(field);
 
-        this.isLoading = false;
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-          return;
-        } else if (err.status === 0) {
-          this.serverNotAvailablePage = true;
-        }
+        return (
+            fieldControl! &&
+            (fieldControl!.dirty ||
+                fieldControl!.touched ||
+                this.isTracklistSubmitted)
+        );
+    };
 
-        this.hasError = true;
-        this.isLoading = false;
-      },
-    });
-  };
+    // dialog
+    public setVisibilityStatus = (status: number) => {
+        this.visibilityStatus = status;
+    };
 
-  public hasErrorField = (field: string) => {
-    const fieldControl = this.trackListForm.get(field);
+    public setSelectedTracklist = (tracklist: SeasonTracklist) => {
+        this.selectedTracklist = tracklist;
+        this.visibilityStatus = 2;
+    };
 
-    return (
-      fieldControl! &&
-      (fieldControl!.dirty ||
-        fieldControl!.touched ||
-        this.isTracklistSubmitted)
-    );
-  };
-
-  // dialog
-  public setVisibilityStatus = (status: number) => {
-    this.visibilityStatus = status;
-  };
-
-  public setSelectedTracklist = (tracklist: SeasonTracklist) => {
-    this.selectedTracklist = tracklist;
-    this.visibilityStatus = 2;
-  };
-
-  public refreshPage = () => {
-    this.setVisibilityStatus(0);
-    this.loadData();
-  };
+    public refreshPage = () => {
+        this.setVisibilityStatus(0);
+        this.loadData();
+    };
 }

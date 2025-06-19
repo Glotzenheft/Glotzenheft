@@ -1,4 +1,4 @@
 export interface ValidationQuestion {
-  name: string;
-  code: string;
+    name: string;
+    code: string;
 }

@@ -1,121 +1,74 @@
 <div class="createMovieTracklistWrapper">
-  <h1>Trackliste editieren</h1>
+    <h1>Trackliste editieren</h1>
 
-  <div class="createMovieWindow">
-    <div class="createNewTracklist">
-      <form
-        [formGroup]="updateTracklistForm"
-        (submit)="submitForm()"
-      >
-        <div>
-          <p-float-label variant="in">
-            <input
-              type="text"
-              pInputText
-              formControlName="tracklist_name"
-              id="trackName"
-            />
-            <label for="trackName">Name der Tracklist</label>
-          </p-float-label>
-          <p-message
-            *ngIf="
+    <div class="createMovieWindow">
+        <div class="createNewTracklist">
+            <form [formGroup]="updateTracklistForm" (submit)="submitForm()">
+                <div>
+                    <p-float-label variant="in">
+                        <input type="text" pInputText formControlName="tracklist_name" id="trackName" />
+                        <label for="trackName">Name der Tracklist</label>
+                    </p-float-label>
+                    <p-message *ngIf="
               hasErrorField('tracklist_name') &&
               updateTracklistForm.get('tracklist_name')?.invalid
-            "
-            size="small"
-            severity="error"
-          >
-            Der Name ist Pflicht.</p-message
-          >
-        </div>
+            " size="small" severity="error">
+                        Der Name ist Pflicht.</p-message>
+                </div>
 
-        <div>
-          <p-float-label variant="in">
-            <p-select
-              [options]="tracklistStatusOptions"
-              optionLabel="name"
-              formControlName="tracklist_status"
-              id="trackStatus"
-            />
-            <label for="trackStatus">Status der Trackliste</label>
-          </p-float-label>
-          <p-message
-            *ngIf="
+                <div>
+                    <p-float-label variant="in">
+                        <p-select [options]="tracklistStatusOptions" optionLabel="name"
+                            formControlName="tracklist_status" id="trackStatus" />
+                        <label for="trackStatus">Status der Trackliste</label>
+                    </p-float-label>
+                    <p-message *ngIf="
               hasErrorField('tracklist_status') &&
               updateTracklistForm.get('tracklist_status')?.invalid
-            "
-            severity="error"
-            size="small"
-          >
-            Der Status ist Pflicht.
-          </p-message>
-        </div>
+            " severity="error" size="small">
+                        Der Status ist Pflicht.
+                    </p-message>
+                </div>
 
-        <div class="gapDIV">
-          <p-float-label variant="in">
-            <p-date-picker
-              formControlName="tracklist_finish_date"
-              dateFormat="dd.mm.yy"
-              [showIcon]="true"
-              inputId="end"
-              [showOnFocus]="false"
-              [minDate]="updateTracklistForm.get('tracklist_start_date')?.value"
-              [showButtonBar]="true"
-            />
-            <label [for]="'end'">Enddatum</label>
-          </p-float-label>
-        </div>
+                <div class="gapDIV">
+                    <p-float-label variant="in">
+                        <p-date-picker formControlName="tracklist_finish_date" dateFormat="dd.mm.yy" [showIcon]="true"
+                            inputId="end" [showOnFocus]="false"
+                            [minDate]="updateTracklistForm.get('tracklist_start_date')?.value" [showButtonBar]="true" />
+                        <label [for]="'end'">Enddatum</label>
+                    </p-float-label>
+                </div>
 
-        <div>
-          <p-float-label variant="in">
-            <p-date-picker
-              formControlName="tracklist_start_date"
-              dateFormat="dd.mm.yy"
-              [showIcon]="true"
-              inputId="start"
-              [showOnFocus]="false"
-              [maxDate]="
+                <div>
+                    <p-float-label variant="in">
+                        <p-date-picker formControlName="tracklist_start_date" dateFormat="dd.mm.yy" [showIcon]="true"
+                            inputId="start" [showOnFocus]="false" [maxDate]="
                 updateTracklistForm.get('tracklist_finish_date')?.value
-              "
-              [showButtonBar]="true"
-            />
-            <label [for]="'start'">Startdatum</label>
-          </p-float-label>
-        </div>
+              " [showButtonBar]="true" />
+                        <label [for]="'start'">Startdatum</label>
+                    </p-float-label>
+                </div>
 
-        <div class="ratingDIV">
-          <p>Bewertung</p>
-          <p-rating [stars]="10" formControlName="tracklist_rating" />
-          <p *ngIf="updateTracklistForm.get('tracklist_rating')?.value">
-            {{ updateTracklistForm.get("tracklist_rating")?.value }} / 10
-          </p>
-        </div>
+                <div class="ratingDIV">
+                    <p>Bewertung</p>
+                    <p-rating [stars]="10" formControlName="tracklist_rating" />
+                    <p *ngIf="updateTracklistForm.get('tracklist_rating')?.value">
+                        {{ updateTracklistForm.get("tracklist_rating")?.value }} / 10
+                    </p>
+                </div>
 
-        <div class="tracklistActions">
-          <p-button label="Speichern" type="submit" icon="pi pi-save" />
-          <p-button
-            label="Abbrechen"
-            severity="secondary"
-            icon="pi pi-times"
-            (onClick)="cancelTracklist()"
-          />
+                <div class="tracklistActions">
+                    <p-button label="Speichern" type="submit" icon="pi pi-save" />
+                    <p-button label="Abbrechen" severity="secondary" icon="pi pi-times" (onClick)="cancelTracklist()" />
 
-          <p-button
-            label="Löschen"
-            severity="danger"
-            icon="pi pi-trash"
-            (onClick)="setDeleteDialogVisibility(true)"
-          />
+                    <p-button label="Löschen" severity="danger" icon="pi pi-trash"
+                        (onClick)="setDeleteDialogVisibility(true)" />
+                </div>
+            </form>
         </div>
-      </form>
     </div>
-  </div>
 </div>
 
-<app-delete-dialog
-  *ngIf="isDeleteDialogVisible"
-  [inpHeading]="'Trackliste löschen'"
-  [inpText]="'Willst du die Trackliste wirklich löschen?'"
-  (outCancelDeletion)="setDeleteDialogVisibility(false)"
-  (outDeleteMedia)="deleteTracklist()"
-/>
+<app-delete-dialog *ngIf="isDeleteDialogVisible" [inpHeading]="'Trackliste löschen'"
+    [inpText]="'Willst du die Trackliste wirklich löschen?'" (outCancelDeletion)="setDeleteDialogVisibility(false)"
+    (outDeleteMedia)="deleteTracklist()" />

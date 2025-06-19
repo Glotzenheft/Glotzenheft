@@ -2,20 +2,20 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class AuthService {
-  public showToast$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-    false
-  );
+    public showToast$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
+        false
+    );
 
-  constructor() {}
+    constructor() { }
 
-  public triggerToast = () => {
-    this.showToast$.next(true);
-  };
+    public triggerToast = () => {
+        this.showToast$.next(true);
+    };
 
-  public isUserLoggedIn = (): boolean => {
-    return !!localStorage.getItem('authToken');
-  };
+    public isUserLoggedIn = (): boolean => {
+        return !!localStorage.getItem('authToken');
+    };
 }

@@ -1,17 +1,17 @@
 .impressum {
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
-  padding-top: var(--padding--top-bottom);
-  padding-bottom: var(--padding--top-bottom);
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
 }
 
 .impressum ul {
-  list-style: circle;
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
+    list-style: circle;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
 }
 
 .impressum h2 {
-  font-size: 1.4rem;
-  text-decoration: underline;
+    font-size: 1.4rem;
+    text-decoration: underline;
 }

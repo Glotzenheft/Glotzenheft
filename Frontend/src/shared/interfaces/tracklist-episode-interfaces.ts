@@ -1,6 +1,6 @@
 export interface CreateTracklistEpisode {
-  tracklistID: number;
-  tracklistSeasonID: number;
-  watchDate: string;
-  episodeID: number;
+    tracklistID: number;
+    tracklistSeasonID: number;
+    watchDate: string;
+    episodeID: number;
 }

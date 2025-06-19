@@ -1,457 +1,453 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
-  Film,
-  MediaIDResponse,
-  Season,
-  UpdateTracklistRequest,
+    Film,
+    MediaIDResponse,
+    Season,
+    UpdateTracklistRequest,
 } from '../../shared/interfaces/media-interfaces';
 import {
-  catchError,
-  EMPTY,
-  exhaustMap,
-  Observable,
-  shareReplay,
-  Subject,
-  throttleTime,
-  throwError,
+    catchError,
+    EMPTY,
+    exhaustMap,
+    Observable,
+    shareReplay,
+    Subject,
+    throttleTime,
+    throwError,
 } from 'rxjs';
 import {
-  HttpClient,
-  HttpErrorResponse,
-  HttpHeaders,
+    HttpClient,
+    HttpErrorResponse,
+    HttpHeaders,
 } from '@angular/common/http';
 import {
-  ROUTE_CREATE_NEW_TRACKLIST,
-  ROUTE_DELETE_TRACKLIST,
-  ROUTE_GET_ALL_USER_TRACKLISTS,
-  ROUTE_MEDIA_DETAILS_SEARCH,
-  ROUTE_MEDIA_ID_FOR_MEDIA,
-  ROUTE_MOVIE_DETAILS_SEARCH,
-  ROUTE_MULTI_SEARCH,
-  ROUTE_UPDATE_TRACKLIST,
+    ROUTE_CREATE_NEW_TRACKLIST,
+    ROUTE_DELETE_TRACKLIST,
+    ROUTE_GET_ALL_USER_TRACKLISTS,
+    ROUTE_MEDIA_DETAILS_SEARCH,
+    ROUTE_MEDIA_ID_FOR_MEDIA,
+    ROUTE_MOVIE_DETAILS_SEARCH,
+    ROUTE_MULTI_SEARCH,
+    ROUTE_UPDATE_TRACKLIST,
 } from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
 import {
-  CreateMovieTracklistData,
-  CreateSeasonTracklistData,
-  Tracklist,
+    CreateMovieTracklistData,
+    CreateSeasonTracklistData,
+    Tracklist,
 } from '../../shared/interfaces/tracklist-interfaces';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
 
 @Injectable({
-  providedIn: 'root',
+    providedIn: 'root',
 })
 export class MediaService {
-  // tracklist update subject triggers new http request and controls request frequence (via throttle time)
-  private tracklistUPDATESubject: Subject<UpdateTracklistRequest> =
-    new Subject<UpdateTracklistRequest>();
-  // getting the response for the update tracklist request (new value whenever update subject is renewed)
-  private tracklistUPDATEResponseSubject: Subject<Tracklist> =
-    new Subject<Tracklist>();
+    // tracklist update subject triggers new http request and controls request frequence (via throttle time)
+    private tracklistUPDATESubject: Subject<UpdateTracklistRequest> =
+        new Subject<UpdateTracklistRequest>();
+    // getting the response for the update tracklist request (new value whenever update subject is renewed)
+    private tracklistUPDATEResponseSubject: Subject<Tracklist> =
+        new Subject<Tracklist>();
 
-  private tracklistDELETESubject: Subject<number> = new Subject<number>();
-  private tracklistDELETEResponseSubject: Subject<any> = new Subject<any>();
+    private tracklistDELETESubject: Subject<number> = new Subject<number>();
+    private tracklistDELETEResponseSubject: Subject<any> = new Subject<any>();
 
-  private tracklistCREATEMOVIESubject: Subject<CreateMovieTracklistData> =
-    new Subject<CreateMovieTracklistData>();
-  private tracklistCREATEMOVIEResponseSubject: Subject<any> =
-    new Subject<any>();
+    private tracklistCREATEMOVIESubject: Subject<CreateMovieTracklistData> =
+        new Subject<CreateMovieTracklistData>();
+    private tracklistCREATEMOVIEResponseSubject: Subject<any> =
+        new Subject<any>();
 
-  private tracklistCREATESEASONSubject: Subject<CreateSeasonTracklistData> =
-    new Subject<CreateSeasonTracklistData>();
-  private tracklistCREATESEASONResponseSubject: Subject<Tracklist> =
-    new Subject<Tracklist>();
+    private tracklistCREATESEASONSubject: Subject<CreateSeasonTracklistData> =
+        new Subject<CreateSeasonTracklistData>();
+    private tracklistCREATESEASONResponseSubject: Subject<Tracklist> =
+        new Subject<Tracklist>();
 
-  constructor(
-    private http: HttpClient,
-    @Inject(PLATFORM_ID) private platformId: Object
-  ) {
-    // controlling the request frequence (via throttle time)
-    this.tracklistUPDATESubject
-      .pipe(
-        throttleTime(REQUEST_THROTTLE_TIME), // wait 10 s
-        exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
-        shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
-      )
-      .subscribe({
-        // updating the response subject (response subject will return new response value to the components)
-        next: (response) => this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
-        error: (error) => this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
-      });
+    constructor(
+        private http: HttpClient,
+        @Inject(PLATFORM_ID) private platformId: Object
+    ) {
+        // controlling the request frequence (via throttle time)
+        this.tracklistUPDATESubject
+            .pipe(
+                throttleTime(REQUEST_THROTTLE_TIME), // wait 10 s
+                exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
+                shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
+            )
+            .subscribe({
+                // updating the response subject (response subject will return new response value to the components)
+                next: (response) => this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
+                error: (error) => this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
+            });
 
-    // deleting tracklist --------------------------------------------------
-    this.tracklistDELETESubject
-      .pipe(
-        throttleTime(REQUEST_THROTTLE_TIME),
-        exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
-        shareReplay(1)
-      )
-      .subscribe({
-        next: (response) => this.tracklistDELETEResponseSubject.next(response),
-        error: (error) => this.tracklistDELETEResponseSubject.error(error),
-      });
+        // deleting tracklist --------------------------------------------------
+        this.tracklistDELETESubject
+            .pipe(
+                throttleTime(REQUEST_THROTTLE_TIME),
+                exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
+                shareReplay(1)
+            )
+            .subscribe({
+                next: (response) => this.tracklistDELETEResponseSubject.next(response),
+                error: (error) => this.tracklistDELETEResponseSubject.error(error),
+            });
 
-    // creating a new movie tracklist ---------------------------------------------------
-    this.tracklistCREATEMOVIESubject
-      .pipe(
-        throttleTime(REQUEST_THROTTLE_TIME), // 20.000 ms
-        exhaustMap((tracklistData: CreateMovieTracklistData) =>
-          this.createNewMovieTracklist(tracklistData)
-        ),
-        shareReplay(1)
-      )
-      .subscribe({
-        next: (res: any) => this.tracklistCREATEMOVIEResponseSubject.next(res),
-        error: (err: any) =>
-          this.tracklistCREATEMOVIEResponseSubject.error(err),
-      });
+        // creating a new movie tracklist ---------------------------------------------------
+        this.tracklistCREATEMOVIESubject
+            .pipe(
+                throttleTime(REQUEST_THROTTLE_TIME), // 20.000 ms
+                exhaustMap((tracklistData: CreateMovieTracklistData) =>
+                    this.createNewMovieTracklist(tracklistData)
+                ),
+                shareReplay(1)
+            )
+            .subscribe({
+                next: (res: any) => this.tracklistCREATEMOVIEResponseSubject.next(res),
+                error: (err: any) =>
+                    this.tracklistCREATEMOVIEResponseSubject.error(err),
+            });
 
-    // create a new season tracklist ----------------------------------------------
-    this.tracklistCREATESEASONSubject
-      .pipe(
-        throttleTime(REQUEST_THROTTLE_TIME),
-        exhaustMap((tracklistData: CreateSeasonTracklistData) =>
-          this.createNewSeasonTracklist(tracklistData)
-        ),
-        shareReplay(1)
-      )
-      .subscribe({
-        next: (res: Tracklist) =>
-          this.tracklistCREATESEASONResponseSubject.next(res),
-        error: (err: any) =>
-          this.tracklistCREATESEASONResponseSubject.error(err),
-      });
-  }
-
-  // functions ---------------------------------------------------------------------------------------
-
-  public getHeader = (): HttpHeaders | null => {
-    let userToken: string = '';
-
-    if (isPlatformBrowser(this.platformId)) {
-      userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
+        // create a new season tracklist ----------------------------------------------
+        this.tracklistCREATESEASONSubject
+            .pipe(
+                throttleTime(REQUEST_THROTTLE_TIME),
+                exhaustMap((tracklistData: CreateSeasonTracklistData) =>
+                    this.createNewSeasonTracklist(tracklistData)
+                ),
+                shareReplay(1)
+            )
+            .subscribe({
+                next: (res: Tracklist) =>
+                    this.tracklistCREATESEASONResponseSubject.next(res),
+                error: (err: any) =>
+                    this.tracklistCREATESEASONResponseSubject.error(err),
+            });
     }
 
-    if (!userToken.trim()) {
-      return null;
-    }
+    // functions ---------------------------------------------------------------------------------------
 
-    return new HttpHeaders({
-      Authorization: `Bearer ${userToken}`,
-    });
-  };
+    public getHeader = (): HttpHeaders | null => {
+        let userToken: string = '';
 
-  getAllFilms = (): Observable<Film[]> => {
-    return this.http.get<Film[]>('');
-  };
+        if (isPlatformBrowser(this.platformId)) {
+            userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
+        }
 
-  /**
-   * For getting the mediaID from the database.
+        if (!userToken.trim()) {
+            return null;
+        }
 
-   *
-   * @param tmdbID string
-   * @param isMovie boolean
-   * @returns
-   */
-  public getMediaIdForMedia = (
-    /*
-    Function in the app: on multi search, the user clicks on the media (movie or tv) but there is only tmdb id available at this moment
-    -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
-    */
-    tmdbID: number,
-    isMovie: boolean
-  ): Observable<MediaIDResponse> => {
-    const movieType: string = isMovie ? 'movie' : 'tv';
-    const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
-
-    return this.http.get<MediaIDResponse>(url).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
-
-  getSeasonForTV = (mediaID: string): Observable<Season> | null => {
-    const header = this.getHeader();
-
-    if (!header) {
-      return null;
-    }
-
-    let url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
-
-    return this.http.get<Season>(url, { headers: header }).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
-
-  public getFilmDetails = (movieID: string): Observable<Film> | null => {
-    const header = this.getHeader();
-
-    if (!header) {
-      return null;
-    }
-
-    let url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
-
-    return this.http.get<Film>(url, { headers: header }).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
-
-  getMultiSearchResults = (
-    searchString: string,
-    page: number
-  ): Observable<any> => {
-    return this.http
-      .get(
-        `${ROUTE_MULTI_SEARCH[0]}${encodeURIComponent(searchString)}${
-          ROUTE_MULTI_SEARCH[1]
-        }${page}`
-      )
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
-  };
-
-  // functions for creating a new season tracklist ------------------------------------------------------------------
-
-  public triggerTracklistCREATESEASONSubject = (
-    // function for triggering a new request for creating a new season tracklist
-    tracklistData: CreateSeasonTracklistData
-  ) => {
-    // updating the subject with the new data -> new request will be triggered
-    this.tracklistCREATESEASONSubject.next(tracklistData);
-  };
-
-  public getTracklistCREATESEASONResponseSubject =
-    (): Observable<Tracklist> => {
-      // function for getting the current response value from the create tracklist request as observable
-      return this.tracklistCREATESEASONResponseSubject.asObservable();
+        return new HttpHeaders({
+            Authorization: `Bearer ${userToken}`,
+        });
     };
 
-  private createNewSeasonTracklist = (
-    // function for making the request to the backend for creating a new season tracklist
-    data: CreateSeasonTracklistData
-  ): Observable<Tracklist> => {
-    const header = this.getHeader();
+    getAllFilms = (): Observable<Film[]> => {
+        return this.http.get<Film[]>('');
+    };
 
-    if (!header) {
-      return EMPTY;
-    }
+    /**
+     * For getting the mediaID from the database.
+  
+     *
+     * @param tmdbID string
+     * @param isMovie boolean
+     * @returns
+     */
+    public getMediaIdForMedia = (
+        /*
+        Function in the app: on multi search, the user clicks on the media (movie or tv) but there is only tmdb id available at this moment
+        -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
+        */
+        tmdbID: number,
+        isMovie: boolean
+    ): Observable<MediaIDResponse> => {
+        const movieType: string = isMovie ? 'movie' : 'tv';
+        const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
-    let formattedDate: string = '';
-    let formattedEndDate: string = '';
+        return this.http.get<MediaIDResponse>(url).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
 
-    if (data.startDate) {
-      let startDateAsDate: Date = new Date(data.startDate);
-      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
-      formattedDate = startDateAsDate.toISOString().split('T')[0];
-    }
+    getSeasonForTV = (mediaID: string): Observable<Season> | null => {
+        const header = this.getHeader();
 
-    if (data.endDate) {
-      let endDateAsDate: Date = new Date(data.endDate);
-      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
-      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
-    }
+        if (!header) {
+            return null;
+        }
 
-    let url: string =
-      ROUTE_CREATE_NEW_TRACKLIST[0] +
-      encodeURIComponent(data.name) +
-      ROUTE_CREATE_NEW_TRACKLIST[1] +
-      data.status +
-      ROUTE_CREATE_NEW_TRACKLIST[2] +
-      data.mediaID +
-      ROUTE_CREATE_NEW_TRACKLIST[3] +
-      data.seasonID +
-      ROUTE_CREATE_NEW_TRACKLIST[4] +
-      'tv' +
-      ROUTE_CREATE_NEW_TRACKLIST[5] +
-      formattedDate +
-      ROUTE_CREATE_NEW_TRACKLIST[6] +
-      formattedEndDate +
-      ROUTE_CREATE_NEW_TRACKLIST[7] +
-      `${data.rating ? data.rating : ''}`;
+        let url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
 
-    return this.http.post<Tracklist>(url, {}, { headers: header }).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
+        return this.http.get<Season>(url, { headers: header }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
 
-  // functions for creating a new movie tracklist --------------------------------------------
+    public getFilmDetails = (movieID: string): Observable<Film> | null => {
+        const header = this.getHeader();
 
-  public triggerTracklistCREATEMOVIESubject = (
-    tracklistData: CreateMovieTracklistData
-  ) => {
-    this.tracklistCREATEMOVIESubject.next(tracklistData);
-  };
+        if (!header) {
+            return null;
+        }
 
-  public getTracklistCREATEMOVIESubjectResponse = (): Observable<any> => {
-    return this.tracklistCREATEMOVIEResponseSubject.asObservable();
-  };
+        let url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
 
-  private createNewMovieTracklist = (
-    data: CreateMovieTracklistData
-  ): Observable<any> => {
-    const header = this.getHeader();
+        return this.http.get<Film>(url, { headers: header }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
 
-    if (!header) {
-      return EMPTY;
-    }
+    getMultiSearchResults = (
+        searchString: string,
+        page: number
+    ): Observable<any> => {
+        return this.http
+            .get(
+                `${ROUTE_MULTI_SEARCH[0]}${encodeURIComponent(searchString)}${ROUTE_MULTI_SEARCH[1]
+                }${page}`
+            )
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => error);
+                })
+            );
+    };
 
-    let formattedDate: string = '';
-    let formattedEndDate: string = '';
+    // functions for creating a new season tracklist ------------------------------------------------------------------
 
-    if (data.startDate) {
-      let startDateAsDate: Date = new Date(data.startDate);
-      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
-      formattedDate = startDateAsDate.toISOString().split('T')[0];
-    }
+    public triggerTracklistCREATESEASONSubject = (
+        // function for triggering a new request for creating a new season tracklist
+        tracklistData: CreateSeasonTracklistData
+    ) => {
+        // updating the subject with the new data -> new request will be triggered
+        this.tracklistCREATESEASONSubject.next(tracklistData);
+    };
 
-    if (data.endDate) {
-      let endDateAsDate: Date = new Date(data.endDate);
-      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
-      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
-    }
+    public getTracklistCREATESEASONResponseSubject =
+        (): Observable<Tracklist> => {
+            // function for getting the current response value from the create tracklist request as observable
+            return this.tracklistCREATESEASONResponseSubject.asObservable();
+        };
 
-    const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${encodeURIComponent(
-      data.name
-    )}${ROUTE_CREATE_NEW_TRACKLIST[1]}${data.status}${
-      ROUTE_CREATE_NEW_TRACKLIST[2]
-    }${data.mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${
-      ROUTE_CREATE_NEW_TRACKLIST[5]
-    }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${
-      ROUTE_CREATE_NEW_TRACKLIST[7]
-    }${data.rating ? data.rating : ''}`;
+    private createNewSeasonTracklist = (
+        // function for making the request to the backend for creating a new season tracklist
+        data: CreateSeasonTracklistData
+    ): Observable<Tracklist> => {
+        const header = this.getHeader();
 
-    return this.http.post<any>(url, {}, { headers: header }).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
+        if (!header) {
+            return EMPTY;
+        }
 
-  // update tracklist functions -----------------------------------------------------------------------------------
+        let formattedDate: string = '';
+        let formattedEndDate: string = '';
 
-  public triggerTracklistUPDATESubject = (
-    tracklistData: UpdateTracklistRequest
-  ) => {
-    this.tracklistUPDATESubject.next(tracklistData); // Schicke die Daten an den Subject
-  };
+        if (data.startDate) {
+            let startDateAsDate: Date = new Date(data.startDate);
+            startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+            formattedDate = startDateAsDate.toISOString().split('T')[0];
+        }
 
-  // Diese Methode gibt das Observable der Antwort zurück, um es im Component zu abonnieren
-  public getTracklistUPDATEResponseSubject = (): Observable<Tracklist> => {
-    return this.tracklistUPDATEResponseSubject.asObservable();
-  };
+        if (data.endDate) {
+            let endDateAsDate: Date = new Date(data.endDate);
+            endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+            formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+        }
 
-  private updateTracklist = (
-    tracklistData: UpdateTracklistRequest
-  ): Observable<Tracklist> => {
-    const header = this.getHeader();
+        let url: string =
+            ROUTE_CREATE_NEW_TRACKLIST[0] +
+            encodeURIComponent(data.name) +
+            ROUTE_CREATE_NEW_TRACKLIST[1] +
+            data.status +
+            ROUTE_CREATE_NEW_TRACKLIST[2] +
+            data.mediaID +
+            ROUTE_CREATE_NEW_TRACKLIST[3] +
+            data.seasonID +
+            ROUTE_CREATE_NEW_TRACKLIST[4] +
+            'tv' +
+            ROUTE_CREATE_NEW_TRACKLIST[5] +
+            formattedDate +
+            ROUTE_CREATE_NEW_TRACKLIST[6] +
+            formattedEndDate +
+            ROUTE_CREATE_NEW_TRACKLIST[7] +
+            `${data.rating ? data.rating : ''}`;
 
-    if (!header) {
-      return EMPTY;
-    }
+        return this.http.post<Tracklist>(url, {}, { headers: header }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
 
-    let formattedStartDate: string = '';
-    let formattedEndDate: string = '';
+    // functions for creating a new movie tracklist --------------------------------------------
 
-    if (tracklistData.tracklist_start_date) {
-      let startDateAsDate: Date = new Date(tracklistData.tracklist_start_date);
+    public triggerTracklistCREATEMOVIESubject = (
+        tracklistData: CreateMovieTracklistData
+    ) => {
+        this.tracklistCREATEMOVIESubject.next(tracklistData);
+    };
 
-      startDateAsDate.setDate(startDateAsDate.getDate() + 1);
-      formattedStartDate = startDateAsDate.toISOString().split('T')[0];
-    }
+    public getTracklistCREATEMOVIESubjectResponse = (): Observable<any> => {
+        return this.tracklistCREATEMOVIEResponseSubject.asObservable();
+    };
 
-    if (tracklistData.tracklist_finish_date) {
-      let endDateAsDate: Date = new Date(tracklistData.tracklist_finish_date);
+    private createNewMovieTracklist = (
+        data: CreateMovieTracklistData
+    ): Observable<any> => {
+        const header = this.getHeader();
 
-      endDateAsDate.setDate(endDateAsDate.getDate() + 1);
-      formattedEndDate = endDateAsDate.toISOString().split('T')[0];
-    }
+        if (!header) {
+            return EMPTY;
+        }
 
-    const url: string =
-      ROUTE_UPDATE_TRACKLIST[0] +
-      tracklistData.tracklist_id +
-      ROUTE_UPDATE_TRACKLIST[1] +
-      tracklistData.tracklist_status +
-      ROUTE_UPDATE_TRACKLIST[2] +
-      encodeURIComponent(tracklistData.tracklist_name) +
-      ROUTE_UPDATE_TRACKLIST[3] +
-      tracklistData.tracklist_rating +
-      ROUTE_UPDATE_TRACKLIST[4] +
-      formattedStartDate +
-      ROUTE_UPDATE_TRACKLIST[5] +
-      formattedEndDate;
+        let formattedDate: string = '';
+        let formattedEndDate: string = '';
 
-    return this.http.patch<Tracklist>(url, {}, { headers: header }).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
+        if (data.startDate) {
+            let startDateAsDate: Date = new Date(data.startDate);
+            startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+            formattedDate = startDateAsDate.toISOString().split('T')[0];
+        }
 
-  // functions for deleting traclists ----------------------------------------------------------------
+        if (data.endDate) {
+            let endDateAsDate: Date = new Date(data.endDate);
+            endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+            formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+        }
 
-  public triggerTracklistDELETESubject = (tracklistID: number) => {
-    this.tracklistDELETESubject.next(tracklistID);
-  };
+        const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${encodeURIComponent(
+            data.name
+        )}${ROUTE_CREATE_NEW_TRACKLIST[1]}${data.status}${ROUTE_CREATE_NEW_TRACKLIST[2]
+            }${data.mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${ROUTE_CREATE_NEW_TRACKLIST[5]
+            }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]
+            }${data.rating ? data.rating : ''}`;
 
-  public getTracklistDELETEResponseSubject = (): Observable<any> => {
-    return this.tracklistDELETEResponseSubject.asObservable();
-  };
+        return this.http.post<any>(url, {}, { headers: header }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
 
-  private deleteTracklist = (tracklistID: number): Observable<any> => {
-    const header = this.getHeader();
+    // update tracklist functions -----------------------------------------------------------------------------------
 
-    if (!header) {
-      return EMPTY;
-    }
+    public triggerTracklistUPDATESubject = (
+        tracklistData: UpdateTracklistRequest
+    ) => {
+        this.tracklistUPDATESubject.next(tracklistData); // Schicke die Daten an den Subject
+    };
 
-    const url: string = ROUTE_DELETE_TRACKLIST + tracklistID;
+    // Diese Methode gibt das Observable der Antwort zurück, um es im Component zu abonnieren
+    public getTracklistUPDATEResponseSubject = (): Observable<Tracklist> => {
+        return this.tracklistUPDATEResponseSubject.asObservable();
+    };
 
-    return this.http.delete(url, { headers: header }).pipe(
-      shareReplay(1),
-      catchError((error: HttpErrorResponse) => {
-        return throwError(() => error);
-      })
-    );
-  };
+    private updateTracklist = (
+        tracklistData: UpdateTracklistRequest
+    ): Observable<Tracklist> => {
+        const header = this.getHeader();
 
-  // other functions --------------------------------------------------------------------------------
+        if (!header) {
+            return EMPTY;
+        }
 
-  public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
-    const header = this.getHeader();
+        let formattedStartDate: string = '';
+        let formattedEndDate: string = '';
 
-    if (!header) {
-      return null;
-    }
+        if (tracklistData.tracklist_start_date) {
+            let startDateAsDate: Date = new Date(tracklistData.tracklist_start_date);
 
-    return this.http
-      .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
-        headers: header,
-      })
-      .pipe(
-        shareReplay(1),
-        catchError((error: HttpErrorResponse) => {
-          return throwError(() => error);
-        })
-      );
-  };
+            startDateAsDate.setDate(startDateAsDate.getDate() + 1);
+            formattedStartDate = startDateAsDate.toISOString().split('T')[0];
+        }
+
+        if (tracklistData.tracklist_finish_date) {
+            let endDateAsDate: Date = new Date(tracklistData.tracklist_finish_date);
+
+            endDateAsDate.setDate(endDateAsDate.getDate() + 1);
+            formattedEndDate = endDateAsDate.toISOString().split('T')[0];
+        }
+
+        const url: string =
+            ROUTE_UPDATE_TRACKLIST[0] +
+            tracklistData.tracklist_id +
+            ROUTE_UPDATE_TRACKLIST[1] +
+            tracklistData.tracklist_status +
+            ROUTE_UPDATE_TRACKLIST[2] +
+            encodeURIComponent(tracklistData.tracklist_name) +
+            ROUTE_UPDATE_TRACKLIST[3] +
+            tracklistData.tracklist_rating +
+            ROUTE_UPDATE_TRACKLIST[4] +
+            formattedStartDate +
+            ROUTE_UPDATE_TRACKLIST[5] +
+            formattedEndDate;
+
+        return this.http.patch<Tracklist>(url, {}, { headers: header }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
+
+    // functions for deleting traclists ----------------------------------------------------------------
+
+    public triggerTracklistDELETESubject = (tracklistID: number) => {
+        this.tracklistDELETESubject.next(tracklistID);
+    };
+
+    public getTracklistDELETEResponseSubject = (): Observable<any> => {
+        return this.tracklistDELETEResponseSubject.asObservable();
+    };
+
+    private deleteTracklist = (tracklistID: number): Observable<any> => {
+        const header = this.getHeader();
+
+        if (!header) {
+            return EMPTY;
+        }
+
+        const url: string = ROUTE_DELETE_TRACKLIST + tracklistID;
+
+        return this.http.delete(url, { headers: header }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    };
+
+    // other functions --------------------------------------------------------------------------------
+
+    public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
+        const header = this.getHeader();
+
+        if (!header) {
+            return null;
+        }
+
+        return this.http
+            .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
+                headers: header,
+            })
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => error);
+                })
+            );
+    };
 }

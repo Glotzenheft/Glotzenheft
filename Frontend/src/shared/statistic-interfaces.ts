@@ -1,8 +1,8 @@
 export interface WatchTimeStatistic {
-  [date: string]: number;
+    [date: string]: number;
 }
 
 export interface RatingStatistic {
-  [key: string]: number;
-  no_rating: number;
+    [key: string]: number;
+    no_rating: number;
 }

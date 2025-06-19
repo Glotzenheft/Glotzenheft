@@ -1,10 +1,10 @@
 .about {
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
-  padding-top: var(--padding--top-bottom);
-  padding-bottom: var(--padding--top-bottom);
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
 }
 
 .about article {
-  text-align: justify;
+    text-align: justify;
 }
