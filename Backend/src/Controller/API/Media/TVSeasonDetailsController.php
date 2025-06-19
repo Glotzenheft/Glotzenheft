@@ -12,12 +12,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TVSeasonDetailsController extends AbstractController
 {
-    public function __construct
-    (
+    public function __construct(
         private readonly TMDBTVSeasonDetailsService $service
-    )
-    {
-    }
+    ){}
 
     /**
      * @param Request $request

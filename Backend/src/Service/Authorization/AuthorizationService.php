@@ -144,7 +144,7 @@ class AuthorizationService
             'sub' => $user->getId(),  // User-ID als Subject
             'username' => $user->getUsername(),
             'iat' => time(),
-            'exp' => time() + 604800, // 1 Woche gültig
+            'exp' => time() + (604800 * 4), // 4 Woche gültig
         ];
         $jwt = JWT::encode($payload, $privateKey, 'RS256');
 

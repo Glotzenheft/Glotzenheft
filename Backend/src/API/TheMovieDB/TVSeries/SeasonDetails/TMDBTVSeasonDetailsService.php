@@ -17,8 +17,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterface
 {
-    public function __construct
-    (
+    public function __construct(
         #[Autowire('%env(TMDB_TOKEN)%')]
         private string $tmdbToken,
         #[Autowire('%env(TMDB_TV_SERIES_DETAILS_URL)%')]
@@ -26,9 +25,7 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
         private HttpClientInterface $httpClient,
         private LoggerInterface $logger,
         private EntityManagerInterface $entityManager
-    )
-    {
-    }
+    ){}
 
     public function getTVSeasonDetails(int $seriesID, int $seasonNumber, string $language = 'de-DE'): array
     {

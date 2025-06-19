@@ -19,7 +19,7 @@ readonly class TMDBGenreService implements TMDBGenreInterface
         private string $tvGenreURL,
         #[Autowire('%env(TMDB_MOVIE_GENRE_URL)%')]
         private string $movieGenreURL,
-        public readonly LoggerInterface $logger,
+        public LoggerInterface $logger,
     )
     {
         $this->client = new Client();
