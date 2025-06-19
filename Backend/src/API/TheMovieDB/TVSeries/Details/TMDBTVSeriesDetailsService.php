@@ -13,17 +13,14 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 readonly class TMDBTVSeriesDetailsService implements TMDBTVSeriesDetailsInterface
 {
 
-    public function __construct
-    (
+    public function __construct(
         #[Autowire('%env(TMDB_TOKEN)%')]
         private string $tmdbToken,
         #[Autowire('%env(TMDB_TV_SERIES_DETAILS_URL)%')]
         private string $apiUrl,
         private HttpClientInterface $httpClient,
         private LoggerInterface $logger
-    )
-    {
-    }
+    ){}
 
     public function getTVSeriesDetails(int $seriesID, string $language = 'de-DE'): array
     {

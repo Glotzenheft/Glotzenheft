@@ -13,12 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistEpisodeController extends AbstractController
 {
-    public function __construct
-    (
+    public function __construct(
         private readonly TracklistEpisodeService $tracklistEpisodeService
-    )
-    {
-    }
+    ){}
 
     /**
      * Creates an entry in tracklist_episode.

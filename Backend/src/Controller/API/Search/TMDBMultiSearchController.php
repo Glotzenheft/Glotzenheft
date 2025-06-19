@@ -15,13 +15,10 @@ use Symfony\Component\Routing\Attribute\Route;
 class TMDBMultiSearchController extends AbstractController
 {
 
-    public function __construct
-    (
+    public function __construct(
         private readonly TMDBMultiSearchService $multiSearchService,
         private readonly LoggerInterface $logger
-    )
-    {
-    }
+    ){}
 
     /**
      * @example https://127.0.0.1:8000/api/multi-search?q=solo%20leveling

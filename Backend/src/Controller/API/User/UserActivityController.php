@@ -15,12 +15,9 @@ use Symfony\Component\Routing\Attribute\Route;
 class UserActivityController extends AbstractController
 {
 
-    public function __construct
-    (
+    public function __construct(
         private readonly UserActivityService $userActivityService
-    )
-    {
-    }
+    ){}
 
     /**
      * Retrieves the latest user activities, which are watched episodes and completed movies.

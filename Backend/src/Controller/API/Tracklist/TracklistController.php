@@ -13,12 +13,9 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistController extends AbstractController
 {
-    public function __construct
-    (
+    public function __construct(
         private readonly TracklistService $tracklistService
-    )
-    {
-    }
+    ){}
 
     /**
      * Retrieve all tracklists from a user.
