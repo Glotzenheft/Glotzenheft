@@ -27,8 +27,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
 import {
-  DeleteUserRequest,
-  UserActivity,
+  DeleteUserRequest, UserActivitiesResponse
 } from '../../shared/interfaces/user-interfaces';
 import { MediaService } from '../media/media.service';
 import {RatingStatistic, WatchTimeStatistic} from '../../shared/statistic-interfaces';
@@ -139,7 +138,7 @@ export class UserService {
     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
 
     // navigate to login page
-    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
   };
 
   public showNoAccessMessage = () => {
@@ -290,7 +289,7 @@ export class UserService {
    */
   public getUserActivities = (
     responsePage: number
-  ): Observable<UserActivity[]> | null => {
+  ): Observable<UserActivitiesResponse> | null => {
     const header = this.mediaService.getHeader();
 
     if (!header) {
@@ -298,7 +297,7 @@ export class UserService {
     }
 
     return this.http
-      .get<UserActivity[]>(ROUTE_USER_ACTIVITIES + responsePage, {
+      .get<UserActivitiesResponse>(ROUTE_USER_ACTIVITIES + responsePage, {
         headers: header,
       })
       .pipe(

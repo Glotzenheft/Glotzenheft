@@ -8,7 +8,18 @@
     [disabled]="isLeftButtonDisabled"
   />
 
-  <p>aktuelle Seite: {{ this.currentPage }}</p>
+  <div>
+    Seite
+    <p-select
+      [options]="pageOptions"
+      [ngModel]="currentPage"
+      (ngModelChange)="onPageSelect($event)"
+      [style]="{width: '6rem'}"
+    />
+    <span> von {{ totalPages }} - Gesamtaktivitäten: <strong>{{ totalResults }}</strong></span>
+  </div>
+
+
   <p-button
     icon="pi pi-angle-right"
     pTooltip="nächste Seite"
@@ -34,7 +45,7 @@
 
 <ng-container *ngIf="!isLoading && !serverNotAvailablePage">
   <div
-    *ngIf="userActivitiesRequest$ | async as userActivitiesRequest"
+    *ngIf="userActivitiesRequest$ | async "
     class="userActivitiesTable"
   >
     <div class="userActivitesTableDIV">
@@ -57,9 +68,7 @@
         <ng-template #body let-tracklist>
           <tr *ngIf="!tracklist.isDateSplitter">
             <td>
-              <ng-container
-                *ngIf="getPicture(tracklist) as picture; else noImage"
-              >
+              <ng-container *ngIf="tracklist.picture as picture; else noImage">
                 <img
                   [src]="posterPath + picture"
                   [alt]="
