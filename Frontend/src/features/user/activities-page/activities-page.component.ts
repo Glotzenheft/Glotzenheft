@@ -52,8 +52,6 @@ export class ActivitiesPageComponent implements OnInit {
   public pageOptions: { label: string; value: number }[] = [];
   public isLeftButtonDisabled: boolean = true;
   public isRightButtonDisabled: boolean = false;
-  public rightButtonPagesLimit: number | null = null;
-
   public isTableLoading: boolean = false;
   public isError: boolean = false;
   public serverNotAvailablePage: boolean = false;
@@ -93,10 +91,12 @@ export class ActivitiesPageComponent implements OnInit {
         this.totalPages   = response.total_pages;
         this.totalResults = response.total_results;
 
-        this.pageOptions = Array.from({ length: this.totalPages }, (_, i) => ({
-          label: (i + 1).toString(),
-          value: i + 1,
-        }));
+        this.pageOptions = this.totalPages > 0
+          ? Array.from({ length: this.totalPages }, (_, i) => ({
+            label: (i + 1).toString(),
+            value: i + 1,
+          }))
+          : [{ label: '0', value: 0 }];
 
         const sortedUserActivities: UserActivity[] = userActivities.sort(
           (a: UserActivity, b: UserActivity) => {
@@ -173,34 +173,18 @@ export class ActivitiesPageComponent implements OnInit {
         });
 
         // logic for pagination -------------------------------------------------
-        if (this.currentPage < 2) {
+        if (this.totalPages === 0) {
+          this.currentPage = 0;
+          this.isLeftButtonDisabled = true;
+          this.isRightButtonDisabled = true;
+        }
+        else if (this.currentPage === 1) {
+          this.isRightButtonDisabled = this.currentPage == this.totalPages;
           this.isLeftButtonDisabled = true;
         }
-
-        if (this.rightButtonPagesLimit) {
-          if (this.currentPage < this.rightButtonPagesLimit - 1) {
-            this.isRightButtonDisabled = false;
-          } else if (this.currentPage < this.rightButtonPagesLimit) {
-            this.isRightButtonDisabled = true;
-          }
-        } else {
-          if (userActivities.length < 1 && this.currentPage > 1) {
-            // return to previous page if loaded page has no entries
-            this.isRightButtonDisabled = true;
-            this.currentPage -= 1;
-            this.rightButtonPagesLimit = page;
-            this.loadUserActivities(this.currentPage);
-            return;
-          } else if (userActivities.length < 2 && this.currentPage < 2) {
-            this.isLeftButtonDisabled = true;
-            this.isRightButtonDisabled = true;
-          } else if (this.currentPage === 1) {
-            this.isRightButtonDisabled = false;
-            this.isLeftButtonDisabled = true;
-          } else {
-            this.isRightButtonDisabled = userActivities.length <= 0;
-            this.isLeftButtonDisabled = this.currentPage === 1;
-          }
+        else if (this.currentPage > 1) {
+          this.isRightButtonDisabled = this.currentPage >= this.totalPages;
+          this.isLeftButtonDisabled = false;
         }
         this.isLoading = false;
       },
@@ -208,7 +192,7 @@ export class ActivitiesPageComponent implements OnInit {
         if (err.status === 401) {
           this.userService.logoutOfAccount();
           this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+          void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 
           return;
         } else if (err.status === 0) {
@@ -232,7 +216,8 @@ export class ActivitiesPageComponent implements OnInit {
   };
 
   public changeToNextPage = () => {
-    if (this.isRightButtonDisabled) {
+    if (this.currentPage == this.totalPages) {
+      this.isRightButtonDisabled = true;
       return;
     }
     this.currentPage += 1;
@@ -242,7 +227,8 @@ export class ActivitiesPageComponent implements OnInit {
   };
 
   public changeToPreviousPage = () => {
-    if (this.isLeftButtonDisabled) {
+    if (this.currentPage == 1) {
+      this.isLeftButtonDisabled = true;
       return;
     }
 
