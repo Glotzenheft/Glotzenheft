@@ -2,8 +2,8 @@
 
 namespace App\Service\Statistic;
 
+use App\Entity\Tracklist;
 use App\Entity\User;
-use App\Enum\MediaType;
 use App\Service\RequestTrait;
 use DateTimeImmutable;
 use Exception;
@@ -17,8 +17,6 @@ class StatisticService
     {
         $this->data = $this->handleRequest($request);
 
-        $watchTimeArray = [];
-        $watchTimeUnknownDate = 0;
         try
         {
             $periodStart = isset($this->data['period_start_date'])
@@ -40,81 +38,98 @@ class StatisticService
             return $this->returnUserNotFound();
         }
 
-        $tracklists = $user->getTracklists();
-        foreach ($tracklists as $tracklist)
+        $conn = $this->entityManager->getConnection();
+
+        $sql = <<<'SQL'
+SELECT   day, SUM(minutes) AS minutes
+FROM    (
+    SELECT DATE(te.watch_date)        AS day,
+           SUM(e.runtime)             AS minutes
+    FROM   tracklist_episode   te
+    JOIN   tracklist_season    ts ON ts.id = te.tracklist_season_id
+    JOIN   tracklist           tl ON tl.id = ts.tracklist_id
+    JOIN   episode             e  ON e.id  = te.episode_id
+    WHERE  tl.user_id = :userId
+      AND  te.watch_date BETWEEN :start AND :end
+    GROUP  BY DATE(te.watch_date)
+
+    UNION ALL
+
+    SELECT DATE(tl.finish_date)       AS day,
+           SUM(m.runtime)             AS minutes
+    FROM   tracklist           tl
+    JOIN   media               m  ON m.id = tl.media_id
+    WHERE  tl.user_id = :userId
+      AND  m.type   = 'Movie'
+      AND  tl.finish_date BETWEEN :start AND :end
+    GROUP  BY DATE(tl.finish_date)
+) AS daily
+GROUP BY day
+ORDER BY day DESC
+SQL;
+
+        try
         {
-            $media = $tracklist->getMedia();
-            if ($media->getType() === MediaType::Movie)
-            {
-                $finishDate = $tracklist->getFinishDate();
-                $finishDateString = $finishDate?->format('Y-m-d');
-                if ($finishDate)
-                {
-                    if (!isset($watchTimeArray[$finishDateString]))
-                    {
-                        $watchTimeArray[$finishDateString] = 0;
-                    }
-
-                    if ($finishDate >= $periodStart && $finishDate <= $periodEnd)
-                    {
-                        $watchTimeArray[$finishDateString] += $media->getRuntime();
-                    }
-                }
-                else
-                {
-                    $watchTimeUnknownDate += $media->getRuntime();
-                }
-
-            }
-            elseif ($media->getType() === MediaType::TV)
-            {
-                $tracklistSeasons = $tracklist->getTracklistSeasons();
-                foreach ($tracklistSeasons as $tracklistSeason)
-                {
-                    $tracklistEpisodes = $tracklistSeason->getTracklistEpisodes();
-                    foreach ($tracklistEpisodes as $tracklistEpisode)
-                    {
-                        $watchDate = $tracklistEpisode->getWatchDate();
-                        $watchDateString = $watchDate?->format('Y-m-d');
-                        if ($watchDate)
-                        {
-                            if (!isset($watchTimeArray[$watchDateString]))
-                            {
-                                $watchTimeArray[$watchDateString] = 0;
-                            }
-
-                            if ($watchDate >= $periodStart && $watchDate <= $periodEnd)
-                            {
-                                $watchTimeArray[$watchDateString] += $tracklistEpisode->getEpisode()->getRuntime();
-                            }
-
-                        }
-                        else
-                        {
-                            $watchTimeUnknownDate += $tracklistEpisode->getEpisode()->getRuntime();
-                        }
-                    }
-                }
-            }
+            $rows = $conn->executeQuery(
+                $sql,
+                [
+                    'userId' => $this->data['user_id'],
+                    'start' => $periodStart->format('Y-m-d 00:00:00'),
+                    'end' => $periodEnd->format('Y-m-d 23:59:59'),
+                ]
+            )->fetchAllAssociative();
+        }
+        catch (Exception)
+        {
+            return $this->returnDatabaseError();
         }
 
-        $watchTimeArray['unknown_date'] = $watchTimeUnknownDate;
 
-        $filteredWatchTimeArray = array_filter($watchTimeArray, function ($value) {
-            return $value !== 0;
-        });
+        $watchTime = [];
+        $watchTime['unknown_date'] = 0;
+        foreach ($rows as $row)
+        {
+            $watchTime[$row['day']] = (int)$row['minutes'];
+        }
 
-        krsort($filteredWatchTimeArray);
+        $unknownSql = <<<'SQL'
+SELECT SUM(r.minutes) FROM (
+    SELECT SUM(e.runtime) AS minutes
+    FROM   tracklist_episode te
+    JOIN   tracklist_season ts ON ts.id = te.tracklist_season_id
+    JOIN   tracklist        tl ON tl.id = ts.tracklist_id
+    JOIN   episode          e  ON e.id  = te.episode_id
+    WHERE  tl.user_id = :userId
+      AND  te.watch_date IS NULL
 
-        return $filteredWatchTimeArray;
+    UNION ALL
+
+    SELECT SUM(m.runtime) AS minutes
+    FROM   tracklist tl
+    JOIN   media     m ON m.id = tl.media_id
+    WHERE  tl.user_id     = :userId
+      AND  tl.finish_date IS NULL
+      AND  m.type = 'Movie'
+) AS r
+SQL;
+
+        try
+        {
+            $unknownMinutes = (int)$conn->fetchOne($unknownSql, ['userId' => $this->data['user_id']]);
+        }
+        catch (Exception)
+        {
+            return $this->returnDatabaseError();
+        }
+
+        if ($unknownMinutes > 0) $watchTime['unknown_date'] = $unknownMinutes;
+
+        return $watchTime;
     }
 
     public function getUserRatings(Request $request): array
     {
         $this->data = $this->handleRequest($request);
-
-        $ratings = [];
-        $ratings['no_rating'] = 0;
 
         $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
         if (!$user instanceof User)
@@ -122,26 +137,51 @@ class StatisticService
             return $this->returnUserNotFound();
         }
 
-        $tracklists = $user->getTracklists();
-        foreach ($tracklists as $tracklist)
+        $qb = $this->entityManager->createQueryBuilder();
+        $qb->select(
+            "CASE WHEN t.rating IS NULL THEN 'no_rating' 
+                  ELSE CONCAT(t.rating, '') END AS rating_key",
+            "COUNT(t.id) AS cnt"
+        )
+            ->from(Tracklist::class, 't')
+            ->where('t.user = :user')
+            ->groupBy('rating_key')
+            ->setParameter('user', $user);
+
+        try
         {
-            $rating = $tracklist->getRating();
-            if (!$rating)
+            /** @var array{rating_key:string, cnt:string}[] $rows */
+            $rows = $qb
+                ->getQuery()
+                ->getArrayResult();
+        }
+        catch (Exception)
+        {
+            return $this->returnDatabaseError();
+        }
+
+        // 4) PHP-Seitige Aufbereitung & Sortierung
+        $numeric = [];
+        $noRating = 0;
+        foreach ($rows as $row)
+        {
+            if ($row['rating_key'] === 'no_rating')
             {
-                $ratings['no_rating']++;
+                $noRating = (int)$row['cnt'];
             }
             else
             {
-                if (!isset($ratings[$rating]))
-                {
-                    $ratings[$rating] = 0;
-                }
-
-                $ratings[$rating]++;
+                $numeric[(int)$row['rating_key']] = (int)$row['cnt'];
             }
         }
 
-        ksort($ratings);
+        ksort($numeric, SORT_NUMERIC);
+
+        $ratings = ['no_rating' => $noRating];
+        foreach ($numeric as $rate => $cnt)
+        {
+            $ratings[(string)$rate] = $cnt;
+        }
 
         return $ratings;
     }

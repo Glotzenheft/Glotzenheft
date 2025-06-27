@@ -36,6 +36,45 @@ class UserActivityService
         }
 
         $userId = $user->getId();
+        $conn   = $this->entityManager->getConnection();
+
+        $countSql =<<<SQL
+SELECT
+    (
+       SELECT COUNT(*)
+       FROM tracklist_episode te
+       JOIN tracklist_season ts ON ts.id = te.tracklist_season_id
+       JOIN tracklist        t  ON t.id  = ts.tracklist_id
+       WHERE t.user_id = :userId
+         AND te.watch_date IS NOT NULL
+    ) +
+    (
+       SELECT COUNT(*)
+       FROM tracklist t
+       JOIN media     m ON m.id = t.media_id
+       WHERE t.user_id = :userId
+         AND t.finish_date IS NOT NULL
+         AND m.type = 'movie'
+    ) AS total_results
+SQL;
+
+        try
+        {
+            $total = (int) $conn->fetchOne($countSql, ['userId' => $userId]);
+            if ($total === 0)
+            {
+                return $this->createPaginatedResponse(
+                    page:   $page,
+                    limit:  $limit,
+                    total:  $total,
+                    rows:   []
+                );
+            }
+        }
+        catch(Exception)
+        {
+            return $this->returnDatabaseError();
+        }
 
         $sql =<<<SQL
 (SELECT 
@@ -80,7 +119,7 @@ UNION ALL
     NULL AS tracklistSeasinID,
     NULL AS tracklistEpisodeID,
     m.poster_path AS posterPath,
-    NULL AS stillPath
+    m.backdrop_path AS stillPath
 FROM tracklist t
 JOIN media m ON t.media_id = m.id
 WHERE t.user_id = :userId 
@@ -93,17 +132,43 @@ SQL;
 
         try
         {
-            $stmt = $this->entityManager->getConnection()->prepare($sql);
+            $stmt = $conn->prepare($sql);
             $stmt->bindValue('userId', $userId, PDO::PARAM_INT);
             $stmt->bindValue('limit', $limit, PDO::PARAM_INT);
             $stmt->bindValue('offset', $offset, PDO::PARAM_INT);
+            $rows = $stmt->executeQuery()->fetchAllAssociative();
 
-            $result = $stmt->executeQuery();
-            return $result->fetchAllAssociative();
+            return $this->createPaginatedResponse(
+                page:   $page,
+                limit:  $limit,
+                total:  $total,
+                rows:   $rows
+            );
         }
-        catch (Exception $e)
+        catch (Exception)
         {
             return $this->returnDatabaseError();
         }
+    }
+
+    /**
+     * @param int $page
+     * @param int $limit
+     * @param int $total
+     * @param array $rows
+     * @return array{page:int,total_pages:int,total_results:int,results:array}
+     */
+    private function createPaginatedResponse(int $page, int $limit, int $total, array $rows): array
+    {
+        $totalPages = $total > 0
+            ? (int) ceil($total / $limit)
+            : 0;
+
+        return [
+            'page'          => $page,
+            'total_pages'   => $totalPages,
+            'total_results' => $total,
+            'results'       => $rows,
+        ];
     }
 }

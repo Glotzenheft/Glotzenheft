@@ -12,6 +12,8 @@ use Symfony\Component\Serializer\Attribute\Context;
 
 #[ORM\Entity(repositoryClass: TracklistEpisodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[ORM\Table(name: 'tracklist_episode')]
+#[ORM\Index(name: 'idx_episode_watch_date', columns: ['watch_date'])]
 class TracklistEpisode
 {
     use TimestampsTrait;
