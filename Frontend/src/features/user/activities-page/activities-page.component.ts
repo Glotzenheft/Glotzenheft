@@ -5,6 +5,7 @@ import { UserService } from '../../../service/user/user.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import {
+  UserActivitiesResponse,
   UserActivity,
   UserActivityWithDaySplitt,
 } from '../../../shared/interfaces/user-interfaces';
@@ -19,6 +20,9 @@ import {
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import {DropdownModule} from 'primeng/dropdown';
+import {FormsModule} from '@angular/forms';
+import {Select} from 'primeng/select';
 
 @Component({
   selector: 'app-activities-page',
@@ -30,21 +34,25 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
     ButtonModule,
     TooltipModule,
     ProgressSpinnerModule,
+    DropdownModule,
+    FormsModule,
+    Select,
   ],
   templateUrl: './activities-page.component.html',
   styleUrl: './activities-page.component.css',
 })
 export class ActivitiesPageComponent implements OnInit {
   // variables for user activities overview
-  public userActivitiesRequest$: Observable<UserActivity[]> | null = null;
-  public userActivitiesRequest: UserActivity[] = [];
+  public userActivitiesRequest$: Observable<UserActivitiesResponse> | null = null;
   public userActivitiesListWithDaySplitter: UserActivityWithDaySplitt[] = [];
 
   public currentPage: number = 1;
+  public totalPages: number = 1;
+  public totalResults: number = 0;
+  public pageOptions: { label: string; value: number }[] = [];
   public isLeftButtonDisabled: boolean = true;
   public isRightButtonDisabled: boolean = false;
   public rightButtonPagesLimit: number | null = null;
-  public isRightLimit: boolean = false;
 
   public isTableLoading: boolean = false;
   public isError: boolean = false;
@@ -77,7 +85,19 @@ export class ActivitiesPageComponent implements OnInit {
     }
 
     this.userActivitiesRequest$.subscribe({
-      next: (userActivities: UserActivity[]) => {
+      next: (response) => {
+        const userActivities = response.results;
+        this.currentPage = response.page;
+        this.isLeftButtonDisabled  = this.currentPage === 1;
+        this.isRightButtonDisabled = this.currentPage === this.totalPages;
+        this.totalPages   = response.total_pages;
+        this.totalResults = response.total_results;
+
+        this.pageOptions = Array.from({ length: this.totalPages }, (_, i) => ({
+          label: (i + 1).toString(),
+          value: i + 1,
+        }));
+
         const sortedUserActivities: UserActivity[] = userActivities.sort(
           (a: UserActivity, b: UserActivity) => {
             return new Date(b.date).getTime() - new Date(a.date).getTime();
@@ -136,6 +156,7 @@ export class ActivitiesPageComponent implements OnInit {
               tracklistSeasinID: null,
               type: '',
               isDateSplitter: true,
+              picture: null
             });
 
             lastDateKey = dateKey;
@@ -145,14 +166,13 @@ export class ActivitiesPageComponent implements OnInit {
           this.userActivitiesListWithDaySplitter.push({
             ...userActivity,
             isDateSplitter: false,
+            picture: userActivity.stillPath !== null
+              ? userActivity.stillPath
+              : userActivity.posterPath
           });
         });
 
         // logic for pagination -------------------------------------------------
-        this.currentPage = page;
-
-        // this.currentPage = page;
-
         if (this.currentPage < 2) {
           this.isLeftButtonDisabled = true;
         }
@@ -230,26 +250,15 @@ export class ActivitiesPageComponent implements OnInit {
     this.loadUserActivities(this.currentPage);
   };
 
-  public getPicture = (currentActivity: UserActivity): string | null => {
-    if (!currentActivity.stillPath && !currentActivity.posterPath) {
-      return null;
-    }
-
-    if (currentActivity.type === 'movie') {
-      return currentActivity.posterPath;
+  public onClickActivity = (activity: UserActivityWithDaySplitt) => {
+    if (activity.type === 'movie') {
+      void this.router.navigateByUrl(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
     } else {
-      return currentActivity.stillPath;
+      void this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
     }
   };
 
-  public onClickActivity = (activity: UserActivityWithDaySplitt) => {
-    if (activity.type === 'movie') {
-      this.router.navigateByUrl(
-        `${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`
-      );
-      return;
-    }
-
-    this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+  public onPageSelect = (page: number) => {
+    this.loadUserActivities(page);
   };
 }

@@ -14,6 +14,13 @@ export interface DeleteUserRequest {
   security_answer: string;
 }
 
+export interface UserActivitiesResponse {
+  page: number;
+  total_pages: number;
+  total_results: number;
+  results: UserActivity[];
+}
+
 export interface UserActivity {
   date: string;
   episodeID: number | null;
@@ -49,6 +56,7 @@ export interface UserActivityWithDaySplitt {
   tracklistSeasinID: number | null;
   type: string;
   isDateSplitter: boolean;
+  picture: string | null;
 }
 
 export interface UserActivitiesPageEvent {
