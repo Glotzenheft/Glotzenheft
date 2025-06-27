@@ -227,7 +227,7 @@ export class ActivitiesPageComponent implements OnInit {
   };
 
   public changeToPreviousPage = () => {
-    if (this.currentPage == 1) {
+    if (this.currentPage < 2) {
       this.isLeftButtonDisabled = true;
       return;
     }
