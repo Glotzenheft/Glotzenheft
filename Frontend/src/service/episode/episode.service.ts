@@ -1,14 +1,9 @@
 import { HttpClient, HttpErrorResponse } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { MediaService } from '../media/media.service';
-import { catchError, Observable, share, shareReplay, throwError } from 'rxjs';
-import {
-    ROUTE_CREATE_TRACKLIST_EPISODE,
-    ROUTE_DELETE_TRACKLIST_EPISODE,
-    ROUTE_UPDATE_TRACKLIST_EPISODE,
-} from '../../shared/variables/api-routes';
-import { CreateTracklistEpisode } from '../../shared/interfaces/tracklist-episode-interfaces';
-import { error } from 'console';
+import { catchError, Observable, shareReplay, throwError } from 'rxjs';
+import { CreateTracklistEpisode } from '../../app/shared/interfaces/tracklist-episode-interfaces';
+import { ROUTE_CREATE_TRACKLIST_EPISODE, ROUTE_DELETE_TRACKLIST_EPISODE, ROUTE_UPDATE_TRACKLIST_EPISODE } from '../../app/shared/variables/api-routes';
 
 @Injectable({
     providedIn: 'root',

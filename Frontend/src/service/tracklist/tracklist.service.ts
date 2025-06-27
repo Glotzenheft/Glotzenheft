@@ -1,19 +1,10 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
-import {
-  Season,
-  SeasonWithEpisodes,
-} from '../../shared/interfaces/media-interfaces';
-import {
-  ExtractedTracklist,
-  SeasonTracklist,
-  TracklistEpisode,
-  TVSeasonWithTracklist,
-  TVWithTracklist,
-} from '../../shared/interfaces/tracklist-interfaces';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/local-storage-keys';
+import { Season, SeasonWithEpisodes } from '../../app/shared/interfaces/media-interfaces';
+import { ExtractedTracklist, SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist, TVWithTracklist } from '../../app/shared/interfaces/tracklist-interfaces';
+import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../app/shared/variables/local-storage-keys';
 
 @Injectable({
   providedIn: 'root',

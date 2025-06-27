@@ -1,11 +1,5 @@
 import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import {
-    Film,
-    MediaIDResponse,
-    Season,
-    UpdateTracklistRequest,
-} from '../../shared/interfaces/media-interfaces';
-import {
     catchError,
     EMPTY,
     exhaustMap,
@@ -20,24 +14,12 @@ import {
     HttpErrorResponse,
     HttpHeaders,
 } from '@angular/common/http';
-import {
-    ROUTE_CREATE_NEW_TRACKLIST,
-    ROUTE_DELETE_TRACKLIST,
-    ROUTE_GET_ALL_USER_TRACKLISTS,
-    ROUTE_MEDIA_DETAILS_SEARCH,
-    ROUTE_MEDIA_ID_FOR_MEDIA,
-    ROUTE_MOVIE_DETAILS_SEARCH,
-    ROUTE_MULTI_SEARCH,
-    ROUTE_UPDATE_TRACKLIST,
-} from '../../shared/variables/api-routes';
 import { isPlatformBrowser } from '@angular/common';
-import {
-    CreateMovieTracklistData,
-    CreateSeasonTracklistData,
-    Tracklist,
-} from '../../shared/interfaces/tracklist-interfaces';
-import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
-import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
+import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from '../../app/shared/interfaces/media-interfaces';
+import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from '../../app/shared/interfaces/tracklist-interfaces';
+import { REQUEST_THROTTLE_TIME } from '../../app/shared/variables/message-vars';
+import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../app/shared/variables/local-storage-keys';
+import { ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../app/shared/variables/api-routes';
 
 @Injectable({
     providedIn: 'root',

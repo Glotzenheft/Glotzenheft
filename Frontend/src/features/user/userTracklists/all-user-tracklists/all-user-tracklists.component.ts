@@ -9,243 +9,238 @@ import { AccordionModule } from 'primeng/accordion';
 import { PanelModule } from 'primeng/panel';
 import { RatingModule } from 'primeng/rating';
 import {
-  FormBuilder,
-  FormGroup,
-  FormsModule,
-  ReactiveFormsModule,
+    FormBuilder,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
 } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { UpdateFilmTracklistComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
 import { UpdateTracklistFormComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
-import { Tracklist } from '../../../../shared/interfaces/tracklist-interfaces';
-import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
-import {
-  convertTracklistStatusIntoGerman,
-  TRACK_LIST_STATUS_LIST,
-  TRACK_LIST_STATUS_LIST_AS_OBJECT,
-  TracklistStatusType,
-} from '../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../service/media/media.service';
-import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST_AS_OBJECT, TracklistStatusType } from '../../../../app/shared/variables/tracklist';
+import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 
 @Component({
-  selector: 'app-all-user-tracklists',
-  imports: [
-    CommonModule,
-    CardModule,
-    DateFormattingPipe,
-    DialogModule,
-    TableModule,
-    AccordionModule,
-    PanelModule,
-    RatingModule,
-    FormsModule,
-    ButtonModule,
-    UpdateFilmTracklistComponent,
-    UpdateTracklistFormComponent,
-    ProgressSpinnerModule,
-    SelectModule,
-    ReactiveFormsModule,
-    FloatLabelModule,
-  ],
-  templateUrl: './all-user-tracklists.component.html',
-  styleUrl: './all-user-tracklists.component.css',
+    selector: 'app-all-user-tracklists',
+    imports: [
+        CommonModule,
+        CardModule,
+        DateFormattingPipe,
+        DialogModule,
+        TableModule,
+        AccordionModule,
+        PanelModule,
+        RatingModule,
+        FormsModule,
+        ButtonModule,
+        UpdateFilmTracklistComponent,
+        UpdateTracklistFormComponent,
+        ProgressSpinnerModule,
+        SelectModule,
+        ReactiveFormsModule,
+        FloatLabelModule,
+    ],
+    templateUrl: './all-user-tracklists.component.html',
+    styleUrl: './all-user-tracklists.component.css',
 })
 export class AllUserTracklistsComponent implements OnInit {
-  public userTracklists$: Observable<Tracklist[]> | null = null;
-  public allTracklists: Tracklist[] | null = null;
-  public sortedUserTracklists: Tracklist[] | null = null;
+    public userTracklists$: Observable<Tracklist[]> | null = null;
+    public allTracklists: Tracklist[] | null = null;
+    public sortedUserTracklists: Tracklist[] | null = null;
 
-  public currentFilterForm!: FormGroup;
+    public currentFilterForm!: FormGroup;
 
-  public tracklistStatusFilterList: { german: string; value: string }[] =
-    TRACK_LIST_STATUS_LIST_AS_OBJECT;
-  public currentFilterStatus: TracklistStatusType = 'watching';
+    public tracklistStatusFilterList: { german: string; value: string }[] =
+        TRACK_LIST_STATUS_LIST_AS_OBJECT;
+    public currentFilterStatus: TracklistStatusType = 'watching';
 
-  public tracklistMediaTypeFilterList: { german: string; value: string }[] = [
-    {
-      german: 'Alle Medien',
-      value: 'all',
-    },
-    {
-      german: 'Filme',
-      value: 'movie',
-    },
-    {
-      german: 'Serien',
-      value: 'tv',
-    },
-  ];
-  public currentFilterMediaType: 'all' | 'movie' | 'tv' = 'all';
+    public tracklistMediaTypeFilterList: { german: string; value: string }[] = [
+        {
+            german: 'Alle Medien',
+            value: 'all',
+        },
+        {
+            german: 'Filme',
+            value: 'movie',
+        },
+        {
+            german: 'Serien',
+            value: 'tv',
+        },
+    ];
+    public currentFilterMediaType: 'all' | 'movie' | 'tv' = 'all';
 
-  public posterPath: string = TMDB_POSTER_PATH;
-  public isDialogVisible: boolean = false;
-  public currentTracklist: Tracklist | null = null;
-  public tracklistStatusClass: string | null = null;
-  public tmdbPosterPath: string = TMDB_POSTER_PATH;
-  public visibility: number = 0;
+    public posterPath: string = TMDB_POSTER_PATH;
+    public isDialogVisible: boolean = false;
+    public currentTracklist: Tracklist | null = null;
+    public tracklistStatusClass: string | null = null;
+    public tmdbPosterPath: string = TMDB_POSTER_PATH;
+    public visibility: number = 0;
 
-  public isLoading: boolean = false;
-  public serverNotAvailablePage: boolean = false;
+    public isLoading: boolean = false;
+    public serverNotAvailablePage: boolean = false;
 
-  public convertStatus = convertTracklistStatusIntoGerman;
+    public convertStatus = convertTracklistStatusIntoGerman;
 
-  constructor(
-    private mediaService: MediaService,
-    private router: Router,
-    private formBuilder: FormBuilder
-  ) {}
+    constructor(
+        private mediaService: MediaService,
+        private router: Router,
+        private formBuilder: FormBuilder
+    ) { }
 
-  ngOnInit(): void {
-    this.currentFilterForm = this.formBuilder.group({
-      statusFilter: this.tracklistStatusFilterList[0],
-      mediaFilter: this.tracklistMediaTypeFilterList[0],
-    });
+    ngOnInit(): void {
+        this.currentFilterForm = this.formBuilder.group({
+            statusFilter: this.tracklistStatusFilterList[0],
+            mediaFilter: this.tracklistMediaTypeFilterList[0],
+        });
 
-    this.loadTracklists();
-  }
-
-  public loadTracklists = () => {
-    this.serverNotAvailablePage = false;
-    this.isLoading = true;
-    this.userTracklists$ = this.mediaService.getAllUserTracklists();
-
-    if (!this.userTracklists$) {
-      return;
+        this.loadTracklists();
     }
 
-    this.userTracklists$.subscribe({
-      next: (res: Tracklist[]) => {
-        this.isLoading = false;
-        this.sortedUserTracklists = res
-          .filter((tracklist: Tracklist) => {
-            return (
-              tracklist.status ===
-              this.currentFilterForm.get('statusFilter')?.value.value
-            );
-          })
-          .filter((tracklist: Tracklist) => {
-            if (
-              this.currentFilterForm.get('mediaFilter')?.value.value === 'all'
-            ) {
-              return true;
-            } else {
-              return (
-                tracklist.media.type ===
-                this.currentFilterForm.get('mediaFilter')?.value.value
-              );
-            }
-          });
+    public loadTracklists = () => {
+        this.serverNotAvailablePage = false;
+        this.isLoading = true;
+        this.userTracklists$ = this.mediaService.getAllUserTracklists();
 
-        this.allTracklists = res;
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
-        } else if (err.status === 0) {
-          this.serverNotAvailablePage = true;
+        if (!this.userTracklists$) {
+            return;
         }
 
-        this.isLoading = false;
-      },
-    });
-  };
+        this.userTracklists$.subscribe({
+            next: (res: Tracklist[]) => {
+                this.isLoading = false;
+                this.sortedUserTracklists = res
+                    .filter((tracklist: Tracklist) => {
+                        return (
+                            tracklist.status ===
+                            this.currentFilterForm.get('statusFilter')?.value.value
+                        );
+                    })
+                    .filter((tracklist: Tracklist) => {
+                        if (
+                            this.currentFilterForm.get('mediaFilter')?.value.value === 'all'
+                        ) {
+                            return true;
+                        } else {
+                            return (
+                                tracklist.media.type ===
+                                this.currentFilterForm.get('mediaFilter')?.value.value
+                            );
+                        }
+                    });
 
-  public navigateToDetailspage = (mediaID: number, mediaType: string) => {
-    let url: string =
-      mediaType.trim() === 'movie'
-        ? `${ROUTES_LIST[5].fullUrl}/${mediaID}`
-        : `${ROUTES_LIST[6].fullUrl}/${mediaID}`;
+                this.allTracklists = res;
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
+                } else if (err.status === 0) {
+                    this.serverNotAvailablePage = true;
+                }
 
-    this.router.navigateByUrl(url);
-  };
+                this.isLoading = false;
+            },
+        });
+    };
 
-  /**
-   * Function for settting the CSS class for the current status of the tracklist.
-   * @param status string
-   * @returns string
-   */
-  public setTracklistStatus = (status: string): string => {
-    switch (status) {
-      case 'watching':
-        this.tracklistStatusClass = 'statusWatching';
-        return 'statusWatching';
+    public navigateToDetailspage = (mediaID: number, mediaType: string) => {
+        let url: string =
+            mediaType.trim() === 'movie'
+                ? `${ROUTES_LIST[5].fullUrl}/${mediaID}`
+                : `${ROUTES_LIST[6].fullUrl}/${mediaID}`;
 
-      case 'pausing':
-        this.tracklistStatusClass = 'statusPausing';
-        return 'statusPausing';
+        this.router.navigateByUrl(url);
+    };
 
-      case 'dropped':
-        this.tracklistStatusClass = 'statusDropped';
-        return 'statusDropped';
+    /**
+     * Function for settting the CSS class for the current status of the tracklist.
+     * @param status string
+     * @returns string
+     */
+    public setTracklistStatus = (status: string): string => {
+        switch (status) {
+            case 'watching':
+                this.tracklistStatusClass = 'statusWatching';
+                return 'statusWatching';
 
-      case 'rewatching':
-        this.tracklistStatusClass = 'statusRewatching';
-        return 'statusRewatching';
+            case 'pausing':
+                this.tracklistStatusClass = 'statusPausing';
+                return 'statusPausing';
 
-      case 'plan to watch':
-        this.tracklistStatusClass = 'statusPlanToWatch';
-        return 'statusPlanToWatch';
+            case 'dropped':
+                this.tracklistStatusClass = 'statusDropped';
+                return 'statusDropped';
 
-      case 'completed':
-        this.tracklistStatusClass = 'statusCompleted';
-        return 'statusCompleted';
-    }
-    return '';
-  };
+            case 'rewatching':
+                this.tracklistStatusClass = 'statusRewatching';
+                return 'statusRewatching';
 
-  /**
-   * Function for switching them visible component to the editing tracklist interface.
-   * @param tracklist Tracklist
-   * @param isMovie boolean
-   * @returns void
-   */
-  public editTracklist = (tracklist: Tracklist, isMovie: boolean) => {
-    this.currentTracklist = tracklist;
-    this.visibility = isMovie ? 1 : 2;
-  };
+            case 'plan to watch':
+                this.tracklistStatusClass = 'statusPlanToWatch';
+                return 'statusPlanToWatch';
 
-  /**
-   * Function returning the page to the tracklist list page.
-   * @param isCancelling boolean
-   * @return void
-   */
-  public refreshPage = (isCancelling: boolean) => {
-    // refreshing page
-    this.visibility = 0;
+            case 'completed':
+                this.tracklistStatusClass = 'statusCompleted';
+                return 'statusCompleted';
+        }
+        return '';
+    };
 
-    if (!isCancelling) {
-      // refresh page if user has updated tracklist
-      this.loadTracklists();
-    }
-  };
+    /**
+     * Function for switching them visible component to the editing tracklist interface.
+     * @param tracklist Tracklist
+     * @param isMovie boolean
+     * @returns void
+     */
+    public editTracklist = (tracklist: Tracklist, isMovie: boolean) => {
+        this.currentTracklist = tracklist;
+        this.visibility = isMovie ? 1 : 2;
+    };
 
-  public setSortedTracklistList = () => {
-    // sorting the list with the current values of the selections
-    if (!this.allTracklists) {
-      return;
-    }
+    /**
+     * Function returning the page to the tracklist list page.
+     * @param isCancelling boolean
+     * @return void
+     */
+    public refreshPage = (isCancelling: boolean) => {
+        // refreshing page
+        this.visibility = 0;
 
-    this.sortedUserTracklists = this.allTracklists
-      .filter((tracklist: Tracklist) => {
-        return (
-          tracklist.status ===
-          this.currentFilterForm.get('statusFilter')?.value.value
-        );
-      })
-      .filter((tracklist: Tracklist) => {
-        if (this.currentFilterForm.get('mediaFilter')?.value.value === 'all') {
-          return true;
+        if (!isCancelling) {
+            // refresh page if user has updated tracklist
+            this.loadTracklists();
+        }
+    };
+
+    public setSortedTracklistList = () => {
+        // sorting the list with the current values of the selections
+        if (!this.allTracklists) {
+            return;
         }
 
-        return (
-          tracklist.media.type ===
-          this.currentFilterForm.get('mediaFilter')?.value.value
-        );
-      });
-  };
+        this.sortedUserTracklists = this.allTracklists
+            .filter((tracklist: Tracklist) => {
+                return (
+                    tracklist.status ===
+                    this.currentFilterForm.get('statusFilter')?.value.value
+                );
+            })
+            .filter((tracklist: Tracklist) => {
+                if (this.currentFilterForm.get('mediaFilter')?.value.value === 'all') {
+                    return true;
+                }
+
+                return (
+                    tracklist.media.type ===
+                    this.currentFilterForm.get('mediaFilter')?.value.value
+                );
+            });
+    };
 }

@@ -8,7 +8,6 @@ import { PanelModule } from 'primeng/panel';
 import { Observable } from 'rxjs';
 import { MediaService } from '../../../service/media/media.service';
 import { MessageService } from 'primeng/api';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { UserService } from '../../../service/user/user.service';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';

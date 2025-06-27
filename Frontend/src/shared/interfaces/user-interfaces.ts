@@ -1,67 +1,67 @@
 interface UserMenuItem {
-  label: string;
-  icon: string;
-  command: () => void;
+    label: string;
+    icon: string;
+    command: () => void;
 }
 
 export interface UserMenuList {
-  label: string;
-  items: UserMenuItem[];
+    label: string;
+    items: UserMenuItem[];
 }
 
 export interface DeleteUserRequest {
-  security_question: string;
-  security_answer: string;
+    security_question: string;
+    security_answer: string;
 }
 
 export interface UserActivitiesResponse {
-  page: number;
-  total_pages: number;
-  total_results: number;
-  results: UserActivity[];
+    page: number;
+    total_pages: number;
+    total_results: number;
+    results: UserActivity[];
 }
 
 export interface UserActivity {
-  date: string;
-  episodeID: number | null;
-  episodeNumber: number | null;
-  mediaID: number;
-  mediaTitle: string;
-  posterPath: string | null;
-  runtime: number | null;
-  seasonID: number | null;
-  seasonNumber: number | null;
-  stillPath: string | null; // if episode
-  tracklistEpisodeID: number | null;
-  tracklistID: number;
-  tracklistName: string;
-  tracklistSeasinID: number | null;
-  type: string;
+    date: string;
+    episodeID: number | null;
+    episodeNumber: number | null;
+    mediaID: number;
+    mediaTitle: string;
+    posterPath: string | null;
+    runtime: number | null;
+    seasonID: number | null;
+    seasonNumber: number | null;
+    stillPath: string | null; // if episode
+    tracklistEpisodeID: number | null;
+    tracklistID: number;
+    tracklistName: string;
+    tracklistSeasinID: number | null;
+    type: string;
 }
 
 export interface UserActivityWithDaySplitt {
-  date: string;
-  episodeID: number | null;
-  episodeNumber: number | null;
-  mediaID: number;
-  mediaTitle: string;
-  posterPath: string | null;
-  runtime: number | null;
-  seasonID: number | null;
-  seasonNumber: number | null;
-  stillPath: string | null; // if episode
-  tracklistEpisodeID: number | null;
-  tracklistID: number;
-  tracklistName: string;
-  tracklistSeasinID: number | null;
-  type: string;
-  isDateSplitter: boolean;
-  picture: string | null;
+    date: string;
+    episodeID: number | null;
+    episodeNumber: number | null;
+    mediaID: number;
+    mediaTitle: string;
+    posterPath: string | null;
+    runtime: number | null;
+    seasonID: number | null;
+    seasonNumber: number | null;
+    stillPath: string | null; // if episode
+    tracklistEpisodeID: number | null;
+    tracklistID: number;
+    tracklistName: string;
+    tracklistSeasinID: number | null;
+    type: string;
+    isDateSplitter: boolean;
+    picture: string | null;
 }
 
 export interface UserActivitiesPageEvent {
-  first: number;
-  rows: number;
-  page: number;
-  pageCount: number;
+    first: number;
+    rows: number;
+    page: number;
+    pageCount: number;
 }
