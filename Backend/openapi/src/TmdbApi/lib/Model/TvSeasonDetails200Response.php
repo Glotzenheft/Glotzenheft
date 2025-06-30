@@ -207,7 +207,7 @@ class TvSeasonDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      * @var string[]
      */
     protected static $setters = [
-        '_id' => 'setId',
+        '_id' => 'setUnderscoreId',
         'air_date' => 'setAirDate',
         'episodes' => 'setEpisodes',
         'name' => 'setName',
@@ -224,7 +224,7 @@ class TvSeasonDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      * @var string[]
      */
     protected static $getters = [
-        '_id' => 'getId',
+        '_id' => 'getUnderscoreId',
         'air_date' => 'getAirDate',
         'episodes' => 'getEpisodes',
         'name' => 'getName',
@@ -350,7 +350,7 @@ class TvSeasonDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getId()
+    public function getUnderscoreId()
     {
         return $this->container['_id'];
     }
@@ -362,7 +362,7 @@ class TvSeasonDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setId($_id)
+    public function setUnderscoreId($_id)
     {
         if (is_null($_id)) {
             throw new \InvalidArgumentException('non-nullable _id cannot be null');
