@@ -10,23 +10,19 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
-import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
-import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
-import { SecurityService } from '../../../service/security/security.service';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { NavigationService } from '../../../service/navigation/navigation.service';
-import { ResetPasswordCredentials } from '../../../shared/interfaces/login';
 import { PasswordModule } from 'primeng/password';
 import { UserService } from '../../../service/user/user.service';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
 import { ValidationService } from '../../../service/validation/validation.service';
+import { ValidationQuestion } from '../../../app/shared/interfaces/validation-question';
+import { VALIDATION_QUESTIONS } from '../../../app/shared/variables/validation-questions';
+import { ResetPasswordCredentials } from '../../../app/shared/interfaces/login';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
   selector: 'app-reset-password',

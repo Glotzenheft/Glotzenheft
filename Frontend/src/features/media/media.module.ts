@@ -1,10 +1,10 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { RouterModule, Routes } from '@angular/router';
-import { ROUTES_LIST } from '../../shared/variables/routes-list';
 import { FilmPageComponent } from './mediaDetailsCOMPONENTS/film-page/film-page.component';
 import { SeasonPageComponent } from './mediaDetailsCOMPONENTS/season-page/season-page.component';
 import { MultiSearchComponent } from './mediaSearchCOMPONENTS/search/multi-search.component';
+import { ROUTES_LIST } from '../../app/shared/variables/routes-list';
 
 const mediaRoutes: Routes = [
     {

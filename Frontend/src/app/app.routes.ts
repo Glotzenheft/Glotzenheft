@@ -2,7 +2,6 @@ import { Routes } from '@angular/router';
 import { StartMainComponent } from '../features/start/start-main/start-main.component';
 import { LoginComponent } from '../features/start/login/login.component';
 import { RegisterComponent } from '../features/start/register/register.component';
-import { ROUTES_LIST } from '../shared/variables/routes-list';
 import { authGuard } from '../guards/auth.guard';
 import { ResetPasswordComponent } from '../features/start/reset-password/reset-password.component';
 import { ImpressumComponent } from '../features/footerCOMPONENTS/impressum/impressum.component';
@@ -11,6 +10,7 @@ import { PrivacyPolicyComponent } from '../features/footerCOMPONENTS/privacy-pol
 import { MultiSearchComponent } from '../features/media/mediaSearchCOMPONENTS/search/multi-search.component';
 import { AllUserTracklistsComponent } from '../features/user/userTracklists/all-user-tracklists/all-user-tracklists.component';
 import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
+import { ROUTES_LIST } from './shared/variables/routes-list';
 
 export const routes: Routes = [
   {

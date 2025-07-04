@@ -15,15 +15,12 @@ import {
   Validators,
 } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
 import { DeleteUserRequest } from '../../../shared/interfaces/user-interfaces';
 import { Observable } from 'rxjs';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
 import { DeleteDialogComponent } from '../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
+import { VALIDATION_QUESTIONS } from '../../../app/shared/variables/validation-questions';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
   selector: 'app-delete-user-account-page',

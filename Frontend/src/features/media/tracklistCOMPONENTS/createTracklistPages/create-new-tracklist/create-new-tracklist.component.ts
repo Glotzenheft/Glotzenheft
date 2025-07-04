@@ -24,22 +24,13 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import {
-    Tracklist,
-    TVSeasonWithTracklist,
-} from '../../../../../shared/interfaces/tracklist-interfaces';
-import {
-    convertTracklistStatusIntoGerman,
-    TRACK_LIST_STATUS_LIST,
-} from '../../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../../service/media/media.service';
 import { UserService } from '../../../../../service/user/user.service';
 import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
-import {
-    ERR_OBJECT_INVALID_AUTHENTICATION,
-    getMessageObject,
-} from '../../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
+import { Tracklist, TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 
 @Component({
     selector: 'app-create-new-tracklist',

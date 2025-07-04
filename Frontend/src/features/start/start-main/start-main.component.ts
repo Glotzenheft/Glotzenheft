@@ -8,7 +8,7 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { CommonModule } from '@angular/common';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
   selector: 'app-start-main',

@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
+import { Inject, Injectable } from "@angular/core";
 import { Season } from "../../../shared/interfaces/media-interfaces";
 import { TVWithTracklist } from "../../../shared/interfaces/tracklist-interfaces";
-import { I_TracklistRepository } from "../../interfaces/tracklist.repository";
+import { I_TracklistRepository, IT_TRACKLIST_REPOSITORY } from "../../interfaces/tracklist.repository";
 
 @Injectable({ providedIn: 'root' })
 export class UC_JoinTVWithTracklists {
-    constructor(private readonly tracklistRepository: I_TracklistRepository) { }
+    constructor(@Inject(IT_TRACKLIST_REPOSITORY) private readonly tracklistRepository: I_TracklistRepository) { }
 
     public execute = (data: Season): TVWithTracklist => { return this.tracklistRepository.joinTVWithTracklists(data) }
 }

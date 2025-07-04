@@ -14,20 +14,17 @@ import { CommonModule } from '@angular/common';
 import { Message } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { UserService } from '../../../service/user/user.service';
-import {
-  LoginAndMessageResponse,
-  RegisterCredentials,
-} from '../../../shared/interfaces/login';
 import { MessageService } from 'primeng/api';
 import { SecurityService } from '../../../service/security/security.service';
-import { VALIDATION_QUESTIONS } from '../../../shared/variables/validation-questions';
 import { SelectModule } from 'primeng/select';
-import { ValidationQuestion } from '../../../shared/interfaces/validation-question';
 import { CheckboxModule } from 'primeng/checkbox';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
-import { getMessageObject } from '../../../shared/variables/message-vars';
 import { AgbComponent } from '../../footerCOMPONENTS/agb/agb.component';
+import { ValidationQuestion } from '../../../app/shared/interfaces/validation-question';
+import { VALIDATION_QUESTIONS } from '../../../app/shared/variables/validation-questions';
+import { getMessageObject } from '../../../app/shared/variables/message-vars';
+import { LoginAndMessageResponse, RegisterCredentials } from '../../../app/shared/interfaces/login';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
   selector: 'app-register',

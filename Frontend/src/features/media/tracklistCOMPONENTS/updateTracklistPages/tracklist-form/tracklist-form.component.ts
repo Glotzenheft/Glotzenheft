@@ -12,9 +12,9 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
 import { CreateNewTracklistComponent } from '../../createTracklistPages/create-new-tracklist/create-new-tracklist.component';
-import { TVSeasonWithTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
 import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
 import { MediaService } from '../../../../../service/media/media.service';
+import { TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 
 @Component({
     selector: 'app-tracklist-form',

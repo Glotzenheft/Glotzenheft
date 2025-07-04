@@ -19,21 +19,15 @@ import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import {
-    SeasonTracklist,
-    TracklistEpisode,
-} from '../../../../../shared/interfaces/tracklist-interfaces';
-import { SeasonEpisode } from '../../../../../shared/interfaces/media-interfaces';
 import { EpisodeService } from '../../../../../service/episode/episode.service';
 import { UserService } from '../../../../../service/user/user.service';
 import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
-import { CreateTracklistEpisode } from '../../../../../shared/interfaces/tracklist-episode-interfaces';
-import {
-    ERR_OBJECT_INVALID_AUTHENTICATION,
-    getMessageObject,
-} from '../../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
 import { MediaService } from '../../../../../service/media/media.service';
+import { SeasonTracklist, TracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-interfaces';
+import { SeasonEpisode } from '../../../../../app/shared/interfaces/media-interfaces';
+import { CreateTracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 
 @Component({
     selector: 'app-create-tracklist-episode-form',

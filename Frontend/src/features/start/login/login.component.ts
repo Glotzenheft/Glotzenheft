@@ -14,20 +14,14 @@ import {
   Validators,
 } from '@angular/forms';
 import { UserService } from '../../../service/user/user.service';
-import {
-  LoginAndMessageResponse,
-  LoginCredentials,
-} from '../../../shared/interfaces/login';
 import { Message } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { SecurityService } from '../../../service/security/security.service';
 import { PanelModule } from 'primeng/panel';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import { LoginAndMessageResponse, LoginCredentials } from '../../../app/shared/interfaces/login';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
   selector: 'app-login',

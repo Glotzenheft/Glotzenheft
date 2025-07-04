@@ -14,18 +14,14 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
-import {
-  MediaIDResponse,
-  MediaResult,
-  MultiSearchResponse,
-} from '../../../../shared/interfaces/media-interfaces';
 import { MediaService } from '../../../../service/media/media.service';
 import { SearchService } from '../../../../service/search/search.service';
 import { UserService } from '../../../../service/user/user.service';
-import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
-import { getMessageObject } from '../../../../shared/variables/message-vars';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
+import { MediaIDResponse, MediaResult, MultiSearchResponse } from '../../../../app/shared/interfaces/media-interfaces';
+import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { getMessageObject } from '../../../../app/shared/variables/message-vars';
 
 @Component({
   selector: 'app-multi-search',

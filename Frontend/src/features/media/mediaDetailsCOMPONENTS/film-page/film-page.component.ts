@@ -21,17 +21,17 @@ import { Observable } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { CreateMovieTracklistComponent } from '../../tracklistCOMPONENTS/createTracklistPages/create-movie-tracklist/create-movie-tracklist.component';
 import { UpdateFilmTracklistComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
-import { Film } from '../../../../shared/interfaces/media-interfaces';
-import { SeasonTracklist } from '../../../../shared/interfaces/tracklist-interfaces';
-import { convertTracklistStatusIntoGerman } from '../../../../shared/variables/tracklist';
 import { StringService } from '../../../../service/string/string.service';
 import { SecurityService } from '../../../../service/security/security.service';
 import { MediaService } from '../../../../service/media/media.service';
 import { UserService } from '../../../../service/user/user.service';
-import { MEDIA_ID_NOT_EXISTS } from '../../../../shared/variables/navigation-vars';
-import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Film } from '../../../../app/shared/interfaces/media-interfaces';
+import { SeasonTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
+import { MEDIA_ID_NOT_EXISTS } from '../../../../app/shared/variables/navigation-vars';
+import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 
 @Component({
     selector: 'app-film-page',

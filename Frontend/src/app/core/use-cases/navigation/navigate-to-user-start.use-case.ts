@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { I_NavigationRepository } from "../../interfaces/navigation.repository";
+import { Inject, Injectable } from "@angular/core";
+import { I_NavigationRepository, IT_NAVIGATION_REPOSITORY } from "../../interfaces/navigation.repository";
 
 @Injectable({ providedIn: 'root' })
 export class UC_NavigateToUserStart {
-    constructor(private readonly navigationRepository: I_NavigationRepository) { }
+    constructor(@Inject(IT_NAVIGATION_REPOSITORY) private readonly navigationRepository: I_NavigationRepository) { }
 
     public execute = () => { return this.navigationRepository.navigateToUserStart() }
 }

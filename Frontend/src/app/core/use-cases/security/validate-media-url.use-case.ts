@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { I_SecurityRepository } from "../../interfaces/security.repository";
+import { Inject, Injectable } from "@angular/core";
+import { I_SecurityRepository, IT_SECURITY_REPOSITORY } from "../../interfaces/security.repository";
 
 @Injectable({ providedIn: 'root' })
 export class UC_ValidateMediaURL {
-    constructor(private readonly securityRepository: I_SecurityRepository) { }
+    constructor(@Inject(IT_SECURITY_REPOSITORY) private readonly securityRepository: I_SecurityRepository) { }
 
     public execute = (mediaURL: string): boolean => { return this.securityRepository.validateMediaURL(mediaURL) }
 }

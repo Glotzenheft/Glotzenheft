@@ -1,10 +1,10 @@
 import { Observable } from "rxjs";
-import { I_MediaRepository } from "../../interfaces/media.repository";
-import { Injectable } from "@angular/core";
+import { I_MediaRepository, IT_MEDIA_REPOSITORY } from "../../interfaces/media.repository";
+import { Inject, Injectable } from "@angular/core";
 
 @Injectable({ providedIn: 'root' })
 export class UC_DeleteTracklist {
-    constructor(private readonly mediaRepository: I_MediaRepository) { }
+    constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
 
     public execute = (tracklistId: number): Observable<any> => {
         return this.mediaRepository.deleteTracklist(tracklistId);

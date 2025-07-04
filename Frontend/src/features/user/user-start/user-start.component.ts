@@ -11,20 +11,16 @@ import { MessageService } from 'primeng/api';
 import { UserService } from '../../../service/user/user.service';
 import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
-import {
-  BarDiagram,
-} from '../../../shared/interfaces/diagram-interfaces';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
-import {RatingStatistic, WatchTimeStatistic} from '../../../shared/statistic-interfaces';
 import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { RatingStatistic, WatchTimeStatistic } from '../../../app/shared/statistic-interfaces';
+import { BarDiagram } from '../../../app/shared/interfaces/diagram-interfaces';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
   selector: 'app-user-start',

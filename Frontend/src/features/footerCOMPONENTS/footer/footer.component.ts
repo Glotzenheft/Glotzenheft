@@ -1,10 +1,10 @@
 import { Component, Output, EventEmitter } from '@angular/core';
-import { getVisibleRoutes } from '../../../shared/variables/routes-list';
-import { VisibleRoute } from '../../../shared/interfaces/route-list-item';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
+import { getVisibleRoutes } from '../../../app/shared/variables/routes-list';
+import { VisibleRoute } from '../../../app/shared/interfaces/route-list-item';
 
 @Component({
     selector: 'app-footer',

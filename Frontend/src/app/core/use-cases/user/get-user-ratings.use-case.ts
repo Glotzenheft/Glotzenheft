@@ -1,11 +1,11 @@
-import { Injectable } from "@angular/core";
-import { I_UserRepository } from "../../interfaces/user.repository";
+import { Inject, Injectable } from "@angular/core";
+import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
 import { Observable } from "rxjs";
 import { RatingStatistic } from "../../../shared/statistic-interfaces";
 
 @Injectable({ providedIn: 'root' })
 export class UC_GetUserRatings {
-    constructor(private readonly userRepository: I_UserRepository) { }
+    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
 
     public execute = (): Observable<RatingStatistic> | null => {
         return this.userRepository.getUserRatings()

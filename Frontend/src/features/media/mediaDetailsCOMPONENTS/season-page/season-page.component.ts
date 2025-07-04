@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
-
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
@@ -27,26 +26,17 @@ import { TracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklis
 import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
-import {
-    Season,
-    SeasonEpisode,
-    SeasonWithEpisodes,
-} from '../../../../shared/interfaces/media-interfaces';
-import {
-    SeasonTracklist,
-    SeasonTracklistType,
-    TVSeasonWithTracklist,
-    TVWithTracklist,
-} from '../../../../shared/interfaces/tracklist-interfaces';
-import { TMDB_POSTER_PATH } from '../../../../shared/variables/tmdb-vars';
 import { StringService } from '../../../../service/string/string.service';
 import { MediaService } from '../../../../service/media/media.service';
 import { SecurityService } from '../../../../service/security/security.service';
 import { UserService } from '../../../../service/user/user.service';
 import { TracklistService } from '../../../../service/tracklist/tracklist.service';
-import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
+import { Season, SeasonEpisode, SeasonWithEpisodes } from '../../../../app/shared/interfaces/media-interfaces';
+import { SeasonTracklist, SeasonTracklistType, TVSeasonWithTracklist, TVWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 
 @Component({
     selector: 'app-season-page',

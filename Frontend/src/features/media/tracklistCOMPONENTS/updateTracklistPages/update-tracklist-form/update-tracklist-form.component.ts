@@ -24,20 +24,14 @@ import { RatingModule } from 'primeng/rating';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { SeasonTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
-import {
-    convertTracklistStatusIntoGerman,
-    TRACK_LIST_STATUS_LIST,
-} from '../../../../../shared/variables/tracklist';
 import { MediaService } from '../../../../../service/media/media.service';
 import { UserService } from '../../../../../service/user/user.service';
 import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
-import { UpdateTracklistRequest } from '../../../../../shared/interfaces/media-interfaces';
-import {
-    ERR_OBJECT_INVALID_AUTHENTICATION,
-    getMessageObject,
-} from '../../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
+import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/media-interfaces';
 
 @Component({
     selector: 'app-update-tracklist-form',
