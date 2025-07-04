@@ -21,10 +21,6 @@ import { Observable } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { CreateMovieTracklistComponent } from '../../tracklistCOMPONENTS/createTracklistPages/create-movie-tracklist/create-movie-tracklist.component';
 import { UpdateFilmTracklistComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
-import { StringService } from '../../../../service/string/string.service';
-import { SecurityService } from '../../../../service/security/security.service';
-import { MediaService } from '../../../../service/media/media.service';
-import { UserService } from '../../../../service/user/user.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Film } from '../../../../app/shared/interfaces/media-interfaces';
 import { SeasonTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
@@ -32,6 +28,10 @@ import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variabl
 import { MEDIA_ID_NOT_EXISTS } from '../../../../app/shared/variables/navigation-vars';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
+import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
+import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film-details.use-case';
+import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-film-page',
@@ -75,15 +75,15 @@ export class FilmPageComponent implements OnInit {
     public isLoading: boolean = false;
 
     constructor(
+        public shortenStringUseCase: UC_ShortenString,
         private messageService: MessageService,
         private route: ActivatedRoute,
-        public stringService: StringService,
-        private securityService: SecurityService,
         private formBuilder: FormBuilder,
-        private mediaService: MediaService,
         private location: Location,
-        private userService: UserService,
-        private router: Router
+        private router: Router,
+        private validateMediaURLUseCase: UC_ValidateMediaURL,
+        private getFilmDetailsUseCase: UC_GetFilmDetails,
+        private logOutOfAccountUseCase: UC_LogoutOfAccount
     ) { }
 
     ngOnInit(): void {
@@ -100,12 +100,12 @@ export class FilmPageComponent implements OnInit {
             return;
         }
 
-        if (!this.securityService.validateMediaURL(this.movieID)) {
+        if (!this.validateMediaURLUseCase.execute(this.movieID)) {
             this.isInvalidID = true;
             return;
         }
 
-        this.filmData$ = this.mediaService.getFilmDetails(this.movieID);
+        this.filmData$ = this.getFilmDetailsUseCase.execute(this.movieID);
 
         if (!this.filmData$) {
             this.hasError = true;
@@ -128,7 +128,7 @@ export class FilmPageComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logOutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;

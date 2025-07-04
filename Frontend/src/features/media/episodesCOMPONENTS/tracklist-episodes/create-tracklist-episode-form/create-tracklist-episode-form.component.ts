@@ -19,15 +19,17 @@ import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { EpisodeService } from '../../../../../service/episode/episode.service';
-import { UserService } from '../../../../../service/user/user.service';
-import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
 import { MediaService } from '../../../../../service/media/media.service';
 import { SeasonTracklist, TracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { SeasonEpisode } from '../../../../../app/shared/interfaces/media-interfaces';
 import { CreateTracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { UC_CreateTracklistEpisode } from '../../../../../app/core/use-cases/episode/create-tracklist-episode';
+import { UC_UpdateTracklistEpisode } from '../../../../../app/core/use-cases/episode/update-tracklist-episode.use-case';
+import { UC_DeleteTracklistEpisode } from '../../../../../app/core/use-cases/episode/delete-tracklist-episode.use-case';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
 
 @Component({
     selector: 'app-create-tracklist-episode-form',
@@ -70,11 +72,13 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
     constructor(
         private messageService: MessageService,
-        private episodeService: EpisodeService,
         private formBuilder: FormBuilder,
-        private userService: UserService,
         private router: Router,
-        private tracklistService: TracklistService
+        private createTracklistEpisodeUseCase: UC_CreateTracklistEpisode,
+        private updateTracklistEpisodeUseCase: UC_UpdateTracklistEpisode,
+        private deleteTracklistEpisodeUseCase: UC_DeleteTracklistEpisode,
+        private logOutOfAccountUseCase: UC_LogoutOfAccount,
+        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage
     ) { }
 
     ngOnInit(): void {
@@ -109,7 +113,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         });
 
         // set local storage tracklist to selected tracklist
-        this.tracklistService.setSelectedTracklistInLocalStorage(
+        this.setSelectedTracklistInLocalStorageUseCase.execute(
             this.inpTracklist().id
         );
     }
@@ -240,7 +244,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
         if (episodeActionNumber === 0) {
             this.createEpisodeRequestData$ =
-                this.episodeService.createTracklistEpisode(episodeData);
+                this.createTracklistEpisodeUseCase.execute(episodeData);
 
             if (!this.createEpisodeRequestData$) {
                 this.messageService.add(
@@ -259,7 +263,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                 error: (err: any) => {
                     if (err.status === 401) {
                         // logout user of account
-                        this.userService.logoutOfAccount();
+                        this.logOutOfAccountUseCase.execute();
                         this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                         return;
@@ -274,7 +278,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         } else if (episodeActionNumber === 1) {
             // updating episode
             this.updateEpisodeRequestData$ =
-                this.episodeService.updateTracklistEpisode(episodeData);
+                this.updateTracklistEpisodeUseCase.execute(episodeData);
 
             if (!this.updateEpisodeRequestData$) {
                 this.messageService.add(
@@ -303,7 +307,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         } else if (episodeActionNumber === 2) {
             // delete episode
             this.deleteEpisodeRequestData$ =
-                this.episodeService.deleteTracklistEpisode(
+                this.deleteTracklistEpisodeUseCase.execute(
                     episodeData.tracklistID,
                     episodeData.tracklistSeasonID,
                     episodeData.episodeID

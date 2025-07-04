@@ -8,7 +8,7 @@
             <div (click)="openDialog(episode)">
                 <p [pTooltip]="episode.name">
                     E{{ episode.episodeNumber }}:
-                    {{ stringService.shortenString(episode.name) }}
+                    {{ shortenStringUseCase.execute(episode.name) }}
                 </p>
             </div>
             <p-button *ngIf="!checkEpisodeInCurrentTracklist(episode.id)" icon="pi pi-plus" severity="secondary"
@@ -24,7 +24,7 @@
             <div (click)="openDialog(episode)">
                 <p [pTooltip]="episode.name">
                     E{{ episode.episodeNumber }}:
-                    {{ stringService.shortenString(episode.name) }}
+                    {{ shortenStringUseCase.execute(episode.name) }}
                 </p>
             </div>
         </div>

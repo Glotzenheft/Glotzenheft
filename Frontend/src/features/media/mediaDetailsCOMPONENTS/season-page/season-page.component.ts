@@ -37,6 +37,9 @@ import { SeasonTracklist, SeasonTracklistType, TVSeasonWithTracklist, TVWithTrac
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { UC_GetSeasonForTV } from '../../../../app/core/use-cases/media/get-season-for-tv.use-case';
+import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
+import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-season-page',
@@ -114,15 +117,14 @@ export class SeasonPageComponent implements OnInit {
     public isLoading: boolean = false;
 
     constructor(
-        public stringService: StringService,
         private route: ActivatedRoute,
-        private mediaService: MediaService,
-        private securityService: SecurityService,
         private formBuilder: FormBuilder,
         private messageService: MessageService,
-        private userService: UserService,
         private tracklistService: TracklistService,
-        private router: Router
+        private router: Router,
+        private getSeasonForTVUseCase: UC_GetSeasonForTV,
+        private validateMediaURLUseCase: UC_ValidateMediaURL,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
     ) { }
 
     ngOnInit(): void {
@@ -141,13 +143,13 @@ export class SeasonPageComponent implements OnInit {
             return;
         }
 
-        if (!this.securityService.validateMediaURL(this.tvSeriesID)) {
+        if (!this.validateMediaURLUseCase.execute(this.tvSeriesID)) {
             this.isInvalidID = true;
             return;
         }
 
         // checking if "media_id" already exists:
-        this.seasonData$ = this.mediaService.getSeasonForTV(this.tvSeriesID);
+        this.seasonData$ = this.getSeasonForTVUseCase.execute(this.tvSeriesID);
 
         if (!this.seasonData$) {
             this.hasError = true;
@@ -176,7 +178,7 @@ export class SeasonPageComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                 } else if (err.status === 0) {

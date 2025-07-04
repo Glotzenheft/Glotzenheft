@@ -11,11 +11,11 @@ import { FormGroup } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
-import { StringService } from '../../../../service/string/string.service';
 import { MediaService } from '../../../../service/media/media.service';
 import { SeasonEpisode } from '../../../../app/shared/interfaces/media-interfaces';
 import { SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 
 @Component({
     selector: 'app-episode-list',
@@ -54,7 +54,7 @@ export class EpisodeListComponent {
     @Output() setEpisodeForEditing: EventEmitter<SeasonEpisode> =
         new EventEmitter<SeasonEpisode>();
 
-    constructor(public stringService: StringService) { }
+    constructor(public shortenStringUseCase: UC_ShortenString) { }
 
     public openDialog = (currenEpisode: SeasonEpisode) => {
         this.currentEpisodeForDialog = currenEpisode;
