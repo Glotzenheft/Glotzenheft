@@ -1,6 +1,10 @@
 import { InjectionToken } from "@angular/core"
+import { BehaviorSubject } from "rxjs"
 
 export interface I_AuthRepository {
+    // variables
+    showToast$: BehaviorSubject<boolean>,
+    // functions
     triggerToast: () => void,
     isUserLoggedIn: () => boolean
 }

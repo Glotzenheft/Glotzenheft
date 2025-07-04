@@ -1,4 +1,4 @@
-import { Component, HostListener, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { InputTextModule } from 'primeng/inputtext';
 import { IconFieldModule } from 'primeng/iconfield';
@@ -7,17 +7,15 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
-import { SearchService } from '../service/search/search.service';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { AuthService } from '../service/auth/auth.service';
-import { UserService } from '../service/user/user.service';
 import { FooterComponent } from '../features/footerCOMPONENTS/footer/footer.component';
 import { SearchBarComponent } from '../features/media/mediaSearchCOMPONENTS/search-bar/search-bar.component';
 import { UserLinksComponent } from '../features/user/userMenuPages/user-links/user-links.component';
 import { UserMenuComponent } from '../features/user/userMenuPages/user-menu/user-menu.component';
 import { getMessageObject } from './shared/variables/message-vars';
-import { UC_GetUserName } from './core/use-cases/user/get-user-name.use-case';
+import { UC_GetSearchTerm } from './core/use-cases/search/get-search-term.use-case';
+import { UC_GetShowToast } from './core/use-cases/auth/get-show-toast.use-case';
 
 @Component({
     selector: 'app-root',
@@ -46,18 +44,17 @@ export class AppComponent implements OnInit, OnDestroy {
     public toastSubscription!: Subscription;
 
     constructor(
-        public searchService: SearchService,
         public messageService: MessageService,
-        private authService: AuthService,
-        public getUserNameUseCase: UC_GetUserName
+        public getSearchTermUseCase: UC_GetSearchTerm,
+        public getShowToastUseCase: UC_GetShowToast
     ) { }
 
     ngOnInit(): void {
-        this.searchService.searchTerm$.subscribe((searchTerm: string) => {
+        this.getSearchTermUseCase.observe().subscribe((searchTerm: string) => {
             this.isMultiSearchResponseVisible = !searchTerm.trim() ? false : true;
         });
 
-        this.toastSubscription = this.authService.showToast$.subscribe(
+        this.toastSubscription = this.getShowToastUseCase.observe().subscribe(
             (show: boolean) => {
                 if (show) {
                     this.messageService.add(
@@ -70,8 +67,6 @@ export class AppComponent implements OnInit, OnDestroy {
                 }
             }
         );
-
-        console.log("Hallo", this.getUserNameUseCase.execute())
     }
 
     ngOnDestroy(): void {
