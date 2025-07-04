@@ -3,6 +3,7 @@ import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPa
 import { DeleteUserRequest } from "../../shared/interfaces/user-interfaces";
 import { RatingStatistic, WatchTimeStatistic } from "../../shared/statistic-interfaces";
 import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
+import { InjectionToken } from "@angular/core";
 
 export interface I_UserRepository {
     loginIntoAccount: (loginData: LoginCredentials) => Observable<LoginAndMessageResponse>,
@@ -19,3 +20,6 @@ export interface I_UserRepository {
     getUserActivities: (responsePage: number) => Observable<UserActivitiesResponse> | null,
     getUserRatings: () => Observable<RatingStatistic> | null,
 }
+
+// IT = Injection Token
+export const IT_USER_REPOSITORY = new InjectionToken<I_UserRepository>("I_UserRepository")

@@ -2,6 +2,7 @@ import { HttpHeaders } from "@angular/common/http";
 import { Observable } from "rxjs";
 import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from "../../shared/interfaces/media-interfaces";
 import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from "../../shared/interfaces/tracklist-interfaces";
+import { InjectionToken } from "@angular/core";
 
 export interface I_MediaRepository {
     getHeader: () => HttpHeaders | null,
@@ -24,3 +25,6 @@ export interface I_MediaRepository {
     deleteTracklist: (tracklistID: number) => Observable<any>,
     getAllUserTracklists: () => Observable<Tracklist[]> | null
 }
+
+// IT = Injection Token
+export const IT_MEDIA_REPOSITORY = new InjectionToken<I_MediaRepository>("I_MediaRepository")

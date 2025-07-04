@@ -2,14 +2,15 @@ import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
 import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
-import { Season, SeasonWithEpisodes } from '../../app/shared/interfaces/media-interfaces';
-import { ExtractedTracklist, SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist, TVWithTracklist } from '../../app/shared/interfaces/tracklist-interfaces';
-import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../app/shared/variables/local-storage-keys';
+import { I_TracklistRepository } from '../../core/interfaces/tracklist.repository';
+import { Season, SeasonWithEpisodes } from '../../shared/interfaces/media-interfaces';
+import { ExtractedTracklist, SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist, TVWithTracklist } from '../../shared/interfaces/tracklist-interfaces';
+import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/local-storage-keys';
 
 @Injectable({
     providedIn: 'root',
 })
-export class TracklistService {
+export class R_TracklistHttp implements I_TracklistRepository {
     // variables for rerender of season page/ film page
     private filmRefreshSubject = new BehaviorSubject<void>(undefined);
     public refreshFilmPage$ = this.filmRefreshSubject.asObservable();
@@ -83,13 +84,15 @@ export class TracklistService {
         });
     };
 
-    public isEpisodeInCurrenTracklist = (
+    public isEpisodeInCurrentTracklist = (
         episodeID: number,
         selectedSeason: TVSeasonWithTracklist | null,
         tracklistsOfSeason: SeasonTracklist[],
         tracklistSelectionForm: FormGroup<any>
     ): boolean => {
-        if (!selectedSeason) { return true; }
+        if (!selectedSeason) {
+            return true;
+        }
 
         const selectedTracklistFull: SeasonTracklist[] = tracklistsOfSeason.filter(
             (tracklist: SeasonTracklist) => {
@@ -111,7 +114,9 @@ export class TracklistService {
                 }
             );
 
-        if (trackSeasonEpisodeIDs.includes(episodeID)) { return true; }
+        if (trackSeasonEpisodeIDs.includes(episodeID)) {
+            return true;
+        }
 
         return false;
     };

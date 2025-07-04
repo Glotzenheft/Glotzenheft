@@ -9,7 +9,7 @@ import { I_EpisodeRepository } from '../../core/interfaces/episode.repository';
 @Injectable({
     providedIn: 'root',
 })
-export class EpisodeService implements I_EpisodeRepository {
+export class R_EpisodeHttp implements I_EpisodeRepository {
     constructor(private http: HttpClient, private mediaService: MediaService) { }
 
     public createTracklistEpisode = (
