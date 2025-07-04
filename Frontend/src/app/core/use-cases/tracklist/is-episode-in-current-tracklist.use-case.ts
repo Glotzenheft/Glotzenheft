@@ -1,0 +1,11 @@
+import { FormGroup } from "@angular/forms";
+import { I_TracklistRepository } from "../../interfaces/tracklist.repository";
+import { SeasonTracklist, TVSeasonWithTracklist } from "../../../shared/interfaces/tracklist-interfaces";
+
+export class UC_IsEpisodeInCurrentTracklist {
+    constructor(private readonly tracklistRepository: I_TracklistRepository) { }
+
+    public execute = (episodeID: number, selectedSeason: TVSeasonWithTracklist[] | null, tracklistosOfSeason: SeasonTracklist[], tracklistSelectionForm: FormGroup<any>): boolean => {
+        return this.tracklistRepository.isEpisodeInCurrentTracklist(episodeID, selectedSeason, tracklistosOfSeason, tracklistSelectionForm)
+    }
+}
