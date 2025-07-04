@@ -15,16 +15,17 @@ import {
     HttpHeaders,
 } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from '../../app/shared/interfaces/media-interfaces';
-import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from '../../app/shared/interfaces/tracklist-interfaces';
-import { REQUEST_THROTTLE_TIME } from '../../app/shared/variables/message-vars';
-import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../app/shared/variables/local-storage-keys';
-import { ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../app/shared/variables/api-routes';
+import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from '../../shared/interfaces/media-interfaces';
+import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from '../../shared/interfaces/tracklist-interfaces';
+import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
+import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
+import { ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../shared/variables/api-routes';
+import { I_MediaRepository } from '../../core/interfaces/media.repository';
 
 @Injectable({
     providedIn: 'root',
 })
-export class MediaService {
+export class R_MediaHttp implements I_MediaRepository {
     // tracklist update subject triggers new http request and controls request frequence (via throttle time)
     private tracklistUPDATESubject: Subject<UpdateTracklistRequest> =
         new Subject<UpdateTracklistRequest>();
@@ -222,7 +223,7 @@ export class MediaService {
             return this.tracklistCREATESEASONResponseSubject.asObservable();
         };
 
-    private createNewSeasonTracklist = (
+    public createNewSeasonTracklist = (
         // function for making the request to the backend for creating a new season tracklist
         data: CreateSeasonTracklistData
     ): Observable<Tracklist> => {
@@ -285,7 +286,7 @@ export class MediaService {
         return this.tracklistCREATEMOVIEResponseSubject.asObservable();
     };
 
-    private createNewMovieTracklist = (
+    public createNewMovieTracklist = (
         data: CreateMovieTracklistData
     ): Observable<any> => {
         const header = this.getHeader();
@@ -337,7 +338,7 @@ export class MediaService {
         return this.tracklistUPDATEResponseSubject.asObservable();
     };
 
-    private updateTracklist = (
+    public updateTracklist = (
         tracklistData: UpdateTracklistRequest
     ): Observable<Tracklist> => {
         const header = this.getHeader();
@@ -395,7 +396,7 @@ export class MediaService {
         return this.tracklistDELETEResponseSubject.asObservable();
     };
 
-    private deleteTracklist = (tracklistID: number): Observable<any> => {
+    public deleteTracklist = (tracklistID: number): Observable<any> => {
         const header = this.getHeader();
 
         if (!header) {
