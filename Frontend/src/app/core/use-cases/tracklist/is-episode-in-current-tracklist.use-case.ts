@@ -1,7 +1,9 @@
 import { FormGroup } from "@angular/forms";
 import { I_TracklistRepository } from "../../interfaces/tracklist.repository";
 import { SeasonTracklist, TVSeasonWithTracklist } from "../../../shared/interfaces/tracklist-interfaces";
+import { Injectable } from "@angular/core";
 
+@Injectable({ providedIn: 'root' })
 export class UC_IsEpisodeInCurrentTracklist {
     constructor(private readonly tracklistRepository: I_TracklistRepository) { }
 

@@ -1,6 +1,8 @@
+import { Injectable } from "@angular/core";
 import { CreateMovieTracklistData } from "../../../shared/interfaces/tracklist-interfaces";
 import { I_MediaRepository } from "../../interfaces/media.repository";
 
+@Injectable({ providedIn: 'root' })
 export class UC_TriggerTracklistCREATEMOVIESubject {
     constructor(private readonly mediaRepository: I_MediaRepository) { }
 
