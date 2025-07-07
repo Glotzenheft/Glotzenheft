@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Authorization;
 
+use App\Security\IsAuthenticated;
 use App\Service\Authorization\AuthorizationService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -40,5 +41,12 @@ class AuthorizationController extends AbstractController
         }
 
         return $this->json($response);
+    }
+
+    #[IsAuthenticated]
+    #[Route('/api/auth/check', name: 'check_auth_token', methods: ['GET'])]
+    public function checkAuthenticationEndpoint(): JsonResponse
+    {
+        return $this->json(['status' => 'Token is valid']);
     }
 }
