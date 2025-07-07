@@ -24,6 +24,13 @@ services:
         tags:
             - { name: kernel.event_listener, event: kernel.controller, priority: 10 }
 
+    App\TmdbApi\:
+        resource: '../openapi/src/TmdbApi/lib/*'
+
+    App\TmdbApi\Configuration:
+        factory: [ 'App\TmdbApi\Configuration', 'getDefaultConfiguration' ]
+        calls:
+            - [ 'setApiKey', ['Authorization', 'Bearer %env(TMDB_TOKEN)%'] ]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
