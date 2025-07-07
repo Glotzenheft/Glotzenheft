@@ -1067,7 +1067,8 @@
                           },
                           "backdrop_path": {
                             "type": "string",
-                            "example": "/aDYSnJAK0BTVeE8osOy22Kz3SXY.jpg"
+                            "example": "/aDYSnJAK0BTVeE8osOy22Kz3SXY.jpg",
+                            "nullable": true
                           },
                           "id": {
                             "type": "integer",
@@ -1076,7 +1077,8 @@
                           },
                           "title": {
                             "type": "string",
-                            "example": "Star Wars"
+                            "example": "Star Wars",
+                            "nullable": true
                           },
                           "original_language": {
                             "type": "string",
@@ -1084,7 +1086,8 @@
                           },
                           "original_title": {
                             "type": "string",
-                            "example": "Star Wars"
+                            "example": "Star Wars",
+                            "nullable": true
                           },
                           "overview": {
                             "type": "string",
@@ -1092,7 +1095,8 @@
                           },
                           "poster_path": {
                             "type": "string",
-                            "example": "/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg"
+                            "example": "/6FfCtAuVAW8XJjZ7eWeLibRLWTw.jpg",
+                            "nullable": true
                           },
                           "media_type": {
                             "type": "string",
@@ -1113,12 +1117,14 @@
                           },
                           "release_date": {
                             "type": "string",
-                            "example": "1977-05-25"
+                            "example": "1977-05-25",
+                            "nullable": true
                           },
                           "video": {
                             "type": "boolean",
                             "example": false,
-                            "default": true
+                            "default": true,
+                            "nullable": true
                           },
                           "vote_average": {
                             "type": "number",
@@ -1129,6 +1135,29 @@
                             "type": "integer",
                             "example": 18528,
                             "default": 0
+                          },
+                          "name": {
+                            "type": "string",
+                            "example": "The Mandalorian",
+                            "nullable": true
+                          },
+                          "original_name": {
+                            "type": "string",
+                            "example": "The Mandalorian",
+                            "nullable": true
+                          },
+                          "first_air_date": {
+                            "type": "string",
+                            "example": "2019-11-12",
+                            "nullable": true
+                          },
+                          "origin_country": {
+                            "type": "array",
+                            "items": {
+                              "type": "string",
+                              "example": "US"
+                            },
+                            "nullable": true
                           }
                         }
                       }
