@@ -3,13 +3,13 @@
 namespace App\Security;
 
 use Exception;
+use Firebase\JWT\ExpiredException;
 use Firebase\JWT\JWT;
 use Firebase\JWT\Key;
-use Psr\Container\ContainerExceptionInterface;
-use Psr\Container\NotFoundExceptionInterface;
 use ReflectionException;
-use Symfony\Component\DependencyInjection\ParameterBag\ContainerBagInterface;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Event\ControllerEvent;
 use Doctrine\ORM\EntityManagerInterface;
@@ -20,75 +20,112 @@ readonly class JwtAuthenticator
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private ContainerBagInterface $params
+        #[Autowire('%env(resolve:JWT_PUBLIC_KEY_PATH)%')]
+        private string $publicKeyPath,
+        #[Autowire('%env(JWT_ALGORITHM)%')]
+        private string $jwtAlgorithm = 'RS256'
     ){}
 
-    /**
-     * @throws ReflectionException
-     */
     public function onKernelController(ControllerEvent $event): void
     {
+        if (!$this->isAuthenticationRequired($event->getController())) return;
+
+        $jwt = $this->extractToken($event->getRequest());
+        if (!$jwt)
+        {
+            $event->setController(fn () => new JsonResponse(
+                ['error' => 'Missing or invalid Authorization header'],
+                Response::HTTP_UNAUTHORIZED
+            ));
+            return;
+        }
+
+        try
+        {
+            $decoded = JWT::decode($jwt, new Key(file_get_contents($this->publicKeyPath), $this->jwtAlgorithm));
+        }
+        catch (ExpiredException)
+        {
+            $event->setController(fn() => new JsonResponse(
+                ['error' => 'Token has expired'],
+                Response::HTTP_UNAUTHORIZED
+            ));
+            return;
+        }
+        catch (Exception)
+        {
+            $event->setController(fn() => new JsonResponse(
+                ['error' => 'Invalid token'],
+                Response::HTTP_UNAUTHORIZED
+            ));
+            return;
+        }
+
         $controller = $event->getController();
 
-        // Falls es sich um ein [Controller-Klasse, Methode] handelt, extrahieren
         if (is_array($controller))
         {
             [$controllerInstance, $method] = $controller;
         }
         else
         {
-            return; // Falls es keine gültige Methode ist, einfach ignorieren
-        }
-
-        $reflection = new ReflectionMethod($controllerInstance, $method);
-
-        // 🔥 Prüfen, ob die Methode das #[IsAuthenticated] Attribut hat
-        if (!$reflection->getAttributes(IsAuthenticated::class))
-        {
-            return; // Falls nicht vorhanden, nichts tun
-        }
-
-        $request = $event->getRequest();
-        $authHeader = $request->headers->get('Authorization');
-        if (!$authHeader || !str_starts_with($authHeader, 'Bearer '))
-        {
-            $event->setController(fn () => new JsonResponse(['error' => 'Missing or invalid Authorization header'], Response::HTTP_UNAUTHORIZED));
             return;
         }
 
-        $jwt = substr($authHeader, 7); // "Bearer " entfernen
         try
         {
-            $publicKeyPath = $this->params->get('kernel.project_dir') . '/config/public.pem';
-            $publicKey = file_get_contents($publicKeyPath);
-            $decoded = JWT::decode($jwt, new Key($publicKey, 'RS256'));
-
-            // User anhand der ID laden
-            $user = $this->entityManager->getRepository(User::class)->find($decoded->sub);
-            if (!$user)
-            {
-                $event->setController(fn () => new JsonResponse(['error' => 'User not found'], Response::HTTP_NOT_FOUND));
-                return;
-            }
-
-            // ✅ User-Daten in Request speichern
-            $request->attributes->set('user_id', $user->getId());
-            $request->attributes->set('username', $user->getUsername());
-
+            $reflection = new ReflectionMethod($controllerInstance, $method);
+            if (!$reflection->getAttributes(IsAuthenticated::class)) return;
         }
-        catch (Exception $e)
-        {
-            $event->setController(fn () => new JsonResponse(
-                ['error' => 'Invalid token: ' . $e->getMessage()],
-                Response::HTTP_UNAUTHORIZED
-            ));
-        }
-        catch (NotFoundExceptionInterface|ContainerExceptionInterface $e)
+        catch (ReflectionException $e)
         {
             $event->setController(fn () => new JsonResponse(
                 ['error' => 'Internal error: ' . $e->getMessage()],
                 Response::HTTP_INTERNAL_SERVER_ERROR
             ));
         }
+
+        $user = $this->entityManager->getRepository(User::class)->find($decoded->sub);
+        if (!$user)
+        {
+            $event->setController(fn () => new JsonResponse(['error' => 'User in token not found'], Response::HTTP_UNAUTHORIZED));
+            return;
+        }
+
+        $event->getRequest()->attributes->set('user_id', $user->getId());
+        $event->getRequest()->attributes->set('username', $user->getUsername());
+    }
+
+    /**
+     * @param callable|object $controller
+     * @return bool
+     */
+    private function isAuthenticationRequired(callable|object $controller): bool
+    {
+        if (!is_array($controller)) return false;
+
+        try
+        {
+            $reflection = new ReflectionMethod($controller[0], $controller[1]);
+            return count($reflection->getAttributes(IsAuthenticated::class)) > 0;
+        }
+        catch (ReflectionException)
+        {
+            return false;
+        }
+    }
+
+    /**
+     * @param Request $request
+     * @return string|null
+     */
+    private function extractToken(Request $request): ?string
+    {
+        $authHeader = $request->headers->get('Authorization');
+        if (!$authHeader || !str_starts_with($authHeader, 'Bearer '))
+        {
+            return null;
+        }
+        return substr($authHeader, 7);
     }
 }
