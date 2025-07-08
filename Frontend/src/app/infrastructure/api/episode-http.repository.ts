@@ -3,19 +3,19 @@ import { Injectable } from '@angular/core';
 import { CreateTracklistEpisode } from '../../shared/interfaces/tracklist-episode-interfaces';
 import { catchError, Observable, shareReplay, throwError } from 'rxjs';
 import { ROUTE_CREATE_TRACKLIST_EPISODE, ROUTE_DELETE_TRACKLIST_EPISODE, ROUTE_UPDATE_TRACKLIST_EPISODE } from '../../shared/variables/api-routes';
-import { MediaService } from '../../../service/media/media.service';
 import { I_EpisodeRepository } from '../../core/interfaces/episode.repository';
+import { UC_GetHeader } from '../../core/use-cases/media/get-header.use-case';
 
 @Injectable({
     providedIn: 'root',
 })
 export class R_EpisodeHttp implements I_EpisodeRepository {
-    constructor(private http: HttpClient, private mediaService: MediaService) { }
+    constructor(private http: HttpClient, private getHeaderUseCase: UC_GetHeader) { }
 
     public createTracklistEpisode = (
         tracklistEpisode: CreateTracklistEpisode
     ): Observable<any> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
 
         if (!header) {
             return null;
@@ -42,7 +42,7 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
     public updateTracklistEpisode = (
         tracklistEpisode: CreateTracklistEpisode
     ): Observable<any> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
 
         if (!header) {
             return null;
@@ -71,7 +71,7 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
         tracklistSeasonID: number,
         tracklistEpisodeId: number
     ): Observable<any> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
 
         if (!header) {
             return null;

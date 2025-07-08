@@ -24,7 +24,6 @@ import { RatingModule } from 'primeng/rating';
 import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { MediaService } from '../../../../../service/media/media.service';
 import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
@@ -51,7 +50,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-ca
         RatingModule,
         DeleteDialogComponent,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './update-tracklist-form.component.html',
     styleUrl: './update-tracklist-form.component.css',
 })

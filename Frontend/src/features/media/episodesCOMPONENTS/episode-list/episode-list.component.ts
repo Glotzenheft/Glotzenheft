@@ -11,7 +11,6 @@ import { FormGroup } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
-import { MediaService } from '../../../../service/media/media.service';
 import { SeasonEpisode } from '../../../../app/shared/interfaces/media-interfaces';
 import { SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
@@ -26,7 +25,7 @@ import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-
         ButtonModule,
         TooltipModule,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './episode-list.component.html',
     styleUrl: './episode-list.component.css',
 })

@@ -1,6 +1,8 @@
 import { InjectionToken } from "@angular/core"
 
 export interface I_SecurityRepository {
+    // variables
+    INVALID_CHARS: string[],
     validateMediaURL: (mediaURL: string) => boolean,
     isValidUserName: (userName: string) => boolean
 }

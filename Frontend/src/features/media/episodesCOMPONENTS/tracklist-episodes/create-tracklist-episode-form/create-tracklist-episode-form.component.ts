@@ -19,7 +19,6 @@ import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { MediaService } from '../../../../../service/media/media.service';
 import { SeasonTracklist, TracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { SeasonEpisode } from '../../../../../app/shared/interfaces/media-interfaces';
 import { CreateTracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
@@ -45,7 +44,7 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         TooltipModule,
         DeleteDialogComponent,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './create-tracklist-episode-form.component.html',
     styleUrl: './create-tracklist-episode-form.component.css',
 })

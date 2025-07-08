@@ -17,6 +17,8 @@ import { IT_TRACKLIST_REPOSITORY } from "./core/interfaces/tracklist.repository"
 import { R_TracklistHttp } from "./infrastructure/api/tracklist-service.repository";
 import { IT_USER_REPOSITORY } from "./core/interfaces/user.repository";
 import { R_UserHTTP } from "./infrastructure/api/user-http.repository";
+import { IT_VALIDATION_REPOSITORY } from "./core/interfaces/validation.repository";
+import { R_Validation } from "./infrastructure/non-api/validation-service.repository";
 
 export const provideAppConfig = (): Provider[] => {
     return [
@@ -28,6 +30,7 @@ export const provideAppConfig = (): Provider[] => {
         { provide: IT_SECURITY_REPOSITORY, useClass: R_Security },
         { provide: IT_STRING_REPOSITORY, useClass: R_String },
         { provide: IT_TRACKLIST_REPOSITORY, useClass: R_TracklistHttp },
-        { provide: IT_USER_REPOSITORY, useClass: R_UserHTTP }
+        { provide: IT_USER_REPOSITORY, useClass: R_UserHTTP },
+        { provide: IT_VALIDATION_REPOSITORY, useClass: R_Validation }
     ]
 }

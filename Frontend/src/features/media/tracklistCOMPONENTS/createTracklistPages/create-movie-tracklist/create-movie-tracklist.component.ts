@@ -24,11 +24,12 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import { MediaService } from '../../../../../service/media/media.service';
-import { UserService } from '../../../../../service/user/user.service';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
+import { UC_TriggerTracklistCREATEMOVIESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-movie-subject.use-case';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-create-movie-tracklist',
@@ -44,7 +45,7 @@ import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
         SelectModule,
         RatingModule,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './create-movie-tracklist.component.html',
     styleUrl: './create-movie-tracklist.component.css',
 })
@@ -70,14 +71,15 @@ export class CreateMovieTracklistComponent implements OnInit {
 
     constructor(
         private messageService: MessageService,
-        private mediaService: MediaService,
         private formBuilder: FormBuilder,
         private router: Router,
-        private userService: UserService
+        private getTracklistCREATEMOVIESubjectResponseUseCase: UC_getTracklistCREATEMOVIESubjectResponse,
+        private triggerTracklistCREATEMOVIESubjectUseCase: UC_TriggerTracklistCREATEMOVIESubject,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
     ) { }
 
     ngOnInit(): void {
-        this.mediaService.getTracklistCREATEMOVIESubjectResponse().subscribe({
+        this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject('success', 'Trackliste erfolgreich angelegt')
@@ -87,7 +89,7 @@ export class CreateMovieTracklistComponent implements OnInit {
             error: (err) => {
                 if (err.status === 401) {
                     // status 401 = user is not logged in anymore -> navigate to login page
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
@@ -118,7 +120,7 @@ export class CreateMovieTracklistComponent implements OnInit {
             return;
         }
 
-        this.mediaService.triggerTracklistCREATEMOVIESubject({
+        this.triggerTracklistCREATEMOVIESubjectUseCase.execute({
             name: this.tracklistForm.get('trackListName')?.value,
             mediaID: this.mediaID(),
             startDate: this.tracklistForm.get('startDate')?.value,

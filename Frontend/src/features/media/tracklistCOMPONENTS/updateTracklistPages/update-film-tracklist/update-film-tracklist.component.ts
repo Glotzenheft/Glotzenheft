@@ -24,13 +24,16 @@ import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
 import { Observable } from 'rxjs';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { MediaService } from '../../../../../service/media/media.service';
-import { UserService } from '../../../../../service/user/user.service';
 import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/media-interfaces';
+import { UC_GetTracklistUPDATEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
+import { UC_GetTracklistDELETEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
+import { UC_TriggerTracklistUPDATESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
+import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-update-film-tracklist',
@@ -46,7 +49,7 @@ import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/med
         DatePickerModule,
         DeleteDialogComponent,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './update-film-tracklist.component.html',
     styleUrl: './update-film-tracklist.component.css',
 })
@@ -79,13 +82,16 @@ export class UpdateFilmTracklistComponent implements OnInit {
     constructor(
         private messageService: MessageService,
         private router: Router,
-        private mediaService: MediaService,
         private formBuilder: FormBuilder,
-        private userService: UserService
+        private getTracklistUPDATEResponseSubjectUseCase: UC_GetTracklistUPDATEResponseSubject,
+        private getTracklistDELETEReponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
+        private triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
+        private triggerTracklistDELETEsubjectUseCase: UC_TriggerTracklistDELETESubject,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
     ) { }
 
     ngOnInit(): void {
-        this.mediaService.getTracklistUPDATEResponseSubject().subscribe({
+        this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add({
                     life: 7000,
@@ -96,7 +102,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
@@ -134,7 +140,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
         });
 
         // delete tracklist -------------------------------------------
-        this.mediaService.getTracklistDELETEResponseSubject().subscribe({
+        this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject('success', 'Trackliste erfolgreich gelöscht')
@@ -143,7 +149,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
             },
             error: (err: any) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
@@ -195,7 +201,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
             tracklist_finish_date: formattedEndDate,
         };
 
-        this.mediaService.triggerTracklistUPDATESubject(updateTracklistData);
+        this.triggerTracklistUPDATESubjectUseCase.execute(updateTracklistData);
     };
 
     public hasErrorField = (field: string) => {
@@ -214,7 +220,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
     };
 
     public deleteTracklist = () => {
-        this.mediaService.triggerTracklistDELETESubject(this.inpTracklist().id);
+        this.triggerTracklistDELETEsubjectUseCase.execute(this.inpTracklist().id);
     };
 
     public setDeleteDialogVisibility = (status: boolean) => {

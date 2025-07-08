@@ -1,6 +1,5 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { AuthService } from '../../../../service/auth/auth.service';
 import { VisibleRoute } from '../../../../app/shared/interfaces/route-list-item';
 import { getVisibleRoutesForUser } from '../../../../app/shared/variables/routes-list';
 import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
@@ -17,7 +16,6 @@ export class UserLinksComponent implements OnInit {
     public personalUserLinks: VisibleRoute[] = getVisibleRoutesForUser();
 
     constructor(
-        public authService: AuthService,
         private isSearchBarVisibleUseCase: UC_IsSearchBarVisible
     ) { }
 

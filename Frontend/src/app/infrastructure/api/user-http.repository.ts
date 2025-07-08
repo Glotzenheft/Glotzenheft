@@ -12,7 +12,6 @@ import { isPlatformBrowser } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
-import { MediaService } from '../../../service/media/media.service';
 import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from '../../shared/interfaces/login';
 import { ROUTE_DELETE_USER_ACCOUNT, ROUTE_LOGIN, ROUTE_RESET_PASSWORD, ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, ROUTE_STATISTICS_GET_USER_RATINGS, ROUTE_USER_ACTIVITIES } from '../../shared/variables/api-routes';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../shared/variables/message-vars';
@@ -22,6 +21,7 @@ import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
 import { RatingStatistic, WatchTimeStatistic } from '../../shared/statistic-interfaces';
 import { UserActivitiesResponse } from '../../../shared/interfaces/user-interfaces';
 import { I_UserRepository } from '../../core/interfaces/user.repository';
+import { UC_GetHeader } from '../../core/use-cases/media/get-header.use-case';
 
 @Injectable({
     providedIn: 'root',
@@ -45,7 +45,7 @@ export class R_UserHTTP implements I_UserRepository {
         @Inject(PLATFORM_ID) private platformId: Object,
         private messageService: MessageService,
         private router: Router,
-        private mediaService: MediaService
+        private getHeaderUseCase: UC_GetHeader
     ) { }
 
     // functions -----------------------------------------------------------------------
@@ -98,7 +98,7 @@ export class R_UserHTTP implements I_UserRepository {
     public resetPassword = (
         resetPasswordCredentials: ResetPasswordCredentials
     ): Observable<any> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
 
         if (!header) {
             return null;
@@ -195,7 +195,7 @@ export class R_UserHTTP implements I_UserRepository {
     public deleteUserAccount = (
         userData: DeleteUserRequest
     ): Observable<any> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
 
         if (!header) {
             return null;
@@ -247,7 +247,7 @@ export class R_UserHTTP implements I_UserRepository {
      */
     public getUserStatisticWatchTime =
         (): Observable<WatchTimeStatistic> | null => {
-            const header = this.mediaService.getHeader();
+            const header = this.getHeaderUseCase.execute();
 
             if (!header) {
                 return null;
@@ -273,7 +273,7 @@ export class R_UserHTTP implements I_UserRepository {
     public getUserActivities = (
         responsePage: number
     ): Observable<UserActivitiesResponse> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
 
         if (!header) {
             return null;
@@ -292,7 +292,7 @@ export class R_UserHTTP implements I_UserRepository {
     };
 
     public getUserRatings = (): Observable<RatingStatistic> | null => {
-        const header = this.mediaService.getHeader();
+        const header = this.getHeaderUseCase.execute();
         if (!header) {
             return null;
         }

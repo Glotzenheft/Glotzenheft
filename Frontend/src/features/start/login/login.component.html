@@ -1,69 +1,37 @@
 <div class="login">
-  <div class="loginWindow">
-    <form action="submit" [formGroup]="loginGroup" (ngSubmit)="loginUser()">
-      <div>
-        <p-floatlabel class="userInput" variant="in">
-          <input
-            type="text"
-            id="username"
-            pInputText
-            formControlName="username"
-            name="username"
-          />
-          <label for="userName">Nutzername</label>
-        </p-floatlabel>
-        <p-message
-          severity="error"
-          size="small"
-          *ngIf="loginGroup.get('username')?.invalid && hasError('username')"
-          >Nutzername ist Pflicht</p-message
-        >
-      </div>
+    <div class="loginWindow">
+        <form action="submit" [formGroup]="loginGroup" (ngSubmit)="loginUser()">
+            <div>
+                <p-floatlabel class="userInput" variant="in">
+                    <input type="text" id="username" pInputText formControlName="username" name="username" />
+                    <label for="userName">Nutzername</label>
+                </p-floatlabel>
+                <p-message severity="error" size="small"
+                    *ngIf="loginGroup.get('username')?.invalid && hasError('username')">Nutzername ist
+                    Pflicht</p-message>
+            </div>
 
-      <div>
-        <p-floatlabel class="userInput" variant="in">
-          <p-password
-            type="password"
-            id="password"
-            class="passInput"
-            fluid
-            formControlName="password"
-            name="password"
-            #passwordInp
-            [feedback]="false"
-          ></p-password>
-          <label for="password">Passwort</label>
-        </p-floatlabel>
-        <p-message
-          severity="error"
-          size="small"
-          *ngIf="loginGroup.get('password')?.invalid && hasError('password')"
-          >Passwort ist Pflicht und muss mindestens 8 Zeichen lang
-          sein.</p-message
-        >
-      </div>
+            <div>
+                <p-floatlabel class="userInput" variant="in">
+                    <p-password type="password" id="password" class="passInput" fluid formControlName="password"
+                        name="password" #passwordInp [feedback]="false"></p-password>
+                    <label for="password">Passwort</label>
+                </p-floatlabel>
+                <p-message severity="error" size="small"
+                    *ngIf="loginGroup.get('password')?.invalid && hasError('password')">Passwort ist Pflicht und muss
+                    mindestens 8 Zeichen lang
+                    sein.</p-message>
+            </div>
 
-      <div class="loginActions">
-        <div class="marginBottom">
-          <p-button
-            fluid
-            icon="pi pi-sign-in"
-            label="Einloggen"
-            class="button2"
-            type="submit"
-          />
-        </div>
-        <div>
-          <p-button
-            fluid
-            label="Abbrechen"
-            class="button2"
-            severity="secondary"
-            icon="pi pi-times"
-            (onClick)="navigationService.navigateToStartPage()"
-          />
-        </div>
-      </div>
-    </form>
-  </div>
+            <div class="loginActions">
+                <div class="marginBottom">
+                    <p-button fluid icon="pi pi-sign-in" label="Einloggen" class="button2" type="submit" />
+                </div>
+                <div>
+                    <p-button fluid label="Abbrechen" class="button2" severity="secondary" icon="pi pi-times"
+                        (onClick)="navigateToStartPageUseCase.execute()" />
+                </div>
+            </div>
+        </form>
+    </div>
 </div>

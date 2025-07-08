@@ -11,9 +11,6 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
-import { CreateNewTracklistComponent } from '../../createTracklistPages/create-new-tracklist/create-new-tracklist.component';
-import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
-import { MediaService } from '../../../../../service/media/media.service';
 import { TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 
 @Component({
@@ -24,9 +21,8 @@ import { TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/trac
         RatingModule,
         MessageModule,
         CommonModule,
-        CreateNewTracklistComponent,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './tracklist-form.component.html',
     styleUrl: './tracklist-form.component.css',
 })
@@ -46,7 +42,6 @@ export class TracklistFormComponent implements OnInit {
     @Output() saveNewTracklist: EventEmitter<boolean> =
         new EventEmitter<boolean>();
 
-    constructor(private tracklistService: TracklistService) { }
 
     ngOnInit(): void { }
 
