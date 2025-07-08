@@ -6,11 +6,12 @@ import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
 import { UserMenuList } from '../../../../shared/interfaces/user-interfaces';
-import { UserService } from '../../../../service/user/user.service';
-import { StringService } from '../../../../service/string/string.service';
 import { isUserLoggedIn } from '../../../../guards/auth.guard';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { getMessageObject } from '../../../../app/shared/variables/message-vars';
+import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
+import { UC_VisibleUserName } from '../../../../app/core/use-cases/user/get-visible-user-name.use-case';
+import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-user-menu',
@@ -41,7 +42,7 @@ export class UserMenuComponent implements OnInit {
                     label: 'Ausloggen',
                     icon: 'pi pi-sign-out',
                     command: () => {
-                        this.userService.logoutOfAccount();
+                        this.logoutOfAccountUseCase.execute();
                         this.messageService.add(
                             getMessageObject('success', 'Erfolgreich ausgeloggt')
                         );
@@ -78,19 +79,20 @@ export class UserMenuComponent implements OnInit {
     public isUserMenuVisible: boolean = false;
 
     constructor(
-        private userService: UserService,
         private router: Router,
         private messageService: MessageService,
-        public stringService: StringService
+        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible,
+        private visibleUserNameUseCase: UC_VisibleUserName,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
     ) { }
 
     ngOnInit(): void {
         // this.userName = this.userService.getUserName() ?? '';
-        this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
+        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
             this.isUserMenuVisible = status;
         });
 
-        this.userService.visibleUserName$.subscribe((userName: string) => {
+        this.visibleUserNameUseCase.observe().subscribe((userName: string) => {
             this.userName = localStorage.getItem('username') ?? userName;
         });
     }

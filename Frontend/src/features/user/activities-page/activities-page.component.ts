@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { UserService } from '../../../service/user/user.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import {
@@ -20,6 +19,8 @@ import { TMDB_POSTER_PATH } from '../../../app/shared/variables/tmdb-vars';
 import { Router } from '@angular/router';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
+import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
+import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-activities-page',
@@ -58,9 +59,10 @@ export class ActivitiesPageComponent implements OnInit {
     public isLoading: boolean = false;
 
     constructor(
-        private userService: UserService,
         private messageService: MessageService,
-        private router: Router
+        private router: Router,
+        private getActivitiesUseCase: UC_GetUserActivites,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
     ) { }
 
     ngOnInit(): void {
@@ -72,7 +74,7 @@ export class ActivitiesPageComponent implements OnInit {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
         this.isTableLoading = true;
-        this.userActivitiesRequest$ = this.userService.getUserActivities(page);
+        this.userActivitiesRequest$ = this.getActivitiesUseCase.execute(page);
 
         if (!this.userActivitiesRequest$) {
             this.isError = true;
@@ -187,7 +189,7 @@ export class ActivitiesPageComponent implements OnInit {
             },
             error: (err: any) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
 

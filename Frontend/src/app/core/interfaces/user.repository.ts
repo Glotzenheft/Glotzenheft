@@ -6,6 +6,11 @@ import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfac
 import { InjectionToken } from "@angular/core";
 
 export interface I_UserRepository {
+    // variables
+    isSearchBarVisible$: Observable<boolean>,
+    visibleUserName$: Observable<string>,
+
+    // functions
     loginIntoAccount: (loginData: LoginCredentials) => Observable<LoginAndMessageResponse>,
     registerAccount: (registerData: RegisterCredentials) => Observable<LoginAndMessageResponse>,
     logoutOfAccount: () => void,

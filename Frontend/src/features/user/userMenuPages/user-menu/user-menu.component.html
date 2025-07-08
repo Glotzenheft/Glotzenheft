@@ -1,17 +1,7 @@
 <div>
-  <p-menu
-    #menu
-    [model]="isUserMenuVisible ? userMenuList : loggedOutMenuList"
-    [popup]="true"
-  />
+    <p-menu #menu [model]="isUserMenuVisible ? userMenuList : loggedOutMenuList" [popup]="true" />
 
-  <div
-    (click)="menu.toggle($event)"
-    class="menuDIV"
-    [pTooltip]="isUserMenuVisible ? userName : 'nicht eingeloggt'"
-  >
-    <span
-      [className]="isUserMenuVisible ? 'pi pi-user' : 'pi pi-sign-in'"
-    ></span>
-  </div>
+    <div (click)="menu.toggle($event)" class="menuDIV" [pTooltip]="isUserMenuVisible ? userName : 'nicht eingeloggt'">
+        <span [className]="isUserMenuVisible ? 'pi pi-user' : 'pi pi-sign-in'"></span>
+    </div>
 </div>

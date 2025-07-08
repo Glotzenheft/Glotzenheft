@@ -1,38 +1,30 @@
 <div class="appwrapper">
-  <div class="sidebar" *ngIf="isSidebarOpen">
-    <div class="appHeading">
-      <div class="sidebarToggleDIV">
-        <div (click)="toggleSidebar(false)">
-          <span
-            class="pi pi-times"
-            pTooltip="Klicken zum Schließen des Menüs"
-            tooltipPosition="right"
-          ></span>
+    <div class="sidebar" *ngIf="isSidebarOpen">
+        <div class="appHeading">
+            <div class="sidebarToggleDIV">
+                <div (click)="toggleSidebar(false)">
+                    <span class="pi pi-times" pTooltip="Klicken zum Schließen des Menüs" tooltipPosition="right"></span>
+                </div>
+                <app-user-menu />
+            </div>
+
+            <h1><a href="/">Glotzenheft</a></h1>
+        </div>
+        <app-user-links />
+        <app-footer (sideBarOpenEvent)="toggleSidebar(false)" />
+    </div>
+
+    <div class="closedSidebar" *ngIf="!isSidebarOpen">
+        <div class="closedSidebarToggleDIV">
+            <div (click)="toggleSidebar(true)">
+                <span class="pi pi-bars" pTooltip="Klicken zum Öffnen des Menüs" tooltipPosition="right"></span>
+            </div>
         </div>
         <app-user-menu />
-      </div>
-
-      <h1><a href="/">Glotzenheft</a></h1>
     </div>
-    <app-user-links />
-    <app-footer (sideBarOpenEvent)="toggleSidebar(false)" />
-  </div>
-
-  <div class="closedSidebar" *ngIf="!isSidebarOpen">
-    <div class="closedSidebarToggleDIV">
-      <div (click)="toggleSidebar(true)">
-        <span
-          class="pi pi-bars"
-          pTooltip="Klicken zum Öffnen des Menüs"
-          tooltipPosition="right"
-        ></span>
-      </div>
+    <div class="content">
+        <app-search-bar (emitSearchQuery)="setUserQuery($event)" />
+        <router-outlet></router-outlet>
     </div>
-    <app-user-menu />
-  </div>
-  <div class="content">
-    <app-search-bar (emitSearchQuery)="setUserQuery($event)" />
-    <router-outlet></router-outlet>
-  </div>
 </div>
 <p-toast></p-toast>

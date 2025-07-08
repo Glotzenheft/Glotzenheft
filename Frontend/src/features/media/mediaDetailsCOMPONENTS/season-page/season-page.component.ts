@@ -26,11 +26,6 @@ import { TracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklis
 import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
-import { StringService } from '../../../../service/string/string.service';
-import { MediaService } from '../../../../service/media/media.service';
-import { SecurityService } from '../../../../service/security/security.service';
-import { UserService } from '../../../../service/user/user.service';
-import { TracklistService } from '../../../../service/tracklist/tracklist.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Season, SeasonEpisode, SeasonWithEpisodes } from '../../../../app/shared/interfaces/media-interfaces';
 import { SeasonTracklist, SeasonTracklistType, TVSeasonWithTracklist, TVWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
@@ -40,6 +35,8 @@ import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_GetSeasonForTV } from '../../../../app/core/use-cases/media/get-season-for-tv.use-case';
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UC_JoinTVWithTracklists } from '../../../../app/core/use-cases/tracklist/join-tv-with-tracklists.use-case';
+import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/get-selected-tracklist-in-local-storage.use-case';
 
 @Component({
     selector: 'app-season-page',
@@ -120,11 +117,12 @@ export class SeasonPageComponent implements OnInit {
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private messageService: MessageService,
-        private tracklistService: TracklistService,
         private router: Router,
         private getSeasonForTVUseCase: UC_GetSeasonForTV,
         private validateMediaURLUseCase: UC_ValidateMediaURL,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+        private joinTVWithTracklistsUseCase: UC_JoinTVWithTracklists,
+        private getSelectedTracklistsInLocalStorageUseCase: UC_GetSelectedTracklistInLocalStorage
     ) { }
 
     ngOnInit(): void {
@@ -167,7 +165,7 @@ export class SeasonPageComponent implements OnInit {
 
                 // join seasondata with tracklists
                 this.tvDataWithTracklist =
-                    this.tracklistService.joinTVWithTracklists(res);
+                    this.joinTVWithTracklistsUseCase.execute(res);
 
                 this.tracklistSelectionForm = this.formBuilder.group({
                     selectedTracklist: [this.EMPTY_TRACKLIST],
@@ -215,8 +213,8 @@ export class SeasonPageComponent implements OnInit {
             let currentTracklistInLocalStorage: SeasonTracklist | null = null;
 
             const currentTracklistInLocalStorageID: number | null =
-                this.tracklistService.getSelectedTracklistInLocalStorage()
-                    ? Number(this.tracklistService.getSelectedTracklistInLocalStorage())
+                this.getSelectedTracklistsInLocalStorageUseCase.execute()
+                    ? Number(this.getSelectedTracklistsInLocalStorageUseCase.execute())
                     : null;
 
             if (

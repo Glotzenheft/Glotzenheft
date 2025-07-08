@@ -5,9 +5,9 @@ import { InputIcon, InputIconModule } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
 
 @Component({
-  selector: 'app-user-layout',
-  imports: [RouterModule, IconFieldModule, InputIconModule, InputTextModule],
-  templateUrl: './user-layout.component.html',
-  styleUrl: './user-layout.component.css',
+    selector: 'app-user-layout',
+    imports: [RouterModule, IconFieldModule, InputIconModule, InputTextModule],
+    templateUrl: './user-layout.component.html',
+    styleUrl: './user-layout.component.css',
 })
-export class UserLayoutComponent {}
+export class UserLayoutComponent { }

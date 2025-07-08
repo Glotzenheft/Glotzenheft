@@ -18,7 +18,6 @@ import { ButtonModule } from 'primeng/button';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { UpdateFilmTracklistComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
 import { UpdateTracklistFormComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
-import { MediaService } from '../../../../service/media/media.service';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -26,6 +25,7 @@ import { Tracklist } from '../../../../app/shared/interfaces/tracklist-interface
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST_AS_OBJECT, TracklistStatusType } from '../../../../app/shared/variables/tracklist';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/get-all-user-tracklists.use-case';
 
 @Component({
     selector: 'app-all-user-tracklists',
@@ -90,9 +90,9 @@ export class AllUserTracklistsComponent implements OnInit {
     public convertStatus = convertTracklistStatusIntoGerman;
 
     constructor(
-        private mediaService: MediaService,
         private router: Router,
-        private formBuilder: FormBuilder
+        private formBuilder: FormBuilder,
+        private getAllUserTracklists: UC_GetAllUserTracklists
     ) { }
 
     ngOnInit(): void {
@@ -107,7 +107,7 @@ export class AllUserTracklistsComponent implements OnInit {
     public loadTracklists = () => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.userTracklists$ = this.mediaService.getAllUserTracklists();
+        this.userTracklists$ = this.getAllUserTracklists.execute();
 
         if (!this.userTracklists$) {
             return;

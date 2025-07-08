@@ -7,9 +7,9 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { isUserLoggedIn } from '../../../../guards/auth.guard';
-import { SearchService } from '../../../../service/search/search.service';
-import { UserService } from '../../../../service/user/user.service';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { UC_UpdateSearchTerm } from '../../../../app/core/use-cases/search/update-search-term.use-case';
+import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
 
 @Component({
     selector: 'app-search-bar',
@@ -33,12 +33,12 @@ export class SearchBarComponent implements OnInit {
 
     constructor(
         private router: Router,
-        private searchService: SearchService,
-        private userService: UserService
+        private updateSearchTermUseCase: UC_UpdateSearchTerm,
+        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible
     ) { }
 
     ngOnInit(): void {
-        this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
+        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
             this.isVisible = status;
         });
 
@@ -52,7 +52,7 @@ export class SearchBarComponent implements OnInit {
 
     navigateToSearch = () => {
         this.emitSearchQuery.emit(this.searchQuery);
-        this.searchService.updateSearchTerm(this.searchQuery);
+        this.updateSearchTermUseCase.execute(this.searchQuery);
 
         if (this.router.url !== `/${ROUTES_LIST[4].fullUrl}`) {
             // checking if user is already on multi search route

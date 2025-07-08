@@ -1,108 +1,79 @@
 <router-outlet />
 
 <div *ngIf="isLoading" class="loadingWrapper">
-  <h1>Laden ...</h1>
-  <p-progress-spinner
-    ariaLabel="loading"
-    strokeWidth="8"
-    [style]="{ width: '5rem', height: '5rem' }"
-  />
+    <h1>Laden ...</h1>
+    <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
 </div>
 
 <div *ngIf="serverNotAvailablePage" class="serverNotAvailableDIV">
-  <h1>Server nicht erreichbar</h1>
+    <h1>Server nicht erreichbar</h1>
 </div>
 
 <ng-container *ngIf="!isLoading && !serverNotAvailablePage">
-  <div *ngIf="userRatings$" class="diagrammDIV">
-    <h1>Meine Übersicht</h1>
+    <div *ngIf="userRatings$" class="diagrammDIV">
+        <h1>Meine Übersicht</h1>
 
-    <div class="diagramSelection">
-      <p-select
-        [options]="diagramSelection"
-        optionLabel="name"
-        (onChange)="handleDiagramSelectionChange($event)"
-      />
+        <div class="diagramSelection">
+            <p-select [options]="diagramSelection" optionLabel="name"
+                (onChange)="handleDiagramSelectionChange($event)" />
+        </div>
+
+        <div class="barChartDIVWrapper">
+            <div class="barChartDIV" *ngIf="selectedDiagramType.value === 0">
+                <p-chart type="bar" [data]="ratingBarChart" [options]="diagramOptions" />
+            </div>
+        </div>
+        <div class="pieChartDIV" *ngIf="selectedDiagramType.value === 1">
+            <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
+        </div>
+
+        <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 2">
+            <div class="barChartDIV">
+                <p-chart type="bar" [data]="barChartForMediaStatistic" [options]="barChartMediaStatisticOptions" />
+            </div>
+        </div>
+
+        <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 3">
+            <div class="barChartDIV">
+                <p-chart type="bar" [data]="barChartForYearlyMediaStatistic"
+                    [options]="barChartYearlyStatisticOptions" />
+            </div>
+        </div>
+
+        <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 4">
+            <div class="barChartDIV">
+                <p-chart type="bar" [data]="barChartForMostWatchedDaysMediaStatistic"
+                    [options]="barChartForMostWatchedDaysMediaStatisticOptions" />
+            </div>
+        </div>
+
+        <div *ngIf="selectedDiagramType.value === 5" class="heatmap-container">
+            <div class="heatmap">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Jahr</th>
+                            <th *ngFor="let month of months">{{ month }}</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr *ngFor="let entry of heatmapData">
+                            <td class="heatmap-Years">{{ entry[0] }}</td>
+                            <td *ngFor="let hours of entry[1]" [style.background-color]="getHeatmapColor(hours, true)"
+                                [style.color]="getHeatmapColor(hours, false)" [title]="hours.toFixed(1) + ' Stunden'">
+                                {{ hours > 0 ? hours.toFixed(1) : "" }}
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
-    <div class="barChartDIVWrapper">
-      <div class="barChartDIV" *ngIf="selectedDiagramType.value === 0">
-        <p-chart
-          type="bar"
-          [data]="ratingBarChart"
-          [options]="diagramOptions"
-        />
-      </div>
-    </div>
-    <div class="pieChartDIV" *ngIf="selectedDiagramType.value === 1">
-      <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
-    </div>
+    <div class="gapDIV"></div>
 
-    <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 2">
-      <div class="barChartDIV">
-        <p-chart
-          type="bar"
-          [data]="barChartForMediaStatistic"
-          [options]="barChartMediaStatisticOptions"
-        />
-      </div>
+    <div class="activitiesPage">
+        <h2>Meine Aktivitäten</h2>
+        <p-button label="zu meinen Aktivitäten" icon="pi pi-arrow-right" (onClick)="navigateToActivitiesPage()" />
     </div>
-
-    <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 3">
-      <div class="barChartDIV">
-        <p-chart
-          type="bar"
-          [data]="barChartForYearlyMediaStatistic"
-          [options]="barChartYearlyStatisticOptions"
-        />
-      </div>
-    </div>
-
-    <div class="barChartDIVWrapper" *ngIf="selectedDiagramType.value === 4">
-      <div class="barChartDIV">
-        <p-chart
-          type="bar"
-          [data]="barChartForMostWatchedDaysMediaStatistic"
-          [options]="barChartForMostWatchedDaysMediaStatisticOptions"
-        />
-      </div>
-    </div>
-
-    <div *ngIf="selectedDiagramType.value === 5" class="heatmap-container">
-      <div class="heatmap">
-        <table>
-          <thead>
-            <tr>
-              <th>Jahr</th>
-              <th *ngFor="let month of months">{{ month }}</th>
-            </tr>
-          </thead>
-          <tbody>
-            <tr *ngFor="let entry of heatmapData">
-              <td class="heatmap-Years">{{ entry[0] }}</td>
-              <td
-                *ngFor="let hours of entry[1]"
-                [style.background-color]="getHeatmapColor(hours, true)"
-                [style.color]="getHeatmapColor(hours, false)"
-                [title]="hours.toFixed(1) + ' Stunden'"
-              >
-                {{ hours > 0 ? hours.toFixed(1) : "" }}
-              </td>
-            </tr>
-          </tbody>
-        </table>
-      </div>
-    </div>
-  </div>
-
-  <div class="gapDIV"></div>
-
-  <div class="activitiesPage">
-    <h2>Meine Aktivitäten</h2>
-    <p-button
-      label="zu meinen Aktivitäten"
-      icon="pi pi-arrow-right"
-      (onClick)="navigateToActivitiesPage()"
-    />
-  </div>
 </ng-container>

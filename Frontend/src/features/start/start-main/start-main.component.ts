@@ -11,32 +11,32 @@ import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
 @Component({
-  selector: 'app-start-main',
-  imports: [
-    InputTextModule,
-    IconFieldModule,
-    InputIconModule,
-    TooltipModule,
-    ButtonModule,
-    CommonModule,
-  ],
-  templateUrl: './start-main.component.html',
-  styleUrl: './start-main.component.css',
+    selector: 'app-start-main',
+    imports: [
+        InputTextModule,
+        IconFieldModule,
+        InputIconModule,
+        TooltipModule,
+        ButtonModule,
+        CommonModule,
+    ],
+    templateUrl: './start-main.component.html',
+    styleUrl: './start-main.component.css',
 })
 export class StartMainComponent {
-  public areLoginButtonsVisible: boolean = !isUserLoggedIn();
+    public areLoginButtonsVisible: boolean = !isUserLoggedIn();
 
-  constructor(private router: Router, private m: MessageService) {}
+    constructor(private router: Router) { }
 
-  navigateToLogin = () => {
-    this.router.navigateByUrl('/login');
-  };
+    navigateToLogin = () => {
+        this.router.navigateByUrl('/login');
+    };
 
-  public navigateToStartPage = () => {
-    this.router.navigateByUrl(ROUTES_LIST[8].fullUrl);
-  };
+    public navigateToStartPage = () => {
+        this.router.navigateByUrl(ROUTES_LIST[8].fullUrl);
+    };
 
-  navigateToRegister = () => {
-    this.router.navigateByUrl('/register');
-  };
+    navigateToRegister = () => {
+        this.router.navigateByUrl('/register');
+    };
 }
