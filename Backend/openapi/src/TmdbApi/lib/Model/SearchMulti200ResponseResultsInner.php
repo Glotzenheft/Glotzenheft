@@ -71,7 +71,11 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'release_date' => 'string',
         'video' => 'bool',
         'vote_average' => 'float',
-        'vote_count' => 'int'
+        'vote_count' => 'int',
+        'name' => 'string',
+        'original_name' => 'string',
+        'first_air_date' => 'string',
+        'origin_country' => 'string[]'
     ];
 
     /**
@@ -96,7 +100,11 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'release_date' => null,
         'video' => null,
         'vote_average' => null,
-        'vote_count' => null
+        'vote_count' => null,
+        'name' => null,
+        'original_name' => null,
+        'first_air_date' => null,
+        'origin_country' => null
     ];
 
     /**
@@ -119,7 +127,11 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'release_date' => false,
         'video' => false,
         'vote_average' => false,
-        'vote_count' => false
+        'vote_count' => false,
+        'name' => false,
+        'original_name' => false,
+        'first_air_date' => false,
+        'origin_country' => false
     ];
 
     /**
@@ -222,7 +234,11 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'release_date' => 'release_date',
         'video' => 'video',
         'vote_average' => 'vote_average',
-        'vote_count' => 'vote_count'
+        'vote_count' => 'vote_count',
+        'name' => 'name',
+        'original_name' => 'original_name',
+        'first_air_date' => 'first_air_date',
+        'origin_country' => 'origin_country'
     ];
 
     /**
@@ -245,7 +261,11 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'release_date' => 'setReleaseDate',
         'video' => 'setVideo',
         'vote_average' => 'setVoteAverage',
-        'vote_count' => 'setVoteCount'
+        'vote_count' => 'setVoteCount',
+        'name' => 'setName',
+        'original_name' => 'setOriginalName',
+        'first_air_date' => 'setFirstAirDate',
+        'origin_country' => 'setOriginCountry'
     ];
 
     /**
@@ -268,7 +288,11 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'release_date' => 'getReleaseDate',
         'video' => 'getVideo',
         'vote_average' => 'getVoteAverage',
-        'vote_count' => 'getVoteCount'
+        'vote_count' => 'getVoteCount',
+        'name' => 'getName',
+        'original_name' => 'getOriginalName',
+        'first_air_date' => 'getFirstAirDate',
+        'origin_country' => 'getOriginCountry'
     ];
 
     /**
@@ -343,6 +367,10 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         $this->setIfExists('video', $data ?? [], true);
         $this->setIfExists('vote_average', $data ?? [], 0);
         $this->setIfExists('vote_count', $data ?? [], 0);
+        $this->setIfExists('name', $data ?? [], null);
+        $this->setIfExists('original_name', $data ?? [], null);
+        $this->setIfExists('first_air_date', $data ?? [], null);
+        $this->setIfExists('origin_country', $data ?? [], null);
     }
 
     /**
@@ -788,6 +816,114 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
             throw new \InvalidArgumentException('non-nullable vote_count cannot be null');
         }
         $this->container['vote_count'] = $vote_count;
+
+        return $this;
+    }
+
+    /**
+     * Gets name
+     *
+     * @return string|null
+     */
+    public function getName()
+    {
+        return $this->container['name'];
+    }
+
+    /**
+     * Sets name
+     *
+     * @param string|null $name name
+     *
+     * @return self
+     */
+    public function setName($name)
+    {
+        if (is_null($name)) {
+            throw new \InvalidArgumentException('non-nullable name cannot be null');
+        }
+        $this->container['name'] = $name;
+
+        return $this;
+    }
+
+    /**
+     * Gets original_name
+     *
+     * @return string|null
+     */
+    public function getOriginalName()
+    {
+        return $this->container['original_name'];
+    }
+
+    /**
+     * Sets original_name
+     *
+     * @param string|null $original_name original_name
+     *
+     * @return self
+     */
+    public function setOriginalName($original_name)
+    {
+        if (is_null($original_name)) {
+            throw new \InvalidArgumentException('non-nullable original_name cannot be null');
+        }
+        $this->container['original_name'] = $original_name;
+
+        return $this;
+    }
+
+    /**
+     * Gets first_air_date
+     *
+     * @return string|null
+     */
+    public function getFirstAirDate()
+    {
+        return $this->container['first_air_date'];
+    }
+
+    /**
+     * Sets first_air_date
+     *
+     * @param string|null $first_air_date first_air_date
+     *
+     * @return self
+     */
+    public function setFirstAirDate($first_air_date)
+    {
+        if (is_null($first_air_date)) {
+            throw new \InvalidArgumentException('non-nullable first_air_date cannot be null');
+        }
+        $this->container['first_air_date'] = $first_air_date;
+
+        return $this;
+    }
+
+    /**
+     * Gets origin_country
+     *
+     * @return string[]|null
+     */
+    public function getOriginCountry()
+    {
+        return $this->container['origin_country'];
+    }
+
+    /**
+     * Sets origin_country
+     *
+     * @param string[]|null $origin_country origin_country
+     *
+     * @return self
+     */
+    public function setOriginCountry($origin_country)
+    {
+        if (is_null($origin_country)) {
+            throw new \InvalidArgumentException('non-nullable origin_country cannot be null');
+        }
+        $this->container['origin_country'] = $origin_country;
 
         return $this;
     }

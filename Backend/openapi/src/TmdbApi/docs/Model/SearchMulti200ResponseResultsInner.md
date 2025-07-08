@@ -19,5 +19,9 @@ Name | Type | Description | Notes
 **video** | **bool** |  | [optional] [default to true]
 **vote_average** | **float** |  | [optional] [default to 0]
 **vote_count** | **int** |  | [optional] [default to 0]
+**name** | **string** |  | [optional]
+**original_name** | **string** |  | [optional]
+**first_air_date** | **string** |  | [optional]
+**origin_country** | **string[]** |  | [optional]
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)
