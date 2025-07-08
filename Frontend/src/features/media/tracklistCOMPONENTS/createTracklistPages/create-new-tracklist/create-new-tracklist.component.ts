@@ -24,13 +24,14 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import { MediaService } from '../../../../../service/media/media.service';
-import { UserService } from '../../../../../service/user/user.service';
-import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
 import { Tracklist, TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { UC_GetTracklistCREATESEASONResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-create-season-response-subject.use-case';
+import { UC_TriggerTracklistCREATESEASONSubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-season-subject.use-case';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
 
 @Component({
     selector: 'app-create-new-tracklist',
@@ -46,7 +47,7 @@ import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
         SelectModule,
         RatingModule,
     ],
-    providers: [MediaService],
+    providers: [],
     templateUrl: './create-new-tracklist.component.html',
     styleUrl: './create-new-tracklist.component.css',
 })
@@ -78,27 +79,28 @@ export class CreateNewTracklistComponent implements OnInit {
 
     constructor(
         private messageService: MessageService,
-        private mediaService: MediaService,
         private formBuilder: FormBuilder,
         private router: Router,
-        private userService: UserService,
-        private tracklistService: TracklistService
+        private getTracklistCREATESEASONResponseSubjectUseCase: UC_GetTracklistCREATESEASONResponseSubject,
+        private triggerTracklistCREATESEASONSubjectUseCase: UC_TriggerTracklistCREATESEASONSubject,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage
     ) { }
 
     ngOnInit(): void {
-        this.mediaService.getTracklistCREATESEASONResponseSubject().subscribe({
+        this.getTracklistCREATESEASONResponseSubjectUseCase.execute().subscribe({
             next: (res: Tracklist) => {
                 this.messageService.add(
                     getMessageObject('success', 'Tracklist erfolgreich angelegt')
                 );
                 // set current tracklist to local storage
-                this.tracklistService.setSelectedTracklistInLocalStorage(res.id);
+                this.setSelectedTracklistInLocalStorageUseCase.execute(res.id);
                 this.saveUpdatedTracklist.emit(true);
             },
             error: (err) => {
                 if (err.status === 401) {
                     // status 401 = user is not logged in anymore -> navigate to login page
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
@@ -146,7 +148,7 @@ export class CreateNewTracklistComponent implements OnInit {
                 .split('T')[0];
         }
 
-        this.mediaService.triggerTracklistCREATESEASONSubject({
+        this.triggerTracklistCREATESEASONSubjectUseCase.execute({
             name: this.trackListForm.get('trackListName')?.value,
             mediaID: this.mediaID(),
             seasonID: this.inputSeason().id,

@@ -23,6 +23,7 @@ import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_ResetPassword } from '../../../app/core/use-cases/user/reset-password.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_PasswordMatchValidationForResetPassword } from '../../../app/core/use-cases/validation/password-match-validation-for-reset-password.use-case';
+import { UC_NavigateToStartPage } from '../../../app/core/use-cases/navigation/navigate-to-start-page.use-case';
 
 @Component({
     selector: 'app-reset-password',
@@ -48,12 +49,13 @@ export class ResetPasswordComponent implements OnInit {
     public resetPasswordData$: Observable<any> | null = null;
 
     constructor(
+        public navigateToStartPageUseCase: UC_NavigateToStartPage,
         private formBuilder: FormBuilder,
         private messageService: MessageService,
         private router: Router,
         private resetPasswordUseCase: UC_ResetPassword,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
-        private validationPasswordsMatchUseCase: UC_PasswordMatchValidationForResetPassword
+        private validationPasswordsMatchUseCase: UC_PasswordMatchValidationForResetPassword,
     ) { }
 
     ngOnInit(): void {
