@@ -386,7 +386,7 @@ export class R_MediaHttp implements I_MediaRepository {
         );
     };
 
-    // functions for deleting traclists ----------------------------------------------------------------
+    // functions for deleting tracklists ----------------------------------------------------------------
 
     public triggerTracklistDELETESubject = (tracklistID: number) => {
         this.tracklistDELETESubject.next(tracklistID);

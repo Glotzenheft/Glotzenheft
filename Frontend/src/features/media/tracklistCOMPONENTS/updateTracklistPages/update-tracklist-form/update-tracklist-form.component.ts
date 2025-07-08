@@ -25,13 +25,17 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import { MediaService } from '../../../../../service/media/media.service';
-import { UserService } from '../../../../../service/user/user.service';
-import { TracklistService } from '../../../../../service/tracklist/tracklist.service';
 import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/media-interfaces';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
+import { UC_GetTracklistUPDATEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
+import { UC_GetTracklistDELETEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
+import { UC_TriggerTracklistUPDATESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
+import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 
 @Component({
     selector: 'app-update-tracklist-form',
@@ -81,15 +85,18 @@ export class UpdateTracklistFormComponent implements OnInit {
 
     constructor(
         private formBuilder: FormBuilder,
-        private mediaService: MediaService,
         private messageService: MessageService,
         private router: Router,
-        private userService: UserService,
-        private tracklistService: TracklistService
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage,
+        private getTracklistUPDATEResponseSubjectUseCase: UC_GetTracklistUPDATEResponseSubject,
+        private getTracklistDELETEResponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
+        private triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
+        private triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject
     ) { }
 
     ngOnInit(): void {
-        this.mediaService.getTracklistUPDATEResponseSubject().subscribe({
+        this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject('success', 'Erfolgreich gespeichert.')
@@ -98,7 +105,7 @@ export class UpdateTracklistFormComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
@@ -113,7 +120,7 @@ export class UpdateTracklistFormComponent implements OnInit {
             },
         });
 
-        this.mediaService.getTracklistDELETEResponseSubject().subscribe({
+        this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject('success', 'Trackliste erfolgreich gelöscht')
@@ -122,7 +129,7 @@ export class UpdateTracklistFormComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.userService.logoutOfAccount();
+                    this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
@@ -140,7 +147,7 @@ export class UpdateTracklistFormComponent implements OnInit {
         this.loadFilmData();
 
         // set local storage selected tracklist to this tracklist
-        this.tracklistService.setSelectedTracklistInLocalStorage(
+        this.setSelectedTracklistInLocalStorageUseCase.execute(
             this.inpSelectedTracklist().id
         );
     }
@@ -216,7 +223,7 @@ export class UpdateTracklistFormComponent implements OnInit {
             tracklist_finish_date: formattedEndDate,
         };
 
-        this.mediaService.triggerTracklistUPDATESubject(updateTracklistData);
+        this.triggerTracklistUPDATESubjectUseCase.execute(updateTracklistData);
     };
 
     public hasErrorField = (field: string) => {
@@ -235,7 +242,7 @@ export class UpdateTracklistFormComponent implements OnInit {
     public deleteTracklist = () => {
         this.isDeleteDialogVisible = false;
 
-        this.mediaService.triggerTracklistDELETESubject(
+        this.triggerTracklistDELETESubjectUseCase.execute(
             this.inpSelectedTracklist().id
         );
     };
