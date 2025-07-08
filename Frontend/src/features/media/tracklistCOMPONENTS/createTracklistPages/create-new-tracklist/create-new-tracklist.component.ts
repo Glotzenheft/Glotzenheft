@@ -47,7 +47,7 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         SelectModule,
         RatingModule,
     ],
-    providers: [],
+    providers: [UC_GetTracklistCREATESEASONResponseSubject, UC_TriggerTracklistCREATESEASONSubject, UC_SetSelectedTracklistInLocalStorage, UC_LogoutOfAccount],
     templateUrl: './create-new-tracklist.component.html',
     styleUrl: './create-new-tracklist.component.css',
 })

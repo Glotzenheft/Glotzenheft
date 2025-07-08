@@ -50,7 +50,14 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-ca
         RatingModule,
         DeleteDialogComponent,
     ],
-    providers: [],
+    providers: [
+        UC_GetTracklistDELETEResponseSubject,
+        UC_GetTracklistUPDATEResponseSubject,
+        UC_TriggerTracklistDELETESubject,
+        UC_TriggerTracklistUPDATESubject,
+        UC_SetSelectedTracklistInLocalStorage,
+        UC_LogoutOfAccount,
+    ],
     templateUrl: './update-tracklist-form.component.html',
     styleUrl: './update-tracklist-form.component.css',
 })

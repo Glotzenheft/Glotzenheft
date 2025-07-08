@@ -41,6 +41,7 @@ import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-lo
         ReactiveFormsModule,
     ],
     styleUrls: ['./multi-search.component.css'],
+    providers: [UC_GetMediaIdForMedia, UC_GetMultiSearchResults, UC_GetSearchTerm, UC_ShowLoginMessage]
     //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit, OnDestroy {

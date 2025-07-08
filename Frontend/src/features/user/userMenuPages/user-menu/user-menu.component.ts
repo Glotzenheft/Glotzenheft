@@ -18,6 +18,7 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
     imports: [CommonModule, MenuModule, ButtonModule, TooltipModule],
     templateUrl: './user-menu.component.html',
     styleUrl: './user-menu.component.css',
+    providers: [UC_IsSearchBarVisible, UC_VisibleUserName]
 })
 export class UserMenuComponent implements OnInit {
     public userMenuList: UserMenuList[] = [

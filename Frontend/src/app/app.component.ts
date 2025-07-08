@@ -35,7 +35,7 @@ import { UC_GetShowToast } from './core/use-cases/auth/get-show-toast.use-case';
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
-    providers: [MessageService],
+    providers: [MessageService, UC_GetShowToast, UC_GetSearchTerm],
 })
 export class AppComponent implements OnInit, OnDestroy {
     public isSidebarOpen: boolean = window.innerWidth <= 850 ? false : true; // sidebar should be open by default

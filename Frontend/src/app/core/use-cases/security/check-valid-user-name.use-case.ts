@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import { I_SecurityRepository, IT_SECURITY_REPOSITORY } from "../../interfaces/security.repository";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_IsValidUserName {
     constructor(@Inject(IT_SECURITY_REPOSITORY) private readonly securityRepository: I_SecurityRepository) { }
 

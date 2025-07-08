@@ -3,7 +3,7 @@ import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repo
 import { DeleteUserRequest } from "../../../shared/interfaces/user-interfaces";
 import { Observable } from "rxjs";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_DeleteUserAccount {
     constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
 

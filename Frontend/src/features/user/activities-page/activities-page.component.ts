@@ -38,6 +38,7 @@ import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-
     ],
     templateUrl: './activities-page.component.html',
     styleUrl: './activities-page.component.css',
+    providers: [UC_GetUserActivites, UC_LogoutOfAccount]
 })
 export class ActivitiesPageComponent implements OnInit {
     // variables for user activities overview

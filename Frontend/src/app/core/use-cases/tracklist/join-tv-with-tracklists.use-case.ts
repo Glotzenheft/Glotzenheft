@@ -3,7 +3,7 @@ import { Season } from "../../../shared/interfaces/media-interfaces";
 import { TVWithTracklist } from "../../../shared/interfaces/tracklist-interfaces";
 import { I_TracklistRepository, IT_TRACKLIST_REPOSITORY } from "../../interfaces/tracklist.repository";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_JoinTVWithTracklists {
     constructor(@Inject(IT_TRACKLIST_REPOSITORY) private readonly tracklistRepository: I_TracklistRepository) { }
 

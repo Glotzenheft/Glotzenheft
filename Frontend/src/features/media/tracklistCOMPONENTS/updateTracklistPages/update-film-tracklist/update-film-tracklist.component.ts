@@ -49,7 +49,13 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
         DatePickerModule,
         DeleteDialogComponent,
     ],
-    providers: [],
+    providers: [
+        UC_GetTracklistDELETEResponseSubject,
+        UC_GetTracklistUPDATEResponseSubject,
+        UC_TriggerTracklistDELETESubject,
+        UC_TriggerTracklistUPDATESubject,
+        UC_LogoutOfAccount
+    ],
     templateUrl: './update-film-tracklist.component.html',
     styleUrl: './update-film-tracklist.component.css',
 })

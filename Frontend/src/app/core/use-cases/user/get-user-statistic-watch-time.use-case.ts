@@ -3,7 +3,7 @@ import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repo
 import { Observable } from "rxjs";
 import { WatchTimeStatistic } from "../../../shared/statistic-interfaces";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_GetUserStatisticWatchTime {
     constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
 

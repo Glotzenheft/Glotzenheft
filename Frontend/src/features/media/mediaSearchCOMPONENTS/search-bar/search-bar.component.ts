@@ -23,6 +23,7 @@ import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-i
     ],
     templateUrl: './search-bar.component.html',
     styleUrl: './search-bar.component.css',
+    providers: [UC_UpdateSearchTerm, UC_IsSearchBarVisible]
 })
 export class SearchBarComponent implements OnInit {
     searchQuery: string = '';

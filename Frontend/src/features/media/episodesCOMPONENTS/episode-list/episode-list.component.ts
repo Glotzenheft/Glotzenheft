@@ -25,7 +25,7 @@ import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-
         ButtonModule,
         TooltipModule,
     ],
-    providers: [],
+    providers: [UC_ShortenString],
     templateUrl: './episode-list.component.html',
     styleUrl: './episode-list.component.css',
 })

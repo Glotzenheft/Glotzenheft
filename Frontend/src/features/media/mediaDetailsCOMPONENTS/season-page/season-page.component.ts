@@ -64,6 +64,7 @@ import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
+    providers: [UC_GetSeasonForTV, UC_ValidateMediaURL, UC_GetSelectedTracklistInLocalStorage, UC_JoinTVWithTracklists, UC_LogoutOfAccount]
 })
 export class SeasonPageComponent implements OnInit {
     public tvSeriesID: string | null = null;

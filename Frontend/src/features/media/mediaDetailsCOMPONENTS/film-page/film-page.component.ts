@@ -54,6 +54,7 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
+    providers: [UC_GetFilmDetails, UC_ValidateMediaURL, UC_ShortenString, UC_LogoutOfAccount]
 })
 export class FilmPageComponent implements OnInit {
     public movieID: string | null = null;

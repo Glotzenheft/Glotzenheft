@@ -45,7 +45,7 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
         SelectModule,
         RatingModule,
     ],
-    providers: [],
+    providers: [UC_getTracklistCREATEMOVIESubjectResponse, UC_TriggerTracklistCREATEMOVIESubject, UC_LogoutOfAccount],
     templateUrl: './create-movie-tracklist.component.html',
     styleUrl: './create-movie-tracklist.component.css',
 })

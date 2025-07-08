@@ -3,7 +3,7 @@ import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repo
 import { ResetPasswordCredentials } from "../../../shared/interfaces/login";
 import { Observable } from "rxjs";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_ResetPassword {
     constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
 

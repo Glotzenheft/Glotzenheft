@@ -43,6 +43,7 @@ import { UC_GetUserStatisticWatchTime } from '../../../app/core/use-cases/user/g
     ],
     templateUrl: './user-start.component.html',
     styleUrl: './user-start.component.css',
+    providers: [UC_GetUserRatings, UC_GetUserStatisticWatchTime, UC_LogoutOfAccount]
 })
 export class UserStartComponent implements OnInit {
     public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;

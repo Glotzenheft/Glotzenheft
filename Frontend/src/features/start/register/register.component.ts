@@ -44,6 +44,7 @@ import { UC_GetInvalidChars } from '../../../app/core/use-cases/security/get-inv
     ],
     templateUrl: './register.component.html',
     styleUrl: './register.component.css',
+    providers: [UC_NavigateToStartPage, UC_IsValidUserName, UC_GetInvalidChars, UC_RegisterAccount]
 })
 export class RegisterComponent implements OnInit {
     registerGroup!: FormGroup;

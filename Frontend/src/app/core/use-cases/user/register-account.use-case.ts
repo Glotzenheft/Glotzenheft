@@ -3,7 +3,7 @@ import { LoginAndMessageResponse, RegisterCredentials } from "../../../shared/in
 import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
 import { Inject, Injectable } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_RegisterAccount {
     constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
 

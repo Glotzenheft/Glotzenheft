@@ -38,6 +38,7 @@ import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-
     ],
     templateUrl: './delete-user-account-page.component.html',
     styleUrl: './delete-user-account-page.component.css',
+    providers: [UC_DeleteUserAccount, UC_LogoutOfAccount]
 })
 export class DeleteUserAccountPageComponent implements OnInit {
     // variables for form submitting

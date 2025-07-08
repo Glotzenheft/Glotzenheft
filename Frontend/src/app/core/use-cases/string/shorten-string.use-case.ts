@@ -1,7 +1,7 @@
 import { Inject, Injectable } from "@angular/core";
 import { I_StringRepository, IT_STRING_REPOSITORY } from "../../interfaces/string.repository";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_ShortenString {
     constructor(@Inject(IT_STRING_REPOSITORY) private readonly stringRepository: I_StringRepository) { }
 

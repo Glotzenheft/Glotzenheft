@@ -44,7 +44,7 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         TooltipModule,
         DeleteDialogComponent,
     ],
-    providers: [],
+    providers: [UC_CreateTracklistEpisode, UC_DeleteTracklistEpisode, UC_UpdateTracklistEpisode, UC_SetSelectedTracklistInLocalStorage, UC_LogoutOfAccount],
     templateUrl: './create-tracklist-episode-form.component.html',
     styleUrl: './create-tracklist-episode-form.component.css',
 })

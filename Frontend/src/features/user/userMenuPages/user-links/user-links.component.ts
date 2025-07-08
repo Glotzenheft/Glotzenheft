@@ -10,6 +10,7 @@ import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-i
     imports: [CommonModule],
     templateUrl: './user-links.component.html',
     styleUrl: './user-links.component.css',
+    providers: [UC_IsSearchBarVisible]
 })
 export class UserLinksComponent implements OnInit {
     public isLoggedIn: boolean = false;

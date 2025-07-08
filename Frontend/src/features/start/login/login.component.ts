@@ -43,6 +43,15 @@ import { UC_IsValidUserName } from '../../../app/core/use-cases/security/check-v
     ],
     templateUrl: './login.component.html',
     styleUrl: './login.component.css',
+    providers: [
+        UC_NavigateToStartPage,
+        UC_NavigateToUserStart,
+        UC_IsValidUserName,
+        UC_IncreaseLoginTries,
+        UC_IsUserLoginValid,
+        UC_LogoutOfAccount,
+        UC_LoginIntoAccount
+    ]
 })
 export class LoginComponent implements OnInit {
     loginGroup!: FormGroup;

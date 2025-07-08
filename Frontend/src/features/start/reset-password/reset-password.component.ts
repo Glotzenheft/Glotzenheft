@@ -39,6 +39,7 @@ import { UC_NavigateToStartPage } from '../../../app/core/use-cases/navigation/n
     ],
     templateUrl: './reset-password.component.html',
     styleUrl: './reset-password.component.css',
+    providers: [UC_NavigateToStartPage, UC_LogoutOfAccount, UC_ResetPassword, UC_PasswordMatchValidationForResetPassword]
 })
 export class ResetPasswordComponent implements OnInit {
     public resetPasswordGroup!: FormGroup;

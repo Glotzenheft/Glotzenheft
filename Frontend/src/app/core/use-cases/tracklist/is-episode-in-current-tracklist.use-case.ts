@@ -3,7 +3,7 @@ import { I_TracklistRepository, IT_TRACKLIST_REPOSITORY } from "../../interfaces
 import { SeasonTracklist, TVSeasonWithTracklist } from "../../../shared/interfaces/tracklist-interfaces";
 import { Inject, Injectable } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_IsEpisodeInCurrentTracklist {
     constructor(@Inject(IT_TRACKLIST_REPOSITORY) private readonly tracklistRepository: I_TracklistRepository) { }
 

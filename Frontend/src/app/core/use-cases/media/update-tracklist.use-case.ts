@@ -4,7 +4,7 @@ import { I_MediaRepository, IT_MEDIA_REPOSITORY } from "../../interfaces/media.r
 import { Tracklist } from "../../../shared/interfaces/tracklist-interfaces";
 import { Inject, Injectable } from "@angular/core";
 
-@Injectable({ providedIn: 'root' })
+@Injectable()
 export class UC_UpdateTracklist {
     constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
 

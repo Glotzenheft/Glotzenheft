@@ -49,6 +49,7 @@ import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/ge
     ],
     templateUrl: './all-user-tracklists.component.html',
     styleUrl: './all-user-tracklists.component.css',
+    providers: [UC_GetAllUserTracklists]
 })
 export class AllUserTracklistsComponent implements OnInit {
     public userTracklists$: Observable<Tracklist[]> | null = null;
