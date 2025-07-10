@@ -1,17 +1,17 @@
 import {
-  Component,
-  EventEmitter,
-  input,
-  InputSignal,
-  OnInit,
-  Output,
+    Component,
+    EventEmitter,
+    input,
+    InputSignal,
+    OnInit,
+    Output,
 } from '@angular/core';
 import { MessageService } from 'primeng/api';
 import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
 } from '@angular/forms';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
@@ -24,128 +24,124 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import {
-  convertTracklistStatusIntoGerman,
-  TRACK_LIST_STATUS_LIST,
-} from '../../../../../shared/variables/tracklist';
-import { MediaService } from '../../../../../service/media/media.service';
-import { UserService } from '../../../../../service/user/user.service';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
+import { UC_TriggerTracklistCREATEMOVIESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-movie-subject.use-case';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
-  selector: 'app-create-movie-tracklist',
-  imports: [
-    CommonModule,
-    ReactiveFormsModule,
-    ButtonModule,
-    MessageModule,
-    InputTextModule,
-    FloatLabelModule,
-    DialogModule,
-    DatePickerModule,
-    SelectModule,
-    RatingModule,
-  ],
-  providers: [MediaService],
-  templateUrl: './create-movie-tracklist.component.html',
-  styleUrl: './create-movie-tracklist.component.css',
+    selector: 'app-create-movie-tracklist',
+    imports: [
+        CommonModule,
+        ReactiveFormsModule,
+        ButtonModule,
+        MessageModule,
+        InputTextModule,
+        FloatLabelModule,
+        DialogModule,
+        DatePickerModule,
+        SelectModule,
+        RatingModule,
+    ],
+    providers: [UC_getTracklistCREATEMOVIESubjectResponse, UC_TriggerTracklistCREATEMOVIESubject, UC_LogoutOfAccount],
+    templateUrl: './create-movie-tracklist.component.html',
+    styleUrl: './create-movie-tracklist.component.css',
 })
 export class CreateMovieTracklistComponent implements OnInit {
-  // input variables
-  public mediaName: InputSignal<string> = input.required<string>();
-  public mediaID: InputSignal<number> = input.required<number>();
+    // input variables
+    public mediaName: InputSignal<string> = input.required<string>();
+    public mediaID: InputSignal<number> = input.required<number>();
 
-  // output variables
-  @Output() cancelTracklistCreation: EventEmitter<boolean> =
-    new EventEmitter<boolean>(false);
-  @Output() saveNewTracklist: EventEmitter<number> = new EventEmitter<number>();
+    // output variables
+    @Output() cancelTracklistCreation: EventEmitter<boolean> =
+        new EventEmitter<boolean>(false);
+    @Output() saveNewTracklist: EventEmitter<number> = new EventEmitter<number>();
 
-  // variables for submitting the form
-  public isTracklistSubmitted: boolean = false;
-  public tracklistForm!: FormGroup;
-  public createNewTracklist$: Observable<any> | null = null;
-  public tracklistSelectionList: { name: string; value: string }[] =
-    TRACK_LIST_STATUS_LIST.map((selection: string) => ({
-      name: convertTracklistStatusIntoGerman(selection),
-      value: selection,
-    }));
+    // variables for submitting the form
+    public isTracklistSubmitted: boolean = false;
+    public tracklistForm!: FormGroup;
+    public createNewTracklist$: Observable<any> | null = null;
+    public tracklistSelectionList: { name: string; value: string }[] =
+        TRACK_LIST_STATUS_LIST.map((selection: string) => ({
+            name: convertTracklistStatusIntoGerman(selection),
+            value: selection,
+        }));
 
-  constructor(
-    private messageService: MessageService,
-    private mediaService: MediaService,
-    private formBuilder: FormBuilder,
-    private router: Router,
-    private userService: UserService
-  ) {}
+    constructor(
+        private messageService: MessageService,
+        private formBuilder: FormBuilder,
+        private router: Router,
+        private getTracklistCREATEMOVIESubjectResponseUseCase: UC_getTracklistCREATEMOVIESubjectResponse,
+        private triggerTracklistCREATEMOVIESubjectUseCase: UC_TriggerTracklistCREATEMOVIESubject,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
+    ) { }
 
-  ngOnInit(): void {
-    this.mediaService.getTracklistCREATEMOVIESubjectResponse().subscribe({
-      next: () => {
-        this.messageService.add(
-          getMessageObject('success', 'Trackliste erfolgreich angelegt')
-        );
-        this.saveNewTracklist.emit(0);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          // status 401 = user is not logged in anymore -> navigate to login page
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-          return;
-        }
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Anlegen der Trackliste',
-            'Bitte lade die Seite neu und probiere es erneut.'
-          )
-        );
-      },
-    });
+    ngOnInit(): void {
+        this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
+            next: () => {
+                this.messageService.add(
+                    getMessageObject('success', 'Trackliste erfolgreich angelegt')
+                );
+                this.saveNewTracklist.emit(0);
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    // status 401 = user is not logged in anymore -> navigate to login page
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Anlegen der Trackliste',
+                        'Bitte lade die Seite neu und probiere es erneut.'
+                    )
+                );
+            },
+        });
 
-    this.tracklistForm = this.formBuilder.group({
-      trackListName: [this.mediaName().toString(), [Validators.required]],
-      startDate: [null],
-      endDate: [null],
-      status: ['', Validators.required],
-      rating: [null],
-    });
-  }
-
-  public createNewTracklist = () => {
-    this.isTracklistSubmitted = true;
-
-    if (this.tracklistForm.invalid) {
-      return;
+        this.tracklistForm = this.formBuilder.group({
+            trackListName: [this.mediaName().toString(), [Validators.required]],
+            startDate: [null],
+            endDate: [null],
+            status: ['', Validators.required],
+            rating: [null],
+        });
     }
 
-    this.mediaService.triggerTracklistCREATEMOVIESubject({
-      name: this.tracklistForm.get('trackListName')?.value,
-      mediaID: this.mediaID(),
-      startDate: this.tracklistForm.get('startDate')?.value,
-      endDate: this.tracklistForm.get('endDate')?.value,
-      status: this.tracklistForm.get('status')?.value.value,
-      rating: this.tracklistForm.get('rating')?.value,
-    });
-  };
+    public createNewTracklist = () => {
+        this.isTracklistSubmitted = true;
 
-  public hasErrorField = (fieldName: string): boolean => {
-    const fieldControl = this.tracklistForm.get(fieldName);
+        if (this.tracklistForm.invalid) {
+            return;
+        }
 
-    return (
-      fieldControl! &&
-      (fieldControl!.dirty ||
-        fieldControl!.touched ||
-        this.isTracklistSubmitted)
-    );
-  };
+        this.triggerTracklistCREATEMOVIESubjectUseCase.execute({
+            name: this.tracklistForm.get('trackListName')?.value,
+            mediaID: this.mediaID(),
+            startDate: this.tracklistForm.get('startDate')?.value,
+            endDate: this.tracklistForm.get('endDate')?.value,
+            status: this.tracklistForm.get('status')?.value.value,
+            rating: this.tracklistForm.get('rating')?.value,
+        });
+    };
 
-  public cancelNewTracklist = () => {
-    this.cancelTracklistCreation.emit(false);
-  };
+    public hasErrorField = (fieldName: string): boolean => {
+        const fieldControl = this.tracklistForm.get(fieldName);
+
+        return (
+            fieldControl! &&
+            (fieldControl!.dirty ||
+                fieldControl!.touched ||
+                this.isTracklistSubmitted)
+        );
+    };
+
+    public cancelNewTracklist = () => {
+        this.cancelTracklistCreation.emit(false);
+    };
 }

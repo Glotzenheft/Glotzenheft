@@ -1,29 +1,28 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VisibleRoute } from '../../../../shared/interfaces/route-list-item';
-import { getVisibleRoutesForUser } from '../../../../shared/variables/routes-list';
-import { AuthService } from '../../../../service/auth/auth.service';
-import { UserService } from '../../../../service/user/user.service';
+import { VisibleRoute } from '../../../../app/shared/interfaces/route-list-item';
+import { getVisibleRoutesForUser } from '../../../../app/shared/variables/routes-list';
+import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
 
 
 @Component({
-  selector: 'app-user-links',
-  imports: [CommonModule],
-  templateUrl: './user-links.component.html',
-  styleUrl: './user-links.component.css',
+    selector: 'app-user-links',
+    imports: [CommonModule],
+    templateUrl: './user-links.component.html',
+    styleUrl: './user-links.component.css',
+    providers: [UC_IsSearchBarVisible]
 })
 export class UserLinksComponent implements OnInit {
-  public isLoggedIn: boolean = false;
-  public personalUserLinks: VisibleRoute[] = getVisibleRoutesForUser();
+    public isLoggedIn: boolean = false;
+    public personalUserLinks: VisibleRoute[] = getVisibleRoutesForUser();
 
-  constructor(
-    public authService: AuthService,
-    private userService: UserService
-  ) {}
+    constructor(
+        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible
+    ) { }
 
-  ngOnInit(): void {
-    this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
-      this.isLoggedIn = status;
-    });
-  }
+    ngOnInit(): void {
+        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
+            this.isLoggedIn = status;
+        });
+    }
 }

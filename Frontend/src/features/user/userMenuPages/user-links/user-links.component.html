@@ -1,7 +1,7 @@
 <div class="userLinks" *ngIf="isLoggedIn">
-  <ul>
-    <li *ngFor="let route of personalUserLinks">
-      <a [href]="route.fullUrl">{{ route.description }}</a>
-    </li>
-  </ul>
+    <ul>
+        <li *ngFor="let route of personalUserLinks">
+            <a [href]="route.fullUrl">{{ route.description }}</a>
+        </li>
+    </ul>
 </div>

@@ -1,13 +1,4 @@
-<p-dialog
-  [header]="inpHeading()"
-  [(visible)]="isDialogVisible"
-  (onHide)="cancelDeletion()"
->
-  <P>{{ inpText() }}</P>
-  <p-button
-    label="Löschen"
-    severity="danger"
-    icon="pi pi-trash"
-    (onClick)="deleteMedia()"
-  />
+<p-dialog [header]="inpHeading()" [(visible)]="isDialogVisible" (onHide)="cancelDeletion()">
+    <P>{{ inpText() }}</P>
+    <p-button label="Löschen" severity="danger" icon="pi pi-trash" (onClick)="deleteMedia()" />
 </p-dialog>

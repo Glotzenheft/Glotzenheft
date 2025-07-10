@@ -1,178 +1,182 @@
 @media (max-width: 950px) {
-  img {
-    height: 100%;
-  }
-  .seasonMeta {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-  }
-  .seasonMetaPicture {
-    width: 13rem;
-    height: 13rem;
-    border: 0.4rem solid white;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
+    img {
+        height: 100%;
+    }
 
-  .seasonMetaContent {
-    width: 100%;
-    padding-left: var(--padding--left-right);
-    border-left: 0.1rem solid white;
-    height: 20rem;
-  }
+    .seasonMeta {
+        width: 100%;
+        height: auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .seasonMetaPicture {
-    background-color: white;
-    color: black;
-    width: auto;
-  }
+    .seasonMetaPicture {
+        width: 13rem;
+        height: 13rem;
+        border: 0.4rem solid white;
+        margin-right: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
 
-  .newWatchlistButton {
-    margin-top: 2rem;
-  }
+    .seasonMetaContent {
+        width: 100%;
+        padding-left: var(--padding--left-right);
+        border-left: 0.1rem solid white;
+        height: 20rem;
+    }
 
-  .seasonWrapper {
-    width: 100%;
-    height: 28rem;
-    padding-top: var(--padding--top-bottom);
-  }
+    .seasonMetaPicture {
+        background-color: white;
+        color: black;
+        width: auto;
+    }
 
-  .seasonWrapper .seasonMeta {
-    height: 70%;
-    width: 100%;
-    overflow-y: auto;
-  }
+    .newWatchlistButton {
+        margin-top: 2rem;
+    }
 
-  .seasonWrapper .seasonMeta div {
-    width: 100%;
-  }
+    .seasonWrapper {
+        width: 100%;
+        height: 28rem;
+        padding-top: var(--padding--top-bottom);
+    }
 
-  .seasonWrapper .seasonPoster {
-    width: 100%;
-    height: 40%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .seasonWrapper .seasonMeta {
+        height: 70%;
+        width: 100%;
+        overflow-y: auto;
+    }
 
-  .seasonWrapper .seasonPoster img {
-    height: 100%;
-    border: 0.1rem solid black;
-  }
+    .seasonWrapper .seasonMeta div {
+        width: 100%;
+    }
 
-  .tracklistSelectionDIV {
-    width: 100%;
-    height: 10rem;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .seasonWrapper .seasonPoster {
+        width: 100%;
+        height: 40%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .tracklistSelectionDIV div {
-    width: 50%;
-  }
+    .seasonWrapper .seasonPoster img {
+        height: 100%;
+        border: 0.1rem solid black;
+    }
+
+    .tracklistSelectionDIV {
+        width: 100%;
+        height: 10rem;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
+
+    .tracklistSelectionDIV div {
+        width: 50%;
+    }
 }
 
 @media (min-width: 950px) {
-  img {
-    height: 100%;
-  }
+    img {
+        height: 100%;
+    }
 
-  .headingDIV {
-    height: 6rem;
-  }
-  .seasonMeta {
-    width: 100%;
-    height: 20rem;
-    display: flex;
-    justify-content: center;
-    align-items: flex-start;
-  }
+    .headingDIV {
+        height: 6rem;
+    }
 
-  .seasonPictureWrapper {
-    height: 100%;
-    display: flex;
-    align-items: center;
-  }
+    .seasonMeta {
+        width: 100%;
+        height: 20rem;
+        display: flex;
+        justify-content: center;
+        align-items: flex-start;
+    }
 
-  .seasonMetaPicture {
-    /* width: 13rem; */
-    width: auto;
-    height: 13rem;
-    border: 0.2rem solid white;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .seasonPictureWrapper {
+        height: 100%;
+        display: flex;
+        align-items: center;
+    }
 
-  .seasonMetaContent {
-    width: calc(100% - 13rem);
+    .seasonMetaPicture {
+        /* width: 13rem; */
+        width: auto;
+        height: 13rem;
+        border: 0.2rem solid white;
+        margin-right: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-    height: 20rem;
-  }
-  .seasonMetaContent div {
-    border-left: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-  }
+    .seasonMetaContent {
+        width: calc(100% - 13rem);
 
-  .bigButton .p-button {
-    width: 10rem;
-  }
+        height: 20rem;
+    }
 
-  .seasonWrapper {
-    width: 100%;
-    height: 20rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .seasonMetaContent div {
+        border-left: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+    }
 
-  .seasonWrapper .seasonMeta {
-    height: auto;
-    width: 70%;
-  }
+    .bigButton .p-button {
+        width: 10rem;
+    }
 
-  .seasonWrapper .seasonMeta div {
-    width: 100%;
-  }
+    .seasonWrapper {
+        width: 100%;
+        height: 20rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .seasonWrapper .seasonPoster {
-    width: 20%;
-    height: 56%;
-  }
+    .seasonWrapper .seasonMeta {
+        height: auto;
+        width: 70%;
+    }
 
-  .seasonWrapper .seasonPoster img {
-    height: 100%;
-    border: 0.1rem solid black;
-  }
+    .seasonWrapper .seasonMeta div {
+        width: 100%;
+    }
 
-  .tracklistSelectionDIV {
-    width: 100%;
-    height: 4rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    gap: 1rem;
-  }
+    .seasonWrapper .seasonPoster {
+        width: 20%;
+        height: 56%;
+    }
 
-  .tracklistSelectionDIV div {
-    width: 50%;
-  }
+    .seasonWrapper .seasonPoster img {
+        height: 100%;
+        border: 0.1rem solid black;
+    }
+
+    .tracklistSelectionDIV {
+        width: 100%;
+        height: 4rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 1rem;
+    }
+
+    .tracklistSelectionDIV div {
+        width: 50%;
+    }
 }
 
 .backButtonDIV {
-  height: 4rem;
+    height: 4rem;
 }
 
 .descriptionP {
-  overflow-y: auto;
-  height: 10rem;
+    overflow-y: auto;
+    height: 10rem;
 }

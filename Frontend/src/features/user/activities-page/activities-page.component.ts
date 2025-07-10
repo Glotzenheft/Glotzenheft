@@ -1,250 +1,250 @@
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { UserService } from '../../../service/user/user.service';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
 import {
-  UserActivitiesResponse,
-  UserActivity,
-  UserActivityWithDaySplitt,
+    UserActivitiesResponse,
+    UserActivity,
+    UserActivityWithDaySplitt,
 } from '../../../shared/interfaces/user-interfaces';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
-import { TMDB_POSTER_PATH } from '../../../shared/variables/tmdb-vars';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../shared/variables/message-vars';
-import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../../../shared/variables/routes-list';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import {DropdownModule} from 'primeng/dropdown';
-import {FormsModule} from '@angular/forms';
-import {Select} from 'primeng/select';
+import { DropdownModule } from 'primeng/dropdown';
+import { FormsModule } from '@angular/forms';
+import { Select } from 'primeng/select';
+import { TMDB_POSTER_PATH } from '../../../app/shared/variables/tmdb-vars';
+import { Router } from '@angular/router';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
+import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
+import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
-  selector: 'app-activities-page',
-  imports: [
-    TableModule,
-    ButtonModule,
-    DateFormattingPipe,
-    CommonModule,
-    ButtonModule,
-    TooltipModule,
-    ProgressSpinnerModule,
-    DropdownModule,
-    FormsModule,
-    Select,
-  ],
-  templateUrl: './activities-page.component.html',
-  styleUrl: './activities-page.component.css',
+    selector: 'app-activities-page',
+    imports: [
+        TableModule,
+        ButtonModule,
+        DateFormattingPipe,
+        CommonModule,
+        ButtonModule,
+        TooltipModule,
+        ProgressSpinnerModule,
+        DropdownModule,
+        FormsModule,
+        Select,
+    ],
+    templateUrl: './activities-page.component.html',
+    styleUrl: './activities-page.component.css',
+    providers: [UC_GetUserActivites, UC_LogoutOfAccount]
 })
 export class ActivitiesPageComponent implements OnInit {
-  // variables for user activities overview
-  public userActivitiesRequest$: Observable<UserActivitiesResponse> | null = null;
-  public userActivitiesListWithDaySplitter: UserActivityWithDaySplitt[] = [];
+    // variables for user activities overview
+    public userActivitiesRequest$: Observable<UserActivitiesResponse> | null = null;
+    public userActivitiesListWithDaySplitter: UserActivityWithDaySplitt[] = [];
 
-  public currentPage: number = 1;
-  public totalPages: number = 1;
-  public totalResults: number = 0;
-  public pageOptions: { label: string; value: number }[] = [];
-  public isLeftButtonDisabled: boolean = true;
-  public isRightButtonDisabled: boolean = false;
-  public isTableLoading: boolean = false;
-  public isError: boolean = false;
-  public serverNotAvailablePage: boolean = false;
+    public currentPage: number = 1;
+    public totalPages: number = 1;
+    public totalResults: number = 0;
+    public pageOptions: { label: string; value: number }[] = [];
+    public isLeftButtonDisabled: boolean = true;
+    public isRightButtonDisabled: boolean = false;
+    public isTableLoading: boolean = false;
+    public isError: boolean = false;
+    public serverNotAvailablePage: boolean = false;
 
-  public posterPath: string = TMDB_POSTER_PATH;
+    public posterPath: string = TMDB_POSTER_PATH;
 
-  public isLoading: boolean = false;
+    public isLoading: boolean = false;
 
-  constructor(
-    private userService: UserService,
-    private messageService: MessageService,
-    private router: Router
-  ) {}
+    constructor(
+        private messageService: MessageService,
+        private router: Router,
+        private getActivitiesUseCase: UC_GetUserActivites,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
+    ) { }
 
-  ngOnInit(): void {
-    this.loadUserActivities(1);
-  }
-
-  // functions --------------------------------------------------
-  public loadUserActivities = (page: number) => {
-    this.serverNotAvailablePage = false;
-    this.isLoading = true;
-    this.isTableLoading = true;
-    this.userActivitiesRequest$ = this.userService.getUserActivities(page);
-
-    if (!this.userActivitiesRequest$) {
-      this.isError = true;
-      return;
+    ngOnInit(): void {
+        this.loadUserActivities(1);
     }
 
-    this.userActivitiesRequest$.subscribe({
-      next: (response) => {
-        const userActivities = response.results;
-        this.currentPage = response.page;
-        this.isLeftButtonDisabled  = this.currentPage === 1;
-        this.isRightButtonDisabled = this.currentPage === this.totalPages;
-        this.totalPages   = response.total_pages;
-        this.totalResults = response.total_results;
+    // functions --------------------------------------------------
+    public loadUserActivities = (page: number) => {
+        this.serverNotAvailablePage = false;
+        this.isLoading = true;
+        this.isTableLoading = true;
+        this.userActivitiesRequest$ = this.getActivitiesUseCase.execute(page);
 
-        this.pageOptions = this.totalPages > 0
-          ? Array.from({ length: this.totalPages }, (_, i) => ({
-            label: (i + 1).toString(),
-            value: i + 1,
-          }))
-          : [{ label: '0', value: 0 }];
+        if (!this.userActivitiesRequest$) {
+            this.isError = true;
+            return;
+        }
 
-        const sortedUserActivities: UserActivity[] = userActivities.sort(
-          (a: UserActivity, b: UserActivity) => {
-            return new Date(b.date).getTime() - new Date(a.date).getTime();
-          }
-        );
+        this.userActivitiesRequest$.subscribe({
+            next: (response) => {
+                const userActivities = response.results;
+                this.currentPage = response.page;
+                this.isLeftButtonDisabled = this.currentPage === 1;
+                this.isRightButtonDisabled = this.currentPage === this.totalPages;
+                this.totalPages = response.total_pages;
+                this.totalResults = response.total_results;
 
-        this.userActivitiesListWithDaySplitter = [];
+                this.pageOptions = this.totalPages > 0
+                    ? Array.from({ length: this.totalPages }, (_, i) => ({
+                        label: (i + 1).toString(),
+                        value: i + 1,
+                    }))
+                    : [{ label: '0', value: 0 }];
 
-        const weekDays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
-        const dailyStats = new Map<
-          string,
-          { totalRuntime: number; mediaCount: number }
-        >();
+                const sortedUserActivities: UserActivity[] = userActivities.sort(
+                    (a: UserActivity, b: UserActivity) => {
+                        return new Date(b.date).getTime() - new Date(a.date).getTime();
+                    }
+                );
 
-        sortedUserActivities.forEach((userActivity) => {
-          const dateKey = userActivity.date.split(' ')[0];
+                this.userActivitiesListWithDaySplitter = [];
 
-          if (!dailyStats.has(dateKey)) {
-            dailyStats.set(dateKey, { totalRuntime: 0, mediaCount: 0 });
-          }
+                const weekDays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
+                const dailyStats = new Map<
+                    string,
+                    { totalRuntime: number; mediaCount: number }
+                >();
 
-          const stats = dailyStats.get(dateKey)!;
-          stats.totalRuntime += userActivity.runtime || 0;
-          stats.mediaCount += 1;
+                sortedUserActivities.forEach((userActivity) => {
+                    const dateKey = userActivity.date.split(' ')[0];
+
+                    if (!dailyStats.has(dateKey)) {
+                        dailyStats.set(dateKey, { totalRuntime: 0, mediaCount: 0 });
+                    }
+
+                    const stats = dailyStats.get(dateKey)!;
+                    stats.totalRuntime += userActivity.runtime || 0;
+                    stats.mediaCount += 1;
+                });
+
+                let lastDateKey = '';
+
+                sortedUserActivities.forEach((userActivity) => {
+                    const dateAsDate = new Date(userActivity.date);
+                    const formattedDate = dateAsDate.toLocaleDateString('de-DE', {
+                        day: '2-digit',
+                        month: '2-digit',
+                        year: 'numeric',
+                    });
+                    const weekDay = weekDays[dateAsDate.getDay()];
+                    const dateKey = userActivity.date.split(' ')[0];
+
+                    if (dateKey !== lastDateKey) {
+                        const stats = dailyStats.get(dateKey)!;
+
+                        this.userActivitiesListWithDaySplitter.push({
+                            date: `${weekDay} ${formattedDate} `,
+                            episodeID: stats.mediaCount,
+                            episodeNumber: null,
+                            mediaID: 0,
+                            mediaTitle: '',
+                            posterPath: null,
+                            runtime: stats.totalRuntime,
+                            seasonID: null,
+                            seasonNumber: null,
+                            stillPath: null,
+                            tracklistEpisodeID: null,
+                            tracklistID: -1,
+                            tracklistName: '',
+                            tracklistSeasinID: null,
+                            type: '',
+                            isDateSplitter: true,
+                            picture: null
+                        });
+
+                        lastDateKey = dateKey;
+                    }
+
+                    // Füge die eigentliche Aktivität hinzu
+                    this.userActivitiesListWithDaySplitter.push({
+                        ...userActivity,
+                        isDateSplitter: false,
+                        picture: userActivity.stillPath !== null
+                            ? userActivity.stillPath
+                            : userActivity.posterPath
+                    });
+                });
+
+                // logic for pagination -------------------------------------------------
+                if (this.totalPages === 0) {
+                    this.currentPage = 0;
+                    this.isLeftButtonDisabled = true;
+                    this.isRightButtonDisabled = true;
+                }
+                else if (this.currentPage === 1) {
+                    this.isRightButtonDisabled = this.currentPage == this.totalPages;
+                    this.isLeftButtonDisabled = true;
+                }
+                else if (this.currentPage > 1) {
+                    this.isRightButtonDisabled = this.currentPage >= this.totalPages;
+                    this.isLeftButtonDisabled = false;
+                }
+                this.isLoading = false;
+            },
+            error: (err: any) => {
+                if (err.status === 401) {
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+
+                    return;
+                } else if (err.status === 0) {
+                    this.serverNotAvailablePage = true;
+                }
+
+                this.isError = true;
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Laden der Daten',
+                        'Bitte probiere es erneut.'
+                    )
+                );
+
+                this.isLoading = false;
+            },
         });
 
-        let lastDateKey = '';
+        this.isTableLoading = false;
+    };
 
-        sortedUserActivities.forEach((userActivity) => {
-          const dateAsDate = new Date(userActivity.date);
-          const formattedDate = dateAsDate.toLocaleDateString('de-DE', {
-            day: '2-digit',
-            month: '2-digit',
-            year: 'numeric',
-          });
-          const weekDay = weekDays[dateAsDate.getDay()];
-          const dateKey = userActivity.date.split(' ')[0];
-
-          if (dateKey !== lastDateKey) {
-            const stats = dailyStats.get(dateKey)!;
-
-            this.userActivitiesListWithDaySplitter.push({
-              date: `${weekDay} ${formattedDate} `,
-              episodeID: stats.mediaCount,
-              episodeNumber: null,
-              mediaID: 0,
-              mediaTitle: '',
-              posterPath: null,
-              runtime: stats.totalRuntime,
-              seasonID: null,
-              seasonNumber: null,
-              stillPath: null,
-              tracklistEpisodeID: null,
-              tracklistID: -1,
-              tracklistName: '',
-              tracklistSeasinID: null,
-              type: '',
-              isDateSplitter: true,
-              picture: null
-            });
-
-            lastDateKey = dateKey;
-          }
-
-          // Füge die eigentliche Aktivität hinzu
-          this.userActivitiesListWithDaySplitter.push({
-            ...userActivity,
-            isDateSplitter: false,
-            picture: userActivity.stillPath !== null
-              ? userActivity.stillPath
-              : userActivity.posterPath
-          });
-        });
-
-        // logic for pagination -------------------------------------------------
-        if (this.totalPages === 0) {
-          this.currentPage = 0;
-          this.isLeftButtonDisabled = true;
-          this.isRightButtonDisabled = true;
+    public changeToNextPage = () => {
+        if (this.currentPage == this.totalPages) {
+            this.isRightButtonDisabled = true;
+            return;
         }
-        else if (this.currentPage === 1) {
-          this.isRightButtonDisabled = this.currentPage == this.totalPages;
-          this.isLeftButtonDisabled = true;
-        }
-        else if (this.currentPage > 1) {
-          this.isRightButtonDisabled = this.currentPage >= this.totalPages;
-          this.isLeftButtonDisabled = false;
-        }
-        this.isLoading = false;
-      },
-      error: (err: any) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+        this.currentPage += 1;
+        this.isRightButtonDisabled = false;
+        this.isLeftButtonDisabled = false;
+        this.loadUserActivities(this.currentPage);
+    };
 
-          return;
-        } else if (err.status === 0) {
-          this.serverNotAvailablePage = true;
+    public changeToPreviousPage = () => {
+        if (this.currentPage < 2) {
+            this.isLeftButtonDisabled = true;
+            return;
         }
 
-        this.isError = true;
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Laden der Daten',
-            'Bitte probiere es erneut.'
-          )
-        );
+        this.currentPage -= 1;
+        this.loadUserActivities(this.currentPage);
+    };
 
-        this.isLoading = false;
-      },
-    });
+    public onClickActivity = (activity: UserActivityWithDaySplitt) => {
+        if (activity.type === 'movie') {
+            void this.router.navigateByUrl(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
+        } else {
+            void this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+        }
+    };
 
-    this.isTableLoading = false;
-  };
-
-  public changeToNextPage = () => {
-    if (this.currentPage == this.totalPages) {
-      this.isRightButtonDisabled = true;
-      return;
-    }
-    this.currentPage += 1;
-    this.isRightButtonDisabled = false;
-    this.isLeftButtonDisabled = false;
-    this.loadUserActivities(this.currentPage);
-  };
-
-  public changeToPreviousPage = () => {
-    if (this.currentPage < 2) {
-      this.isLeftButtonDisabled = true;
-      return;
-    }
-
-    this.currentPage -= 1;
-    this.loadUserActivities(this.currentPage);
-  };
-
-  public onClickActivity = (activity: UserActivityWithDaySplitt) => {
-    if (activity.type === 'movie') {
-      void this.router.navigateByUrl(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
-    } else {
-      void this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
-    }
-  };
-
-  public onPageSelect = (page: number) => {
-    this.loadUserActivities(page);
-  };
+    public onPageSelect = (page: number) => {
+        this.loadUserActivities(page);
+    };
 }

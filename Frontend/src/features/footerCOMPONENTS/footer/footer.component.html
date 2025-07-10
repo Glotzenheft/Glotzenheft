@@ -1,16 +1,15 @@
 <div class="footer">
-  <h1>Weiteres</h1>
-  <div class="footerContent">
-    <p-menu #menu [model]="footerLinkList" [popup]="true" />
-    <div (click)="menu.toggle($event)" class="toggleDIV">
-      <span class="pi pi-ellipsis-v"></span>
-      <p>Über diese Webseite</p>
+    <h1>Weiteres</h1>
+    <div class="footerContent">
+        <p-menu #menu [model]="footerLinkList" [popup]="true" />
+        <div (click)="menu.toggle($event)" class="toggleDIV">
+            <span class="pi pi-ellipsis-v"></span>
+            <p>Über diese Webseite</p>
+        </div>
     </div>
-  </div>
 
-  <small
-    >This product uses the TMDB API but is not endorsed or certified by TMDB.
-  </small>
+    <small>This product uses the TMDB API but is not endorsed or certified by TMDB.
+    </small>
 
-  <small>&copy; M. Seide, H. Tran, H. Keller</small>
+    <small>&copy; M. Seide, H. Tran, H. Keller</small>
 </div>

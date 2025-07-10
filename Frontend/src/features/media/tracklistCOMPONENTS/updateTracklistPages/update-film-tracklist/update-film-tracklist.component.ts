@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import {
-  Component,
-  EventEmitter,
-  input,
-  InputSignal,
-  OnInit,
-  Output,
+    Component,
+    EventEmitter,
+    input,
+    InputSignal,
+    OnInit,
+    Output,
 } from '@angular/core';
 import {
-  FormBuilder,
-  FormGroup,
-  ReactiveFormsModule,
-  Validators,
+    FormBuilder,
+    FormGroup,
+    ReactiveFormsModule,
+    Validators,
 } from '@angular/forms';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -24,206 +24,212 @@ import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
 import { Observable } from 'rxjs';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { SeasonTracklist } from '../../../../../shared/interfaces/tracklist-interfaces';
-import {
-  convertTracklistStatusIntoGerman,
-  TRACK_LIST_STATUS_LIST,
-} from '../../../../../shared/variables/tracklist';
-import { MediaService } from '../../../../../service/media/media.service';
-import { UserService } from '../../../../../service/user/user.service';
-import { UpdateTracklistRequest } from '../../../../../shared/interfaces/media-interfaces';
-import {
-  ERR_OBJECT_INVALID_AUTHENTICATION,
-  getMessageObject,
-} from '../../../../../shared/variables/message-vars';
-import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
+import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
+import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/media-interfaces';
+import { UC_GetTracklistUPDATEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
+import { UC_GetTracklistDELETEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
+import { UC_TriggerTracklistUPDATESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
+import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
-  selector: 'app-update-film-tracklist',
-  imports: [
-    ReactiveFormsModule,
-    InputTextModule,
-    CommonModule,
-    MessageModule,
-    ButtonModule,
-    FloatLabelModule,
-    SelectModule,
-    RatingModule,
-    DatePickerModule,
-    DeleteDialogComponent,
-  ],
-  providers: [MediaService],
-  templateUrl: './update-film-tracklist.component.html',
-  styleUrl: './update-film-tracklist.component.css',
+    selector: 'app-update-film-tracklist',
+    imports: [
+        ReactiveFormsModule,
+        InputTextModule,
+        CommonModule,
+        MessageModule,
+        ButtonModule,
+        FloatLabelModule,
+        SelectModule,
+        RatingModule,
+        DatePickerModule,
+        DeleteDialogComponent,
+    ],
+    providers: [
+        UC_GetTracklistDELETEResponseSubject,
+        UC_GetTracklistUPDATEResponseSubject,
+        UC_TriggerTracklistDELETESubject,
+        UC_TriggerTracklistUPDATESubject,
+        UC_LogoutOfAccount
+    ],
+    templateUrl: './update-film-tracklist.component.html',
+    styleUrl: './update-film-tracklist.component.css',
 })
 export class UpdateFilmTracklistComponent implements OnInit {
-  // input variables
-  public inpTracklist: InputSignal<SeasonTracklist> =
-    input.required<SeasonTracklist>();
+    // input variables
+    public inpTracklist: InputSignal<SeasonTracklist> =
+        input.required<SeasonTracklist>();
 
-  // output variables
-  @Output() cancelTracklistForm: EventEmitter<number> =
-    new EventEmitter<number>();
-  @Output() refreshFilmPage: EventEmitter<boolean> =
-    new EventEmitter<boolean>();
+    // output variables
+    @Output() cancelTracklistForm: EventEmitter<number> =
+        new EventEmitter<number>();
+    @Output() refreshFilmPage: EventEmitter<boolean> =
+        new EventEmitter<boolean>();
 
-  // other variables
-  public updateTracklistForm!: FormGroup;
-  public isTracklistSubmitted: boolean = false;
-  public tracklistStatusOptions: { name: string; value: string }[] =
-    TRACK_LIST_STATUS_LIST.map((status: string) => ({
-      name: convertTracklistStatusIntoGerman(status),
-      value: status,
-    }));
+    // other variables
+    public updateTracklistForm!: FormGroup;
+    public isTracklistSubmitted: boolean = false;
+    public tracklistStatusOptions: { name: string; value: string }[] =
+        TRACK_LIST_STATUS_LIST.map((status: string) => ({
+            name: convertTracklistStatusIntoGerman(status),
+            value: status,
+        }));
 
-  // variables for requests
-  public updateResponseData$: Observable<any> | null = null;
-  public deleteTracklistResponseData$: Observable<any> | null = null;
+    // variables for requests
+    public updateResponseData$: Observable<any> | null = null;
+    public deleteTracklistResponseData$: Observable<any> | null = null;
 
-  public isDeleteDialogVisible: boolean = false;
+    public isDeleteDialogVisible: boolean = false;
 
-  constructor(
-    private messageService: MessageService,
-    private router: Router,
-    private mediaService: MediaService,
-    private formBuilder: FormBuilder,
-    private userService: UserService
-  ) {}
+    constructor(
+        private messageService: MessageService,
+        private router: Router,
+        private formBuilder: FormBuilder,
+        private getTracklistUPDATEResponseSubjectUseCase: UC_GetTracklistUPDATEResponseSubject,
+        private getTracklistDELETEReponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
+        private triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
+        private triggerTracklistDELETEsubjectUseCase: UC_TriggerTracklistDELETESubject,
+        private logoutOfAccountUseCase: UC_LogoutOfAccount
+    ) { }
 
-  ngOnInit(): void {
-    this.mediaService.getTracklistUPDATEResponseSubject().subscribe({
-      next: () => {
-        this.messageService.add({
-          life: 7000,
-          severity: 'success',
-          summary: 'Erfolgreich gespeichert',
+    ngOnInit(): void {
+        this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
+            next: () => {
+                this.messageService.add({
+                    life: 7000,
+                    severity: 'success',
+                    summary: 'Erfolgreich gespeichert',
+                });
+                this.refreshFilmPage.emit(true);
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Speichern',
+                        'Bitte probiere es erneut.'
+                    )
+                );
+            },
         });
-        this.refreshFilmPage.emit(true);
-      },
-      error: (err) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-          return;
+
+        this.updateTracklistForm = this.formBuilder.group({
+            tracklist_status: [
+                {
+                    name: convertTracklistStatusIntoGerman(this.inpTracklist().status),
+                    value: this.inpTracklist().status,
+                },
+                Validators.required,
+            ],
+            tracklist_name: [this.inpTracklist().tracklistName, Validators.required],
+            tracklist_rating: [this.inpTracklist().rating],
+            tracklist_start_date: [
+                this.inpTracklist().startDate !== null
+                    ? new Date(this.inpTracklist().startDate!)
+                    : null,
+            ],
+            tracklist_finish_date: [
+                this.inpTracklist().finishDate
+                    ? new Date(this.inpTracklist().finishDate!)
+                    : null,
+            ],
+        });
+
+        // delete tracklist -------------------------------------------
+        this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
+            next: () => {
+                this.messageService.add(
+                    getMessageObject('success', 'Trackliste erfolgreich gelöscht')
+                );
+                this.refreshFilmPage.emit(true);
+            },
+            error: (err: any) => {
+                if (err.status === 401) {
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Löschen',
+                        'Bitte probiere es erneut.'
+                    )
+                );
+            },
+        });
+    }
+
+    public submitForm = () => {
+        this.isTracklistSubmitted = true;
+
+        if (this.updateTracklistForm.invalid) {
+            return;
         }
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Speichern',
-            'Bitte probiere es erneut.'
-          )
-        );
-      },
-    });
 
-    this.updateTracklistForm = this.formBuilder.group({
-      tracklist_status: [
-        {
-          name: convertTracklistStatusIntoGerman(this.inpTracklist().status),
-          value: this.inpTracklist().status,
-        },
-        Validators.required,
-      ],
-      tracklist_name: [this.inpTracklist().tracklistName, Validators.required],
-      tracklist_rating: [this.inpTracklist().rating],
-      tracklist_start_date: [
-        this.inpTracklist().startDate !== null
-          ? new Date(this.inpTracklist().startDate!)
-          : null,
-      ],
-      tracklist_finish_date: [
-        this.inpTracklist().finishDate
-          ? new Date(this.inpTracklist().finishDate!)
-          : null,
-      ],
-    });
+        let formattedStartDate: string = '';
+        let formattedEndDate: string = '';
 
-    // delete tracklist -------------------------------------------
-    this.mediaService.getTracklistDELETEResponseSubject().subscribe({
-      next: () => {
-        this.messageService.add(
-          getMessageObject('success', 'Trackliste erfolgreich gelöscht')
-        );
-        this.refreshFilmPage.emit(true);
-      },
-      error: (err: any) => {
-        if (err.status === 401) {
-          this.userService.logoutOfAccount();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-          return;
+        if (this.updateTracklistForm.get('tracklist_start_date')?.value) {
+            formattedStartDate = new Date(
+                this.updateTracklistForm.get('tracklist_start_date')?.value
+            )
+                .toISOString()
+                .split('T')[0];
         }
-        this.messageService.add(
-          getMessageObject(
-            'error',
-            'Fehler beim Löschen',
-            'Bitte probiere es erneut.'
-          )
-        );
-      },
-    });
-  }
 
-  public submitForm = () => {
-    this.isTracklistSubmitted = true;
+        if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
+            formattedEndDate = new Date(
+                this.updateTracklistForm.get('tracklist_finish_date')?.value
+            )
+                .toISOString()
+                .split('T')[0];
+        }
 
-    if (this.updateTracklistForm.invalid) {
-      return;
-    }
+        const updateTracklistData: UpdateTracklistRequest = {
+            tracklist_id: this.inpTracklist().id,
+            tracklist_status:
+                this.updateTracklistForm.get('tracklist_status')?.value.value,
+            tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
+            tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
+            tracklist_start_date: formattedStartDate,
+            tracklist_finish_date: formattedEndDate,
+        };
 
-    let formattedStartDate: string = '';
-    let formattedEndDate: string = '';
-
-    if (this.updateTracklistForm.get('tracklist_start_date')?.value) {
-      formattedStartDate = new Date(
-        this.updateTracklistForm.get('tracklist_start_date')?.value
-      )
-        .toISOString()
-        .split('T')[0];
-    }
-
-    if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
-      formattedEndDate = new Date(
-        this.updateTracklistForm.get('tracklist_finish_date')?.value
-      )
-        .toISOString()
-        .split('T')[0];
-    }
-
-    const updateTracklistData: UpdateTracklistRequest = {
-      tracklist_id: this.inpTracklist().id,
-      tracklist_status:
-        this.updateTracklistForm.get('tracklist_status')?.value.value,
-      tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
-      tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
-      tracklist_start_date: formattedStartDate,
-      tracklist_finish_date: formattedEndDate,
+        this.triggerTracklistUPDATESubjectUseCase.execute(updateTracklistData);
     };
 
-    this.mediaService.triggerTracklistUPDATESubject(updateTracklistData);
-  };
+    public hasErrorField = (field: string) => {
+        const fieldControl = this.updateTracklistForm.get(field);
 
-  public hasErrorField = (field: string) => {
-    const fieldControl = this.updateTracklistForm.get(field);
+        return (
+            fieldControl! &&
+            (fieldControl!.dirty ||
+                fieldControl!.touched ||
+                this.isTracklistSubmitted)
+        );
+    };
 
-    return (
-      fieldControl! &&
-      (fieldControl!.dirty ||
-        fieldControl!.touched ||
-        this.isTracklistSubmitted)
-    );
-  };
+    public cancelTracklist = () => {
+        this.cancelTracklistForm.emit(0);
+    };
 
-  public cancelTracklist = () => {
-    this.cancelTracklistForm.emit(0);
-  };
+    public deleteTracklist = () => {
+        this.triggerTracklistDELETEsubjectUseCase.execute(this.inpTracklist().id);
+    };
 
-  public deleteTracklist = () => {
-    this.mediaService.triggerTracklistDELETESubject(this.inpTracklist().id);
-  };
-
-  public setDeleteDialogVisibility = (status: boolean) => {
-    this.isDeleteDialogVisible = status;
-  };
+    public setDeleteDialogVisibility = (status: boolean) => {
+        this.isDeleteDialogVisible = status;
+    };
 }

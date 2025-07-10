@@ -1,5 +1,5 @@
 import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { Router } from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
@@ -7,64 +7,65 @@ import { InputTextModule } from 'primeng/inputtext';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { isUserLoggedIn } from '../../../../guards/auth.guard';
-import { SearchService } from '../../../../service/search/search.service';
-import { UserService } from '../../../../service/user/user.service';
-import { ROUTES_LIST } from '../../../../shared/variables/routes-list';
+import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { UC_UpdateSearchTerm } from '../../../../app/core/use-cases/search/update-search-term.use-case';
+import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
 
 @Component({
-  selector: 'app-search-bar',
-  imports: [
-    InputTextModule,
-    InputIcon,
-    IconFieldModule,
-    ButtonModule,
-    CommonModule,
-    TooltipModule,
-  ],
-  templateUrl: './search-bar.component.html',
-  styleUrl: './search-bar.component.css',
+    selector: 'app-search-bar',
+    imports: [
+        InputTextModule,
+        InputIcon,
+        IconFieldModule,
+        ButtonModule,
+        CommonModule,
+        TooltipModule,
+    ],
+    templateUrl: './search-bar.component.html',
+    styleUrl: './search-bar.component.css',
+    providers: [UC_UpdateSearchTerm, UC_IsSearchBarVisible]
 })
 export class SearchBarComponent implements OnInit {
-  searchQuery: string = '';
-  public isVisible: boolean = isUserLoggedIn();
-  public isBackButtonVisible: boolean = false;
+    searchQuery: string = '';
+    public isVisible: boolean = isUserLoggedIn();
+    public isBackButtonVisible: boolean = false;
 
-  @Output() emitSearchQuery: EventEmitter<string> = new EventEmitter<string>();
+    @Output() emitSearchQuery: EventEmitter<string> = new EventEmitter<string>();
 
-  constructor(
-    private router: Router,
-    private searchService: SearchService,
-    private userService: UserService
-  ) {}
+    constructor(
+        private router: Router,
+        private updateSearchTermUseCase: UC_UpdateSearchTerm,
+        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible
+    ) { }
 
-  ngOnInit(): void {
-    this.userService.isSearchBarVisible$.subscribe((status: boolean) => {
-      this.isVisible = status;
-    });
+    ngOnInit(): void {
+        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
+            this.isVisible = status;
+        });
 
-    this.router.events.subscribe(() => {
-      // checking url and if url is movie or tv details page make back button visible; otherwise invisible
-      this.isBackButtonVisible =
-        this.router.url.startsWith(`/${ROUTES_LIST[5].fullUrl}`) ||
-        this.router.url.startsWith(`/${ROUTES_LIST[6].fullUrl}`);
-    });
-  }
-
-  navigateToSearch = () => {
-    this.emitSearchQuery.emit(this.searchQuery);
-    this.searchService.updateSearchTerm(this.searchQuery);
-
-    if (this.router.url !== `/${ROUTES_LIST[4].fullUrl}`) {
-      // checking if user is already on multi search route
-      this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
+        this.router.events.subscribe(() => {
+            // checking url and if url is movie or tv details page make back button visible; otherwise invisible
+            this.isBackButtonVisible =
+                this.router.url.startsWith(`/${ROUTES_LIST[5].fullUrl}`) ||
+                this.router.url.startsWith(`/${ROUTES_LIST[6].fullUrl}`);
+        });
     }
-  };
 
-  handleInput = (event: Event) => {
-    this.searchQuery = (event.target as HTMLInputElement).value;
-  };
+    navigateToSearch = () => {
+        this.emitSearchQuery.emit(this.searchQuery);
+        this.updateSearchTermUseCase.execute(this.searchQuery);
 
-  public navigateToMultiSearch = () => {
-    this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
-  };
+        if (this.router.url !== `/${ROUTES_LIST[4].fullUrl}`) {
+            // checking if user is already on multi search route
+            this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
+        }
+    };
+
+    handleInput = (event: Event) => {
+        this.searchQuery = (event.target as HTMLInputElement).value;
+    };
+
+    public navigateToMultiSearch = () => {
+        this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
+    };
 }
