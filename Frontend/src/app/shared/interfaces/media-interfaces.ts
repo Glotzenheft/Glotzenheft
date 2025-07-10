@@ -96,8 +96,8 @@ export interface MediaResult {
 export interface MultiSearchResponse {
     page: number;
     results: MediaResult[];
-    total_results: 3;
-    total_pages: 1;
+    total_results: number;
+    total_pages: number;
 }
 
 export interface MediaIDResponse {

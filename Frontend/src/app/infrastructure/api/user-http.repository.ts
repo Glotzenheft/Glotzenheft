@@ -13,7 +13,7 @@ import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from '../../shared/interfaces/login';
-import { ROUTE_DELETE_USER_ACCOUNT, ROUTE_LOGIN, ROUTE_RESET_PASSWORD, ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, ROUTE_STATISTICS_GET_USER_RATINGS, ROUTE_USER_ACTIVITIES } from '../../shared/variables/api-routes';
+import { ROUTE_DELETE_USER_ACCOUNT, ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_RESET_PASSWORD, ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, ROUTE_STATISTICS_GET_USER_RATINGS, ROUTE_USER_ACTIVITIES } from '../../shared/variables/api-routes';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
 import { KEY_LOCAL_STORAGE_LAST_LOG_IN, KEY_LOCAL_STORAGE_LOG_IN_TRIES } from '../../shared/variables/local-storage-keys';
@@ -70,7 +70,7 @@ export class R_UserHTTP implements I_UserRepository {
     ): Observable<LoginAndMessageResponse> => {
         return this.http
             .post<LoginAndMessageResponse>(
-                'https://127.0.0.1:8000/api/register',
+                ROUTE_REGISTER,
                 JSON.stringify(registerData)
             )
             .pipe(

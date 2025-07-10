@@ -80,21 +80,4 @@ export class AppComponent implements OnInit, OnDestroy {
     setUserQuery = (query: string) => {
         this.userQuery = query;
     };
-
-    //   @HostListener('window:keydown', ['$event'])
-    //   onKeyDown = (event: KeyboardEvent) => {
-    //     if (
-    //       (event.ctrlKey && event.shiftKey && event.key === 'I') ||
-    //       event.key === 'F12' ||
-    //       (event.ctrlKey && event.shiftKey && event.key === 'C')
-    //     ) {
-    //       event.preventDefault();
-    //       this.messageService.add({
-    //         severity: 'error',
-    //         summary: 'Kein Zugriff auf Dev-Tools',
-    //         detail:
-    //           'Sie haben keinen Zugriff auf die Entwicklungswerkzeuge in dieser Applikation.',
-    //       });
-    //     }
-    //   };
 }

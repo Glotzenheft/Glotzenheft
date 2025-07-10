@@ -41,8 +41,8 @@ export interface TracklistSeason {
     id: number;
     tracklistEpisodes: any[];
     season: {
-        id: 1;
-        seasonNumber: 1;
+        id: number;
+        seasonNumber: number;
         episodes: TracklistSeason[];
     };
 }
