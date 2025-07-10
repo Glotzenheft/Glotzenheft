@@ -1,5 +1,6 @@
 <div class="appwrapper">
-    <div class="sidebar" *ngIf="isSidebarOpen">
+    @if(isSidebarOpen) {
+    <div class="sidebar">
         <div class="appHeading">
             <div class="sidebarToggleDIV">
                 <div (click)="toggleSidebar(false)">
@@ -13,7 +14,8 @@
         <app-user-links />
         <app-footer (sideBarOpenEvent)="toggleSidebar(false)" />
     </div>
-
+    }
+    @else {
     <div class="closedSidebar" *ngIf="!isSidebarOpen">
         <div class="closedSidebarToggleDIV">
             <div (click)="toggleSidebar(true)">
@@ -22,6 +24,8 @@
         </div>
         <app-user-menu />
     </div>
+    }
+
     <div class="content">
         <app-search-bar (emitSearchQuery)="setUserQuery($event)" />
         <router-outlet></router-outlet>

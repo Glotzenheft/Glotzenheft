@@ -16,82 +16,91 @@
         (onClick)="changeToNextPage()" [disabled]="isRightButtonDisabled" />
 </div>
 
-<div *ngIf="isLoading" class="loadingWrapper">
+@if (isLoading) {
+<div class="loadingWrapper">
     <h1>Laden ...</h1>
     <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
 </div>
+}
 
-<div *ngIf="serverNotAvailablePage" class="serverNotAvailableDIV">
+@if (serverNotAvailablePage) {
+<div class="serverNotAvailableDIV">
     <h1>Server nicht erreichbar</h1>
 </div>
+}
 
-<ng-container *ngIf="!isLoading && !serverNotAvailablePage">
-    <div *ngIf="userActivitiesRequest$ | async " class="userActivitiesTable">
-        <div class="userActivitesTableDIV">
-            <p-table [value]="userActivitiesListWithDaySplitter" stripedRows [loading]="isTableLoading">
-                <ng-template #header>
-                    <tr>
-                        <th>Vorschau/Poster</th>
-                        <th>Datum</th>
-                        <th>Episode</th>
-                        <th>Laufzeit</th>
-                        <th>Film/Serie</th>
-                        <th>Tracklist-Name</th>
-                    </tr>
-                </ng-template>
 
-                <ng-template #body let-tracklist>
-                    <tr *ngIf="!tracklist.isDateSplitter">
-                        <td>
-                            <ng-container *ngIf="tracklist.picture as picture; else noImage">
-                                <img [src]="posterPath + picture" [alt]="
-                    'Cover von ' +
-                    tracklist.mediaTitle +
-                    (tracklist.episodeNumber
-                      ? ' - Episode ' + tracklist.episodeNumber
-                      : '')
-                  " loading="lazy" />
-                            </ng-container>
-                            <ng-template #noImage>
-                                <i>kein Bild vorhanden</i>
-                            </ng-template>
-                        </td>
-                        <td>
-                            {{ tracklist.date | dateFormatting }}
-                        </td>
-                        <td>
-                            {{
-                            tracklist.episodeNumber !== null
-                            ? "E" + tracklist.episodeNumber.toString().padStart(2, "0")
-                            : "-"
-                            }}
-                        </td>
-                        <td>{{ tracklist.runtime }} min</td>
-                        <td>
-                            <p class="mediaRow" (click)="onClickActivity(tracklist)">
-                                {{ tracklist.mediaTitle }}
-                            </p>
-                        </td>
-                        <td>{{ tracklist.tracklistName }}</td>
-                    </tr>
+@if (!isLoading && !serverNotAvailablePage) {
+<div *ngIf="userActivitiesRequest$ | async " class="userActivitiesTable">
+    <div class="userActivitesTableDIV">
+        <p-table [value]="userActivitiesListWithDaySplitter" stripedRows [loading]="isTableLoading">
+            <ng-template #header>
+                <tr>
+                    <th>Vorschau/Poster</th>
+                    <th>Datum</th>
+                    <th>Episode</th>
+                    <th>Laufzeit</th>
+                    <th>Film/Serie</th>
+                    <th>Tracklist-Name</th>
+                </tr>
+            </ng-template>
 
-                    <tr *ngIf="tracklist.isDateSplitter">
-                        <td>
-                            <b>{{ tracklist.date }}</b>
-                        </td>
-                        <td></td>
-                        <td></td>
-                        <td></td>
-                        <td>
-                            <b>Geschaut: {{ tracklist.episodeID }}x</b>
-                        </td>
-                        <td>
-                            <b>{{ tracklist.runtime }} Minuten</b>
-                        </td>
-                    </tr>
-                </ng-template>
-            </p-table>
-        </div>
+            <ng-template #body let-tracklist>
+                @if (!tracklist.isDateSplitter) {
+                <tr>
+                    <td>
+                        <ng-container *ngIf="tracklist.picture as picture; else noImage">
+                            <img [src]="posterPath + picture" [alt]="
+                            'Cover von ' +
+                            tracklist.mediaTitle +
+                            (tracklist.episodeNumber
+                              ? ' - Episode ' + tracklist.episodeNumber
+                              : '')
+                          " loading="lazy" />
+                        </ng-container>
+                        <ng-template #noImage>
+                            <i>kein Bild vorhanden</i>
+                        </ng-template>
+                    </td>
+                    <td>
+                        {{ tracklist.date | dateFormatting }}
+                    </td>
+                    <td>
+                        {{
+                        tracklist.episodeNumber !== null
+                        ? "E" + tracklist.episodeNumber.toString().padStart(2, "0")
+                        : "-"
+                        }}
+                    </td>
+                    <td>{{ tracklist.runtime }} min</td>
+                    <td>
+                        <p class="mediaRow" (click)="onClickActivity(tracklist)">
+                            {{ tracklist.mediaTitle }}
+                        </p>
+                    </td>
+                    <td>{{ tracklist.tracklistName }}</td>
+                </tr>
+                }
+
+                @if (tracklist.isDateSplitter) {
+                <tr>
+                    <td>
+                        <b>{{ tracklist.date }}</b>
+                    </td>
+                    <td></td>
+                    <td></td>
+                    <td></td>
+                    <td>
+                        <b>Geschaut: {{ tracklist.episodeID }}x</b>
+                    </td>
+                    <td>
+                        <b>{{ tracklist.runtime }} Minuten</b>
+                    </td>
+                </tr>
+                }
+            </ng-template>
+        </p-table>
     </div>
-    <div class="gapDIV"></div>
-</ng-container>
+</div>
+<div class="gapDIV"></div>
+}

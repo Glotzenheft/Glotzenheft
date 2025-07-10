@@ -9,12 +9,12 @@
                         <input type="text" pInputText formControlName="trackListName" id="listName" />
                         <label for="listName">Name der Tracklist</label>
                     </p-float-label>
-                    <p-message *ngIf="
-              hasErrorField('trackListName') &&
-              tracklistForm.get('trackListName')?.invalid
-            " severity="error" size="small">
+
+                    @if (hasErrorField('trackListName') && tracklistForm.get('trackListName')?.invalid) {
+                    <p-message severity="error" size="small">
                         Der Name für die Tracklist ist Pflicht.
                     </p-message>
+                    }
                 </div>
                 <div>
                     <p-float-label variant="in">
@@ -22,11 +22,12 @@
                             optionLabel="name" placeholder="Status auswählen ..." id="select" />
                         <label for="select">Status der Trackliste</label>
                     </p-float-label>
-                    <p-message *ngIf="
-              hasErrorField('status') && tracklistForm.get('status')?.invalid
-            " severity="error" size="small">
+
+                    @if (hasErrorField('status') && tracklistForm.get('status')?.invalid) {
+                    <p-message severity="error" size="small">
                         Der Status ist Pflicht.
                     </p-message>
+                    }
                 </div>
 
                 <div>
@@ -49,9 +50,10 @@
                     <div class="ratingDIV">
                         <p>Bewertung</p>
                         <p-rating [stars]="10" formControlName="rating" />
-                        <p *ngIf="tracklistForm.get('rating')?.value">
-                            {{ tracklistForm.get("rating")?.value }} / 10
-                        </p>
+
+                        @if (tracklistForm.get('rating')?.value) {
+                        <p>{{ tracklistForm.get("rating")?.value }} / 10</p>
+                        }
                     </div>
 
                     <div class="tracklistActions">

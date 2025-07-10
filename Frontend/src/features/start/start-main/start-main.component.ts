@@ -5,8 +5,6 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { Router } from '@angular/router';
-import { MessageService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 
@@ -18,7 +16,6 @@ import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
         InputIconModule,
         TooltipModule,
         ButtonModule,
-        CommonModule,
     ],
     templateUrl: './start-main.component.html',
     styleUrl: './start-main.component.css',

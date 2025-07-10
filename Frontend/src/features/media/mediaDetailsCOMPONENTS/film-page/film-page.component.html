@@ -1,96 +1,116 @@
-<div *ngIf="isLoading" class="loadingWrapper">
+@if (isLoading) {
+<div class="loadingWrapper">
     <h1>Laden ...</h1>
     <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
 </div>
+}
 
-<div *ngIf="serverNotAvailablePage" class="serverNotAvailableDIV">
+@if (serverNotAvailablePage) {
+<div class="serverNotAvailableDIV">
     <h1>Server nicht erreichbar</h1>
 </div>
+}
 
-<ng-container *ngIf="!isLoading && !serverNotAvailablePage">
-    <div *ngIf="visibilityStatus === 0" class="filmDetailsWrapper">
-        <div *ngIf="hasError">
-            <p-panel header="Fehler beim Laden der Seite" class="error">
-                <p>
-                    Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
-                    versuchen Sie es erneut durch ein erneutes Laden der Seite.
-                </p>
-            </p-panel>
-        </div>
 
-        <div *ngIf="isInvalidID">
-            <p-panel header="Fehler beim Laden der Seite" class="error">
-                <p>
-                    Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
-                    erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
-                    dieser Seite.
-                </p>
-            </p-panel>
-        </div>
+@if (!isLoading && !serverNotAvailablePage) {
+@if (visibilityStatus === 0) {
+<div class="filmDetailsWrapper">
 
-        <div *ngIf="filmData$ | async as filmData">
-            <h1>{{ filmData.media.name }}</h1>
-            <div class="seasonMeta">
-                <div class="seasonPictureWrapper">
-                    <div class="seasonMetaPicture">
-                        <p *ngIf="filmData.media.posterPath === null">
-                            kein Bild vorhanden
-                        </p>
-                        <img *ngIf="filmData.media.posterPath !== null" [src]="
+    @if (hasError) {
+    <div>
+        <p-panel header="Fehler beim Laden der Seite" class="error">
+            <p>
+                Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
+                versuchen Sie es erneut durch ein erneutes Laden der Seite.
+            </p>
+        </p-panel>
+    </div>
+    }
+
+    @if (isInvalidID) {
+    <div>
+        <p-panel header="Fehler beim Laden der Seite" class="error">
+            <p>
+                Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
+                erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
+                dieser Seite.
+            </p>
+        </p-panel>
+    </div>
+    }
+
+
+    <div *ngIf="filmData$ | async as filmData">
+        <h1>{{ filmData.media.name }}</h1>
+        <div class="seasonMeta">
+            <div class="seasonPictureWrapper">
+                <div class="seasonMetaPicture">
+                    @if (filmData.media.posterPath === null) {
+                    <p>kein Bild vorhanden</p>
+                    }
+                    @else {
+                    <img [src]="
                 'https://image.tmdb.org/t/p/w500' + filmData.media.posterPath
               " [alt]="'Dies ist das Bild für von ' + filmData.media.name" loading="lazy" />
-                    </div>
-                </div>
-                <div class="seasonMetaContent">
-                    <div>
-                        <h2>Beschreibung</h2>
-                        <p *ngIf="filmData.media.description" class="descriptionP">
-                            {{ filmData.media.description }}
-                        </p>
-                        <p *ngIf="!filmData.media.description" class="descriptionP">
-                            <i>keine Beschreibung vorhanden</i>
-                        </p>
-
-                        <p *ngIf="filmData.media.firstAirDate">
-                            Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}
-                        </p>
-                        <p *ngIf="!filmData.media.firstAirDate">
-                            <i>kein Ausstrahlungsdatum vorhanden</i>
-                        </p>
-
-                        <p *ngIf="filmData.media.seasons.length > 0">
-                            Anzahl der Staffeln: {{ filmData.media.seasons.length }}
-                        </p>
-                    </div>
+                    }
                 </div>
             </div>
+            <div class="seasonMetaContent">
+                <div>
+                    <h2>Beschreibung</h2>
+                    @if (filmData.media.description) {
+                    <p class="descriptionP">{{ filmData.media.description }}</p>
 
-            <div class="newWatchlistButton">
-                <p-panel *ngFor="let tracklist of filmData.tracklists; let i = index" [header]="tracklist.tracklistName"
-                    [toggleable]="true" [collapsed]="true">
-                    <p>Status: {{ convertStatus(tracklist.status) }}</p>
-                    <p-button label="Tracklist bearbeiten" icon="pi pi-pencil"
-                        (onClick)="setSelectedTracklist(tracklist)" />
-                </p-panel>
-            </div>
+                    } @else {
+                    <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
+                    }
 
-            <div class="backButtonDIV">
-                <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+
+                    @if (filmData.media.firstAirDate) {
+                    <p>Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
+
+                    } @else {
+                    <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
+                    }
+
+
+                    @if (filmData.media.seasons.length > 0) {
+                    <p>Anzahl der Staffeln: {{ filmData.media.seasons.length }}</p>
+                    }
+                </div>
             </div>
         </div>
+
+        <div class="newWatchlistButton">
+            @for (tracklist of filmData.tracklists; track $index) {
+            <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
+                <p>Status: {{ convertStatus(tracklist.status) }}</p>
+                <p-button label="Tracklist bearbeiten" icon="pi pi-pencil"
+                    (onClick)="setSelectedTracklist(tracklist)" />
+            </p-panel>
+            }
+        </div>
+
+        <div class="backButtonDIV">
+            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+        </div>
     </div>
+</div>
 
-    <ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
-        <app-create-movie-tracklist [mediaID]="filmData.media.id" [mediaName]="filmData.media.name"
-            (cancelTracklistCreation)="setVisibilityStatus(0)" (saveNewTracklist)="refreshPage()" />
-    </ng-container>
+}
 
-    <ng-container *ngIf="
+<ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
+    <app-create-movie-tracklist [mediaID]="filmData.media.id" [mediaName]="filmData.media.name"
+        (cancelTracklistCreation)="setVisibilityStatus(0)" (saveNewTracklist)="refreshPage()" />
+</ng-container>
+
+
+<ng-container *ngIf="
       visibilityStatus === 2 &&
       selectedTracklist &&
       (filmData$ | async) as filmData
     ">
-        <app-update-film-tracklist [inpTracklist]="selectedTracklist" (cancelTracklistForm)="setVisibilityStatus(0)"
-            (refreshFilmPage)="refreshPage()" />
-    </ng-container>
+    <app-update-film-tracklist [inpTracklist]="selectedTracklist" (cancelTracklistForm)="setVisibilityStatus(0)"
+        (refreshFilmPage)="refreshPage()" />
 </ng-container>
+}

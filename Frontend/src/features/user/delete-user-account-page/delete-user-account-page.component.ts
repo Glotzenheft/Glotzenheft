@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
@@ -26,7 +25,6 @@ import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-
 @Component({
     selector: 'app-delete-user-account-page',
     imports: [
-        CommonModule,
         ButtonModule,
         MessageModule,
         ToastModule,

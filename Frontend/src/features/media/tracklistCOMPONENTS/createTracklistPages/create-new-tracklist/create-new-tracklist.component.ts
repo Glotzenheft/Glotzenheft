@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -37,7 +36,6 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
     selector: 'app-create-new-tracklist',
     imports: [
         ReactiveFormsModule,
-        CommonModule,
         ButtonModule,
         MessageModule,
         InputTextModule,
@@ -47,7 +45,11 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         SelectModule,
         RatingModule,
     ],
-    providers: [UC_GetTracklistCREATESEASONResponseSubject, UC_TriggerTracklistCREATESEASONSubject, UC_SetSelectedTracklistInLocalStorage, UC_LogoutOfAccount],
+    providers: [UC_GetTracklistCREATESEASONResponseSubject,
+        UC_TriggerTracklistCREATESEASONSubject,
+        UC_SetSelectedTracklistInLocalStorage,
+        UC_LogoutOfAccount
+    ],
     templateUrl: './create-new-tracklist.component.html',
     styleUrl: './create-new-tracklist.component.css',
 })

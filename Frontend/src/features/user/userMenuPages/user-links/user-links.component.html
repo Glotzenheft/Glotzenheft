@@ -1,7 +1,9 @@
-<div class="userLinks" *ngIf="isLoggedIn">
+@if (isLoggedIn) {
+<div class="userLinks">
     <ul>
-        <li *ngFor="let route of personalUserLinks">
-            <a [href]="route.fullUrl">{{ route.description }}</a>
-        </li>
+        @for (route of personalUserLinks; track $index) {
+        <li><a [href]="route.fullUrl">{{ route.description }}</a></li>
+        }
     </ul>
 </div>
+}

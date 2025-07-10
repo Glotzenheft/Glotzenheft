@@ -23,13 +23,17 @@
                 </p-float-label>
 
                 <div class="formAcions">
-                    <p-button *ngIf="!inpIsEpisodeEditing()" label="Hinzufügen" icon="pi pi-plus" type="submit" />
-                    <p-button *ngIf="inpIsEpisodeEditing()" label="Speichern" icon="pi pi-save"
-                        (onClick)="saveEditedEpisode()" />
-                    <div *ngIf="inpIsEpisodeEditing()">
+                    @if (!inpIsEpisodeEditing()) {
+                    <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" />
+
+                    }
+                    @else {
+                    <p-button label="Speichern" icon="pi pi-save" (onClick)="saveEditedEpisode()" />
+                    <div>
                         <p-button label="Löschen" icon="pi pi-trash" severity="danger"
                             (onClick)="setDeletionDialogVisibilityStatus(true)" />
                     </div>
+                    }
                     <div>
                         <p-button label="Abbrechen" icon="pi pi-times" severity="secondary"
                             (onClick)="cancelEpisodeForm()" />
@@ -40,6 +44,7 @@
     </div>
 </div>
 
-<app-delete-dialog *ngIf="isDeletionDialogVisible" [inpHeading]="'Episode löschen'"
-    [inpText]="'Willst du die Episode wirklich löschen?'" (outDeleteMedia)="deleteEpisode()"
-    (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />
+@if (isDeletionDialogVisible) {
+<app-delete-dialog [inpHeading]="'Episode löschen'" [inpText]="'Willst du die Episode wirklich löschen?'"
+    (outDeleteMedia)="deleteEpisode()" (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />
+}
