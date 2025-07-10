@@ -6,9 +6,10 @@
                     <input type="text" id="username" pInputText formControlName="username" name="username" />
                     <label for="userName">Nutzername</label>
                 </p-floatlabel>
-                <p-message severity="error" size="small"
-                    *ngIf="loginGroup.get('username')?.invalid && hasError('username')">Nutzername ist
-                    Pflicht</p-message>
+
+                @if (loginGroup.get('username')?.invalid && hasError('username')) {
+                <p-message severity="error" size="small">Nutzername istPflicht</p-message>
+                }
             </div>
 
             <div>
@@ -17,10 +18,11 @@
                         name="password" #passwordInp [feedback]="false"></p-password>
                     <label for="password">Passwort</label>
                 </p-floatlabel>
-                <p-message severity="error" size="small"
-                    *ngIf="loginGroup.get('password')?.invalid && hasError('password')">Passwort ist Pflicht und muss
-                    mindestens 8 Zeichen lang
+
+                @if (loginGroup.get('password')?.invalid && hasError('password')) {
+                <p-message severity="error" size="small">Passwort ist Pflicht und muss mindestens 8 Zeichen lang
                     sein.</p-message>
+                }
             </div>
 
             <div class="loginActions">

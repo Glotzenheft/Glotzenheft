@@ -6,7 +6,6 @@ import {
     OnInit,
     Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { DatePickerModule } from 'primeng/datepicker';
 import { MessageModule } from 'primeng/message';
@@ -29,11 +28,11 @@ import { UC_UpdateTracklistEpisode } from '../../../../../app/core/use-cases/epi
 import { UC_DeleteTracklistEpisode } from '../../../../../app/core/use-cases/episode/delete-tracklist-episode.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
+import { DatePipe } from '@angular/common';
 
 @Component({
     selector: 'app-create-tracklist-episode-form',
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         DatePickerModule,
         MessageModule,
@@ -43,8 +42,15 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         SelectModule,
         TooltipModule,
         DeleteDialogComponent,
+        DatePipe
     ],
-    providers: [UC_CreateTracklistEpisode, UC_DeleteTracklistEpisode, UC_UpdateTracklistEpisode, UC_SetSelectedTracklistInLocalStorage, UC_LogoutOfAccount],
+    providers: [
+        UC_CreateTracklistEpisode,
+        UC_DeleteTracklistEpisode,
+        UC_UpdateTracklistEpisode,
+        UC_SetSelectedTracklistInLocalStorage,
+        UC_LogoutOfAccount
+    ],
     templateUrl: './create-tracklist-episode-form.component.html',
     styleUrl: './create-tracklist-episode-form.component.css',
 })

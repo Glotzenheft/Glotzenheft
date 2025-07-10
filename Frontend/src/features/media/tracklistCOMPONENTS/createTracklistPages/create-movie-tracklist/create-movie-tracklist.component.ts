@@ -34,7 +34,6 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
 @Component({
     selector: 'app-create-movie-tracklist',
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         ButtonModule,
         MessageModule,

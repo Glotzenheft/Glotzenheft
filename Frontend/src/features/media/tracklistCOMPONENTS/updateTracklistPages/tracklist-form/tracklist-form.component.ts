@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -17,13 +16,12 @@ import { CreateNewTracklistComponent } from "../../createTracklistPages/create-n
 @Component({
     selector: 'app-tracklist-form',
     imports: [
-    ReactiveFormsModule,
-    ButtonModule,
-    RatingModule,
-    MessageModule,
-    CommonModule,
-    CreateNewTracklistComponent
-],
+        ReactiveFormsModule,
+        ButtonModule,
+        RatingModule,
+        MessageModule,
+        CreateNewTracklistComponent
+    ],
     providers: [],
     templateUrl: './tracklist-form.component.html',
     styleUrl: './tracklist-form.component.css',

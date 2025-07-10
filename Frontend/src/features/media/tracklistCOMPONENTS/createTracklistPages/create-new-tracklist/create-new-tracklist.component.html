@@ -9,12 +9,12 @@
                         <input type="text" pInputText formControlName="trackListName" id="listName" />
                         <label for="listName">Name der Tracklist</label>
                     </p-float-label>
-                    <p-message *ngIf="
-              hasErrorField('trackListName') &&
-              trackListForm.get('trackListName')?.invalid
-            " severity="error" size="small">
+
+                    @if (hasErrorField('trackListName') && trackListForm.get('trackListName')?.invalid) {
+                    <p-message severity="error" size="small">
                         Der Name für die Tracklist ist Pflicht.
                     </p-message>
+                    }
                 </div>
                 <div>
                     <p-float-label variant="in">
@@ -22,11 +22,12 @@
                             optionLabel="name" placeholder="Status auswählen ..." id="trackStatus" />
                         <label for="trackStatus">Status der Trackliste</label>
                     </p-float-label>
-                    <p-message *ngIf="
-              hasErrorField('status') && trackListForm.get('status')?.invalid
-            " severity="error" size="small">
+
+                    @if ( hasErrorField('status') && trackListForm.get('status')?.invalid) {
+                    <p-message severity="error" size="small">
                         Der Status ist Pflicht.
                     </p-message>
+                    }
                 </div>
 
                 <div class="gapDIV">
@@ -50,16 +51,18 @@
                 <div class="ratingDIV">
                     <p>Bewertung:</p>
                     <p-rating [stars]="10" formControlName="rating" />
-                    <p *ngIf="trackListForm.get('rating')?.value">
-                        {{ trackListForm.get("rating")?.value }} / 10
-                    </p>
+
+                    @if (trackListForm.get('rating')?.value) {
+                    <p>{{ trackListForm.get("rating")?.value }} / 10</p>
+                    }
                     <p></p>
                 </div>
-                <p-message *ngIf="
-            hasErrorField('rating') && trackListForm.get('rating')?.invalid
-          " severity="error" size="small">
+
+                @if (hasErrorField('rating') && trackListForm.get('rating')?.invalid) {
+                <p-message severity="error" size="small">
                     Die Bewertung ist Pflicht.
                 </p-message>
+                }
 
                 <div class="tracklistActions">
                     <p-button label="Speichern" type="submit" icon="pi pi-save" />

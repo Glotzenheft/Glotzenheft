@@ -9,20 +9,20 @@
                         id="question" placeholder="Sicherheitsfrage auswählen ..." />
                     <label for="question">Sicherheitsfrage</label>
                 </p-float-label>
-                <p-message severity="error" size="small" *ngIf="
-            deleteUserForm.get('security_question')?.invalid &&
-            hasErrorField('security_question')
-          ">Sicherheitsfrage muss ausgewählt sein.</p-message>
+
+                @if ( deleteUserForm.get('security_question')?.invalid && hasErrorField('security_question')) {
+                <p-message severity="error" size="small">Sicherheitsfrage muss ausgewählt sein.</p-message>
+                }
             </div>
             <div>
                 <p-float-label variant="in">
                     <input pInputText type="text" formControlName="security_answer" id="answer" />
                     <label for="answer">Antwort</label>
                 </p-float-label>
-                <p-message severity="error" size="small" *ngIf="
-            deleteUserForm.get('security_answer')?.invalid &&
-            hasErrorField('security_answer')
-          ">Die Antwort darf nicht leer sein.</p-message>
+
+                @if (deleteUserForm.get('security_answer')?.invalid && hasErrorField('security_answer')) {
+                <p-message severity="error" size="small">Die Antwort darf nicht leer sein.</p-message>
+                }
             </div>
 
             <div class="loginActions">
@@ -33,6 +33,8 @@
     </div>
 </div>
 
-<app-delete-dialog *ngIf="isDeleteDialogVisible" [inpHeading]="'Account löschen'" [inpText]="
+@if (isDeleteDialogVisible) {
+<app-delete-dialog [inpHeading]="'Account löschen'" [inpText]="
     'Willst du deinen Account wirklich löschen? Das kann nicht mehr rückgängig gemacht werden.'
   " (outCancelDeletion)="setDialogStatus(false)" (outDeleteMedia)="submitForm()" />
+}

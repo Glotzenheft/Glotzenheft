@@ -1,48 +1,64 @@
-<ng-container *ngIf="inpIsWithTracklist()">
-    <div *ngIf="episodeList().length > 0" class="episodeDIVWrapper">
-        <div *ngFor="let episode of episodeList()" [class]="
-        checkEpisodeInCurrentTracklist(episode.id)
-          ? 'episodeInTracklistDIV'
-          : 'episodeDIV'
-      ">
-            <div (click)="openDialog(episode)">
-                <p [pTooltip]="episode.name">
-                    E{{ episode.episodeNumber }}:
-                    {{ shortenStringUseCase.execute(episode.name) }}
-                </p>
-            </div>
-            <p-button *ngIf="!checkEpisodeInCurrentTracklist(episode.id)" icon="pi pi-plus" severity="secondary"
-                pTooltip="Episode zur Watchlist hinzufügen" (onClick)="selectEpisode(episode, false)" />
-            <p-button *ngIf="checkEpisodeInCurrentTracklist(episode.id)" icon="pi pi-pencil" severity="secondary"
-                pTooltip="Episode bearbeiten" (onClick)="selectEpisode(episode, true)" />
+@if(inpIsWithTracklist()) { @if(episodeList().length > 0) {
+<div class="episodeDIVWrapper">
+    @for (episode of episodeList(); track $index) {
+    <div [class]="
+                checkEpisodeInCurrentTracklist(episode.id)
+                  ? 'episodeInTracklistDIV'
+                  : 'episodeDIV'
+              ">
+        <div (click)="openDialog(episode)">
+            <p [pTooltip]="episode.name">
+                E{{ episode.episodeNumber }}:
+                {{ shortenStringUseCase.execute(episode.name) }}
+            </p>
         </div>
-    </div>
-</ng-container>
-<ng-container *ngIf="!inpIsWithTracklist()">
-    <div *ngIf="episodeList().length > 0" class="episodeDIVWrapper">
-        <div *ngFor="let episode of episodeList()" class="episodeDIV">
-            <div (click)="openDialog(episode)">
-                <p [pTooltip]="episode.name">
-                    E{{ episode.episodeNumber }}:
-                    {{ shortenStringUseCase.execute(episode.name) }}
-                </p>
-            </div>
-        </div>
-    </div>
-</ng-container>
 
-<p-dialog *ngIf="isEpisodeDialogVisible && currentEpisodeForDialog" [(visible)]="isEpisodeDialogVisible"
-    [header]="currentEpisodeForDialog.name" [modal]="true" [draggable]="false"
-    [style]="{ width: '80%', height: 'auto' }">
+        @if (!checkEpisodeInCurrentTracklist(episode.id)) {
+        <p-button icon="pi pi-plus" severity="secondary" pTooltip="Episode zur Watchlist hinzufügen"
+            (onClick)="selectEpisode(episode, false)" />
+        }
+        @else {
+        <p-button icon="pi pi-pencil" severity="secondary" pTooltip="Episode bearbeiten"
+            (onClick)="selectEpisode(episode, true)" />
+        }
+    </div>
+    }
+</div>
+}
+}
+@else { @if (episodeList().length > 0) {
+<div class="episodeDIVWrapper">
+
+    @for ( episode of episodeList(); track $index) {
+    <div class="episodeDIV">
+        <div (click)="openDialog(episode)">
+            <p [pTooltip]="episode.name">
+                E{{ episode.episodeNumber }}:
+                {{ shortenStringUseCase.execute(episode.name) }}
+            </p>
+        </div>
+    </div>
+    }
+</div>
+}}
+
+@if (isEpisodeDialogVisible && currentEpisodeForDialog) {
+<p-dialog [(visible)]="isEpisodeDialogVisible" [header]="currentEpisodeForDialog.name" [modal]="true"
+    [draggable]="false" [style]="{ width: '80%', height: 'auto' }">
     <div class="episodeDialogDIV">
         <div class="episodePosterDIV">
-            <img *ngIf="currentEpisodeForDialog.stillPath" [src]="posterPath + currentEpisodeForDialog.stillPath"
+
+            @if (currentEpisodeForDialog.stillPath) {
+            <img [src]="posterPath + currentEpisodeForDialog.stillPath"
                 [alt]="'Poster für ' + currentEpisodeForDialog.name" loading="lazy" />
-            <p *ngIf="!currentEpisodeForDialog.stillPath">
+            } @else {
+            <p>
                 <i>kein Poster vorhanden</i>
             </p>
+            }
         </div>
         <p>{{ currentEpisodeForDialog.overview }}</p>
         <p>Ausstrahlung: {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
     </div>
 </p-dialog>
+}

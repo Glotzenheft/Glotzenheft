@@ -7,7 +7,6 @@ import { Router, RouterOutlet } from '@angular/router';
 import { PanelModule } from 'primeng/panel';
 import { Observable } from 'rxjs';
 import { MessageService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
 import { ChartModule } from 'primeng/chart';
 import { ReactiveFormsModule } from '@angular/forms';
 import { SelectModule } from 'primeng/select';
@@ -32,7 +31,6 @@ import { UC_GetUserStatisticWatchTime } from '../../../app/core/use-cases/user/g
         TooltipModule,
         RouterOutlet,
         PanelModule,
-        CommonModule,
         ChartModule,
         ReactiveFormsModule,
         SelectModule,

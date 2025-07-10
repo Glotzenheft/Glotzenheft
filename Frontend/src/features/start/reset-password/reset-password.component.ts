@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import {
     FormBuilder,
@@ -33,7 +32,6 @@ import { UC_NavigateToStartPage } from '../../../app/core/use-cases/navigation/n
         SelectModule,
         FloatLabelModule,
         MessageModule,
-        CommonModule,
         ButtonModule,
         PasswordModule,
     ],

@@ -5,7 +5,6 @@ import { PasswordModule } from 'primeng/password';
 import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIconModule } from 'primeng/inputicon';
-import { CommonModule } from '@angular/common';
 import {
     FormBuilder,
     FormGroup,
@@ -36,7 +35,6 @@ import { UC_IsValidUserName } from '../../../app/core/use-cases/security/check-v
         ButtonModule,
         IconFieldModule,
         InputIconModule,
-        CommonModule,
         ReactiveFormsModule,
         Message,
         PanelModule,

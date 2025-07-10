@@ -18,7 +18,6 @@ import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-i
         InputIcon,
         IconFieldModule,
         ButtonModule,
-        CommonModule,
         TooltipModule,
     ],
     templateUrl: './search-bar.component.html',

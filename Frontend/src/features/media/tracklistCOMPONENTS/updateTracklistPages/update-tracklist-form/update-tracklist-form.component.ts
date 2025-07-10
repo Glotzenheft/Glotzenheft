@@ -13,7 +13,6 @@ import {
     Validators,
 } from '@angular/forms';
 import { MessageService } from 'primeng/api';
-import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { SelectModule } from 'primeng/select';
@@ -39,7 +38,6 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-ca
 @Component({
     selector: 'app-update-tracklist-form',
     imports: [
-        CommonModule,
         ReactiveFormsModule,
         ButtonModule,
         MessageModule,

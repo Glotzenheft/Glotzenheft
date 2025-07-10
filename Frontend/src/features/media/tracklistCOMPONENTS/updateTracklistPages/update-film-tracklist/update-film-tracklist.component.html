@@ -9,11 +9,10 @@
                         <input type="text" pInputText formControlName="tracklist_name" id="trackName" />
                         <label for="trackName">Name der Tracklist</label>
                     </p-float-label>
-                    <p-message *ngIf="
-              hasErrorField('tracklist_name') &&
-              updateTracklistForm.get('tracklist_name')?.invalid
-            " size="small" severity="error">
-                        Der Name ist Pflicht.</p-message>
+
+                    @if (hasErrorField('tracklist_name') && updateTracklistForm.get('tracklist_name')?.invalid) {
+                    <p-message size="small" severity="error">Der Name ist Pflicht.</p-message>
+                    }
                 </div>
 
                 <div>
@@ -22,12 +21,10 @@
                             formControlName="tracklist_status" id="trackStatus" />
                         <label for="trackStatus">Status der Trackliste</label>
                     </p-float-label>
-                    <p-message *ngIf="
-              hasErrorField('tracklist_status') &&
-              updateTracklistForm.get('tracklist_status')?.invalid
-            " severity="error" size="small">
-                        Der Status ist Pflicht.
-                    </p-message>
+
+                    @if (hasErrorField('tracklist_status') && updateTracklistForm.get('tracklist_status')?.invalid) {
+                    <p-message severity="error" size="small">Der Status ist Pflicht.</p-message>
+                    }
                 </div>
 
                 <div class="gapDIV">
@@ -52,9 +49,10 @@
                 <div class="ratingDIV">
                     <p>Bewertung</p>
                     <p-rating [stars]="10" formControlName="tracklist_rating" />
-                    <p *ngIf="updateTracklistForm.get('tracklist_rating')?.value">
-                        {{ updateTracklistForm.get("tracklist_rating")?.value }} / 10
-                    </p>
+
+                    @if (updateTracklistForm.get('tracklist_rating')?.value) {
+                    <p>{{ updateTracklistForm.get("tracklist_rating")?.value }} / 10</p>
+                    }
                 </div>
 
                 <div class="tracklistActions">
@@ -69,6 +67,7 @@
     </div>
 </div>
 
-<app-delete-dialog *ngIf="isDeleteDialogVisible" [inpHeading]="'Trackliste löschen'"
-    [inpText]="'Willst du die Trackliste wirklich löschen?'" (outCancelDeletion)="setDeleteDialogVisibility(false)"
-    (outDeleteMedia)="deleteTracklist()" />
+@if (isDeleteDialogVisible) {
+<app-delete-dialog [inpHeading]="'Trackliste löschen'" [inpText]="'Willst du die Trackliste wirklich löschen?'"
+    (outCancelDeletion)="setDeleteDialogVisibility(false)" (outDeleteMedia)="deleteTracklist()" />
+}

@@ -23,6 +23,7 @@ import { UC_GetMultiSearchResults } from '../../../../app/core/use-cases/media/g
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
 import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-search-term.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
+import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
 
 @Component({
     selector: 'app-multi-search',
@@ -47,6 +48,7 @@ import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-lo
 export class MultiSearchComponent implements OnInit, OnDestroy {
     public searchQuery: string = ''; // Suchtext aus der Eingabe
     public results$: Observable<MultiSearchResponse> | null = null;
+    public IMG_ROUTE: string = TMDB_IMG_ROUTE
 
     // variables for sorting the results
     public resultsForCurrentPage: MediaResult[] | null = null;

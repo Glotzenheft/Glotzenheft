@@ -19,7 +19,6 @@ import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-
 @Component({
     selector: 'app-episode-list',
     imports: [
-        CommonModule,
         DialogModule,
         DateFormattingPipe,
         ButtonModule,

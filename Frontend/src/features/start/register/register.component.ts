@@ -9,7 +9,6 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { CommonModule } from '@angular/common';
 import { Message } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
@@ -35,7 +34,6 @@ import { UC_GetInvalidChars } from '../../../app/core/use-cases/security/get-inv
         InputTextModule,
         PasswordModule,
         ButtonModule,
-        CommonModule,
         Message,
         DialogModule,
         SelectModule,

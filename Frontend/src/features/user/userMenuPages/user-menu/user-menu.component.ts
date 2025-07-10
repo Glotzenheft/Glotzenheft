@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ButtonModule } from 'primeng/button';
 import { MenuModule } from 'primeng/menu';
@@ -15,7 +14,7 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
 
 @Component({
     selector: 'app-user-menu',
-    imports: [CommonModule, MenuModule, ButtonModule, TooltipModule],
+    imports: [MenuModule, ButtonModule, TooltipModule],
     templateUrl: './user-menu.component.html',
     styleUrl: './user-menu.component.css',
     providers: [UC_IsSearchBarVisible, UC_VisibleUserName, UC_LogoutOfAccount]

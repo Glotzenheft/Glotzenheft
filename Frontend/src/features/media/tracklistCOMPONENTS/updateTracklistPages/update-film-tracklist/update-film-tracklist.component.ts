@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import {
     Component,
     EventEmitter,
@@ -40,7 +39,6 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
     imports: [
         ReactiveFormsModule,
         InputTextModule,
-        CommonModule,
         MessageModule,
         ButtonModule,
         FloatLabelModule,
