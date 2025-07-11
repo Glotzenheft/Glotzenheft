@@ -75,6 +75,11 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
     public isDeletionDialogVisible: boolean = false;
 
+    public isCreateButtonEnabled: boolean = true;
+    public isUpdateButtonEnabled: boolean = true;
+    public isDeleteButtonEnabled: boolean = true;
+    public isCancelButtonEnabled: boolean = true
+
     constructor(
         private messageService: MessageService,
         private formBuilder: FormBuilder,
@@ -123,11 +128,28 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         );
     }
 
+    public disableAllButtons = () => {
+        this.isCreateButtonEnabled = false;
+        this.isUpdateButtonEnabled = false;
+        this.isDeleteButtonEnabled = false;
+        this.isCancelButtonEnabled = false;
+    }
+
+    public enableAllButtons = () => {
+        this.isCreateButtonEnabled = true;
+        this.isUpdateButtonEnabled = true;
+        this.isDeleteButtonEnabled = true;
+        this.isCancelButtonEnabled = true;
+    }
+
     /**
      * Function for add a new episode of the current selected season to the current selected episode.
      * @returns void
      */
     public submitForm = () => {
+        this.disableAllButtons();
+
+        this.isCreateButtonEnabled = false
         const watchDate: string | null =
             this.createEpisodeForm.get('watchDate')?.value;
         let formattedDate: string = '';
@@ -156,6 +178,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     };
 
     public saveEditedEpisode = () => {
+        this.disableAllButtons();
+
         const watchDate: string | null =
             this.createEpisodeForm.get('watchDate')?.value;
         let formattedDate: string = '';
@@ -191,6 +215,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     };
 
     public deleteEpisode = () => {
+        this.disableAllButtons();
         this.setDeletionDialogVisibilityStatus(false);
 
         const episodeInTracklist =
@@ -232,6 +257,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         episodeData: CreateTracklistEpisode,
         episodeActionNumber: number
     ) => {
+        this.disableAllButtons();
+
         // = 0: create episode; = 1: update selected episode; = 2: delete episode
         const errorMessageSummary: string =
             episodeActionNumber === 0

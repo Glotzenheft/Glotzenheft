@@ -24,19 +24,20 @@
 
                 <div class="formAcions">
                     @if (!inpIsEpisodeEditing()) {
-                    <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" />
+                    <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" [disabled]="!isCreateButtonEnabled" />
 
                     }
                     @else {
-                    <p-button label="Speichern" icon="pi pi-save" (onClick)="saveEditedEpisode()" />
+                    <p-button label="Speichern" icon="pi pi-save" [disabled]="!isUpdateButtonEnabled"
+                        (onClick)="saveEditedEpisode()" />
                     <div>
                         <p-button label="Löschen" icon="pi pi-trash" severity="danger"
-                            (onClick)="setDeletionDialogVisibilityStatus(true)" />
+                            [disabled]="!isDeleteButtonEnabled" (onClick)="setDeletionDialogVisibilityStatus(true)" />
                     </div>
                     }
                     <div>
                         <p-button label="Abbrechen" icon="pi pi-times" severity="secondary"
-                            (onClick)="cancelEpisodeForm()" />
+                            [disabled]="!isCancelButtonEnabled" (onClick)="cancelEpisodeForm()" />
                     </div>
                 </div>
             </form>
