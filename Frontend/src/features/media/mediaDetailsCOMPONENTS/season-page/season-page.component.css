@@ -170,10 +170,6 @@
     .tracklistSelectionDIV div {
         width: 50%;
     }
-
-    .gapContainer {
-        height: 3rem;
-    }
 }
 
 .backButtonDIV {
@@ -183,4 +179,9 @@
 .descriptionP {
     overflow-y: auto;
     height: 10rem;
+}
+
+.linkA {
+    color: white;
+    font-weight: bold;
 }

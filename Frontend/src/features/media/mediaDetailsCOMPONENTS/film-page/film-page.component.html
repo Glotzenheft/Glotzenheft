@@ -42,9 +42,7 @@
 
     <div *ngIf="filmData$ | async as filmData">
         <h1>{{ filmData.media.name }}</h1>
-        <p-panel>
-            <a [href]="TMDB_ROUTE + filmData.media.tmdbID">Link zur The Movie Database</a>
-        </p-panel>
+
         <div class="seasonMeta">
             <div class="seasonPictureWrapper">
                 <div class="seasonMetaPicture">
@@ -67,6 +65,8 @@
                     } @else {
                     <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
                     }
+
+                    <a [href]="TMDB_ROUTE + filmData.media.tmdbID" class="linkA">Link zur The Movie Database</a>
 
 
                     @if (filmData.media.firstAirDate) {
