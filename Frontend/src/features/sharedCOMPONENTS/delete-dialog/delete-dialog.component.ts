@@ -19,6 +19,7 @@ export class DeleteDialogComponent implements OnInit {
     // input variables
     public inpHeading: InputSignal<string> = input.required<string>();
     public inpText: InputSignal<string> = input.required<string>();
+    public inpIsButtonEnabled: InputSignal<boolean> = input.required<boolean>()
 
     // output variables
     @Output() outDeleteMedia: EventEmitter<boolean> = new EventEmitter<boolean>();

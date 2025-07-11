@@ -65,7 +65,7 @@
 
     .seasonMeta {
         width: 100%;
-        height: 20rem;
+        height: 25rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -129,4 +129,9 @@
 
 h1 {
     margin-bottom: 2rem;
+}
+
+.linkA {
+    color: white;
+    font-weight: bold;
 }

@@ -32,6 +32,8 @@ import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
 import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film-details.use-case';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 
 @Component({
     selector: 'app-film-page',
@@ -67,6 +69,8 @@ export class FilmPageComponent implements OnInit {
     public isTracklistSubmitted: boolean = false;
     public visibilityStatus: number = 0;
     public selectedTracklist: SeasonTracklist | null = null;
+    public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "movie/"
 
     public convertStatus = convertTracklistStatusIntoGerman;
 

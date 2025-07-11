@@ -1,0 +1,1 @@
+export const TMDB_MAIN_ROUTE: string = "https://www.themoviedb.org/"

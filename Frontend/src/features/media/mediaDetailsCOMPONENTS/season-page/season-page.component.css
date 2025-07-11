@@ -180,3 +180,8 @@
     overflow-y: auto;
     height: 10rem;
 }
+
+.linkA {
+    color: white;
+    font-weight: bold;
+}

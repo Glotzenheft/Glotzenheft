@@ -48,7 +48,7 @@
                 <p><i>kein Bild vorhanden</i></p>
 
                 } @else {
-                <img [src]="posterPath + seasonData.media.posterPath"
+                <img [src]="POSTER_PATH + seasonData.media.posterPath"
                     [alt]="'Dies ist das Bild für von ' + seasonData.media.name" loading="lazy" />
                 }
             </div>
@@ -62,6 +62,8 @@
                 } @else {
                 <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
                 }
+
+                <a [href]="TMDB_ROUTE + seasonData.media.tmdbID" class="linkA">> Link zur The Movie Database</a>
 
                 @if (seasonData.media.firstAirDate) {
                 <p>Ausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
@@ -94,7 +96,7 @@
                                 <p>kein Bild vorhanden</p>
 
                                 } @else {
-                                <img [src]="posterPath + season.posterPath" [alt]="
+                                <img [src]="POSTER_PATH + season.posterPath" [alt]="
                                 'Dies ist das Bild für von ' + seasonData.media.name
                               " loading="lazy" />
                                 }
