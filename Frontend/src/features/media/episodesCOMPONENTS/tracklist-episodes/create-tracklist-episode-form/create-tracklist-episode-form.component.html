@@ -8,7 +8,7 @@
             }}
         </h1>
         <div class="createTracklistEpisodeFormDIV">
-            <form [formGroup]="createEpisodeForm" (submit)="submitForm()">
+            <form [formGroup]="createEpisodeForm" (submit)="inpIsEpisodeEditing() ? saveEditedEpisode() : submitForm()">
                 <h2>{{ inpTracklist().tracklistName }}</h2>
                 <p>Episodenname: {{ inpEpisode().name }}</p>
                 <p>Laufzeit: {{ inpEpisode().runtime ? inpEpisode().runtime + ' min': " nicht vorhanden" }}</p>

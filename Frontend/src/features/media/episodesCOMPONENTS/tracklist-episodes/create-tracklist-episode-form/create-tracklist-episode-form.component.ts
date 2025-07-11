@@ -275,6 +275,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                     : 'Beim Löschen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
 
         if (episodeActionNumber === 0) {
+            // create episode
             this.createEpisodeRequestData$ =
                 this.createTracklistEpisodeUseCase.execute(episodeData);
 
@@ -291,6 +292,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                         getMessageObject('success', 'Episode erfolgreich hinzugefügt')
                     );
                     this.saveEpisode.emit(true);
+                    this.enableAllButtons();
                 },
                 error: (err: any) => {
                     if (err.status === 401) {
@@ -298,11 +300,13 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                         this.logOutOfAccountUseCase.execute();
                         this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
                         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                        this.enableAllButtons();
                         return;
                     }
                     this.messageService.add(
                         getMessageObject('error', errorMessageSummary, errorMessageDetail)
                     );
+                    this.enableAllButtons();
                 },
             });
 
@@ -325,15 +329,18 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                         getMessageObject('success', 'Episode erfolgreich gespeichert')
                     );
                     this.saveEpisode.emit(true);
+                    this.enableAllButtons();
                 },
                 error: (err: any) => {
                     if (err.status === 401) {
                         this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                        this.enableAllButtons();
                         return;
                     }
                     this.messageService.add(
                         getMessageObject('error', errorMessageSummary, errorMessageDetail)
                     );
+                    this.enableAllButtons();
                 },
             });
         } else if (episodeActionNumber === 2) {
@@ -358,15 +365,18 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                         getMessageObject('success', 'Episode erfolgreich gelöscht')
                     );
                     this.saveEpisode.emit(true);
+                    this.enableAllButtons();
                 },
                 error: (err: any) => {
                     if (err.status === 401) {
                         this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                        this.enableAllButtons();
                         return;
                     }
                     this.messageService.add(
                         getMessageObject('error', errorMessageSummary, errorMessageDetail)
                     );
+                    this.enableAllButtons();
                 },
             });
         }

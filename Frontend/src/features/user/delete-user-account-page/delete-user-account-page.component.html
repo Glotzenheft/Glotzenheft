@@ -36,5 +36,5 @@
 @if (isDeleteDialogVisible) {
 <app-delete-dialog [inpHeading]="'Account löschen'" [inpText]="
     'Willst du deinen Account wirklich löschen? Das kann nicht mehr rückgängig gemacht werden.'
-  " (outCancelDeletion)="setDialogStatus(false)" (outDeleteMedia)="submitForm()" />
+  " (outCancelDeletion)="setDialogStatus(false)" (outDeleteMedia)="submitForm()" [inpIsButtonEnabled]="true" />
 }

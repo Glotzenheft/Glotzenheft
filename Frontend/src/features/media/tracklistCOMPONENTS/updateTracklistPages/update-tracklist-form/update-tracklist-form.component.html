@@ -68,6 +68,7 @@
 
 @if (isDeleteDialogVisible) {
 <app-delete-dialog [inpHeading]="'Trackliste löschen'" [inpText]="
-    'Willst du diese Trackliste wirklich löschen? Dies kann nicht mehr rückgängig gemacht werden.'
-  " (outCancelDeletion)="setDeleteDialogVisibility(false)" (outDeleteMedia)="deleteTracklist()" />
+    'Willst du diese Trackliste wirklich löschen? Dies kann nicht mehr rückgängig gemacht werden.' 
+  " (outCancelDeletion)="setDeleteDialogVisibility(false)" (outDeleteMedia)="deleteTracklist()"
+    [inpIsButtonEnabled]="true" />
 }
