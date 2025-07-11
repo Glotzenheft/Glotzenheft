@@ -42,6 +42,9 @@
 
     <div *ngIf="filmData$ | async as filmData">
         <h1>{{ filmData.media.name }}</h1>
+        <p-panel>
+            <a [href]="TMDB_ROUTE + filmData.media.tmdbID">Link zur The Movie Database</a>
+        </p-panel>
         <div class="seasonMeta">
             <div class="seasonPictureWrapper">
                 <div class="seasonMetaPicture">
@@ -50,7 +53,7 @@
                     }
                     @else {
                     <img [src]="
-                'https://image.tmdb.org/t/p/w500' + filmData.media.posterPath
+                POSTER_PATH + filmData.media.posterPath
               " [alt]="'Dies ist das Bild für von ' + filmData.media.name" loading="lazy" />
                     }
                 </div>

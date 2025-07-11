@@ -40,7 +40,11 @@
 <div *ngIf="seasonData$ | async as seasonData">
     <div class="headingDIV">
         <h1>{{ seasonData.media.name }}</h1>
+        <p-panel>
+            <a [href]="TMDB_ROUTE + seasonData.media.tmdbID">Link zur The Movie Database</a>
+        </p-panel>
     </div>
+    <div class="gapContainer"></div>
     <div class="seasonMeta">
         <div class="seasonPictureWrapper">
             <div class="seasonMetaPicture">
@@ -48,7 +52,7 @@
                 <p><i>kein Bild vorhanden</i></p>
 
                 } @else {
-                <img [src]="posterPath + seasonData.media.posterPath"
+                <img [src]="POSTER_PATH + seasonData.media.posterPath"
                     [alt]="'Dies ist das Bild für von ' + seasonData.media.name" loading="lazy" />
                 }
             </div>
@@ -94,7 +98,7 @@
                                 <p>kein Bild vorhanden</p>
 
                                 } @else {
-                                <img [src]="posterPath + season.posterPath" [alt]="
+                                <img [src]="POSTER_PATH + season.posterPath" [alt]="
                                 'Dies ist das Bild für von ' + seasonData.media.name
                               " loading="lazy" />
                                 }

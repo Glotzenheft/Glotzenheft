@@ -37,6 +37,7 @@ import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/val
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_JoinTVWithTracklists } from '../../../../app/core/use-cases/tracklist/join-tv-with-tracklists.use-case';
 import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/get-selected-tracklist-in-local-storage.use-case';
+import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 
 @Component({
     selector: 'app-season-page',
@@ -71,7 +72,8 @@ export class SeasonPageComponent implements OnInit {
     public seasonData$: Observable<Season> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
-    public posterPath: string = TMDB_POSTER_PATH;
+    public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/"
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;

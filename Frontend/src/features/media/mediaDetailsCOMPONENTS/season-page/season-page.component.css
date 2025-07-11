@@ -170,6 +170,10 @@
     .tracklistSelectionDIV div {
         width: 50%;
     }
+
+    .gapContainer {
+        height: 3rem;
+    }
 }
 
 .backButtonDIV {
