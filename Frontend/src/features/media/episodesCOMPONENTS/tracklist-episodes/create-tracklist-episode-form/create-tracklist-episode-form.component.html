@@ -47,5 +47,6 @@
 
 @if (isDeletionDialogVisible) {
 <app-delete-dialog [inpHeading]="'Episode löschen'" [inpText]="'Willst du die Episode wirklich löschen?'"
-    (outDeleteMedia)="deleteEpisode()" (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />
+    [inpIsButtonEnabled]="isDeleteButtonEnabled" (outDeleteMedia)="deleteEpisode()"
+    (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />
 }
