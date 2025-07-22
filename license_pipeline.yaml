@@ -12,7 +12,7 @@ steps:
 
   - script: |
       echo "Starte Lizenzheader-Prüfung..."
-      python3 Licence/add_license.py
+      python3 add_license.py
     displayName: 'Lizenzheader einfügen'
 
   - task: PublishBuildArtifacts@1

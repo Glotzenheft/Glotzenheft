@@ -5,7 +5,7 @@ import re
 ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 ROOT_DIR = os.path.abspath(ROOT_DIR)
 LICENSE_TEXT = """
-All files are part of Glotzenheft.
+This file is part of Glotzenheft.
 
 Glotzenheft is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
@@ -19,21 +19,6 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
-
-Alle Dateien sind Teil vom Glotzenheft.
-
-Glotzenheft ist Freie Software: Sie können es unter den Bedingungen
-der GNU General Public License, wie von der Free Software Foundation,
-Version 3 der Lizenz oder (nach Ihrer Wahl) jeder neueren
-veröffentlichten Version, weiter verteilen und/oder modifizieren.
-
-Glotzenheft wird in der Hoffnung, dass es nützlich sein wird, aber
-OHNE JEDE GEWÄHRLEISTUNG, bereitgestellt; sogar ohne die implizite
-Gewährleistung der MARKTFÄHIGKEIT oder EIGNUNG FÜR EINEN BESTIMMTEN ZWECK.
-Siehe die GNU General Public License für weitere Details.
-
-Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
-Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
 """.strip()
 
 # Kommentar-Syntax pro Dateityp
@@ -49,7 +34,7 @@ COMMENT_SYNTAX = {
 TARGET_EXTENSIONS = COMMENT_SYNTAX.keys()
 
 def has_license(content):
-    return "Glotzenheft is free software" in content or "Glotzenheft ist Freie Software" in content
+    return "Glotzenheft is free software" in content
 
 def process_file(filepath, ext):
     with open(filepath, "r", encoding="utf-8") as f:
