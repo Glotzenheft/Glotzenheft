@@ -1,0 +1,22 @@
+trigger:
+  - master
+
+pool:
+  vmImage: 'ubuntu-latest'
+
+steps:
+  - task: UsePythonVersion@0
+    inputs:
+      versionSpec: '3.x'
+      addToPath: true
+
+  - script: |
+      echo "Starte Lizenzheader-Prüfung..."
+      python3 add_license.py
+    displayName: 'Lizenzheader einfügen'
+
+  - task: PublishBuildArtifacts@1
+    inputs:
+      PathtoPublish: 'home/user/sandbox/Glotzenheft'
+      ArtifactName: 'GlotzenheftMitHeadern'
+    displayName: 'Build-Artefakte veröffentlichen'
