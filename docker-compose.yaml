@@ -1,0 +1,50 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: glotzenheft:${IMAGE_TAG:-latest}
+    environment:
+      APP_ENV: prod
+      DATABASE_URL: ${DATABASE_URL?You_must_set_DATABASE_URL}
+      TMDB_TOKEN: ${TMDB_TOKEN?You_must_set_TMDB_TOKEN}
+      CORS_ALLOW_ORIGIN: ${CORS_ALLOW_ORIGIN:-http://localhost:4200}
+      BOOTSTRAP_ON_START: "0"
+    expose:
+      - "9000"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
+    healthcheck:
+      test: [ "CMD", "php", "-v" ]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  web:
+    image: nginx:1.27-alpine
+    depends_on: [ app ]
+    command: ["sh", "-lc", "chmod +x /entry.sh && /entry.sh"]
+    ports:
+      - "8000:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf:ro
+      - ./Backend/public:/var/www/public:ro
+      - ./docker/certs:/etc/nginx/certs
+      - ./docker/nginx-entrypoint.sh:/entry.sh
+
+  frontend:
+    image: node:22-alpine
+    working_dir: /app/Frontend
+    command: ["sh", "-lc", "chmod +x /entry/run-frontend.sh && /entry/run-frontend.sh"]
+    volumes:
+      - ./Frontend:/app/Frontend
+      - node_modules:/app/Frontend/node_modules
+      - ./docker/run-frontend.sh:/entry/run-frontend.sh
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    ports:
+      - "4200:4200"
+
+volumes:
+  node_modules:
+
