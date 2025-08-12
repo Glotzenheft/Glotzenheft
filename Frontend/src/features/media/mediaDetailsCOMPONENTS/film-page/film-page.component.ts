@@ -33,17 +33,17 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { CreateMovieTracklistComponent } from '../../tracklistCOMPONENTS/createTracklistPages/create-movie-tracklist/create-movie-tracklist.component';
 import { UpdateFilmTracklistComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Film } from '../../../../app/shared/interfaces/media-interfaces';
+import { Film, MediaIDResponse } from '../../../../app/shared/interfaces/media-interfaces';
 import { SeasonTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
 import { MEDIA_ID_NOT_EXISTS } from '../../../../app/shared/variables/navigation-vars';
-import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
@@ -51,6 +51,11 @@ import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
+import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
+import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
+import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/navigate-to-page.use-case';
+import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
+import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 
 @Component({
     selector: 'app-film-page',
@@ -73,7 +78,16 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
-    providers: [UC_GetFilmDetails, UC_ValidateMediaURL, UC_ShortenString, UC_LogoutOfAccount]
+    providers: [
+        UC_GetFilmDetails,
+        UC_ValidateMediaURL,
+        UC_ShortenString,
+        UC_LogoutOfAccount,
+        UC_GetMovieRecommendations,
+        UC_NavigateToPage,
+        UC_GetMediaIdForMedia,
+        UC_ShowLoginMessage
+    ]
 })
 export class FilmPageComponent implements OnInit {
     public movieID: string | null = null;
@@ -95,6 +109,9 @@ export class FilmPageComponent implements OnInit {
     public activePanel: number | null = null;
 
     public isLoading: boolean = false;
+    public areRecommendationsLoading: boolean = false;
+    public recommendations: I_MovieRecommendations | null = null;
+    private subscription: Subscription | null = null
 
     constructor(
         public shortenStringUseCase: UC_ShortenString,
@@ -105,17 +122,26 @@ export class FilmPageComponent implements OnInit {
         private router: Router,
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private getFilmDetailsUseCase: UC_GetFilmDetails,
-        private logOutOfAccountUseCase: UC_LogoutOfAccount
+        private logOutOfAccountUseCase: UC_LogoutOfAccount,
+        private getMovieRecommendationsUseCase: UC_GetMovieRecommendations,
+        private navigateToPageUseCase: UC_NavigateToPage,
+        private getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
+        private showLoginMessageUseCase: UC_ShowLoginMessage,
+        private activatedRoute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        this.loadData();
+        this.activatedRoute.params.subscribe((params: Params) => {
+            this.movieID = params["id"]
+            this.loadData(this.movieID);
+        })
     }
 
-    public loadData = () => {
+    public loadData = (movieID: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
         this.movieID = this.route.snapshot.paramMap.get('id');
+        this.recommendations = null;
 
         if (!this.movieID) {
             this.hasError = true;
@@ -187,6 +213,72 @@ export class FilmPageComponent implements OnInit {
 
     public refreshPage = () => {
         this.setVisibilityStatus(0);
-        this.loadData();
+        this.loadData(this.movieID);
     };
+
+
+    public getMovieRecommendations = (movieId: number, movieTitle: string) => {
+        this.areRecommendationsLoading = true;
+        this.subscription = this.getMovieRecommendationsUseCase.execute(movieId, movieTitle).subscribe({
+            next: (response: I_MovieRecommendations) => {
+                this.recommendations = response
+                this.areRecommendationsLoading = false;
+            },
+            error: (err) => {
+                if (err.status === 401 || err.status === 400) {
+                    this.logOutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                } else if (err.status === 0) {
+                    this.serverNotAvailablePage = true;
+                }
+
+                // this.hasError = true;
+                this.areRecommendationsLoading = false;
+            },
+        });
+    }
+
+    public navigateToMediaPage = (tmdbId: number, isMovie: boolean) => {
+        this.getMediaIdForMediaUseCase.execute(tmdbId, isMovie).subscribe({
+            next: (res: MediaIDResponse) => {
+                if (res.media_id === undefined || res.media_id === null) {
+                    // if no media_id exists in the db -> because media is not already saved
+                    const summaryMessage: string = `Fehler beim Weiterleiten ${isMovie ? 'zum Film.' : 'zur Serie'
+                        }`;
+
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            summaryMessage,
+                            'Bitte lade die Seite erneut und versuche es noch einmal.'
+                        )
+                    );
+                    return;
+                }
+
+                this.navigateToPageUseCase.execute(res.media_id, isMovie);
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    // 401 = user token is not logged in anymore -> navigate to login page
+                    this.showLoginMessageUseCase.execute();
+                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+
+                const message: string = `Fehler beim Weiterleiten ${isMovie ? 'zum Film.' : 'zur Serie.'
+                    }`;
+
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        message,
+                        'Bitte lade die Seite und versuche es erneut.'
+                    )
+                );
+            }
+        })
+    }
 }

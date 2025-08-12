@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const API_ROUTE: string = "https://127.0.0.1:8000/api/"
+const API_ROUTE: string = "http://127.0.0.1:8000/api/"
 
 
 export const ROUTE_MULTI_SEARCH: string[] = [
@@ -117,3 +117,5 @@ export const ROUTE_USER_ACTIVITIES: string =
 
 export const ROUTE_STATISTICS_GET_USER_RATINGS: string =
     API_ROUTE + 'statistic/user-ratings';
+
+export const ROUTE_CHECK_USER_AUTH: string = "http://172.17.164.32:8000/api/auth/check"
