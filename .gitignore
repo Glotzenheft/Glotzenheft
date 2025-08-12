@@ -2,3 +2,4 @@
 /.vscode/setting.json
 .vscode/
 .env
+*.pem
