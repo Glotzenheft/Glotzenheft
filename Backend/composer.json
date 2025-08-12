@@ -46,8 +46,7 @@
         "symfony/web-link": "7.2.*",
         "symfony/yaml": "7.2.*",
         "twig/extra-bundle": "^2.12|^3.18",
-        "twig/twig": "^2.12|^3.18",
-        "glotzenheft/tmdb-api-client": "@dev"
+        "twig/twig": "^2.12|^3.18"
     },
     "config": {
         "allow-plugins": {
@@ -60,15 +59,10 @@
     },
     "autoload": {
         "psr-4": {
-            "App\\": "src/"
+            "App\\": "src/",
+            "App\\TmdbApi\\": "openapi/src/TmdbApi/lib/"
         }
     },
-    "repositories": [
-        {
-            "type": "path",
-            "url": "openapi/src/TmdbApi"
-        }
-    ],
     "autoload-dev": {
         "psr-4": {
             "App\\Tests\\": "tests/"
