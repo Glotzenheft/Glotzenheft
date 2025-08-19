@@ -31,14 +31,14 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { Select } from 'primeng/select';
 import { TMDB_POSTER_PATH } from '../../../app/shared/variables/tmdb-vars';
 import { Router } from '@angular/router';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
-import {SelectOption} from "../../../shared/interfaces/select-option.interface";
+import { SelectOption } from "../../../shared/interfaces/select-option.interface";
+import { PaginationComponent } from "../../sharedCOMPONENTS/pagination/pagination.component";
 
 @Component({
     selector: 'app-activities-page',
@@ -52,7 +52,7 @@ import {SelectOption} from "../../../shared/interfaces/select-option.interface";
         ProgressSpinnerModule,
         DropdownModule,
         FormsModule,
-        Select,
+        PaginationComponent
     ],
     templateUrl: './activities-page.component.html',
     styleUrl: './activities-page.component.css',
@@ -238,7 +238,7 @@ export class ActivitiesPageComponent implements OnInit {
             this.isRightButtonDisabled = true;
             return;
         }
-        this.currentPage ++;
+        this.currentPage++;
         this.isRightButtonDisabled = false;
         this.isLeftButtonDisabled = false;
         this.loadUserActivities(this.currentPage);
@@ -250,7 +250,7 @@ export class ActivitiesPageComponent implements OnInit {
             return;
         }
 
-        this.currentPage --;
+        this.currentPage--;
         this.loadUserActivities(this.currentPage);
     };
 
