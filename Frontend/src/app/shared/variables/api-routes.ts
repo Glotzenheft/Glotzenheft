@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const API_ROUTE: string = "/api/";
+const API_ROUTE: string = "https://localhost:8000/api/";
 const SEARCH_ROUTE: string = "search/";
 
 

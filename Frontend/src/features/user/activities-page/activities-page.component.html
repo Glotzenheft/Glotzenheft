@@ -50,8 +50,9 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
 <div class="pagination">
     <app-pagination [inpIsLeftButtonDisabled]="isLeftButtonDisabled" [inpIsRightButtonDisabled]="isRightButtonDisabled"
         [inpCurrentPage]="currentPage" [inpSelectOptions]="pageOptions" [inpTotalPages]="totalPages"
-        [inpTotalResults]="totalResults" (outOnChangeSelection)="onPageSelect($event)"
-        (outOnClickLeftButton)="changeToPreviousPage()" (outOnClickRightButton)="changeToNextPage()" />
+        [inpTotalResults]="totalResults" [inpTotalPagesText]="'Gesamtaktivitäten'"
+        (outOnChangeSelection)="onPageSelect($event)" (outOnClickLeftButton)="changeToPreviousPage()"
+        (outOnClickRightButton)="changeToNextPage()" />
 </div>
 
 @if (isLoading) {

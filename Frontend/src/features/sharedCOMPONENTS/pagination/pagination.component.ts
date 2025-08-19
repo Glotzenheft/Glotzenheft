@@ -4,10 +4,11 @@ import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Tooltip } from "primeng/tooltip";
+import { StringFormattingPipe } from "../../../pipes/string-formatting/string-formatting.pipe";
 
 @Component({
     selector: 'app-pagination',
-    imports: [SelectModule, FormsModule, ButtonModule, Tooltip],
+    imports: [SelectModule, FormsModule, ButtonModule, Tooltip, StringFormattingPipe],
     templateUrl: './pagination.component.html',
     styleUrl: './pagination.component.css'
 })
@@ -19,6 +20,7 @@ export class PaginationComponent {
     public inpTotalPages: InputSignal<number> = input.required<number>();
     public inpTotalResults: InputSignal<number> = input.required<number>();
     public inpCurrentPage: InputSignal<number> = input.required<number>();
+    public inpTotalPagesText: InputSignal<string> = input.required<string>();
 
     // output variables
     public outOnClickLeftButton: OutputEmitterRef<boolean> = output<boolean>();

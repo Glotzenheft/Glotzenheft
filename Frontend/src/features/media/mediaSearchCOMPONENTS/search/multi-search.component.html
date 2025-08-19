@@ -21,8 +21,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <app-pagination [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
         [inpIsRightButtonDisabled]="isNextPageButtonDisabled" [inpSelectOptions]="pageOptions"
         [inpTotalPages]="totalPages" [inpCurrentPage]="currentPage" [inpTotalResults]="totalResults"
-        (outOnClickLeftButton)="changeToPrevPage()" (outOnClickRightButton)="changeToNextPage()"
-        (outOnChangeSelection)="onPageSelect($event)" />
+        [inpTotalPagesText]="'Gesamtergebnisse'" (outOnClickLeftButton)="changeToPrevPage()"
+        (outOnClickRightButton)="changeToNextPage()" (outOnChangeSelection)="onPageSelect($event)" />
 </div>
 
 @if (isLoading) {
