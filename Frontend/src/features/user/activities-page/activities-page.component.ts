@@ -12,7 +12,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnInit } from '@angular/core';
@@ -237,7 +237,7 @@ export class ActivitiesPageComponent implements OnInit {
             this.isRightButtonDisabled = true;
             return;
         }
-        this.currentPage += 1;
+        this.currentPage ++;
         this.isRightButtonDisabled = false;
         this.isLeftButtonDisabled = false;
         this.loadUserActivities(this.currentPage);
@@ -249,7 +249,7 @@ export class ActivitiesPageComponent implements OnInit {
             return;
         }
 
-        this.currentPage -= 1;
+        this.currentPage --;
         this.loadUserActivities(this.currentPage);
     };
 
