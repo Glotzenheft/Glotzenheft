@@ -16,10 +16,14 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 const API_ROUTE: string = "/api/";
+const SEARCH_ROUTE: string = "search/";
 
 
 export const ROUTE_MULTI_SEARCH: string[] = [
-    API_ROUTE + 'multi-search?q=',
+    API_ROUTE + SEARCH_ROUTE + 'multi?',
+    'q=',
+    '&include_adult=',
+    '&language=',
     '&page=',
 ];
 
