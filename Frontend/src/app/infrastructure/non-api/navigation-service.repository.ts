@@ -38,4 +38,6 @@ export class R_Navigation implements I_NavigationRepository {
     public navigateToMultiSearch = () => {
         this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
     };
+
+    public navigateToPage = (url: string) => { this.router.navigateByUrl(url); }
 }

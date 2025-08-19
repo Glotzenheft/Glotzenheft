@@ -48,21 +48,11 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
 -->
 
 <div class="pagination">
-    <p-button icon="pi pi-angle-left" pTooltip="vorherige Seite" [rounded]="true" [raised]="true"
-        (onClick)="changeToPreviousPage()" [disabled]="isLeftButtonDisabled" />
-
-    <div>
-        Seite
-        <p-select [options]="pageOptions" [ngModel]="currentPage" (ngModelChange)="onPageSelect($event)"
-            [style]="{width: '6rem'}" />
-        <span> von {{ totalPages }} - Gesamtaktivitäten: <strong>{{ totalResults }}</strong></span>
-        <i class="pi pi-info-circle" pTooltip="Zählt nur Aktivitäten mit Datum. Weitere ohne Datumsangabe sind möglich."
-            tooltipPosition="right" style="margin-left: 0.3rem; cursor: help; color: #ffffff;"></i>
-    </div>
-
-
-    <p-button icon="pi pi-angle-right" pTooltip="nächste Seite" [rounded]="true" [raised]="true"
-        (onClick)="changeToNextPage()" [disabled]="isRightButtonDisabled" />
+    <app-pagination [inpIsLeftButtonDisabled]="isLeftButtonDisabled" [inpIsRightButtonDisabled]="isRightButtonDisabled"
+        [inpCurrentPage]="currentPage" [inpSelectOptions]="pageOptions" [inpTotalPages]="totalPages"
+        [inpTotalResults]="totalResults" [inpTotalPagesText]="'Gesamtaktivitäten'"
+        (outOnChangeSelection)="onPageSelect($event)" (outOnClickLeftButton)="changeToPreviousPage()"
+        (outOnClickRightButton)="changeToNextPage()" />
 </div>
 
 @if (isLoading) {

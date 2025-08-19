@@ -1,0 +1,15 @@
+.pagination {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+
+    width: 40rem;
+    height: 5rem;
+}
+
+.pagination div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 30rem;
+}

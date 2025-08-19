@@ -20,7 +20,8 @@ import { InjectionToken } from "@angular/core"
 export interface I_NavigationRepository {
     navigateToStartPage: () => void,
     navigateToUserStart: () => void,
-    navigateToMultiSearch: () => void
+    navigateToMultiSearch: () => void,
+    navigateToPage: (url: string) => void
 }
 
 // IT = Injection Token
