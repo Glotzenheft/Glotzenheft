@@ -12,7 +12,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnInit } from '@angular/core';
@@ -38,6 +38,7 @@ import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../ap
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
+import {SelectOption} from "../../../shared/interfaces/select-option.interface";
 
 @Component({
     selector: 'app-activities-page',
@@ -65,7 +66,7 @@ export class ActivitiesPageComponent implements OnInit {
     public currentPage: number = 1;
     public totalPages: number = 1;
     public totalResults: number = 0;
-    public pageOptions: { label: string; value: number }[] = [];
+    public pageOptions: SelectOption[] = [];
     public isLeftButtonDisabled: boolean = true;
     public isRightButtonDisabled: boolean = false;
     public isTableLoading: boolean = false;
@@ -237,7 +238,7 @@ export class ActivitiesPageComponent implements OnInit {
             this.isRightButtonDisabled = true;
             return;
         }
-        this.currentPage += 1;
+        this.currentPage ++;
         this.isRightButtonDisabled = false;
         this.isLeftButtonDisabled = false;
         this.loadUserActivities(this.currentPage);
@@ -249,7 +250,7 @@ export class ActivitiesPageComponent implements OnInit {
             return;
         }
 
-        this.currentPage -= 1;
+        this.currentPage --;
         this.loadUserActivities(this.currentPage);
     };
 
