@@ -41,7 +41,8 @@ import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-
 import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-search-term.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
-import {SelectOption} from "../../../../shared/interfaces/select-option.interface";
+import { SelectOption } from "../../../../shared/interfaces/select-option.interface";
+import { PaginationComponent } from "../../../sharedCOMPONENTS/pagination/pagination.component";
 
 @Component({
     selector: 'app-multi-search',
@@ -58,6 +59,7 @@ import {SelectOption} from "../../../../shared/interfaces/select-option.interfac
         SelectModule,
         FloatLabelModule,
         ReactiveFormsModule,
+        PaginationComponent
     ],
     styleUrls: ['./multi-search.component.css'],
     providers: [UC_GetMediaIdForMedia, UC_GetMultiSearchResults, UC_GetSearchTerm, UC_ShowLoginMessage]
@@ -98,7 +100,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public currentPage: number = 1; // >= 1
     public totalPages: number = 1;
     public totalResults: number = 0;
-    public pageOptions: SelectOption[] = [];
+    public pageOptions: SelectOption[] = [{ label: "1", value: 1 }];
     public visibleCountOnPage: number = 0;
     public nextPagesLimit: number | null = null; // the limit for the next page button => for disabling the button
     public isNextPageButtonDisabled: boolean = true;
@@ -122,7 +124,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         this.searchSubscription = this.getSearchTermUseCase.observe().subscribe({
             next: (searchTerm) => {
                 if (!searchTerm.trim()) {
-                    this.pageOptions = [{ label: '0', value: 0 }];
+                    this.pageOptions = [{ label: '1', value: 1 }];
                     this.totalPages = 0;
                     this.showErrorDialog();
                     return;
@@ -232,6 +234,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             )
         );
     };
+
     navigateToMediaPage = (id: number, mediaGenre: string) => {
         this.getMediaIdForMediaUseCase.execute(id, mediaGenre === 'movie').subscribe({
             next: (res: MediaIDResponse) => {
@@ -239,11 +242,10 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
                 if (res.media_id === undefined || res.media_id === null) {
                     // if no media_id exists in the db -> because media is not already saved
-                    const summaryMessage: string = `Fehler beim Weiterleiten ${
-                        mediaGenre === 'movie' 
-                            ? 'zum Film.' 
-                            : 'zur Serie.'
-                    }`;
+                    const summaryMessage: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
+                        ? 'zum Film.'
+                        : 'zur Serie.'
+                        }`;
 
                     this.messageService.add(
                         getMessageObject(
@@ -270,10 +272,9 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                const message: string = `Fehler beim Weiterleiten ${
-                    mediaGenre === 'movie' 
-                        ? 'zum Film.' 
-                        : 'zur Serie.'
+                const message: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
+                    ? 'zum Film.'
+                    : 'zur Serie.'
                     }`;
 
                 this.messageService.add(
