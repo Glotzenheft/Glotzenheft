@@ -43,6 +43,7 @@ import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-lo
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
 import { SelectOption } from "../../../../shared/interfaces/select-option.interface";
 import { PaginationComponent } from "../../../sharedCOMPONENTS/pagination/pagination.component";
+import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/navigate-to-page.use-case';
 
 @Component({
     selector: 'app-multi-search',
@@ -62,7 +63,13 @@ import { PaginationComponent } from "../../../sharedCOMPONENTS/pagination/pagina
         PaginationComponent
     ],
     styleUrls: ['./multi-search.component.css'],
-    providers: [UC_GetMediaIdForMedia, UC_GetMultiSearchResults, UC_GetSearchTerm, UC_ShowLoginMessage]
+    providers: [
+        UC_GetMediaIdForMedia,
+        UC_GetMultiSearchResults,
+        UC_GetSearchTerm,
+        UC_ShowLoginMessage,
+        UC_NavigateToPage
+    ]
     //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit, OnDestroy {
@@ -107,13 +114,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public isPrevPageButtonDisabled: boolean = true;
 
     constructor(
-        private router: Router,
         private messageService: MessageService,
         private formBuilder: FormBuilder,
         private getMultiSearchResultUseCase: UC_GetMultiSearchResults,
         private getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
         private getSearchTermUseCase: UC_GetSearchTerm,
-        private showLoginMessageUseCase: UC_ShowLoginMessage
+        private showLoginMessageUseCase: UC_ShowLoginMessage,
+        private navigateToPageUseCase: UC_NavigateToPage
     ) { }
 
     ngOnInit(): void {
@@ -149,7 +156,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     // 401 = user token not valid anymore -> navigate to login page
                     this.showLoginMessageUseCase.execute();
 
-                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                 }
             },
         });
@@ -262,13 +269,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
                     : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
 
-                void this.router.navigateByUrl(url);
+                void this.navigateToPageUseCase.execute(url);
             },
             error: (err) => {
                 if (err.status === 401) {
                     // 401 = user token is not logged in anymore -> navigate to login page
                     this.showLoginMessageUseCase.execute();
-                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                     return;
                 }
 

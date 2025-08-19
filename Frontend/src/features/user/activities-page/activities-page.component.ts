@@ -39,6 +39,7 @@ import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-a
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { SelectOption } from "../../../shared/interfaces/select-option.interface";
 import { PaginationComponent } from "../../sharedCOMPONENTS/pagination/pagination.component";
+import { UC_NavigateToPage } from '../../../app/core/use-cases/navigation/navigate-to-page.use-case';
 
 @Component({
     selector: 'app-activities-page',
@@ -56,7 +57,7 @@ import { PaginationComponent } from "../../sharedCOMPONENTS/pagination/paginatio
     ],
     templateUrl: './activities-page.component.html',
     styleUrl: './activities-page.component.css',
-    providers: [UC_GetUserActivites, UC_LogoutOfAccount]
+    providers: [UC_GetUserActivites, UC_LogoutOfAccount, UC_NavigateToPage]
 })
 export class ActivitiesPageComponent implements OnInit {
     // variables for user activities overview
@@ -79,9 +80,9 @@ export class ActivitiesPageComponent implements OnInit {
 
     constructor(
         private messageService: MessageService,
-        private router: Router,
         private getActivitiesUseCase: UC_GetUserActivites,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+        private readonly navigateToPageUseCase: UC_NavigateToPage
     ) { }
 
     ngOnInit(): void {
@@ -210,7 +211,7 @@ export class ActivitiesPageComponent implements OnInit {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
 
                     return;
                 } else if (err.status === 0) {
@@ -256,9 +257,9 @@ export class ActivitiesPageComponent implements OnInit {
 
     public onClickActivity = (activity: UserActivityWithDaySplitt) => {
         if (activity.type === 'movie') {
-            void this.router.navigateByUrl(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
+            void this.navigateToPageUseCase.execute(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
         } else {
-            void this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+            void this.navigateToPageUseCase.execute(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
         }
     };
 
