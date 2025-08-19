@@ -18,31 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <h1>Suche</h1>
 
 <div class="pagination">
-    <!-- <p-button icon="pi pi-angle-left" pTooltip="zur vorherigen Seite" [raised]="true" [rounded]="true"
-        [disabled]="isPrevPageButtonDisabled" (onClick)="changeToPrevPage()" /> -->
-
-
     <app-pagination [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
         [inpIsRightButtonDisabled]="isNextPageButtonDisabled" [inpSelectOptions]="pageOptions"
         [inpTotalPages]="totalPages" [inpCurrentPage]="currentPage" [inpTotalResults]="totalResults"
         (outOnClickLeftButton)="changeToPrevPage()" (outOnClickRightButton)="changeToNextPage()"
         (outOnChangeSelection)="onPageSelect($event)" />
-
-    <!-- <div>
-        Seite
-        <p-select [options]="pageOptions" [ngModel]="currentPage" (ngModelChange)="onPageSelect($event)"
-            [style]="{width: '6rem'}" />
-        <span>
-            von {{ totalPages }} - Gesamtergebnisse: <strong>{{ totalResults }}</strong>
-        </span>
-
-        <span>
-            | Serien/Filme auf dieser Seite: <strong>{{ visibleCountOnPage }}</strong>
-        </span>
-    </div> -->
-
-    <!-- <p-button icon="pi pi-angle-right" pTooltip="zur nächsten Seite" [raised]="true" [rounded]="true"
-        [disabled]="isNextPageButtonDisabled" (onClick)="changeToNextPage()" /> -->
 </div>
 
 @if (isLoading) {
