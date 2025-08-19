@@ -41,6 +41,7 @@ import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-
 import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-search-term.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
+import {SelectOption} from "../../../../shared/interfaces/select-option.interface";
 
 @Component({
     selector: 'app-multi-search',
@@ -97,7 +98,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public currentPage: number = 1; // >= 1
     public totalPages: number = 1;
     public totalResults: number = 0;
-    public pageOptions: { label: string; value: number }[] = [];
+    public pageOptions: SelectOption[] = [];
     public visibleCountOnPage: number = 0;
     public nextPagesLimit: number | null = null; // the limit for the next page button => for disabling the button
     public isNextPageButtonDisabled: boolean = true;
