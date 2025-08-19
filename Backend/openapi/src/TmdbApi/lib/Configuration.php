@@ -89,7 +89,7 @@ class Configuration
      *
      * @var string
      */
-    protected $booleanFormatForQueryString = self::BOOLEAN_FORMAT_INT;
+    protected $booleanFormatForQueryString = self::BOOLEAN_FORMAT_STRING;
 
     /**
      * Username for HTTP basic authentication
