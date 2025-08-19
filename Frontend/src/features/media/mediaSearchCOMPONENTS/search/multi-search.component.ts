@@ -99,9 +99,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public totalResults: number = 0;
     public pageOptions: { label: string; value: number }[] = [];
     public visibleCountOnPage: number = 0;
-    public movieCountOnPage: number = 0;
-    public tvCountOnPage: number = 0;
-    public hasNoVisibleResultsOnPage: boolean = false;
     public nextPagesLimit: number | null = null; // the limit for the next page button => for disabling the button
     public isNextPageButtonDisabled: boolean = true;
     public isPrevPageButtonDisabled: boolean = true;
@@ -162,7 +159,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     }
 
     public loadMultiSearchResults = (searchTerm: string) => {
-        this.visibleCountOnPage = this.movieCountOnPage = this.tvCountOnPage = 0;
         this.hasError = false;
         this.results$ = this.getMultiSearchResultUseCase.execute(
             searchTerm,
@@ -180,9 +176,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                 );
 
                 this.visibleCountOnPage = this.resultsForCurrentPage.length;
-                this.movieCountOnPage = this.resultsForCurrentPage.filter(r => r.media_type === 'movie').length;
-                this.tvCountOnPage = this.visibleCountOnPage - this.movieCountOnPage;
-                this.hasNoVisibleResultsOnPage = this.visibleCountOnPage === 0;
 
                 this.setFilteredResults();
 
