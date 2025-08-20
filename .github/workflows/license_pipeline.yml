@@ -3,8 +3,11 @@ name: Lizenzheader-Check
 on:
   push:
     branches:
-      - main
+      - main 
   workflow_dispatch:
+
+permissions:
+  contents: write 
 
 jobs:
   license-check:
@@ -13,6 +16,8 @@ jobs:
     steps:
       - name: Checkout Code
         uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
 
       - name: Set up Python
         uses: actions/setup-python@v5
@@ -22,10 +27,13 @@ jobs:
       - name: Lizenzheader einfügen
         run: |
           echo "Starte Lizenzheader-Prüfung..."
-          python add_license.py 
+          python add_license.py
 
-      - name: Artefakte hochladen
-        uses: actions/upload-artifact@v4
-        with:
-          name: GlotzenheftMitHeadern
-          path: Glotzenheft 
+      - name: Änderungen committen und pushen
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "github-actions[bot]@users.noreply.github.com"
+
+          git add .
+          git diff-index --quiet HEAD || git commit -m "Lizenzheader automatisch hinzugefügt/aktualisiert"
+          git push
