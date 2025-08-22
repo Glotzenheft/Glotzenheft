@@ -25,7 +25,12 @@ services:
             - { name: kernel.event_listener, event: kernel.controller, priority: 10 }
 
     App\TmdbApi\:
-        resource: '../openapi/src/TmdbApi/lib/*'
+        resource: '../openapi/src/TmdbApi/lib/'
+        autowire: true
+        autoconfigure: true
+        exclude:
+            - '../openapi/src/TmdbApi/lib/Model/'
+            - '../openapi/src/TmdbApi/lib/docs/'
 
     App\TmdbApi\Configuration:
         factory: [ 'App\TmdbApi\Configuration', 'getDefaultConfiguration' ]

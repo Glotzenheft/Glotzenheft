@@ -1,0 +1,31 @@
+name: Lizenzheader-Check
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  license-check:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Lizenzheader einfügen
+        run: |
+          echo "Starte Lizenzheader-Prüfung..."
+          python add_license.py 
+
+      - name: Artefakte hochladen
+        uses: actions/upload-artifact@v4
+        with:
+          name: GlotzenheftMitHeadern
+          path: Glotzenheft 

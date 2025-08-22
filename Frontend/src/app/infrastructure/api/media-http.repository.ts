@@ -223,17 +223,21 @@ export class R_MediaHttp implements I_MediaRepository {
         searchString: string,
         page: number
     ): Observable<any> => {
-        return this.http
-            .get(
-                `${ROUTE_MULTI_SEARCH[0]}${encodeURIComponent(searchString)}${ROUTE_MULTI_SEARCH[1]
-                }${page}`
-            )
-            .pipe(
-                shareReplay(1),
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(() => error);
-                })
-            );
+        const includeAdult = true;
+        const language = 'de-DE';
+
+        const url = [
+            ROUTE_MULTI_SEARCH[0],
+            ROUTE_MULTI_SEARCH[1], encodeURIComponent(searchString),
+            ROUTE_MULTI_SEARCH[2], String(includeAdult),
+            ROUTE_MULTI_SEARCH[3], language,
+            ROUTE_MULTI_SEARCH[4], String(page)
+        ].join('');
+
+        return this.http.get(url).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => throwError(() => error))
+        );
     };
 
     // functions for creating a new season tracklist ------------------------------------------------------------------

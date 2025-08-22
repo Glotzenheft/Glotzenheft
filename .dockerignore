@@ -1,0 +1,5 @@
+Frontend/node_modules
+Backend/var
+Backend/vendor
+.git
+Backend/*local
