@@ -1,0 +1,39 @@
+<div>
+    @if (!isLoading) {
+    <p-button [label]="areRecommendationsShown ? 'Empfehlungen ausblenden' : 'Empfehlungen anzeigen'"
+        [icon]="areRecommendationsShown ? 'pi pi-angle-up' : 'pi pi-angle-down'"
+        (onClick)="areRecommendationsShown ? hideRecommendations() : getMovieRecommendations(inpMovieId(), inpMovieTitle())" />
+    @if (recommendations && areRecommendationsShown) {
+    <div>
+        <h3>Empfehlungen</h3>
+
+        <h4>Empfehlung 1</h4>
+        @if (recommendations.recommendation1.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+            } @else {
+            <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation1"
+                [inpTitle]="'Empfehlung 1'" />
+            }
+
+            <h4>Empfehlung 2</h4>
+            @if (recommendations.recommendation2.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+                } @else {
+                <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation2"
+                    inpTitle="Empfehlung 2" />
+                }
+
+                <h4>Empfehlung 3</h4>
+                @if (recommendations.recommendation3.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+                    } @else {
+                    <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation3"
+                        inpTitle="Empfehlung 3" />
+                    }
+    </div>
+    }
+    } @else {
+    <div class="loadingWrapper">
+        <h1>Laden ...</h1>
+        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{width: '5rem', height: '5rem'}" />
+    </div>
+    }
+
+</div>

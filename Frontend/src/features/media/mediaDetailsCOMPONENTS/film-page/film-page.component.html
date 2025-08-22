@@ -133,54 +133,7 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
             </div>
         </div>
 
-        <p-button label="Empfehlungen anzeigen"
-            (onClick)="getMovieRecommendations(filmData.media.tmdbID, filmData.media.name)" />
-        <div *ngIf="recommendations && !areRecommendationsLoading">
-            {{recommendations | json}}
-            <div>
-                <h3>Empfehlung 1</h3>
-                @if (recommendations.recommendation1.length < 1) { <p>Keine Empfehlungen vorhanden</p>
-
-                    } @else { <ul>
-                        @for (rec of recommendations.recommendation1; track $index) {
-                        <li class="recommendationA"
-                            (click)="navigateToMediaPage(rec.tmdb_id, rec.media_type === 'movie')">→ {{rec.title}}</li>
-                        }
-                    </ul>
-                    }
-            </div>
-            <div>
-                <h3>Empfehlung 2</h3>
-                @if (recommendations.recommendation2.length < 1) { <p>Keine Empfehlungen vorhanden</p>
-
-                    } @else { <ul>
-                        @for (rec of recommendations.recommendation2; track $index) {
-                        <li class="recommendationA"
-                            (click)="navigateToMediaPage(rec.tmdb_id, rec.media_type === 'movie')">→ {{rec.title}}</li>
-                        }
-                    </ul>
-                    }
-            </div>
-            <div>
-                <h3>Empfehlung 3</h3>
-                @if (recommendations.recommendation3.length < 1) { <p>Keine Empfehlungen vorhanden</p>
-
-                    } @else { <ul>
-                        @for (rec of recommendations.recommendation3; track $index) {
-                        <li class="recommendationA"
-                            (click)="navigateToMediaPage(rec.tmdb_id, rec.media_type === 'movie')">→ {{rec.title}}
-                            {{rec.tmdb_id}}</li>
-                        }
-                    </ul>
-                    }
-            </div>
-        </div>
-        @if (areRecommendationsLoading) {
-        <div class="loadingWrapper">
-            <h3>Empfehlungen laden ...</h3>
-            <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-        </div>
-        }
+        <app-movie-recommendations [inpMovieId]="filmData.media.id" [inpMovieTitle]="filmData.media.name" />
 
         <div class="newWatchlistButton">
             @for (tracklist of filmData.tracklists; track $index) {

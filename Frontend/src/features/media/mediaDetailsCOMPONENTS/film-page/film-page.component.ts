@@ -16,7 +16,7 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -56,6 +56,7 @@ import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media
 import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/navigate-to-page.use-case';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
+import { MovieRecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
 
 @Component({
     selector: 'app-film-page',
@@ -75,6 +76,7 @@ import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-lo
         CreateMovieTracklistComponent,
         UpdateFilmTracklistComponent,
         ProgressSpinnerModule,
+        MovieRecommendationsComponent
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -82,14 +84,10 @@ import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-lo
         UC_GetFilmDetails,
         UC_ValidateMediaURL,
         UC_ShortenString,
-        UC_LogoutOfAccount,
-        UC_GetMovieRecommendations,
-        UC_NavigateToPage,
-        UC_GetMediaIdForMedia,
-        UC_ShowLoginMessage
+        UC_LogoutOfAccount
     ]
 })
-export class FilmPageComponent implements OnInit {
+export class FilmPageComponent implements OnInit, OnDestroy {
     public movieID: string | null = null;
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -123,10 +121,6 @@ export class FilmPageComponent implements OnInit {
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private getFilmDetailsUseCase: UC_GetFilmDetails,
         private logOutOfAccountUseCase: UC_LogoutOfAccount,
-        private getMovieRecommendationsUseCase: UC_GetMovieRecommendations,
-        private navigateToPageUseCase: UC_NavigateToPage,
-        private getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
-        private showLoginMessageUseCase: UC_ShowLoginMessage,
         private activatedRoute: ActivatedRoute
     ) { }
 
@@ -135,6 +129,12 @@ export class FilmPageComponent implements OnInit {
             this.movieID = params["id"]
             this.loadData(this.movieID);
         })
+    }
+
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
     }
 
     public loadData = (movieID: string | null) => {
@@ -161,7 +161,7 @@ export class FilmPageComponent implements OnInit {
             return;
         }
 
-        this.filmData$.subscribe({
+        this.subscription = this.filmData$.subscribe({
             next: (res: Film) => {
                 this.trackListForm = this.formBuilder.group({
                     trackListName: [res.media.name, Validators.required],
@@ -217,68 +217,68 @@ export class FilmPageComponent implements OnInit {
     };
 
 
-    public getMovieRecommendations = (movieId: number, movieTitle: string) => {
-        this.areRecommendationsLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(movieId, movieTitle).subscribe({
-            next: (response: I_MovieRecommendations) => {
-                this.recommendations = response
-                this.areRecommendationsLoading = false;
-            },
-            error: (err) => {
-                if (err.status === 401 || err.status === 400) {
-                    this.logOutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-                    return;
-                } else if (err.status === 0) {
-                    this.serverNotAvailablePage = true;
-                }
+    // public getMovieRecommendations = (movieId: number, movieTitle: string) => {
+    //     this.areRecommendationsLoading = true;
+    //     this.subscription = this.getMovieRecommendationsUseCase.execute(movieId, movieTitle).subscribe({
+    //         next: (response: I_MovieRecommendations) => {
+    //             this.recommendations = response;
+    //             this.areRecommendationsLoading = false;
+    //         },
+    //         error: (err) => {
+    //             if (err.status === 401 || err.status === 400) {
+    //                 this.logOutOfAccountUseCase.execute();
+    //                 this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+    //                 this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+    //                 return;
+    //             } else if (err.status === 0) {
+    //                 this.serverNotAvailablePage = true;
+    //             }
 
-                // this.hasError = true;
-                this.areRecommendationsLoading = false;
-            },
-        });
-    }
+    //             // this.hasError = true;
+    //             this.areRecommendationsLoading = false;
+    //         },
+    //     });
+    // }
 
-    public navigateToMediaPage = (tmdbId: number, isMovie: boolean) => {
-        this.getMediaIdForMediaUseCase.execute(tmdbId, isMovie).subscribe({
-            next: (res: MediaIDResponse) => {
-                if (res.media_id === undefined || res.media_id === null) {
-                    // if no media_id exists in the db -> because media is not already saved
-                    const summaryMessage: string = `Fehler beim Weiterleiten ${isMovie ? 'zum Film.' : 'zur Serie'
-                        }`;
+    // public navigateToMediaPage = (tmdbId: number, isMovie: boolean) => {
+    //     this.getMediaIdForMediaUseCase.execute(tmdbId, isMovie).subscribe({
+    //         next: (res: MediaIDResponse) => {
+    //             if (res.media_id === undefined || res.media_id === null) {
+    //                 // if no media_id exists in the db -> because media is not already saved
+    //                 const summaryMessage: string = `Fehler beim Weiterleiten ${isMovie ? 'zum Film.' : 'zur Serie'
+    //                     }`;
 
-                    this.messageService.add(
-                        getMessageObject(
-                            'error',
-                            summaryMessage,
-                            'Bitte lade die Seite erneut und versuche es noch einmal.'
-                        )
-                    );
-                    return;
-                }
+    //                 this.messageService.add(
+    //                     getMessageObject(
+    //                         'error',
+    //                         summaryMessage,
+    //                         'Bitte lade die Seite erneut und versuche es noch einmal.'
+    //                     )
+    //                 );
+    //                 return;
+    //             }
 
-                this.navigateToPageUseCase.execute(res.media_id, isMovie);
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // 401 = user token is not logged in anymore -> navigate to login page
-                    this.showLoginMessageUseCase.execute();
-                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
+    //             this.navigateToPageUseCase.execute(res.media_id, isMovie);
+    //         },
+    //         error: (err) => {
+    //             if (err.status === 401) {
+    //                 // 401 = user token is not logged in anymore -> navigate to login page
+    //                 this.showLoginMessageUseCase.execute();
+    //                 this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+    //                 return;
+    //             }
 
-                const message: string = `Fehler beim Weiterleiten ${isMovie ? 'zum Film.' : 'zur Serie.'
-                    }`;
+    //             const message: string = `Fehler beim Weiterleiten ${isMovie ? 'zum Film.' : 'zur Serie.'
+    //                 }`;
 
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        message,
-                        'Bitte lade die Seite und versuche es erneut.'
-                    )
-                );
-            }
-        })
-    }
+    //             this.messageService.add(
+    //                 getMessageObject(
+    //                     'error',
+    //                     message,
+    //                     'Bitte lade die Seite und versuche es erneut.'
+    //                 )
+    //             );
+    //         }
+    //     })
+    // }
 }

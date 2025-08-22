@@ -1,5 +1,5 @@
 export interface I_MovieRecommendation {
-    title: string, tmdb_id: number, media_type: string
+    title: string, tmdb_id: number, media_type: string, poster_path: string
 }
 
 export interface I_MovieRecommendations {
