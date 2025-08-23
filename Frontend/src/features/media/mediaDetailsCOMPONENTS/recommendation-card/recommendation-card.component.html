@@ -1,9 +1,16 @@
+@if (inpTitle()) {
+<h4>{{inpTitle()}}</h4>
+}
 <ul class="cardContainer">
+    @if (inpRecommendationsList().length > 0) {
     @for (recommendation of inpRecommendationsList(); track $index) {
     <li class="recCard" (click)="onClickRec(recommendation.tmdb_id, recommendation.media_type === 'movie')"
         [pTooltip]="recommendation.title">
         <img [alt]="'Poster zu ' + recommendation.title" [src]="POSTER_PATH + recommendation.poster_path">
         <p>{{recommendation.title | titleFormatting}}</p>
     </li>
+    }
+    } @else {
+    <span><i>keine Empfehlungen vorhanden</i></span>
     }
 </ul>

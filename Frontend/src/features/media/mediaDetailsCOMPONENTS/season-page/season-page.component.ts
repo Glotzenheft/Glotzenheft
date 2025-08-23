@@ -58,7 +58,7 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
 import { RecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
-import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
+import { I_Recommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 
 @Component({
     selector: 'app-season-page',
@@ -99,7 +99,7 @@ export class SeasonPageComponent implements OnInit {
     public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/";
     public currentTab: string = TABLIST[0];
     public tabList: string[] = TABLIST;
-    public recommendations: I_MovieRecommendations | null = null;
+    public recommendations: I_Recommendations | null = null;
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -323,7 +323,7 @@ export class SeasonPageComponent implements OnInit {
         this.currentTab = newTab;
     };
 
-    public getRecommendations = (recs: I_MovieRecommendations) => {
+    public getRecommendations = (recs: I_Recommendations) => {
         this.recommendations = recs;
     }
 }

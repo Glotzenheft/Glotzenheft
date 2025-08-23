@@ -51,7 +51,7 @@ import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
-import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
+import { I_Recommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { RecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
@@ -109,7 +109,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     public isLoading: boolean = false;
     public areRecommendationsLoading: boolean = false;
-    public recommendations: I_MovieRecommendations | null = null;
+    public recommendations: I_Recommendations | null = null;
     private subscription: Subscription | null = null
 
     constructor(
@@ -222,7 +222,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.currentTab = newTab;
     }
 
-    public getRecommendations = (recs: I_MovieRecommendations) => {
+    public getRecommendations = (recs: I_Recommendations) => {
         this.recommendations = recs;
     }
 }

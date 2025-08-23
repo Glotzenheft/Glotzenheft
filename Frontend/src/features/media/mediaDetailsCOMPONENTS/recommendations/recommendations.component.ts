@@ -1,5 +1,5 @@
 import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
-import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
+import { I_Recommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
@@ -12,17 +12,12 @@ import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/naviga
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
-import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
-import { ProgressSpinner } from 'primeng/progressspinner';
-
 
 @Component({
     selector: 'app-recommendations',
     imports: [
         ButtonModule,
-        CommonModule,
-        RecommendationCardComponent,
-        ProgressSpinner
+        CommonModule
     ],
     templateUrl: './recommendations.component.html',
     styleUrl: './recommendations.component.css',
@@ -35,7 +30,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
     ]
 })
 export class RecommendationsComponent implements OnInit {
-    public recommendations: I_MovieRecommendations | null = null;
+    public recommendations: I_Recommendations | null = null;
     public isLoading: boolean = false;
     public subscription: Subscription | null = null;
     public areRecommendationsShown: boolean = false;
@@ -45,11 +40,12 @@ export class RecommendationsComponent implements OnInit {
     public inpMovieId: InputSignal<number> = input.required<number>();
     public inpMovieTitle: InputSignal<string> = input.required<string>();
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
-    public inpRecommendations: InputSignal<I_MovieRecommendations | null> = input.required<I_MovieRecommendations | null>();
+    public inpRecommendations: InputSignal<I_Recommendations | null> = input.required<I_Recommendations | null>();
+    public inpPosterPath: InputSignal<string> = input.required<string>();
 
     // output variables
     public outServerNotAvailable: OutputEmitterRef<boolean> = output<boolean>();
-    public outGetMovieRecommendations: OutputEmitterRef<I_MovieRecommendations> = output<I_MovieRecommendations>();
+    public outGetMovieRecommendations: OutputEmitterRef<I_Recommendations> = output<I_Recommendations>();
 
     constructor(
         public shortenStringUseCase: UC_ShortenString,
@@ -73,8 +69,8 @@ export class RecommendationsComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie()).subscribe({
-            next: (response: I_MovieRecommendations) => {
+        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpPosterPath()).subscribe({
+            next: (response: I_Recommendations) => {
                 this.recommendations = response;
                 this.outGetMovieRecommendations.emit(response);
                 this.isLoading = false;

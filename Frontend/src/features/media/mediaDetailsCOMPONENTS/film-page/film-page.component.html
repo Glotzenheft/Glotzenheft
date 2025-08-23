@@ -150,7 +150,7 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
             }
         </div>
         } @else if (currentTab === tabsList[1]) {
-        <app-recommendations [inpMovieId]="filmData.media.id" [inpMovieTitle]="filmData.media.name"
+        <app-recommendations [inpMovieId]="filmData.media.tmdbID" [inpMovieTitle]="filmData.media.name"
             [inpRecommendations]="recommendations" [inpIsMovie]="true" [inpMediaPosterPath]="filmData.media.posterPath"
             (outGetMovieRecommendations)="getRecommendations($event)" />
         }

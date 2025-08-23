@@ -224,8 +224,8 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
     }
     }
     @else if (currentTab === tabList[1]) {
-    <app-recommendations [inpMovieId]="seasonData.media.id" [inpMovieTitle]="seasonData.media.name" [inpIsMovie]="false"
-        [inpRecommendations]="recommendations" [inpMediaPosterPath]="seasonData.media.posterPath"
+    <app-recommendations [inpMovieId]="seasonData.media.tmdbID" [inpMovieTitle]="seasonData.media.name"
+        [inpIsMovie]="false" [inpRecommendations]="recommendations" [inpMediaPosterPath]="seasonData.media.posterPath"
         (outGetMovieRecommendations)="getRecommendations($event)" />
     } @else {
     noch leer

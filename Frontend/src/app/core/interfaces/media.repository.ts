@@ -20,7 +20,7 @@ import { Observable } from "rxjs";
 import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from "../../shared/interfaces/media-interfaces";
 import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from "../../shared/interfaces/tracklist-interfaces";
 import { InjectionToken } from "@angular/core";
-import { I_MovieRecommendations } from "../../shared/interfaces/movie-recommendation-interface";
+import { I_HighestRecommendations, I_Recommendations } from "../../shared/interfaces/movie-recommendation-interface";
 
 export interface I_MediaRepository {
     getHeader: () => HttpHeaders | null,
@@ -42,7 +42,8 @@ export interface I_MediaRepository {
     getTracklistDELETEResponseSubject: () => Observable<any>,
     deleteTracklist: (tracklistID: number) => Observable<any>,
     getAllUserTracklists: () => Observable<Tracklist[]> | null,
-    getRecommendations: (tmdbId: number, title: string, isMovie: boolean, posterPath: string) => Observable<I_MovieRecommendations>
+    getRecommendations: (tmdbId: number, title: string, isMovie: boolean, posterPath: string) => Observable<I_Recommendations>,
+    getHighestRecommendations: () => Observable<I_HighestRecommendations>
 }
 
 // IT = Injection Token

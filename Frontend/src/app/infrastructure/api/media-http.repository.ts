@@ -38,7 +38,7 @@ import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 import { ROUTE_CHECK_USER_AUTH, ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../shared/variables/api-routes';
 import { I_MediaRepository } from '../../core/interfaces/media.repository';
-import { I_MovieRecommendations } from '../../shared/interfaces/movie-recommendation-interface';
+import { I_HighestRecommendations, I_Recommendations } from '../../shared/interfaces/movie-recommendation-interface';
 
 @Injectable({
     providedIn: 'root',
@@ -468,11 +468,29 @@ export class R_MediaHttp implements I_MediaRepository {
     };
 
 
-    public getRecommendations = (tmdb_id: number, title: string, isMovie: boolean, posterPath: string): Observable<I_MovieRecommendations> => {
+    public getRecommendations = (tmdb_id: number, title: string, isMovie: boolean, posterPath: string): Observable<I_Recommendations> => {
         const token = this.getUserToken()
 
         if (!token) return EMPTY;
 
-        return this.http.post<I_MovieRecommendations>(`http://localhost:80/${isMovie ? "movie" : "tv"}-recommendation`, { tmdbid: tmdb_id, title, backendIP: ROUTE_CHECK_USER_AUTH, token, posterPath });
+        return this.http.post<I_Recommendations>(`http://localhost:80/${isMovie ? "movie" : "tv"}-recommendation`, { tmdbid: tmdb_id, title, backendIP: ROUTE_CHECK_USER_AUTH, token, posterPath }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    }
+
+    public getHighestRecommendations = (): Observable<I_HighestRecommendations> => {
+        const token = this.getUserToken();
+
+        if (!token) return EMPTY;
+
+        return this.http.post<I_HighestRecommendations>("http://localhost:80/highest-media", { backendIP: ROUTE_CHECK_USER_AUTH, token }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
     }
 }

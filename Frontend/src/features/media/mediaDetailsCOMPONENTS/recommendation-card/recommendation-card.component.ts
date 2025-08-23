@@ -1,5 +1,5 @@
 import { Component, input, InputSignal } from '@angular/core';
-import { I_MovieRecommendation } from '../../../../app/shared/interfaces/movie-recommendation-interface';
+import { I_Recommendation } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
 import { MediaIDResponse } from '../../../../app/shared/interfaces/media-interfaces';
@@ -22,15 +22,16 @@ import { TooltipModule } from 'primeng/tooltip';
         UC_GetMediaIdForMedia,
         UC_NavigateToSpecificPage,
         UC_NavigateToPage,
-        UC_ShowLoginMessage
+        UC_ShowLoginMessage,
+        UC_ShortenString
     ]
 })
 export class RecommendationCardComponent {
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
 
     // input variables
-    public inpRecommendationsList: InputSignal<I_MovieRecommendation[]> = input.required<I_MovieRecommendation[]>();
-    public inpTitle: InputSignal<string> = input.required<string>();
+    public inpRecommendationsList: InputSignal<I_Recommendation[]> = input.required<I_Recommendation[]>();
+    public inpTitle: InputSignal<string | null> = input.required<string | null>();
 
 
     constructor(
@@ -43,6 +44,7 @@ export class RecommendationCardComponent {
     ) { }
 
     public onClickRec = (tmdbId: number, isMovie: boolean) => {
+        console.log("tmdbid", tmdbId, "ismovie", isMovie)
         this.getMediaIdForMediaUseCase.execute(tmdbId, isMovie).subscribe({
             next: (res: MediaIDResponse) => {
                 if (res.media_id === undefined || res.media_id === null) {

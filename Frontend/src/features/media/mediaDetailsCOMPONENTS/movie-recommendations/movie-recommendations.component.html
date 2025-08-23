@@ -3,31 +3,32 @@
     @if (recommendations && areRecommendationsShown) {
     <div>
         @if (inpIsMovie()) {
-        <h4>Empfehlung 1</h4>
-        @if (recommendations.recommendation1.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+        @if (recommendations.recommendation1.length < 1) { <h4>Empfehlung 1</h4><span><i>keine Empfehlungen
+                    vorhanden</i></span>
             } @else {
             <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation1"
                 [inpTitle]="'Empfehlung 1'" />
             }
 
-            <h4>Empfehlung 2</h4>
-            @if (recommendations.recommendation2.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+            @if (recommendations.recommendation2.length < 1) { <h4>Empfehlung 2</h4>
+                <span><i>keine Empfehlungen vorhanden</i></span>
                 } @else {
                 <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation2"
                     inpTitle="Empfehlung 2" />
                 }
 
-                <h4>Empfehlung 3</h4>
-                @if (recommendations.recommendation3.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+                @if (recommendations.recommendation3.length < 1) { <h4>Empfehlung 2</h4> <span><i>keine Empfehlungen
+                            vorhanden</i></span>
                     } @else {
                     <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation3"
                         inpTitle="Empfehlung 3" />
                     }
                     } @else {
-                    @if (recommendations.recommendation3.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+                    @if (recommendations.recommendation3.length < 1) { <h4>Empfehlung 3</h4><span><i>keine Empfehlungen
+                                vorhanden</i></span>
                         } @else {
                         <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation3"
-                            inpTitle="Empfehlung 3" />
+                            [inpTitle]="null" />
                         }
                         }
     </div>

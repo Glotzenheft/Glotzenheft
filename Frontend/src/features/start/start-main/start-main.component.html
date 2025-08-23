@@ -47,6 +47,7 @@ Sie sollten eine Kopie der GNU General Public License zusammen mit diesem
 Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
 -->
 
+@if (!isLoading) {
 <div class="startPage">
     <h1>Glotzenheft</h1>
 
@@ -78,5 +79,14 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
             pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden." tooltipPosition="right"
             (onClick)="navigateToStartPage()" icon="pi pi-sign-in" />
     </div>
+    @if (highestMedia) {
+    <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
+    }
     }
 </div>
+} @else {
+<div class="loadingWrapper">
+    <h1>Empfehlungen werden geladen ...</h1>
+    <p-progress-spinner ariaLabel="Laden" strokeWidth="4" [style]="{width: '5rem', height: '5rem'}" />
+</div>
+}
