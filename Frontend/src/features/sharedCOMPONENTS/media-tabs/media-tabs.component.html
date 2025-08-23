@@ -1,0 +1,23 @@
+<div class="tabWrapper">
+    <p-tabs [value]="value" class="tabList">
+        <p-tablist>
+            <p-tab [value]="0" (valueChange)="onChangeTab('Tracklist')">
+                Tracklist
+            </p-tab>
+            <p-tab [value]="1">Empfehlungen</p-tab>
+            <p-tab [value]="2">Anderes</p-tab>
+        </p-tablist>
+        <p-tabpanels>
+            <p-tabpanel [value]="0">
+                <p>Tracklisten</p>
+            </p-tabpanel>
+            <p-tabpanel [value]="1">
+                Empfehlungen
+            </p-tabpanel>
+            <p-tabpanel [value]="2">
+                Anderes
+            </p-tabpanel>
+        </p-tabpanels>
+    </p-tabs>
+
+</div>
