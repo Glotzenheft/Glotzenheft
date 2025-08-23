@@ -119,11 +119,6 @@ trait MediaDetailTrait
                     $name = $result['title'] ?? null;
                     $originalName = $result['original_title'] ?? null;
                     break;
-                case MediaType::ANIME:
-                    return [
-                        'error' => 'Not supported media type',
-                        'code' => 404,
-                    ];
             }
 
             $genreArray = $result['genres'] ?? null;
@@ -226,9 +221,9 @@ trait MediaDetailTrait
         {
             $data = ['tmdbID' => $tmdbID];
             $media = $this->handleTMDBMediaDetail($data, $type);
-            if (isset($result['error']))
+            if (isset($media['error']))
             {
-                return $result;
+                return $media;
             }
             $media = $media['media'];
         }
