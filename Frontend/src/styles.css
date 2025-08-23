@@ -19,1584 +19,1609 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 @import "primeicons/primeicons.css";
 
 input {
-  width: 100%;
+    width: 100%;
 }
 
 h1 {
-  font-size: x-large;
+    font-size: x-large;
 }
 
 ul {
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  padding: 0;
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
 }
 
 a {
-  color: var(--link--color);
-  text-decoration: none;
-  font-weight: bolder;
+    color: var(--link--color);
+    text-decoration: none;
+    font-weight: bolder;
 }
 
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 p {
-  text-align: justify;
+    text-align: justify;
 }
 
 .button {
-  margin: 1rem;
+    margin: 1rem;
 }
 
 .button2 {
-  width: 12rem;
+    width: 12rem;
 }
 
 .buttonShadow {
-  box-shadow: var(--box--shadow-button);
+    box-shadow: var(--box--shadow-button);
 }
 
 /* customizing scrollbar */
 
 /* Für Webkit-basierte Browser (z. B. Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-  width: 1rem; /* Breite der Scrollbar */
-  height: 12px; /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
+    width: 1rem;
+    /* Breite der Scrollbar */
+    height: 12px;
+    /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
 }
 
 ::-webkit-scrollbar-track {
-  background: black; /* Hintergrund der Scrollbar-Spur */
+    background: black;
+    /* Hintergrund der Scrollbar-Spur */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--link--color); /* Farbe des Scrollbalkens */
+    background: var(--link--color);
+    /* Farbe des Scrollbalkens */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(
-    --link--color--hover
-  ); /* Farbe des Scrollbalkens beim Hover */
-  cursor: pointer;
+    background: var(--link--color--hover);
+    /* Farbe des Scrollbalkens beim Hover */
+    cursor: pointer;
 }
 
 /* media query for smart phones and tablets */
 @media (max-width: 500px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    color: white;
-  }
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-  :root {
-    --transition--duration: 0.3s;
+        color: white;
+    }
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    :root {
+        --transition--duration: 0.3s;
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-  input {
-    width: 100%;
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  h1 {
-    font-size: x-large;
-  }
+    input {
+        width: 100%;
+    }
 
-  ul {
-    list-style: none;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-  }
+    h1 {
+        font-size: x-large;
+    }
 
-  a {
-    color: var(--link--color);
-    text-decoration: none;
-    font-weight: bolder;
-  }
+    ul {
+        list-style: none;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
 
-  a:hover {
-    text-decoration: underline;
-  }
+    a {
+        color: var(--link--color);
+        text-decoration: none;
+        font-weight: bolder;
+    }
 
-  p {
-    text-align: justify;
-  }
+    a:hover {
+        text-decoration: underline;
+    }
 
-  .button {
-    margin: 1rem;
-  }
+    p {
+        text-align: justify;
+    }
 
-  .button2 {
-    width: 8rem;
-  }
+    .button {
+        margin: 1rem;
+    }
 
-  .buttonShadow {
-    box-shadow: var(--box--shadow-button);
-  }
+    .button2 {
+        width: 8rem;
+    }
 
-  .sidebar {
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .buttonShadow {
+        box-shadow: var(--box--shadow-button);
+    }
 
-  .closedSidebar {
-    height: 4rem;
-    width: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    box-shadow: var(--box--shadow);
+    .sidebar {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .closedSidebar {
+        height: 4rem;
+        width: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        box-shadow: var(--box--shadow);
 
-  .content {
-    width: 100%;
-    height: 100%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 15rem;
-  }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .content {
+        width: 100%;
+        height: 100%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .login {
-    height: 120%;
-    width: 100%;
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 15rem;
+    }
 
-    display: flex;
-    justify-content: center;
-  }
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .loginWindow {
-    width: 100%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .login {
+        height: 120%;
+        width: 100%;
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+        display: flex;
+        justify-content: center;
+    }
 
-  .loginWindow form .loginActions {
-    display: block;
-  }
+    .loginWindow {
+        width: 100%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .loginWindow form .loginActions .marginBottom {
-    margin-bottom: 0.5rem;
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .register {
-    width: 100%;
-    height: 90%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    border-radius: 0.6rem;
-  }
+    .loginWindow form .loginActions {
+        display: block;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .loginWindow form .loginActions .marginBottom {
+        margin-bottom: 0.5rem;
+    }
 
-  .register .loginActions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 8rem;
-  }
+    .register {
+        width: 100%;
+        height: 90%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        border-radius: 0.6rem;
+    }
 
-  .register .loginActions .button2 {
-    width: 100%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register .loginActions {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 8rem;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .register .loginActions .button2 {
+        width: 100%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .resCard .p-card {
-    height: 5rem;
-    width: 5rem;
-    margin-bottom: 2rem;
-  }
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .error .p-panel-header {
+        color: white;
+    }
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+    .resCard .p-card {
+        height: 5rem;
+        width: 5rem;
+        margin-bottom: 2rem;
+    }
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: auto;
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+        transition-duration: var(--transition--duration);
 
-  .heading {
-    height: 4rem;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    width: 10rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .dialog .p-dialog {
+        width: 90%;
+        height: auto;
+    }
 
-  .tracklistActions .p-button {
-    width: 100%;
-    height: 3rem;
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 100%;
-    height: 2.5rem;
-  }
+    .heading {
+        height: 4rem;
+    }
 
-  .userActivitiesTable {
-    width: 100%;
-    margin-bottom: 10rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        width: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 60rem;
-  }
+    .tracklistActions .p-button {
+        width: 100%;
+        height: 3rem;
+    }
 
-  .barChartDIV p-chart {
-    display: block !important;
-    width: 30rem !important;
-    height: 100% !important;
-    margin-left: 12rem;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 100%;
+        height: 2.5rem;
+    }
 
-  .barChartDIV p-chart div {
-    display: block !important;
-    width: 130% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable {
+        width: 100%;
+        margin-bottom: 10rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+    }
+
+    .userActivitiesTable .p-datatable {
+        width: 60rem;
+    }
+
+    .barChartDIV p-chart {
+        display: block !important;
+        width: 30rem !important;
+        height: 100% !important;
+        margin-left: 12rem;
+    }
+
+    .barChartDIV p-chart div {
+        display: block !important;
+        width: 130% !important;
+        height: 100% !important;
+    }
 }
 
 /* media query for smart phones and tablets */
 @media (min-width: 500px) and (max-width: 850px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    color: white;
-  }
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-  :root {
-    --transition--duration: 0.3s;
+        color: white;
+    }
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    :root {
+        --transition--duration: 0.3s;
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-  input {
-    width: 100%;
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  h1 {
-    font-size: x-large;
-  }
+    input {
+        width: 100%;
+    }
 
-  ul {
-    list-style: none;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-  }
+    h1 {
+        font-size: x-large;
+    }
 
-  a {
-    color: var(--link--color);
-    text-decoration: none;
-    font-weight: bolder;
-  }
+    ul {
+        list-style: none;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
 
-  a:hover {
-    text-decoration: underline;
-  }
+    a {
+        color: var(--link--color);
+        text-decoration: none;
+        font-weight: bolder;
+    }
 
-  p {
-    text-align: justify;
-  }
+    a:hover {
+        text-decoration: underline;
+    }
 
-  .button {
-    margin: 1rem;
-  }
+    p {
+        text-align: justify;
+    }
 
-  .button2 {
-    width: 8rem;
-  }
+    .button {
+        margin: 1rem;
+    }
 
-  .buttonShadow {
-    box-shadow: var(--box--shadow-button);
-  }
+    .button2 {
+        width: 8rem;
+    }
 
-  .sidebar {
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .buttonShadow {
+        box-shadow: var(--box--shadow-button);
+    }
 
-  .closedSidebar {
-    height: 4rem;
-    width: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    box-shadow: var(--box--shadow);
+    .sidebar {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .closedSidebar {
+        height: 4rem;
+        width: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        box-shadow: var(--box--shadow);
 
-  .content {
-    width: 100%;
-    height: 100%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 15rem;
-  }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .content {
+        width: 100%;
+        height: 100%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .login {
-    height: 120%;
-    width: 100%;
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 15rem;
+    }
 
-    display: flex;
-    justify-content: center;
-  }
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .loginWindow {
-    width: 100%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .login {
+        height: 120%;
+        width: 100%;
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+        display: flex;
+        justify-content: center;
+    }
 
-  .loginWindow form .loginActions {
-    display: block;
-  }
+    .loginWindow {
+        width: 100%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .loginWindow form .loginActions .marginBottom {
-    margin-bottom: 0.5rem;
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .register {
-    width: 100%;
-    height: 90%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    border-radius: 0.6rem;
-  }
+    .loginWindow form .loginActions {
+        display: block;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .loginWindow form .loginActions .marginBottom {
+        margin-bottom: 0.5rem;
+    }
 
-  .register .loginActions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 8rem;
-  }
+    .register {
+        width: 100%;
+        height: 90%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        border-radius: 0.6rem;
+    }
 
-  .register .loginActions .button2 {
-    width: 100%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register .loginActions {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 8rem;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .register .loginActions .button2 {
+        width: 100%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .resCard .p-card {
-    height: 5rem;
-    width: 5rem;
-    margin-bottom: 2rem;
-  }
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .error .p-panel-header {
+        color: white;
+    }
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+    .resCard .p-card {
+        height: 5rem;
+        width: 5rem;
+        margin-bottom: 2rem;
+    }
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: auto;
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+        transition-duration: var(--transition--duration);
 
-  .heading {
-    height: 4rem;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    width: 10rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .dialog .p-dialog {
+        width: 90%;
+        height: auto;
+    }
 
-  .tracklistActions .p-button {
-    width: 100%;
-    height: 3rem;
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 100%;
-    height: 2.5rem;
-  }
+    .heading {
+        height: 4rem;
+    }
 
-  .userActivitiesTable {
-    width: 100%;
-    margin-bottom: 10rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        width: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 60rem;
-  }
+    .tracklistActions .p-button {
+        width: 100%;
+        height: 3rem;
+    }
 
-  .barChartDIV p-chart {
-    display: block !important;
-    width: 30rem !important;
-    height: 100% !important;
-    margin-left: 2rem;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 100%;
+        height: 2.5rem;
+    }
 
-  .barChartDIV p-chart div {
-    display: block !important;
-    width: 130% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable {
+        width: 100%;
+        margin-bottom: 10rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
+
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+    }
+
+    .userActivitiesTable .p-datatable {
+        width: 60rem;
+    }
+
+    .barChartDIV p-chart {
+        display: block !important;
+        width: 30rem !important;
+        height: 100% !important;
+        margin-left: 2rem;
+    }
+
+    .barChartDIV p-chart div {
+        display: block !important;
+        width: 130% !important;
+        height: 100% !important;
+    }
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    color: white;
-  }
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-  :root {
-    --transition--duration: 0.3s;
+        color: white;
+    }
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    :root {
+        --transition--duration: 0.3s;
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
-  .sidebar {
-    background-color: black;
-    height: 100%;
-    width: 25%;
-    left: 0;
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: var(--sidebar--box--shadow);
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  .closedSidebar {
-    width: 4rem;
-    height: 100%;
+    .sidebar {
+        background-color: black;
+        height: 100%;
+        width: 25%;
+        left: 0;
+        color: white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-    background-color: black;
-    box-shadow: var(--sidebar--box--shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--sidebar--box--shadow);
+    }
 
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .closedSidebar {
+        width: 4rem;
+        height: 100%;
 
-  .closedSidebar div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+        background-color: black;
+        box-shadow: var(--sidebar--box--shadow);
 
-  .content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+    .closedSidebar div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 1rem;
-  }
+    .content {
+        height: 100%;
+        width: calc(100% - 2 * var(--padding--left-right));
+        background: linear-gradient(var(--content-background-color),
+                var(--content-background-color2));
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        color: white;
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  /* specific classes */
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
 
-  .login {
-    padding-top: var(--padding--top-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 120%;
-  }
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .loginWindow {
-    width: 70%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    /* specific classes */
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .login {
+        padding-top: var(--padding--top-bottom);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 120%;
+    }
 
-  .register {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 80%;
-    height: 98%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+    .loginWindow {
+        width: 70%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-    border-radius: var(--border--radius);
-    box-shadow: var(--box--shadow);
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .register {
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 80%;
+        height: 98%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .loginTall {
-    height: 60%;
-  }
+        border-radius: var(--border--radius);
+        box-shadow: var(--box--shadow);
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginActions {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .loginActions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .error .p-panel-header {
+        color: white;
+    }
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .dialog .p-dialog {
-    width: 80%;
-    height: auto;
-  }
+        transition-duration: var(--transition--duration);
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .dialog .p-dialog {
+        width: 80%;
+        height: auto;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 100%;
-    height: 3rem;
-  }
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  .userActivitiesTable {
-    width: 100%;
-    margin-bottom: 10rem;
-    display: flex;
-    height: 100rem;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 60rem;
-    box-shadow: var(--box--shadow);
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 100%;
+        height: 3rem;
+    }
 
-  p-chart {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable {
+        width: 100%;
+        margin-bottom: 10rem;
+        display: flex;
+        height: 100rem;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 
-  p-chart div {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+    }
+
+    .userActivitiesTable .p-datatable {
+        width: 60rem;
+        box-shadow: var(--box--shadow);
+    }
+
+    p-chart {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    p-chart div {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 @media (min-width: 940px) and (max-width: 1000px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    color: white;
-  }
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-  :root {
-    --transition--duration: 0.3s;
+        color: white;
+    }
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    :root {
+        --transition--duration: 0.3s;
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
-  .sidebar {
-    background-color: black;
-    height: 100%;
-    width: 20%;
-    left: 0;
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: var(--sidebar--box--shadow);
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  .closedSidebar {
-    width: 4rem;
-    height: 100%;
-    background-color: black;
-    box-shadow: var(--sidebar--box--shadow);
+    .sidebar {
+        background-color: black;
+        height: 100%;
+        width: 20%;
+        left: 0;
+        color: white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--sidebar--box--shadow);
+    }
 
-  .closedSidebar div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .closedSidebar {
+        width: 4rem;
+        height: 100%;
+        background-color: black;
+        box-shadow: var(--sidebar--box--shadow);
 
-  .content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+    .closedSidebar div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 1rem;
-  }
+    .content {
+        height: 100%;
+        width: calc(100% - 2 * var(--padding--left-right));
+        background: linear-gradient(var(--content-background-color),
+                var(--content-background-color2));
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        color: white;
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  /* specific classes */
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
 
-  .login {
-    padding-top: var(--padding--top-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 115%;
-  }
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .p-message {
-    background-color: white;
-  }
+    /* specific classes */
 
-  .loginWindow {
-    width: 50%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .login {
+        padding-top: var(--padding--top-bottom);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 115%;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .p-message {
+        background-color: white;
+    }
 
-  .register {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 80%;
-    height: 98%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+    .loginWindow {
+        width: 50%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-    border-radius: var(--border--radius);
-    box-shadow: var(--box--shadow);
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
+    .register {
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 80%;
+        height: 98%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .loginTall {
-    height: 60%;
-  }
+        border-radius: var(--border--radius);
+        box-shadow: var(--box--shadow);
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginActions {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .loginActions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel-header {
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+        transition-duration: var(--transition--duration);
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: 100%;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 4rem;
-    margin-bottom: 8rem;
-  }
+    .dialog .p-dialog {
+        width: 90%;
+        height: 100%;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 4rem;
+        margin-bottom: 8rem;
+    }
 
-  .tracklistDialog .p-dialog {
-    width: 90%;
-    height: 90%;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .tracklistActions .p-button {
-    width: 10rem;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 120%;
-    height: 3rem;
-  }
+    .tracklistDialog .p-dialog {
+        width: 90%;
+        height: 90%;
+    }
 
-  .userActivitiesTable {
-    border-radius: var(--border--radius);
-    /* background-color: white; */
-    width: 100%;
-    height: 85%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    overflow-y: auto;
-  }
+    .tracklistActions .p-button {
+        width: 10rem;
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-    width: 100%;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 120%;
+        height: 3rem;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 100%;
-  }
+    .userActivitiesTable {
+        border-radius: var(--border--radius);
+        /* background-color: white; */
+        width: 100%;
+        height: 85%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
 
-  p-chart {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+        width: 100%;
+    }
 
-  p-chart div {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable .p-datatable {
+        width: 100%;
+    }
+
+    p-chart {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    p-chart div {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 @media (min-width: 1000px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    color: white;
-  }
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-  :root {
-    --transition--duration: 0.3s;
+        color: white;
+    }
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+    :root {
+        --transition--duration: 0.3s;
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
-  .sidebar {
-    background-color: black;
-    height: 100%;
-    width: 20%;
-    left: 0;
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: var(--sidebar--box--shadow);
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  .closedSidebar {
-    width: 4rem;
-    height: 100%;
-    background-color: black;
-    box-shadow: var(--sidebar--box--shadow);
+    .sidebar {
+        background-color: black;
+        height: 100%;
+        width: 20%;
+        left: 0;
+        color: white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--sidebar--box--shadow);
+    }
 
-  .closedSidebar div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .closedSidebar {
+        width: 4rem;
+        height: 100%;
+        background-color: black;
+        box-shadow: var(--sidebar--box--shadow);
 
-  .content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+    .closedSidebar div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 1rem;
-  }
+    .content {
+        height: 100%;
+        width: calc(100% - 2 * var(--padding--left-right));
+        background: linear-gradient(var(--content-background-color),
+                var(--content-background-color2));
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        color: white;
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  /* specific classes */
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
 
-  .login {
-    padding-top: var(--padding--top-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 115%;
-  }
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .p-message {
-    background-color: white;
-  }
+    /* specific classes */
 
-  .loginWindow {
-    width: 50%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .login {
+        padding-top: var(--padding--top-bottom);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 115%;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .p-message {
+        background-color: white;
+    }
 
-  .register {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 80%;
-    height: 98%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+    .loginWindow {
+        width: 50%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-    border-radius: var(--border--radius);
-    box-shadow: var(--box--shadow);
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
+    .register {
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 80%;
+        height: 98%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .loginTall {
-    height: 60%;
-  }
+        border-radius: var(--border--radius);
+        box-shadow: var(--box--shadow);
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginActions {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .loginActions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel-header {
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+        transition-duration: var(--transition--duration);
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: 100%;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 4rem;
-    margin-bottom: 8rem;
-  }
+    .dialog .p-dialog {
+        width: 90%;
+        height: 100%;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 4rem;
+        margin-bottom: 8rem;
+    }
 
-  .tracklistDialog .p-dialog {
-    width: 90%;
-    height: 90%;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .tracklistActions .p-button {
-    width: 10rem;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 120%;
-    height: 3rem;
-  }
+    .tracklistDialog .p-dialog {
+        width: 90%;
+        height: 90%;
+    }
 
-  .userActivitiesTable {
-    border-radius: var(--border--radius);
-    /* background-color: white; */
-    width: 100%;
-    height: 85%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    overflow-y: auto;
-  }
+    .tracklistActions .p-button {
+        width: 10rem;
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-    width: 100%;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 120%;
+        height: 3rem;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 100%;
-  }
+    .userActivitiesTable {
+        border-radius: var(--border--radius);
+        /* background-color: white; */
+        width: 100%;
+        height: 85%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
 
-  p-chart {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+        width: 100%;
+    }
 
-  p-chart div {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable .p-datatable {
+        width: 100%;
+    }
+
+    p-chart {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    p-chart div {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 .p-select {
-  width: 100%;
+    width: 100%;
 }
 
 .panel .p-accordionpanel {
-  background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .panel .p-panel-header {
-  background-color: white;
+    background-color: white;
 }
 
 .userMenuButton .p-button {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .p-dialog {
-  width: 90%;
+    width: 90%;
 }
 
 /* for loading state */
 .loadingWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .serverNotAvailableDIV {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-  background-color: rgba(227, 17, 63, 0.655);
-  border: 0.1rem solid white;
-  color: white;
+    background-color: rgba(227, 17, 63, 0.655);
+    border: 0.1rem solid white;
+    color: white;
 }
 
 .serverNotAvailableDIV h1 {
-  height: 2rem;
+    height: 2rem;
+}
+
+.p-tablist-tab-list,
+.p-tabpanels {
+    background: transparent !important;
+}
+
+.p-tab {
+    color: white !important;
+}
+
+.p-tab-active {
+    color: #10b981 !important;
 }

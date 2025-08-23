@@ -128,8 +128,14 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
         </div>
     </div>
 
+    <app-media-tabs [inpTabList]="tabList" (outChangeTab)="onChangeTab($event)" />
+
+
+    @if (currentTab === tabList[0]) {
+
+
     @if (seasonData.media.seasons.length > 0) {
-    <div class="mainDIV episodes">
+    <div class="episodes">
         <h2>Staffeln</h2>
 
         <form action="" [formGroup]="tracklistSelectionForm">
@@ -146,8 +152,8 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
 
                                 } @else {
                                 <img [src]="POSTER_PATH + season.posterPath" [alt]="
-                                'Dies ist das Bild für von ' + seasonData.media.name
-                              " loading="lazy" />
+                                    'Dies ist das Bild für von ' + seasonData.media.name
+                                  " loading="lazy" />
                                 }
                             </div>
                             <div class="seasonMeta">
@@ -194,10 +200,10 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
                         <app-episode-list [episodeList]="season.episodes"
                             [tracklistSelectionForm]="tracklistSelectionForm" [selectedSeason]="selectedSeason"
                             [tracklistsOfSeason]="tracklistsOfSeason" [inpSelectedTracklist]="
-                                tracklistSelectionForm.get('selectedTracklist')?.value
-                                  ? tracklistSelectionForm.get('selectedTracklist')?.value
-                                  : null
-                              " [inpIsWithTracklist]="true" (setEpisode)="setCurrentEpisode($event, false)"
+                                    tracklistSelectionForm.get('selectedTracklist')?.value
+                                      ? tracklistSelectionForm.get('selectedTracklist')?.value
+                                      : null
+                                  " [inpIsWithTracklist]="true" (setEpisode)="setCurrentEpisode($event, false)"
                             (setEpisodeForEditing)="setCurrentEpisode($event, true)" />
                         }
 
@@ -215,6 +221,13 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
             }
         </form>
     </div>
+    }
+    }
+    @else if (currentTab === tabList[1]) {
+    <app-recommendations [inpMovieId]="seasonData.media.id" [inpMovieTitle]="seasonData.media.name" [inpIsMovie]="false"
+        [inpRecommendations]="recommendations" (outGetMovieRecommendations)="getRecommendations($event)" />
+    } @else {
+    noch leer
     }
 
 </div>

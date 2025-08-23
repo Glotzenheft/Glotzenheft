@@ -1,12 +1,8 @@
-<div>
+<div class="recommendationsWrapper">
     @if (!isLoading) {
-    <p-button [label]="areRecommendationsShown ? 'Empfehlungen ausblenden' : 'Empfehlungen anzeigen'"
-        [icon]="areRecommendationsShown ? 'pi pi-angle-up' : 'pi pi-angle-down'"
-        (onClick)="areRecommendationsShown ? hideRecommendations() : getMovieRecommendations(inpMovieId(), inpMovieTitle())" />
     @if (recommendations && areRecommendationsShown) {
     <div>
-        <h3>Empfehlungen</h3>
-
+        @if (inpIsMovie()) {
         <h4>Empfehlung 1</h4>
         @if (recommendations.recommendation1.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
             } @else {
@@ -27,6 +23,13 @@
                     <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation3"
                         inpTitle="Empfehlung 3" />
                     }
+                    } @else {
+                    @if (recommendations.recommendation3.length < 1) { <span><i>keine Empfehlungen vorhanden</i></span>
+                        } @else {
+                        <app-recommendation-card [inpRecommendationsList]="recommendations.recommendation3"
+                            inpTitle="Empfehlung 3" />
+                        }
+                        }
     </div>
     }
     } @else {

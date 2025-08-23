@@ -1,4 +1,4 @@
-import { Component, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
+import { Component, Input, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
 import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
@@ -16,7 +16,7 @@ import { RecommendationCardComponent } from "../recommendation-card/recommendati
 import { ProgressSpinner } from 'primeng/progressspinner';
 
 @Component({
-    selector: 'app-movie-recommendations',
+    selector: 'app-recommendations',
     imports: [
         ButtonModule,
         CommonModule,
@@ -33,7 +33,7 @@ import { ProgressSpinner } from 'primeng/progressspinner';
         UC_NavigateToSpecificPage
     ]
 })
-export class MovieRecommendationsComponent {
+export class RecommendationsComponent implements OnInit {
     public recommendations: I_MovieRecommendations | null = null;
     public isLoading: boolean = false;
     public subscription: Subscription | null = null;
@@ -43,9 +43,12 @@ export class MovieRecommendationsComponent {
     // input variables
     public inpMovieId: InputSignal<number> = input.required<number>();
     public inpMovieTitle: InputSignal<string> = input.required<string>();
+    public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
+    public inpRecommendations: InputSignal<I_MovieRecommendations | null> = input.required<I_MovieRecommendations | null>();
 
     // output variables
     public outServerNotAvailable: OutputEmitterRef<boolean> = output<boolean>();
+    public outGetMovieRecommendations: OutputEmitterRef<I_MovieRecommendations> = output<I_MovieRecommendations>();
 
     constructor(
         public shortenStringUseCase: UC_ShortenString,
@@ -55,17 +58,24 @@ export class MovieRecommendationsComponent {
         private messageService: MessageService,
     ) { }
 
-    public getMovieRecommendations = (movieId: number, movieTitle: string) => {
-        if (this.recommendations) {
+
+    ngOnInit(): void {
+        this.getMovieRecommendations();
+    }
+
+    public getMovieRecommendations = () => {
+        if (this.inpRecommendations()) {
             // don't load data if user has already got recommendations for this film
+            this.recommendations = this.inpRecommendations();
             this.areRecommendationsShown = true;
             return;
         }
 
         this.isLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(movieId, movieTitle).subscribe({
+        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie()).subscribe({
             next: (response: I_MovieRecommendations) => {
                 this.recommendations = response;
+                this.outGetMovieRecommendations.emit(response);
                 this.isLoading = false;
                 this.areRecommendationsShown = true;
             },

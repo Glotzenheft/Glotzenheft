@@ -1,0 +1,1 @@
+export const TABLIST: string[] = ["Tracklisten", "Empfehlungen", "Anderes"];

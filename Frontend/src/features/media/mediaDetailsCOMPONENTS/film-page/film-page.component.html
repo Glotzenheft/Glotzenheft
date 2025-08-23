@@ -133,7 +133,12 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
             </div>
         </div>
 
-        <app-movie-recommendations [inpMovieId]="filmData.media.id" [inpMovieTitle]="filmData.media.name" />
+        <app-media-tabs [inpTabList]="tabsList" (outChangeTab)="onChangeTab($event)" />
+
+        @if (currentTab === tabsList[0]) {
+        <div class="backButtonDIV">
+            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+        </div>
 
         <div class="newWatchlistButton">
             @for (tracklist of filmData.tracklists; track $index) {
@@ -144,10 +149,12 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
             </p-panel>
             }
         </div>
+        } @else if (currentTab === tabsList[1]) {
+        <app-recommendations [inpMovieId]="filmData.media.id" [inpMovieTitle]="filmData.media.name"
+            [inpRecommendations]="recommendations" [inpIsMovie]="true"
+            (outGetMovieRecommendations)="getRecommendations($event)" />
+        }
 
-        <div class="backButtonDIV">
-            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
-        </div>
     </div>
 </div>
 

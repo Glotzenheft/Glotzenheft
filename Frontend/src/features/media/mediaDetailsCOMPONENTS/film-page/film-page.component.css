@@ -60,7 +60,7 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
     .newWatchlistButton {
         margin-top: 2rem;
         margin-bottom: 4rem;
-        height: 12rem;
+        max-height: 12rem;
         overflow-y: auto;
     }
 
@@ -125,7 +125,7 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
     .newWatchlistButton {
         margin-top: 2rem;
         margin-bottom: 4rem;
-        height: 20rem;
+        max-height: 20rem;
         overflow-y: auto;
     }
 }

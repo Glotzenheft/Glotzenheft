@@ -55,6 +55,10 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
 import { UC_JoinTVWithTracklists } from '../../../../app/core/use-cases/tracklist/join-tv-with-tracklists.use-case';
 import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/get-selected-tracklist-in-local-storage.use-case';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
+import { TABLIST } from '../../../../app/shared/variables/tab-lists';
+import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
+import { RecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
+import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 
 @Component({
     selector: 'app-season-page',
@@ -79,6 +83,8 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
         TracklistFormComponent,
         UpdateTracklistFormComponent,
         ProgressSpinnerModule,
+        MediaTabsComponent,
+        RecommendationsComponent
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -90,7 +96,10 @@ export class SeasonPageComponent implements OnInit {
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
-    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/"
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/";
+    public currentTab: string = TABLIST[0];
+    public tabList: string[] = TABLIST;
+    public recommendations: I_MovieRecommendations | null = null;
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -305,4 +314,12 @@ export class SeasonPageComponent implements OnInit {
         this.currentTracklistSelection = tracklist;
         this.isTracklistFormVisible = 3;
     };
+
+    public onChangeTab = (newTab: string) => {
+        this.currentTab = newTab;
+    };
+
+    public getRecommendations = (recs: I_MovieRecommendations) => {
+        this.recommendations = recs;
+    }
 }

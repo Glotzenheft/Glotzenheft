@@ -468,11 +468,11 @@ export class R_MediaHttp implements I_MediaRepository {
     };
 
 
-    public getMovieRecommendations = (movieId: number, movieTitle: string): Observable<I_MovieRecommendations> => {
+    public getRecommendations = (tmdb_id: number, title: string, isMovie: boolean): Observable<I_MovieRecommendations> => {
         const token = this.getUserToken()
 
         if (!token) return EMPTY;
 
-        return this.http.post<I_MovieRecommendations>("http://localhost:80/recommendation", { tmdbid: movieId, movieTitle, backendIP: ROUTE_CHECK_USER_AUTH, token });
+        return this.http.post<I_MovieRecommendations>(`http://localhost:80/${isMovie ? "movie" : "tv"}-recommendation`, { tmdbid: tmdb_id, title, backendIP: ROUTE_CHECK_USER_AUTH, token });
     }
 }

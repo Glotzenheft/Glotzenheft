@@ -7,5 +7,5 @@ import { I_MovieRecommendations } from "../../../shared/interfaces/movie-recomme
 export class UC_GetMovieRecommendations {
     constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
 
-    public execute = (movieId: number, movieTitle: string): Observable<I_MovieRecommendations> => { return this.mediaRepository.getMovieRecommendations(movieId, movieTitle) }
+    public execute = (tmdbId: number, title: string, isMovie: boolean): Observable<I_MovieRecommendations> => { return this.mediaRepository.getRecommendations(tmdbId, title, isMovie); }
 }
