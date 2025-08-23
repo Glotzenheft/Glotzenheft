@@ -24,5 +24,4 @@ enum MediaType: string
 {
     case Movie = 'movie';
     case TV = 'tv';
-    case ANIME = 'anime';
 }
