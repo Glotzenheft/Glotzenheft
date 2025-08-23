@@ -41,7 +41,7 @@ import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-
 import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-search-term.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
-import {SelectOption} from "../../../../shared/interfaces/select-option.interface";
+import { SelectOption } from "../../../../app/shared/interfaces/select-option.interface";
 
 @Component({
     selector: 'app-multi-search',
@@ -239,11 +239,10 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
 
                 if (res.media_id === undefined || res.media_id === null) {
                     // if no media_id exists in the db -> because media is not already saved
-                    const summaryMessage: string = `Fehler beim Weiterleiten ${
-                        mediaGenre === 'movie' 
-                            ? 'zum Film.' 
+                    const summaryMessage: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
+                            ? 'zum Film.'
                             : 'zur Serie.'
-                    }`;
+                        }`;
 
                     this.messageService.add(
                         getMessageObject(
@@ -270,9 +269,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                const message: string = `Fehler beim Weiterleiten ${
-                    mediaGenre === 'movie' 
-                        ? 'zum Film.' 
+                const message: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
+                        ? 'zum Film.'
                         : 'zur Serie.'
                     }`;
 

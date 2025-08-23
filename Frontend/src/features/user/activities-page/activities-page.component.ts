@@ -20,11 +20,6 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import {
-    UserActivitiesResponse,
-    UserActivity,
-    UserActivityWithDaySplitt,
-} from '../../../shared/interfaces/user-interfaces';
 import { DateFormattingPipe } from '../../../pipes/date-formatting/date-formatting.pipe';
 import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
@@ -38,7 +33,8 @@ import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../ap
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
-import {SelectOption} from "../../../shared/interfaces/select-option.interface";
+import { SelectOption } from "../../../app/shared/interfaces/select-option.interface";
+import { UserActivitiesResponse, UserActivity, UserActivityWithDaySplitt } from '../../../app/shared/interfaces/user-interfaces';
 
 @Component({
     selector: 'app-activities-page',
@@ -238,7 +234,7 @@ export class ActivitiesPageComponent implements OnInit {
             this.isRightButtonDisabled = true;
             return;
         }
-        this.currentPage ++;
+        this.currentPage++;
         this.isRightButtonDisabled = false;
         this.isLeftButtonDisabled = false;
         this.loadUserActivities(this.currentPage);
@@ -250,7 +246,7 @@ export class ActivitiesPageComponent implements OnInit {
             return;
         }
 
-        this.currentPage --;
+        this.currentPage--;
         this.loadUserActivities(this.currentPage);
     };
 

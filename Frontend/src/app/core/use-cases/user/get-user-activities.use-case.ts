@@ -18,7 +18,7 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 import { Inject, Injectable } from "@angular/core";
 import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
 import { Observable } from "rxjs";
-import { UserActivitiesResponse } from "../../../../shared/interfaces/user-interfaces";
+import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
 
 @Injectable()
 export class UC_GetUserActivites {

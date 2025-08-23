@@ -21,13 +21,13 @@ import { MenuModule } from 'primeng/menu';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
-import { UserMenuList } from '../../../../shared/interfaces/user-interfaces';
 import { isUserLoggedIn } from '../../../../guards/auth.guard';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { getMessageObject } from '../../../../app/shared/variables/message-vars';
 import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
 import { UC_VisibleUserName } from '../../../../app/core/use-cases/user/get-visible-user-name.use-case';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UserMenuList } from '../../../../app/shared/interfaces/user-interfaces';
 
 @Component({
     selector: 'app-user-menu',
