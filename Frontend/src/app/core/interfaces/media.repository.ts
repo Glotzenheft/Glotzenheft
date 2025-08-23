@@ -42,7 +42,7 @@ export interface I_MediaRepository {
     getTracklistDELETEResponseSubject: () => Observable<any>,
     deleteTracklist: (tracklistID: number) => Observable<any>,
     getAllUserTracklists: () => Observable<Tracklist[]> | null,
-    getRecommendations: (tmdbId: number, title: string, isMovie: boolean) => Observable<I_MovieRecommendations>
+    getRecommendations: (tmdbId: number, title: string, isMovie: boolean, posterPath: string) => Observable<I_MovieRecommendations>
 }
 
 // IT = Injection Token

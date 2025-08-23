@@ -16,7 +16,7 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Params, Router } from '@angular/router';
 import { Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
@@ -155,28 +155,32 @@ export class SeasonPageComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.params.subscribe((params: Params) => {
+            this.tvSeriesID = params["id"];
+            this.loadData(this.tvSeriesID);
+        })
     }
 
     // functions -----------------------------------------------------
 
-    public loadData = () => {
+    public loadData = (tmdbId: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.tvSeriesID = this.route.snapshot.paramMap.get('id');
+        this.recommendations = null;
+        this.currentTab = TABLIST[0];
 
-        if (!this.tvSeriesID) {
+        if (!tmdbId) {
             this.hasError = true;
             return;
         }
 
-        if (!this.validateMediaURLUseCase.execute(this.tvSeriesID)) {
+        if (!this.validateMediaURLUseCase.execute(tmdbId)) {
             this.isInvalidID = true;
             return;
         }
 
         // checking if "media_id" already exists:
-        this.seasonData$ = this.getSeasonForTVUseCase.execute(this.tvSeriesID);
+        this.seasonData$ = this.getSeasonForTVUseCase.execute(tmdbId);
 
         if (!this.seasonData$) {
             this.hasError = true;
@@ -300,7 +304,7 @@ export class SeasonPageComponent implements OnInit {
     public refreshPage = () => {
         this.currentSeason = null;
         this.setVisibility(0);
-        this.loadData();
+        this.loadData(this.tvSeriesID);
     };
     public cancelTracklistForm = () => {
         this.isTracklistFormVisible = 0;

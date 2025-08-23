@@ -142,6 +142,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.movieID = movieID;
         this.recommendations = null;
+        this.currentTab = TABLIST[0];
 
         if (!this.movieID) {
             this.hasError = true;

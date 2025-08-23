@@ -1,4 +1,4 @@
-import { Component, Input, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
+import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
 import { I_MovieRecommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
@@ -15,6 +15,7 @@ import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
 import { ProgressSpinner } from 'primeng/progressspinner';
 
+
 @Component({
     selector: 'app-recommendations',
     imports: [
@@ -23,8 +24,8 @@ import { ProgressSpinner } from 'primeng/progressspinner';
         RecommendationCardComponent,
         ProgressSpinner
     ],
-    templateUrl: './movie-recommendations.component.html',
-    styleUrl: './movie-recommendations.component.css',
+    templateUrl: './recommendations.component.html',
+    styleUrl: './recommendations.component.css',
     providers: [
         UC_ShortenString,
         UC_GetMovieRecommendations,
@@ -45,7 +46,6 @@ export class RecommendationsComponent implements OnInit {
     public inpMovieTitle: InputSignal<string> = input.required<string>();
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
     public inpRecommendations: InputSignal<I_MovieRecommendations | null> = input.required<I_MovieRecommendations | null>();
-    public inpMediaPosterPath: InputSignal<string> = input.required<string>();
 
     // output variables
     public outServerNotAvailable: OutputEmitterRef<boolean> = output<boolean>();
@@ -73,7 +73,7 @@ export class RecommendationsComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpMediaPosterPath()).subscribe({
+        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie()).subscribe({
             next: (response: I_MovieRecommendations) => {
                 this.recommendations = response;
                 this.outGetMovieRecommendations.emit(response);
@@ -99,5 +99,4 @@ export class RecommendationsComponent implements OnInit {
     public hideRecommendations = () => {
         this.areRecommendationsShown = false;
     }
-
 }
