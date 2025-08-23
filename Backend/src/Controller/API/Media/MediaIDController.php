@@ -20,42 +20,39 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Media;
 
-use App\API\TheMovieDB\Traits\MediaDetailTrait;
+use App\Model\Request\Media\MediaIdDto;
+use App\Security\IsAuthenticated;
+use App\Service\Media\MediaService;
+use App\TmdbApi\ApiException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 
 class MediaIDController extends AbstractController
 {
-    use MediaDetailTrait;
+    public function __construct(
+        private readonly MediaService $mediaService,
+    ){}
 
     /**
-     * @example https://127.0.0.1:8000/api/media?tmdb_id=205366&media_type=tv
-     * @param Request $request
+     * API endpoint to fetch the media id.
+     * TMDB id and media type are required.
+     * Media type has to be 'movie' or 'tv'.
+     *
+     * @param MediaIdDto $params
      * @return JsonResponse
+     * @throws ApiException
      */
+    #[IsAuthenticated]
     #[Route('/api/media', name: 'get_media_id', methods: ['GET'])]
-    public function getMediaID(Request $request): JsonResponse
+    public function mediaIdEndpoint(
+        #[MapQueryString] MediaIdDto $params
+    ): JsonResponse
     {
-        $tmdbID = $request->query->get('tmdb_id');
-        $tmdbID = $tmdbID !== null ? (int) $tmdbID : null;
-
-        $mediaType = $request->query->get('media_type') ?? null;
-        if ($tmdbID === null || $mediaType === null)
-        {
-            return new JsonResponse([
-                'error' => 'TMDB ID is required.',
-                'code' => 400,
-            ]);
-        }
-
-        $data = [
-            'tmdb_id' =>$tmdbID,
-            'media_type' =>$mediaType
-        ];
-        $mediaID = $this->searchMediaID($data);
-
-        return $this->json($mediaID);
+        $mediaId = $this->mediaService->findOrCreateMedia(params: $params)->getId();
+        return $this->json([
+            'media_id' => $mediaId,
+        ]);
     }
 }
