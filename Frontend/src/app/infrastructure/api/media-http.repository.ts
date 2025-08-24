@@ -148,7 +148,6 @@ export class R_MediaHttp implements I_MediaRepository {
 
     /**
      * For getting the mediaID from the database.
-  
      *
      * @param tmdbID string
      * @param isMovie boolean
@@ -161,11 +160,16 @@ export class R_MediaHttp implements I_MediaRepository {
         */
         tmdbID: number,
         isMovie: boolean
-    ): Observable<MediaIDResponse> => {
+    ): Observable<MediaIDResponse> | null => {
+        const header = this.getHeader();
+        if (!header) {
+            return null;
+        }
+
         const movieType: string = isMovie ? 'movie' : 'tv';
         const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
-        return this.http.get<MediaIDResponse>(url).pipe(
+        return this.http.get<MediaIDResponse>(url, {headers: header}).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
