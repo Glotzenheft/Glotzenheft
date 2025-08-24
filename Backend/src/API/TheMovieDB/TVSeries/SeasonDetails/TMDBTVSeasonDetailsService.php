@@ -92,7 +92,13 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
         }
     }
 
-    public function handleSeasonDetails(int $seriesID, int $seasonNumber, Media $media, string $language = 'de-DE'): Season
+    public function handleSeasonDetails(
+        int $seriesID,
+        int $seasonNumber,
+        Media $media,
+        string $language = 'de-DE',
+        bool $flush = true
+    ): Season
     {
         $response = $this->getTVSeasonDetails($seriesID, $seasonNumber, $language);
         $tmdbSeasonID = $response['id'];
@@ -164,7 +170,7 @@ readonly class TMDBTVSeasonDetailsService implements TMDBTVSeasonDetailsInterfac
             $this->entityManager->persist($episode);
         }
 
-        $this->entityManager->flush();
+        if ($flush) $this->entityManager->flush();
 
         return $season;
     }
