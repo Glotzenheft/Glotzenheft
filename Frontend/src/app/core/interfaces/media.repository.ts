@@ -24,7 +24,7 @@ import { InjectionToken } from "@angular/core";
 export interface I_MediaRepository {
     getHeader: () => HttpHeaders | null,
     getAllFilms: () => Observable<Film[]>,
-    getMediaIdForMedia: (tmdbID: number, isMovie: boolean) => Observable<MediaIDResponse>,
+    getMediaIdForMedia: (tmdbID: number, isMovie: boolean) => Observable<MediaIDResponse> | null,
     getSeasonForTV: (mediaID: string) => Observable<Season> | null,
     getFilmDetails: (movieID: string) => Observable<Film> | null,
     getMultiSearchResults: (searchString: string, page: number) => Observable<any>,
