@@ -8,6 +8,11 @@ docs/Api/MoviesApi.md
 docs/Api/SearchApi.md
 docs/Api/TVApi.md
 docs/Api/TrendingApi.md
+docs/Api/RecommendationApi.md
+docs/Model/MovieRecommendations200Response.md
+docs/Model/MovieRecommendations200ResponseResultsInner.md
+docs/Model/TvSeriesRecommendations200Response.md
+docs/Model/TvSeriesRecommendations200ResponseResultsInner.md
 docs/Model/MovieDetails200Response.md
 docs/Model/MovieDetails200ResponseGenresInner.md
 docs/Model/MovieDetails200ResponseProductionCompaniesInner.md
@@ -43,6 +48,7 @@ lib/Api/MoviesApi.php
 lib/Api/SearchApi.php
 lib/Api/TVApi.php
 lib/Api/TrendingApi.php
+lib/Api/RecommendationApi.php
 lib/ApiException.php
 lib/Configuration.php
 lib/FormDataProcessor.php
@@ -78,5 +84,9 @@ lib/Model/TvSeriesDetails200ResponseNetworksInner.php
 lib/Model/TvSeriesDetails200ResponseProductionCompaniesInner.php
 lib/Model/TvSeriesDetails200ResponseProductionCountriesInner.php
 lib/Model/TvSeriesDetails200ResponseSeasonsInner.php
+lib/Model/MovieRecommendations200Response.php
+lib/Model/MovieRecommendations200ResponseResultsInner.php
+lib/Model/TvSeriesRecommendations200Response.php
+lib/Model/TvSeriesRecommendations200ResponseResultsInner.php
 lib/ObjectSerializer.php
 phpunit.xml.dist
