@@ -14,5 +14,10 @@ readonly class MovieRecommendationDto
         )]
         public ?int $tmdbMovieId = null,
         public ?string $language = 'de-DE',
+        #[Assert\Range(
+            minMessage: 'Page number must be at least 1.',
+            min: 1
+        )]
+        public int $page = 1,
     ){}
 }
