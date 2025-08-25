@@ -24,7 +24,10 @@ import { Inject, Injectable } from "@angular/core";
 export class UC_GetMediaIdForMedia {
     constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
 
-    public execute = (tmdbId: number, isMovie: boolean): Observable<MediaIDResponse> => {
+    public execute = (
+        tmdbId: number,
+        isMovie: boolean
+    ): Observable<MediaIDResponse> => {
         return this.mediaRepository.getMediaIdForMedia(tmdbId, isMovie)
     }
 }
