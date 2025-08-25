@@ -242,7 +242,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     };
 
     navigateToMediaPage = (id: number, mediaGenre: string) => {
-        this.getMediaIdForMediaUseCase.execute(id, mediaGenre === 'movie')?.subscribe({
+        this.getMediaIdForMediaUseCase.execute(id, mediaGenre === 'movie').subscribe({
             next: (res: MediaIDResponse) => {
                 let url: string = '';
 

@@ -27,7 +27,7 @@ export class UC_GetMediaIdForMedia {
     public execute = (
         tmdbId: number,
         isMovie: boolean
-    ): Observable<MediaIDResponse> | null => {
+    ): Observable<MediaIDResponse> => {
         return this.mediaRepository.getMediaIdForMedia(tmdbId, isMovie)
     }
 }

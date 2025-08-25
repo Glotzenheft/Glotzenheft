@@ -160,10 +160,10 @@ export class R_MediaHttp implements I_MediaRepository {
         */
         tmdbID: number,
         isMovie: boolean
-    ): Observable<MediaIDResponse> | null => {
+    ): Observable<MediaIDResponse> => {
         const header = this.getHeader();
         if (!header) {
-            return null;
+            return EMPTY;
         }
 
         const movieType: string = isMovie ? 'movie' : 'tv';
