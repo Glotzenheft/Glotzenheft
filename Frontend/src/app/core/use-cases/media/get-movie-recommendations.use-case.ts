@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { Inject, Injectable } from "@angular/core";
 import { I_MediaRepository, IT_MEDIA_REPOSITORY } from "../../interfaces/media.repository";
 import { Observable } from "rxjs";
-import { I_Recommendations } from "../../../shared/interfaces/movie-recommendation-interface";
+import { I_Recommendations } from "../../../shared/interfaces/recommendation-interfaces";
 
 @Injectable()
 export class UC_GetMovieRecommendations {

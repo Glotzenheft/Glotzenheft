@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, input, InputSignal } from '@angular/core';
-import { I_Recommendation } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
 import { MediaIDResponse } from '../../../../app/shared/interfaces/media-interfaces';
@@ -29,6 +28,7 @@ import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { TitleFormattingPipe } from "../../../../pipes/titleFormatting/title-formatting.pipe";
 import { TooltipModule } from 'primeng/tooltip';
+import { I_Recommendation } from '../../../../app/shared/interfaces/recommendation-interfaces';
 
 @Component({
     selector: 'app-recommendation-card',

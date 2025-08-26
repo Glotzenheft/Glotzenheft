@@ -26,12 +26,12 @@ import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_NavigateToSpecificPage } from '../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { UC_GetHighestMedia } from '../../../app/core/use-cases/media/get-highest-media.use-case';
 import { CommonModule } from '@angular/common';
-import { I_HighestRecommendations } from '../../../app/shared/interfaces/movie-recommendation-interface';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { MessageService } from 'primeng/api';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../app/shared/variables/message-vars';
 import { RecommendationCardComponent } from "../../media/mediaDetailsCOMPONENTS/recommendation-card/recommendation-card.component";
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { I_HighestRecommendations } from '../../../app/shared/interfaces/recommendation-interfaces';
 
 @Component({
     selector: 'app-start-main',

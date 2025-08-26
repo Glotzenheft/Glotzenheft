@@ -58,7 +58,7 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
 import { RecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
-import { I_Recommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
+import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 
 @Component({
     selector: 'app-season-page',

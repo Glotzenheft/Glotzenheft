@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, Input, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
-import { I_Recommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
@@ -31,6 +30,7 @@ import { CommonModule } from '@angular/common';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
 import { ProgressSpinner } from 'primeng/progressspinner';
+import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 
 @Component({
     selector: 'app-recommendations',
