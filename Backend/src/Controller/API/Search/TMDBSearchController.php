@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Search;
 
-use App\Model\Request\Search\MovieSearchRequestDto;
+use App\Model\Request\Movie\MovieSearchRequestDto;
 use App\Model\Request\Search\MultiSearchRequestDto;
-use App\Model\Request\Search\TvSearchRequestDto;
+use App\Model\Request\TV\TvSearchRequestDto;
 use App\Service\TMDB\Search\TMDBSearchService;
 use App\TmdbApi\ApiException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
