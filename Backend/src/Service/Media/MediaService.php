@@ -20,11 +20,11 @@ declare(strict_types=1);
 
 namespace App\Service\Media;
 
-use App\API\TheMovieDB\TVSeries\SeasonDetails\TMDBTVSeasonDetailsService;
 use App\Entity\Media;
 use App\Entity\TMDBGenre;
 use App\Enum\MediaType;
 use App\Model\Request\Media\MediaIdDto;
+use App\Service\TMDB\TVSeries\TVSeriesSeasonService;
 use App\TmdbApi\Api\MoviesApi;
 use App\TmdbApi\Api\TVApi;
 use App\TmdbApi\ApiException;
@@ -38,7 +38,7 @@ readonly class MediaService
 {
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private TMDBTVSeasonDetailsService $seasonService,
+        private TVSeriesSeasonService $seasonService,
         private TVApi $tvApi,
         private MoviesApi $moviesApi,
     ){}
@@ -63,10 +63,88 @@ readonly class MediaService
             return $media;
         }
 
-        return match ($mediaType) {
+        return match ($mediaType)
+        {
             MediaType::Movie => $this->createMovieFromTmdb($params->tmdbId, $params->language),
             MediaType::TV => $this->createTvSeriesFromTmdb($params->tmdbId, $params->language),
         };
+    }
+
+    /**
+     * Updates a given movie entity with the latest data from TMDB.
+     *
+     * @param Media $media The entity to update.
+     * @param string $language
+     * @return Media The updated entity.
+     * @throws ApiException
+     */
+    public function updateMovieFromTmdb(
+        Media $media,
+        string $language
+    ): Media
+    {
+        $response = $this->moviesApi->movieDetails(
+            movie_id: $media->getTmdbID(),
+            append_to_response: 'external_ids',
+            language: $language,
+        );
+
+        $this->populateMediaFromTmdbData(
+            media: $media,
+            tmdbData: $response,
+            type: MediaType::Movie
+        );
+
+        $this->entityManager->persist($media);
+
+        return $media;
+    }
+
+    /**
+     * Updates a given TV series entity with the latest data from TMDB.
+     *
+     * @param Media $media The entity to update.
+     * @param string $language
+     * @return Media The updated entity.
+     * @throws ApiException
+     */
+    public function updateTvSeriesFromTmdb(
+        Media $media,
+        string $language
+    ): Media
+    {
+        $tvDetails = $this->tvApi->tvSeriesDetails(
+            series_id: $media->getTmdbID(),
+            append_to_response: 'external_ids',
+            language: $language,
+        );
+
+        $this->populateMediaFromTmdbData(
+            media: $media,
+            tmdbData: $tvDetails,
+            type: MediaType::TV
+        );
+
+        $this->entityManager->persist($media);
+
+        if ($tvDetails->getNumberOfSeasons() > 0)
+        {
+            foreach ($tvDetails->getSeasons() as $season)
+            {
+                $seasonNumber = $season->getSeasonNumber();
+                if ($seasonNumber !== null)
+                {
+                    $this->seasonService->updateSeasonFromTmdb(
+                        media: $media,
+                        seasonNumber: $seasonNumber,
+                        language: $language,
+                        flush: false
+                    );
+                }
+            }
+        }
+
+        return $media;
     }
 
     /**
@@ -80,19 +158,11 @@ readonly class MediaService
         string $language
     ): ?Media
     {
-        $response = $this->moviesApi->movieDetails(
-            movie_id: $tmdbId,
-            append_to_response: 'external_ids',
-            language: $language,
+        $media = (new Media())->setTmdbID($tmdbId);
+        $this->updateMovieFromTmdb(
+            media: $media,
+            language: $language
         );
-
-        $this->populateMediaFromTmdbData(
-            media: $media = new Media(),
-            tmdbData: $response,
-            type: MediaType::Movie
-        );
-
-        $this->entityManager->persist($media);
         $this->entityManager->flush();
 
         return $media;
@@ -109,38 +179,11 @@ readonly class MediaService
         string $language
     ): Media
     {
-        $tvDetails = $this->tvApi->tvSeriesDetails(
-            series_id: $tmdbId,
-            append_to_response: 'external_ids',
-            language: $language,
+        $media = (new Media())->setTmdbID($tmdbId);
+        $this->updateTvSeriesFromTmdb(
+            media: $media,
+            language: $language
         );
-
-        $this->populateMediaFromTmdbData(
-            media: $media = new Media(),
-            tmdbData: $tvDetails,
-            type: MediaType::TV
-        );
-
-        $this->entityManager->persist($media);
-
-        if ($tvDetails->getNumberOfSeasons() > 0)
-        {
-            foreach ($tvDetails->getSeasons() as $season)
-            {
-                $seasonNumber = $season->getSeasonNumber();
-                if ($seasonNumber !== null)
-                {
-                    $this->seasonService->handleSeasonDetails(
-                        seriesID: $tmdbId,
-                        seasonNumber: $seasonNumber,
-                        media: $media,
-                        language: $language,
-                        flush: false
-                    );
-                }
-            }
-        }
-
         $this->entityManager->flush();
 
         return $media;
@@ -209,10 +252,12 @@ readonly class MediaService
             ->setPosterPath($tmdbData->getPosterPath())
             ->setBackdropPath($tmdbData->getBackdropPath())
             ->setType($type)
-            ->setTmdbID($tmdbData->getId())
+            ->setTmdbID($media->getTmdbID() ?? $tmdbData->getId())
             ->setRuntime($runtime)
             ->setUpdatedAt(new DateTimeImmutable());
 
+        // Clear existing genres to replace them with the new ones
+        $media->getTmdbGenres()->clear();
         foreach ($tmdbData->getGenres() ?? [] as $genreData)
         {
             $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy([
