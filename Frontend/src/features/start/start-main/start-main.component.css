@@ -16,10 +16,18 @@ along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 .startPage {
-  height: 80%;
-  width: 100%;
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
-  padding-top: var(--padding--top-bottom);
-  padding-bottom: var(--padding--top-bottom);
+    height: 80%;
+    width: 100%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+}
+
+.serverNotAvailableDIV {
+    width: 100%;
+    height: 4rem;
+    border: 0.1rem solid red;
+    background-color: transparent;
+    box-shadow: 0.2rem 0.4rem 0.2rem rgba(0, 0, 0, 0.4);
 }

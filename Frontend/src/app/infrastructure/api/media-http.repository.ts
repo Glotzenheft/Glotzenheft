@@ -486,7 +486,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
         if (!token) return EMPTY;
 
-        return this.http.post<I_HighestRecommendations>("http://localhost:80/highest-media", { backendIP: ROUTE_CHECK_USER_AUTH, token }).pipe(
+        return this.http.post<I_HighestRecommendations>("http://127.0.0.1:80/highest-media", { backendIP: ROUTE_CHECK_USER_AUTH, token }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);

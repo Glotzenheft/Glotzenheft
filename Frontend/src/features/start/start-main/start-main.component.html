@@ -48,6 +48,7 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
 -->
 
 @if (!isLoading) {
+
 <div class="startPage">
     <h1>Glotzenheft</h1>
 
@@ -82,6 +83,11 @@ Programm erhalten haben. Wenn nicht, siehe <https://www.gnu.org/licenses/>.
     @if (highestMedia) {
     <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
     }
+    }
+    @if (isServerNotAvailable) {
+    <div class="serverNotAvailableDIV">
+        <p>Empfehlungen können nicht geladen werden.</p>
+    </div>
     }
 </div>
 } @else {
