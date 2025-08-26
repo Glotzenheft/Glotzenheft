@@ -85,8 +85,8 @@ import { TooltipModule } from 'primeng/tooltip';
         UpdateTracklistFormComponent,
         ProgressSpinnerModule,
         MediaTabsComponent,
-        ApiRecommendationComponent,
-        TooltipModule
+        TooltipModule,
+        ApiRecommendationComponent
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',

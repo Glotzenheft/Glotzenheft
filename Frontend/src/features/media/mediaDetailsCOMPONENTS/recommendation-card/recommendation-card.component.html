@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @if (inpTitle()) {
 <h4>{{inpTitle()}}</h4>
 }
+@if (inpRecommendationsList().length > 0) {
 <ul class="cardContainer">
-    @if (inpRecommendationsList().length > 0) {
     @for (recommendation of inpRecommendationsList(); track $index) {
     <li class="recCard" (click)="onClickRec(recommendation.tmdb_id, recommendation.media_type === 'movie')"
         [pTooltip]="recommendation.title">
@@ -27,7 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <p>{{recommendation.title | titleFormatting}}</p>
     </li>
     }
-    } @else {
-    <span><i>keine Empfehlungen vorhanden</i></span>
-    }
 </ul>
+} @else {
+<span><i>keine Empfehlungen vorhanden</i></span>
+}

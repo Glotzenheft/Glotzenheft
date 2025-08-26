@@ -53,8 +53,9 @@ import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
-import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { I_APIRecommendationResponse, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { RecommendationsComponent } from '../recommendations/recommendations.component';
+import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
 
 @Component({
     selector: 'app-film-page',
@@ -75,7 +76,8 @@ import { RecommendationsComponent } from '../recommendations/recommendations.com
         UpdateFilmTracklistComponent,
         ProgressSpinnerModule,
         MediaTabsComponent,
-        RecommendationsComponent
+        RecommendationsComponent,
+        ApiRecommendationComponent
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -110,6 +112,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public isLoading: boolean = false;
     public areRecommendationsLoading: boolean = false;
     public recommendations: I_Recommendations | null = null;
+    public apiRecommendations: I_APIRecommendationResponse | null = null;
     private subscription: Subscription | null = null
 
     constructor(
@@ -142,6 +145,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.isLoading = true;
         this.movieID = movieID;
         this.recommendations = null;
+        this.apiRecommendations = null;
         this.currentTab = TABLIST[0];
 
         if (!this.movieID) {
@@ -225,4 +229,6 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public getRecommendations = (recs: I_Recommendations) => {
         this.recommendations = recs;
     }
+
+    public setAPIRecommendations = (recs: I_APIRecommendationResponse) => { this.apiRecommendations = recs; }
 }

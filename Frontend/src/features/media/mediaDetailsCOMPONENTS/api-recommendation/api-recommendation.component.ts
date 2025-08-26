@@ -15,7 +15,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component } from '@angular/core';
+import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
+import { Tooltip } from 'primeng/tooltip';
+import { TitleFormattingPipe } from '../../../../pipes/titleFormatting/title-formatting.pipe';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { UC_GetAPIRecommendations } from '../../../../app/core/use-cases/media/get-api-recommendations.use-case';
+import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
+import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
+import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
+import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
+import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/navigate-to-page.use-case';
+import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import { MessageService } from 'primeng/api';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
+import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { MediaIDResponse } from '../../../../app/shared/interfaces/media-interfaces';
 
 @Component({
     selector: 'app-api-recommendation',

@@ -118,9 +118,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
         </div>
         } @else if (currentTab === tabsList[1]) {
-        <app-recommendations [inpMovieId]="filmData.media.tmdbID" [inpMovieTitle]="filmData.media.name"
+        <!-- <app-recommendations [inpMovieId]="filmData.media.tmdbID" [inpMovieTitle]="filmData.media.name"
             [inpRecommendations]="recommendations" [inpIsMovie]="true" [inpMediaPosterPath]="filmData.media.posterPath"
-            (outGetMovieRecommendations)="getRecommendations($event)" />
+            (outGetMovieRecommendations)="getRecommendations($event)" /> -->
+        <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
+            [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" />
         }
 
     </div>

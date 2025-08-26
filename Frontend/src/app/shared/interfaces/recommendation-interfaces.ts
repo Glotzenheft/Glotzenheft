@@ -34,6 +34,7 @@ export interface I_APIRecommendation {
     backdrop_path: string,
     id: number,
     name: string,
+    title: string,
     original_language: string,
     original_name: string,
     overview: string,
