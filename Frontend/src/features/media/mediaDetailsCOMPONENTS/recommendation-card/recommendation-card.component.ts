@@ -61,7 +61,6 @@ export class RecommendationCardComponent {
     ) { }
 
     public onClickRec = (tmdbId: number, isMovie: boolean) => {
-        console.log("tmdbid", tmdbId, "ismovie", isMovie)
         this.getMediaIdForMediaUseCase.execute(tmdbId, isMovie).subscribe({
             next: (res: MediaIDResponse) => {
                 if (res.media_id === undefined || res.media_id === null) {

@@ -57,8 +57,9 @@ import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
-import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
-import { RecommendationsComponent } from '../recommendations/recommendations.component';
+import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
+import { TooltipModule } from 'primeng/tooltip';
 
 @Component({
     selector: 'app-season-page',
@@ -84,7 +85,8 @@ import { RecommendationsComponent } from '../recommendations/recommendations.com
         UpdateTracklistFormComponent,
         ProgressSpinnerModule,
         MediaTabsComponent,
-        RecommendationsComponent
+        ApiRecommendationComponent,
+        TooltipModule
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -99,7 +101,7 @@ export class SeasonPageComponent implements OnInit {
     public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/";
     public currentTab: string = TABLIST[0];
     public tabList: string[] = TABLIST;
-    public recommendations: I_Recommendations | null = null;
+    public apiRecommendations: I_APIRecommendationResponse | null = null;
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -166,7 +168,7 @@ export class SeasonPageComponent implements OnInit {
     public loadData = (tmdbId: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.recommendations = null;
+        this.apiRecommendations = null;
         this.currentTab = TABLIST[0];
 
         if (!tmdbId) {
@@ -323,7 +325,7 @@ export class SeasonPageComponent implements OnInit {
         this.currentTab = newTab;
     };
 
-    public getRecommendations = (recs: I_Recommendations) => {
-        this.recommendations = recs;
+    public getRecommendations = (recs: I_APIRecommendationResponse) => {
+        this.apiRecommendations = recs;
     }
 }

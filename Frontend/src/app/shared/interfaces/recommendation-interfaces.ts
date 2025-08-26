@@ -29,7 +29,23 @@ export interface I_HighestRecommendations {
     recommendations: I_Recommendation[]
 }
 
-export interface I_APIRecommendation { }
+export interface I_APIRecommendation {
+    adult: boolean,
+    backdrop_path: string,
+    id: number,
+    name: string,
+    original_language: string,
+    original_name: string,
+    overview: string,
+    poster_path: string,
+    media_type: string,
+    genre_ids: string[],
+    popularity: number,
+    first_air_date: string,
+    vote_average: number,
+    vote_count: number,
+    origin_country: string[]
+}
 
 export interface I_APIRecommendationResponse {
     page: number,

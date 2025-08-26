@@ -31,7 +31,6 @@ import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { I_Recommendation, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
-import { UC_GetAPIRecommendations } from '../../../../app/core/use-cases/media/get-api-recommendations.use-case';
 
 @Component({
     selector: 'app-recommendations',
@@ -49,7 +48,6 @@ import { UC_GetAPIRecommendations } from '../../../../app/core/use-cases/media/g
         UC_GetMediaIdForMedia,
         UC_LogoutOfAccount,
         UC_NavigateToSpecificPage,
-        UC_GetAPIRecommendations
     ]
 })
 export class RecommendationsComponent implements OnInit {
@@ -75,7 +73,6 @@ export class RecommendationsComponent implements OnInit {
     constructor(
         public readonly shortenStringUseCase: UC_ShortenString,
         private readonly getMovieRecommendationsUseCase: UC_GetMovieRecommendations,
-        private readonly getAPIRecommendationsUseCase: UC_GetAPIRecommendations,
         private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
         private readonly logOutOfAccountUseCase: UC_LogoutOfAccount,
         private readonly messageService: MessageService,
@@ -96,30 +93,6 @@ export class RecommendationsComponent implements OnInit {
 
 
         this.isLoading = true;
-        this.apiSubscription = this.getAPIRecommendationsUseCase.execute(this.inpMovieId(), this.inpIsMovie()).subscribe({
-            next: (response: I_Recommendation[] | null) => {
-                if (!response) {
-                    return;
-                }
-                this.apiRecommendations = response;
-
-            },
-            error: (err) => {
-                if (err.status === 401 || err.status === 400) {
-                    this.logOutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                } else if (err.status === 0) {
-                    // server not available
-                    this.outServerNotAvailable.emit(true);
-                }
-
-                this.isLoading = false;
-            },
-        })
-
-
         this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpMediaPosterPath()).subscribe({
             next: (response: I_Recommendations) => {
                 this.recommendations = response;
