@@ -29,17 +29,18 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ProgressSpinner } from 'primeng/progressspinner';
-import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { I_Recommendation, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
+import { UC_GetAPIRecommendations } from '../../../../app/core/use-cases/media/get-api-recommendations.use-case';
 
 @Component({
     selector: 'app-recommendations',
     imports: [
-    ButtonModule,
-    CommonModule,
-    ProgressSpinner,
-    RecommendationCardComponent
-],
+        ButtonModule,
+        CommonModule,
+        ProgressSpinner,
+        RecommendationCardComponent
+    ],
     templateUrl: './recommendations.component.html',
     styleUrl: './recommendations.component.css',
     providers: [
@@ -47,13 +48,16 @@ import { RecommendationCardComponent } from "../recommendation-card/recommendati
         UC_GetMovieRecommendations,
         UC_GetMediaIdForMedia,
         UC_LogoutOfAccount,
-        UC_NavigateToSpecificPage
+        UC_NavigateToSpecificPage,
+        UC_GetAPIRecommendations
     ]
 })
 export class RecommendationsComponent implements OnInit {
     public recommendations: I_Recommendations | null = null;
+    public apiRecommendations: I_Recommendation[] | null = null;
     public isLoading: boolean = false;
     public subscription: Subscription | null = null;
+    public apiSubscription: Subscription | null = null;
     public areRecommendationsShown: boolean = false;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
 
@@ -69,11 +73,12 @@ export class RecommendationsComponent implements OnInit {
     public outGetMovieRecommendations: OutputEmitterRef<I_Recommendations> = output<I_Recommendations>();
 
     constructor(
-        public shortenStringUseCase: UC_ShortenString,
+        public readonly shortenStringUseCase: UC_ShortenString,
         private readonly getMovieRecommendationsUseCase: UC_GetMovieRecommendations,
+        private readonly getAPIRecommendationsUseCase: UC_GetAPIRecommendations,
         private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
         private readonly logOutOfAccountUseCase: UC_LogoutOfAccount,
-        private messageService: MessageService,
+        private readonly messageService: MessageService,
     ) { }
 
 
@@ -89,13 +94,15 @@ export class RecommendationsComponent implements OnInit {
             return;
         }
 
+
         this.isLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpMediaPosterPath()).subscribe({
-            next: (response: I_Recommendations) => {
-                this.recommendations = response;
-                this.outGetMovieRecommendations.emit(response);
-                this.isLoading = false;
-                this.areRecommendationsShown = true;
+        this.apiSubscription = this.getAPIRecommendationsUseCase.execute(this.inpMovieId(), this.inpIsMovie()).subscribe({
+            next: (response: I_Recommendation[] | null) => {
+                if (!response) {
+                    return;
+                }
+                this.apiRecommendations = response;
+
             },
             error: (err) => {
                 if (err.status === 401 || err.status === 400) {
@@ -109,7 +116,28 @@ export class RecommendationsComponent implements OnInit {
                 }
 
                 this.isLoading = false;
-            }
+            },
+        })
+
+
+        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpMediaPosterPath()).subscribe({
+            next: (response: I_Recommendations) => {
+                this.recommendations = response;
+                this.outGetMovieRecommendations.emit(response);
+                this.areRecommendationsShown = true;
+            },
+            error: (err) => {
+                if (err.status === 401 || err.status === 400) {
+                    this.logOutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    return;
+                } else if (err.status === 0) {
+                    // server not available
+                    this.outServerNotAvailable.emit(true);
+                }
+            },
+            complete: () => { this.isLoading = false; }
         })
     }
 

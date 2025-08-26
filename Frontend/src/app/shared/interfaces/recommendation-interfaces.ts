@@ -28,3 +28,10 @@ export interface I_Recommendations {
 export interface I_HighestRecommendations {
     recommendations: I_Recommendation[]
 }
+
+export interface I_APIRecommendation { }
+
+export interface I_APIRecommendationResponse {
+    page: number,
+    recommendations: I_APIRecommendation[]
+}
