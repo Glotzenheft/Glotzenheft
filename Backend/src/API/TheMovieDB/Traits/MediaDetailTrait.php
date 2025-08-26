@@ -13,7 +13,7 @@ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
-along with Foobar.  If not, see <http://www.gnu.org/licenses/>.
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 declare(strict_types=1);
@@ -119,11 +119,6 @@ trait MediaDetailTrait
                     $name = $result['title'] ?? null;
                     $originalName = $result['original_title'] ?? null;
                     break;
-                case MediaType::ANIME:
-                    return [
-                        'error' => 'Not supported media type',
-                        'code' => 404,
-                    ];
             }
 
             $genreArray = $result['genres'] ?? null;
@@ -226,9 +221,9 @@ trait MediaDetailTrait
         {
             $data = ['tmdbID' => $tmdbID];
             $media = $this->handleTMDBMediaDetail($data, $type);
-            if (isset($result['error']))
+            if (isset($media['error']))
             {
-                return $result;
+                return $media;
             }
             $media = $media['media'];
         }

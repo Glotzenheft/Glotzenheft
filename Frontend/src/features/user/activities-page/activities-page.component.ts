@@ -26,7 +26,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
-import { Select } from 'primeng/select';
 import { TMDB_POSTER_PATH } from '../../../app/shared/variables/tmdb-vars';
 import { Router } from '@angular/router';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
@@ -48,11 +47,11 @@ import { UserActivitiesResponse, UserActivity, UserActivityWithDaySplitt } from 
         ProgressSpinnerModule,
         DropdownModule,
         FormsModule,
-        Select,
+        PaginationComponent
     ],
     templateUrl: './activities-page.component.html',
     styleUrl: './activities-page.component.css',
-    providers: [UC_GetUserActivites, UC_LogoutOfAccount]
+    providers: [UC_GetUserActivites, UC_LogoutOfAccount, UC_NavigateToPage]
 })
 export class ActivitiesPageComponent implements OnInit {
     // variables for user activities overview
@@ -75,9 +74,9 @@ export class ActivitiesPageComponent implements OnInit {
 
     constructor(
         private messageService: MessageService,
-        private router: Router,
         private getActivitiesUseCase: UC_GetUserActivites,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+        private readonly navigateToPageUseCase: UC_NavigateToPage
     ) { }
 
     ngOnInit(): void {
@@ -206,7 +205,7 @@ export class ActivitiesPageComponent implements OnInit {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
 
                     return;
                 } else if (err.status === 0) {
@@ -235,6 +234,7 @@ export class ActivitiesPageComponent implements OnInit {
             return;
         }
         this.currentPage++;
+        this.currentPage++;
         this.isRightButtonDisabled = false;
         this.isLeftButtonDisabled = false;
         this.loadUserActivities(this.currentPage);
@@ -247,14 +247,15 @@ export class ActivitiesPageComponent implements OnInit {
         }
 
         this.currentPage--;
+        this.currentPage--;
         this.loadUserActivities(this.currentPage);
     };
 
     public onClickActivity = (activity: UserActivityWithDaySplitt) => {
         if (activity.type === 'movie') {
-            void this.router.navigateByUrl(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
+            void this.navigateToPageUseCase.execute(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
         } else {
-            void this.router.navigateByUrl(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+            void this.navigateToPageUseCase.execute(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
         }
     };
 

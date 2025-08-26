@@ -28,7 +28,6 @@ import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { CardModule } from 'primeng/card';
 import { TooltipModule } from 'primeng/tooltip';
-import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
@@ -41,7 +40,9 @@ import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-
 import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-search-term.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
-import { SelectOption } from "../../../../app/shared/interfaces/select-option.interface";
+import { SelectOption } from "../../../../shared/interfaces/select-option.interface";
+import { PaginationComponent } from "../../../sharedCOMPONENTS/pagination/pagination.component";
+import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/navigate-to-page.use-case';
 
 @Component({
     selector: 'app-multi-search',
@@ -58,9 +59,16 @@ import { SelectOption } from "../../../../app/shared/interfaces/select-option.in
         SelectModule,
         FloatLabelModule,
         ReactiveFormsModule,
+        PaginationComponent
     ],
     styleUrls: ['./multi-search.component.css'],
-    providers: [UC_GetMediaIdForMedia, UC_GetMultiSearchResults, UC_GetSearchTerm, UC_ShowLoginMessage]
+    providers: [
+        UC_GetMediaIdForMedia,
+        UC_GetMultiSearchResults,
+        UC_GetSearchTerm,
+        UC_ShowLoginMessage,
+        UC_NavigateToPage
+    ]
     //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit, OnDestroy {
@@ -98,20 +106,20 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public currentPage: number = 1; // >= 1
     public totalPages: number = 1;
     public totalResults: number = 0;
-    public pageOptions: SelectOption[] = [];
+    public pageOptions: SelectOption[] = [{ label: "1", value: 1 }];
     public visibleCountOnPage: number = 0;
     public nextPagesLimit: number | null = null; // the limit for the next page button => for disabling the button
     public isNextPageButtonDisabled: boolean = true;
     public isPrevPageButtonDisabled: boolean = true;
 
     constructor(
-        private router: Router,
         private messageService: MessageService,
         private formBuilder: FormBuilder,
         private getMultiSearchResultUseCase: UC_GetMultiSearchResults,
         private getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
         private getSearchTermUseCase: UC_GetSearchTerm,
-        private showLoginMessageUseCase: UC_ShowLoginMessage
+        private showLoginMessageUseCase: UC_ShowLoginMessage,
+        private navigateToPageUseCase: UC_NavigateToPage
     ) { }
 
     ngOnInit(): void {
@@ -122,7 +130,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         this.searchSubscription = this.getSearchTermUseCase.observe().subscribe({
             next: (searchTerm) => {
                 if (!searchTerm.trim()) {
-                    this.pageOptions = [{ label: '0', value: 0 }];
+                    this.pageOptions = [{ label: '1', value: 1 }];
                     this.totalPages = 0;
                     this.showErrorDialog();
                     return;
@@ -147,7 +155,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     // 401 = user token not valid anymore -> navigate to login page
                     this.showLoginMessageUseCase.execute();
 
-                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                 }
             },
         });
@@ -232,6 +240,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             )
         );
     };
+
     navigateToMediaPage = (id: number, mediaGenre: string) => {
         this.getMediaIdForMediaUseCase.execute(id, mediaGenre === 'movie').subscribe({
             next: (res: MediaIDResponse) => {
@@ -240,8 +249,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                 if (res.media_id === undefined || res.media_id === null) {
                     // if no media_id exists in the db -> because media is not already saved
                     const summaryMessage: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
-                            ? 'zum Film.'
-                            : 'zur Serie.'
+                        ? 'zum Film.'
+                        : 'zur Serie.'
                         }`;
 
                     this.messageService.add(
@@ -259,19 +268,19 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
                     : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
 
-                void this.router.navigateByUrl(url);
+                void this.navigateToPageUseCase.execute(url);
             },
             error: (err) => {
                 if (err.status === 401) {
                     // 401 = user token is not logged in anymore -> navigate to login page
                     this.showLoginMessageUseCase.execute();
-                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                     return;
                 }
 
                 const message: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
-                        ? 'zum Film.'
-                        : 'zur Serie.'
+                    ? 'zum Film.'
+                    : 'zur Serie.'
                     }`;
 
                 this.messageService.add(
