@@ -51,10 +51,10 @@ import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
-import { RecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { RecommendationsComponent } from '../recommendations/recommendations.component';
 
 @Component({
     selector: 'app-film-page',

@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
-import { I_Recommendations } from '../../../../app/shared/interfaces/movie-recommendation-interface';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
@@ -29,13 +28,18 @@ import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/naviga
 import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import { ProgressSpinner } from 'primeng/progressspinner';
+import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
 
 @Component({
     selector: 'app-recommendations',
     imports: [
-        ButtonModule,
-        CommonModule
-    ],
+    ButtonModule,
+    CommonModule,
+    ProgressSpinner,
+    RecommendationCardComponent
+],
     templateUrl: './recommendations.component.html',
     styleUrl: './recommendations.component.css',
     providers: [
@@ -58,7 +62,7 @@ export class RecommendationsComponent implements OnInit {
     public inpMovieTitle: InputSignal<string> = input.required<string>();
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
     public inpRecommendations: InputSignal<I_Recommendations | null> = input.required<I_Recommendations | null>();
-    public inpPosterPath: InputSignal<string> = input.required<string>();
+    public inpMediaPosterPath: InputSignal<string> = input.required<string>();
 
     // output variables
     public outServerNotAvailable: OutputEmitterRef<boolean> = output<boolean>();
@@ -86,7 +90,7 @@ export class RecommendationsComponent implements OnInit {
         }
 
         this.isLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpPosterPath()).subscribe({
+        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpMediaPosterPath()).subscribe({
             next: (response: I_Recommendations) => {
                 this.recommendations = response;
                 this.outGetMovieRecommendations.emit(response);
@@ -112,4 +116,5 @@ export class RecommendationsComponent implements OnInit {
     public hideRecommendations = () => {
         this.areRecommendationsShown = false;
     }
+
 }

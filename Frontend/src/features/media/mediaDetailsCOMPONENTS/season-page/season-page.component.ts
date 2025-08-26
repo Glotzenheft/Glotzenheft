@@ -57,8 +57,8 @@ import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
-import { RecommendationsComponent } from "../movie-recommendations/movie-recommendations.component";
 import { I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { RecommendationsComponent } from '../recommendations/recommendations.component';
 
 @Component({
     selector: 'app-season-page',
