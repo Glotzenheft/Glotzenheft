@@ -20,30 +20,33 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Media;
 
-use App\API\TheMovieDB\TVSeries\SeasonDetails\TMDBTVSeasonDetailsService;
+use App\Model\Request\TV\TVSeasonDetailDto;
+use App\Service\TMDB\TVSeries\TVSeriesSeasonService;
+use App\TmdbApi\ApiException;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TVSeasonDetailsController extends AbstractController
 {
     public function __construct(
-        private readonly TMDBTVSeasonDetailsService $service
+        private readonly TVSeriesSeasonService $service
     ){}
 
     /**
-     * @param Request $request
+     * @param TVSeasonDetailDto $params
      * @return JsonResponse
+     * @throws ApiException
      */
     #[Route('/api/tv/season', name: 'get_tv_season_details', methods: ['GET'])]
-    public function getTVSeasonDetails(Request $request): JsonResponse
+    public function getTVSeasonDetails(
+        #[MapQueryString]
+        TVSeasonDetailDto $params
+    ): JsonResponse
     {
-        $tmdbID = (int)$request->query->get('tmdbID');
-        $seasonNumber = (int)$request->query->get('seasonNumber');
-
-        $result = $this->service->getTVSeasonDetails($tmdbID, $seasonNumber);
-
-        return $this->json($result);
+        return $this->json(
+            $this->service->getSeasonDetails($params)
+        );
     }
 }
