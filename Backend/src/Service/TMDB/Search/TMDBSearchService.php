@@ -20,9 +20,9 @@ declare(strict_types=1);
 
 namespace App\Service\TMDB\Search;
 
-use App\Model\Request\Search\MovieSearchRequestDto;
+use App\Model\Request\Movie\MovieSearchRequestDto;
 use App\Model\Request\Search\MultiSearchRequestDto;
-use App\Model\Request\Search\TvSearchRequestDto;
+use App\Model\Request\TV\TvSearchRequestDto;
 use App\TmdbApi\Api\SearchApi;
 use App\TmdbApi\ApiException;
 use App\TmdbApi\Model\SearchMovie200Response;
