@@ -24,6 +24,7 @@ use App\Entity\Episode;
 use App\Entity\Media;
 use App\Entity\Season;
 use App\Model\Request\TV\TVSeasonDetailDto;
+use App\Service\Traits\UpdateHelperTrait;
 use App\TmdbApi\Api\TVApi;
 use App\TmdbApi\ApiException;
 use App\TmdbApi\Model\TvSeasonDetails200Response;
@@ -33,6 +34,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 readonly class TVSeriesSeasonService
 {
+    use UpdateHelperTrait;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TVApi                  $tvApi,
@@ -58,7 +61,7 @@ readonly class TVSeriesSeasonService
      *
      * @throws ApiException
      */
-    public function updateSeasonFromTmdb(
+    public function updateOrCreateSeasonFromTmdb(
         Media  $media,
         int    $seasonNumber,
         string $language,
@@ -75,50 +78,134 @@ readonly class TVSeriesSeasonService
             'tmdbSeasonID' => $response->getId()
         ]);
 
-        if (!$season instanceof Season)
+        $isNewSeason = !$season instanceof Season;
+        if ($isNewSeason)
         {
-            $season = new Season();
+            $season = (new Season())
+                ->setMedia($media)
+                ->setTmdbSeasonID($response->getId())
+                ->setSeasonNumber($response->getSeasonNumber());
         }
 
-        $airDate = $response->getAirDate();
-        $season
-            ->setMedia($media)
-            ->setTmdbSeasonID($response->getId())
-            ->setSeasonNumber($response->getSeasonNumber())
-            ->setName($response->getName())
-            ->setOverview($response->getOverview())
-            ->setAirDate($airDate ? DateTime::createFromFormat('Y-m-d', $airDate) : null)
-            ->setEpisodeCount(count($response->getEpisodes()))
-            ->setPosterPath($response->getPosterPath())
-            ->setUpdatedAt(new DateTimeImmutable());
+        $isSeasonChanged = $isNewSeason;
+        $this->setPropertyIfChanged(
+            isChanged: $isSeasonChanged,
+            setter: fn($v) => $season->setName($v),
+            currentValue: $season->getName(),
+            newValue: $response->getName() ?? '',
+        );
 
-        $this->entityManager->persist($season);
+        $this->setPropertyIfChanged(
+            isChanged: $isSeasonChanged,
+            setter: fn($v) => $season->setOverview($v),
+            currentValue: $season->getOverview(),
+            newValue: $response->getOverview() ?? '',
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isSeasonChanged,
+            setter: fn($v) => $season->setPosterPath($v),
+            currentValue: $season->getPosterPath(),
+            newValue: $response->getPosterPath()
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isSeasonChanged,
+            setter: fn($v) => $season->setEpisodeCount($v),
+            currentValue: $season->getEpisodeCount(),
+            newValue: count($response->getEpisodes())
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isSeasonChanged,
+            setter: fn($v) => $season->setAirDate($v),
+            currentValue: $season->getAirDate(),
+            newValue: $response->getAirDate()
+                ? DateTime::createFromFormat('!Y-m-d', $response->getAirDate())
+                : null
+        );
+
+        if ($isSeasonChanged)
+        {
+            $season->setUpdatedAt(new DateTimeImmutable());
+            $this->entityManager->persist($season);
+        }
+
+        $existingEpisodes = [];
+        if (!$isNewSeason)
+        {
+            $episodeIdsFromApi = array_map(fn($ep) => $ep->getId(), $response->getEpisodes());
+            if (!empty($episodeIdsFromApi))
+            {
+                $episodesFromDb = $this->entityManager->getRepository(Episode::class)
+                    ->createQueryBuilder('e')
+                    ->where('e.season = :season')
+                    ->andWhere('e.tmdbEpisodeID IN (:ids)')
+                    ->setParameter('season', $season)
+                    ->setParameter('ids', $episodeIdsFromApi)
+                    ->getQuery()
+                    ->getResult();
+
+                foreach ($episodesFromDb as $episode)
+                {
+                    $existingEpisodes[$episode->getTmdbEpisodeID()] = $episode;
+                }
+            }
+        }
 
         foreach ($response->getEpisodes() as $episodeData)
         {
-            $episode = $this->entityManager->getRepository(Episode::class)->findOneBy([
-                'tmdbEpisodeID' => $episodeData->getId(),
-            ]);
+            $episode = $existingEpisodes[$episodeData->getId()] ?? null;
 
-            if (!$episode instanceof Episode)
+            $isEpisodeChanged = !$episode instanceof Episode;
+            if ($isEpisodeChanged)
             {
                 $episode = new Episode();
                 $season->addEpisode($episode);
+                $episode
+                    ->setSeason($season)
+                    ->setTmdbEpisodeID($episodeData->getId())
+                    ->setEpisodeNumber($episodeData->getEpisodeNumber());
             }
 
-            $episodeAirDate = $episodeData->getAirDate();
-            $episode
-                ->setSeason($season)
-                ->setName($episodeData->getName())
-                ->setOverview($episodeData->getOverview())
-                ->setEpisodeNumber($episodeData->getEpisodeNumber())
-                ->setRuntime($episodeData->getRuntime())
-                ->setStillPath($episodeData->getStillPath())
-                ->setAirDate($episodeAirDate ? DateTime::createFromFormat('Y-m-d', $episodeAirDate) : null)
-                ->setTmdbEpisodeID($episodeData->getId())
-                ->setUpdatedAt(new DateTimeImmutable());
+            $this->setPropertyIfChanged(
+                isChanged: $isEpisodeChanged,
+                setter: fn($v) => $episode->setName($v),
+                currentValue: $episode->getName(),
+                newValue: $episodeData->getName() ?? '',
+            );
+            $this->setPropertyIfChanged(
+                isChanged: $isEpisodeChanged,
+                setter: fn($v) => $episode->setOverview($v),
+                currentValue: $episode->getOverview(),
+                newValue: $episodeData->getOverview() ?? '',
+            );
+            $this->setPropertyIfChanged(
+                isChanged: $isEpisodeChanged,
+                setter: fn($v) => $episode->setRuntime($v),
+                currentValue: $episode->getRuntime(),
+                newValue: $episodeData->getRuntime()
+            );
+            $this->setPropertyIfChanged(
+                isChanged: $isEpisodeChanged,
+                setter: fn($v) => $episode->setStillPath($v),
+                currentValue: $episode->getStillPath(),
+                newValue: $episodeData->getStillPath()
+            );
+            $this->setPropertyIfChanged(
+                isChanged: $isEpisodeChanged,
+                setter: fn($v) => $episode->setAirDate($v),
+                currentValue: $episode->getAirDate(),
+                newValue: $episodeData->getAirDate()
+                    ? DateTime::createFromFormat('!Y-m-d', $episodeData->getAirDate())
+                    : null
+            );
 
-            $this->entityManager->persist($episode);
+            if ($isEpisodeChanged)
+            {
+                $episode->setUpdatedAt(new DateTimeImmutable());
+                $this->entityManager->persist($episode);
+            }
         }
 
         if ($flush) $this->entityManager->flush();
