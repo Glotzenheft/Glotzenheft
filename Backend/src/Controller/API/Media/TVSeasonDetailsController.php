@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Controller\API\Media;
 
 use App\Model\Request\TV\TVSeasonDetailDto;
+use App\Security\IsAuthenticated;
 use App\Service\TMDB\TVSeries\TVSeriesSeasonService;
 use App\TmdbApi\ApiException;
 use Symfony\Component\HttpFoundation\JsonResponse;
@@ -39,6 +40,7 @@ class TVSeasonDetailsController extends AbstractController
      * @return JsonResponse
      * @throws ApiException
      */
+    #[IsAuthenticated]
     #[Route('/api/tv/season', name: 'get_tv_season_details', methods: ['GET'])]
     public function getTVSeasonDetails(
         #[MapQueryString]
