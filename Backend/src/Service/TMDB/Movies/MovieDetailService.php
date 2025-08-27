@@ -1,0 +1,55 @@
+<?php
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+declare(strict_types=1);
+
+namespace App\Service\TMDB\Movies;
+
+use App\Entity\Media;
+use App\Enum\MediaType;
+use App\Model\Request\Movie\MovieDetailDto;
+use App\Service\Media\AbstractMediaDetailService;
+use App\TmdbApi\ApiException;
+
+class MovieDetailService extends AbstractMediaDetailService
+{
+    /**
+     * @param MovieDetailDto $dto
+     * @param int|null $userId
+     * @return array{media: Media, tracklists: array}|array{error: string, code: int}
+     * @throws ApiException
+     */
+    public function getMovieDetails(
+        MovieDetailDto $dto,
+        ?int $userId
+    ): array
+    {
+        return $this->getDetails(
+            dto: $dto,
+            userId: $userId
+        );
+    }
+
+    /**
+     * @return MediaType
+     */
+    protected function getMediaType(): MediaType
+    {
+        return MediaType::Movie;
+    }
+}
