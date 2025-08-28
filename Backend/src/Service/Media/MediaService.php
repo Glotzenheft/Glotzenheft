@@ -25,6 +25,7 @@ use App\Entity\TMDBGenre;
 use App\Enum\MediaType;
 use App\Model\Request\Media\MediaIdDto;
 use App\Service\TMDB\TVSeries\TVSeriesSeasonService;
+use App\Service\Traits\UpdateHelperTrait;
 use App\TmdbApi\Api\MoviesApi;
 use App\TmdbApi\Api\TVApi;
 use App\TmdbApi\ApiException;
@@ -36,6 +37,8 @@ use Doctrine\ORM\EntityManagerInterface;
 
 readonly class MediaService
 {
+    use UpdateHelperTrait;
+
     public function __construct(
         private EntityManagerInterface $entityManager,
         private TVSeriesSeasonService $seasonService,
@@ -89,13 +92,13 @@ readonly class MediaService
             language: $language,
         );
 
-        $this->populateMediaFromTmdbData(
+        $isChanged = $this->populateMediaFromTmdbData(
             media: $media,
             tmdbData: $response,
             type: MediaType::Movie
         );
 
-        $this->entityManager->persist($media);
+        if ($isChanged) $this->entityManager->persist($media);
 
         return $media;
     }
@@ -119,13 +122,13 @@ readonly class MediaService
             language: $language,
         );
 
-        $this->populateMediaFromTmdbData(
+        $isChanged = $this->populateMediaFromTmdbData(
             media: $media,
             tmdbData: $tvDetails,
             type: MediaType::TV
         );
 
-        $this->entityManager->persist($media);
+        if ($isChanged) $this->entityManager->persist($media);
 
         if ($tvDetails->getNumberOfSeasons() > 0)
         {
@@ -134,7 +137,7 @@ readonly class MediaService
                 $seasonNumber = $season->getSeasonNumber();
                 if ($seasonNumber !== null)
                 {
-                    $this->seasonService->updateSeasonFromTmdb(
+                    $this->seasonService->updateOrCreateSeasonFromTmdb(
                         media: $media,
                         seasonNumber: $seasonNumber,
                         language: $language,
@@ -184,6 +187,7 @@ readonly class MediaService
             media: $media,
             language: $language
         );
+
         $this->entityManager->flush();
 
         return $media;
@@ -193,23 +197,15 @@ readonly class MediaService
      * @param Media $media
      * @param MovieDetails200Response|TvSeriesDetails200Response $tmdbData
      * @param MediaType $type
-     * @return void
+     * @return bool
      */
     private function populateMediaFromTmdbData(
         Media $media,
         MovieDetails200Response|TvSeriesDetails200Response $tmdbData,
         MediaType $type
-    ): void
+    ): bool
     {
-        $firstAirDateStr = match ($type)
-        {
-            MediaType::Movie => $tmdbData->getReleaseDate(),
-            MediaType::TV => $tmdbData->getFirstAirDate(),
-        };
-
-        $firstAirDate = !empty($firstAirDateStr)
-            ? DateTime::createFromFormat('Y-m-d', $firstAirDateStr)
-            : null;
+        $isChanged = !$media->getId();
 
         $name = ($type === MediaType::Movie)
             ? $tmdbData->getTitle()
@@ -219,54 +215,105 @@ readonly class MediaService
             ? $tmdbData->getOriginalTitle()
             : $tmdbData->getOriginalName();
 
-        $imdbId = null;
-        if (method_exists($tmdbData, 'getExternalIds')
-            && $tmdbData->getExternalIds()
-        )
-        {
-            $imdbId = $tmdbData->getExternalIds()->getImdbId();
-        }
-        elseif (method_exists($tmdbData, 'getImdbId'))
-        {
-            $imdbId = $tmdbData->getImdbId();
-        }
+        $firstAirDateStr = ($type === MediaType::Movie)
+            ? $tmdbData->getReleaseDate()
+            : $tmdbData->getFirstAirDate();
 
-        $runtime = null;
-        if ($tmdbData instanceof MovieDetails200Response)
-        {
-            $runtime = $tmdbData->getRuntime();
-        }
-        elseif ($tmdbData instanceof TvSeriesDetails200Response
-            && !empty($tmdbData->getEpisodeRunTime())
-        )
-        {
-            $runtime = $tmdbData->getEpisodeRunTime()[0];
-        }
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setName($v),
+            currentValue: $media->getName(),
+            newValue: $name
+        );
 
-        $media
-            ->setName($name ?? '')
-            ->setOriginalName($originalName ?? '')
-            ->setDescription($tmdbData->getOverview() ?? '')
-            ->setFirstAirDate($firstAirDate ?: null)
-            ->setImdbID($imdbId)
-            ->setPosterPath($tmdbData->getPosterPath())
-            ->setBackdropPath($tmdbData->getBackdropPath())
-            ->setType($type)
-            ->setTmdbID($media->getTmdbID() ?? $tmdbData->getId())
-            ->setRuntime($runtime)
-            ->setUpdatedAt(new DateTimeImmutable());
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setOriginalName($v),
+            currentValue: $media->getOriginalName(),
+            newValue: $originalName
+        );
 
-        // Clear existing genres to replace them with the new ones
-        $media->getTmdbGenres()->clear();
-        foreach ($tmdbData->getGenres() ?? [] as $genreData)
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setDescription($v),
+            currentValue: $media->getDescription(),
+            newValue: $tmdbData->getOverview() ?? ''
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setPosterPath($v),
+            currentValue: $media->getPosterPath(),
+            newValue: $tmdbData->getPosterPath()
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setBackdropPath($v),
+            currentValue: $media->getBackdropPath(),
+            newValue: $tmdbData->getBackdropPath()
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setImdbID($v),
+            currentValue: $media->getImdbID(),
+            newValue: $tmdbData->getImdbId()
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setRuntime($v),
+            currentValue: $media->getRuntime(),
+            newValue: ($tmdbData instanceof MovieDetails200Response)
+                ? $tmdbData->getRuntime()
+                : null
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setFirstAirDate($v),
+            currentValue: $media->getFirstAirDate(),
+            newValue: !empty($firstAirDateStr)
+                ? DateTime::createFromFormat('!Y-m-d', $firstAirDateStr)
+                : null
+        );
+
+        $currentGenreIds = $media->getTmdbGenres()
+            ->map(fn(TMDBGenre $g) => $g->getTmdbGenreID())
+            ->toArray();
+        $newGenreIds = array_map(
+            callback: fn($g) => $g->getId(),
+            array: $tmdbData->getGenres() ?? []
+        );
+        sort($currentGenreIds);
+        sort($newGenreIds);
+
+        if ($currentGenreIds !== $newGenreIds)
         {
-            $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy([
-                'tmdbGenreID' => $genreData->getId()]
-            );
-            if ($tmdbGenre instanceof TMDBGenre)
+            $isChanged = true;
+            $media->getTmdbGenres()->clear();
+            foreach ($tmdbData->getGenres() ?? [] as $genreData)
             {
-                $media->addTmdbGenre($tmdbGenre);
+                $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy([
+                    'tmdbGenreID' => $genreData->getId()
+                ]);
+                if ($tmdbGenre instanceof TMDBGenre)
+                {
+                    $media->addTmdbGenre($tmdbGenre);
+                }
             }
         }
+
+        if ($isChanged)
+        {
+            if (!$media->getId())
+            {
+                $media->setType($type)->setTmdbID($tmdbData->getId());
+            }
+            $media->setUpdatedAt(new DateTimeImmutable());
+        }
+
+        return $isChanged;
     }
 }

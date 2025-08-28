@@ -1,4 +1,5 @@
 <?php
+
 /*
 This file is part of Glotzenheft.
 
@@ -15,6 +16,8 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+
+declare(strict_types=1);
 
 /**
  * TvSeriesDetails200Response
@@ -47,6 +50,7 @@ namespace App\TmdbApi\Model;
 
 use \ArrayAccess;
 use \App\TmdbApi\ObjectSerializer;
+use InvalidArgumentException;
 
 /**
  * TvSeriesDetails200Response Class Doc Comment
@@ -59,21 +63,21 @@ use \App\TmdbApi\ObjectSerializer;
  */
 class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSerializable
 {
-    public const DISCRIMINATOR = null;
+    public const null DISCRIMINATOR = null;
 
     /**
-      * The original name of the model.
-      *
-      * @var string
-      */
-    protected static $openAPIModelName = 'tv_series_details_200_response';
+     * The original name of the model.
+     *
+     * @var string
+     */
+    protected static string $openAPIModelName = 'tv_series_details_200_response';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
-    protected static $openAPITypes = [
+     * Array of property to type mappings. Used for (de)serialization
+     *
+     * @var string[]
+     */
+    protected static array $openAPITypes = [
         'adult' => 'bool',
         'backdrop_path' => 'string',
         'created_by' => '\App\TmdbApi\Model\TvSeriesDetails200ResponseCreatedByInner[]',
@@ -105,17 +109,18 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         'tagline' => 'string',
         'type' => 'string',
         'vote_average' => 'float',
-        'vote_count' => 'int'
+        'vote_count' => 'int',
+        'external_ids' => '\App\TmdbApi\Model\TvSeriesDetails200ResponseExternalIds'
     ];
 
     /**
-      * Array of property to format mappings. Used for (de)serialization
-      *
-      * @var string[]
-      * @phpstan-var array<string, string|null>
-      * @psalm-var array<string, string|null>
-      */
-    protected static $openAPIFormats = [
+     * Array of property to format mappings. Used for (de)serialization
+     *
+     * @var string[]
+     * @phpstan-var array<string, string|null>
+     * @psalm-var array<string, string|null>
+     */
+    protected static array $openAPIFormats = [
         'adult' => null,
         'backdrop_path' => null,
         'created_by' => null,
@@ -147,14 +152,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         'tagline' => null,
         'type' => null,
         'vote_average' => null,
-        'vote_count' => null
+        'vote_count' => null,
+        'external_ids' => null,
     ];
 
     /**
-      * Array of nullable properties. Used for (de)serialization
-      *
-      * @var boolean[]
-      */
+     * Array of nullable properties. Used for (de)serialization
+     *
+     * @var boolean[]
+     */
     protected static array $openAPINullables = [
         'adult' => false,
         'backdrop_path' => false,
@@ -187,14 +193,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         'tagline' => false,
         'type' => false,
         'vote_average' => false,
-        'vote_count' => false
+        'vote_count' => false,
+        'external_ids' => true,
     ];
 
     /**
-      * If a nullable field gets set to null, insert it here
-      *
-      * @var boolean[]
-      */
+     * If a nullable field gets set to null, insert it here
+     *
+     * @var boolean[]
+     */
     protected array $openAPINullablesSetToNull = [];
 
     /**
@@ -202,7 +209,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return array
      */
-    public static function openAPITypes()
+    public static function openAPITypes(): array
     {
         return self::$openAPITypes;
     }
@@ -212,7 +219,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return array
      */
-    public static function openAPIFormats()
+    public static function openAPIFormats(): array
     {
         return self::$openAPIFormats;
     }
@@ -275,7 +282,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @var string[]
      */
-    protected static $attributeMap = [
+    protected static array $attributeMap = [
         'adult' => 'adult',
         'backdrop_path' => 'backdrop_path',
         'created_by' => 'created_by',
@@ -307,7 +314,8 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         'tagline' => 'tagline',
         'type' => 'type',
         'vote_average' => 'vote_average',
-        'vote_count' => 'vote_count'
+        'vote_count' => 'vote_count',
+        'external_ids' => 'external_ids',
     ];
 
     /**
@@ -315,7 +323,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @var string[]
      */
-    protected static $setters = [
+    protected static array $setters = [
         'adult' => 'setAdult',
         'backdrop_path' => 'setBackdropPath',
         'created_by' => 'setCreatedBy',
@@ -347,7 +355,8 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         'tagline' => 'setTagline',
         'type' => 'setType',
         'vote_average' => 'setVoteAverage',
-        'vote_count' => 'setVoteCount'
+        'vote_count' => 'setVoteCount',
+        'external_ids' => 'setExternalIds',
     ];
 
     /**
@@ -355,7 +364,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @var string[]
      */
-    protected static $getters = [
+    protected static array $getters = [
         'adult' => 'getAdult',
         'backdrop_path' => 'getBackdropPath',
         'created_by' => 'getCreatedBy',
@@ -387,7 +396,8 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         'tagline' => 'getTagline',
         'type' => 'getType',
         'vote_average' => 'getVoteAverage',
-        'vote_count' => 'getVoteCount'
+        'vote_count' => 'getVoteCount',
+        'external_ids' => 'getExternalIds',
     ];
 
     /**
@@ -396,7 +406,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return array
      */
-    public static function attributeMap()
+    public static function attributeMap(): array
     {
         return self::$attributeMap;
     }
@@ -406,7 +416,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return array
      */
-    public static function setters()
+    public static function setters(): array
     {
         return self::$setters;
     }
@@ -416,7 +426,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return array
      */
-    public static function getters()
+    public static function getters(): array
     {
         return self::$getters;
     }
@@ -426,7 +436,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string
      */
-    public function getModelName()
+    public function getModelName(): string
     {
         return self::$openAPIModelName;
     }
@@ -435,14 +445,14 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Associative array for storing property values
      *
-     * @var mixed[]
+     * @var array
      */
-    protected $container = [];
+    protected array $container = [];
 
     /**
      * Constructor
      *
-     * @param mixed[]|null $data Associated array of property values
+     * @param array|null $data Associated array of property values
      *                      initializing the model
      */
     public function __construct(?array $data = null)
@@ -479,20 +489,25 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
         $this->setIfExists('type', $data ?? [], null);
         $this->setIfExists('vote_average', $data ?? [], 0);
         $this->setIfExists('vote_count', $data ?? [], 0);
+        $this->setIfExists('external_ids', $data ?? [], null);
     }
 
     /**
-    * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
-    * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
-    * $this->openAPINullablesSetToNull array
-    *
-    * @param string $variableName
-    * @param array  $fields
-    * @param mixed  $defaultValue
-    */
-    private function setIfExists(string $variableName, array $fields, $defaultValue): void
+     * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
+     * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
+     * $this->openAPINullablesSetToNull array
+     *
+     * @param string $variableName
+     * @param array $fields
+     * @param mixed $defaultValue
+     */
+    private function setIfExists(string $variableName, array $fields, mixed $defaultValue): void
     {
-        if (self::isNullable($variableName) && array_key_exists($variableName, $fields) && is_null($fields[$variableName])) {
+        if (self::isNullable($variableName)
+            && array_key_exists($variableName, $fields)
+            && is_null($fields[$variableName])
+        )
+        {
             $this->openAPINullablesSetToNull[] = $variableName;
         }
 
@@ -504,11 +519,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return array invalid properties with reasons
      */
-    public function listInvalidProperties()
+    public function listInvalidProperties(): array
     {
-        $invalidProperties = [];
-
-        return $invalidProperties;
+        return [];
     }
 
     /**
@@ -517,7 +530,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return bool True if all properties are valid
      */
-    public function valid()
+    public function valid(): bool
     {
         return count($this->listInvalidProperties()) === 0;
     }
@@ -528,7 +541,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return bool|null
      */
-    public function getAdult()
+    public function getAdult(): ?bool
     {
         return $this->container['adult'];
     }
@@ -540,10 +553,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setAdult($adult)
+    public function setAdult(?bool $adult): static
     {
-        if (is_null($adult)) {
-            throw new \InvalidArgumentException('non-nullable adult cannot be null');
+        if (is_null($adult))
+        {
+            throw new InvalidArgumentException('non-nullable adult cannot be null');
         }
         $this->container['adult'] = $adult;
 
@@ -555,7 +569,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getBackdropPath()
+    public function getBackdropPath(): ?string
     {
         return $this->container['backdrop_path'];
     }
@@ -567,10 +581,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setBackdropPath($backdrop_path)
+    public function setBackdropPath(?string $backdrop_path): static
     {
-        if (is_null($backdrop_path)) {
-            throw new \InvalidArgumentException('non-nullable backdrop_path cannot be null');
+        if (is_null($backdrop_path))
+        {
+            throw new InvalidArgumentException('non-nullable backdrop_path cannot be null');
         }
         $this->container['backdrop_path'] = $backdrop_path;
 
@@ -580,9 +595,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets created_by
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseCreatedByInner[]|null
+     * @return TvSeriesDetails200ResponseCreatedByInner[]|null
      */
-    public function getCreatedBy()
+    public function getCreatedBy(): ?array
     {
         return $this->container['created_by'];
     }
@@ -590,14 +605,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets created_by
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseCreatedByInner[]|null $created_by created_by
+     * @param TvSeriesDetails200ResponseCreatedByInner[]|null $created_by created_by
      *
      * @return self
      */
-    public function setCreatedBy($created_by)
+    public function setCreatedBy(?array $created_by): static
     {
-        if (is_null($created_by)) {
-            throw new \InvalidArgumentException('non-nullable created_by cannot be null');
+        if (is_null($created_by))
+        {
+            throw new InvalidArgumentException('non-nullable created_by cannot be null');
         }
         $this->container['created_by'] = $created_by;
 
@@ -609,7 +625,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return int[]|null
      */
-    public function getEpisodeRunTime()
+    public function getEpisodeRunTime(): ?array
     {
         return $this->container['episode_run_time'];
     }
@@ -621,10 +637,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setEpisodeRunTime($episode_run_time)
+    public function setEpisodeRunTime(?array $episode_run_time): static
     {
-        if (is_null($episode_run_time)) {
-            throw new \InvalidArgumentException('non-nullable episode_run_time cannot be null');
+        if (is_null($episode_run_time))
+        {
+            throw new InvalidArgumentException('non-nullable episode_run_time cannot be null');
         }
         $this->container['episode_run_time'] = $episode_run_time;
 
@@ -636,7 +653,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getFirstAirDate()
+    public function getFirstAirDate(): ?string
     {
         return $this->container['first_air_date'];
     }
@@ -648,10 +665,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setFirstAirDate($first_air_date)
+    public function setFirstAirDate(?string $first_air_date): static
     {
-        if (is_null($first_air_date)) {
-            throw new \InvalidArgumentException('non-nullable first_air_date cannot be null');
+        if (is_null($first_air_date))
+        {
+            throw new InvalidArgumentException('non-nullable first_air_date cannot be null');
         }
         $this->container['first_air_date'] = $first_air_date;
 
@@ -661,9 +679,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets genres
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseGenresInner[]|null
+     * @return TvSeriesDetails200ResponseGenresInner[]|null
      */
-    public function getGenres()
+    public function getGenres(): ?array
     {
         return $this->container['genres'];
     }
@@ -671,14 +689,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets genres
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseGenresInner[]|null $genres genres
+     * @param TvSeriesDetails200ResponseGenresInner[]|null $genres genres
      *
      * @return self
      */
-    public function setGenres($genres)
+    public function setGenres(?array $genres): static
     {
-        if (is_null($genres)) {
-            throw new \InvalidArgumentException('non-nullable genres cannot be null');
+        if (is_null($genres))
+        {
+            throw new InvalidArgumentException('non-nullable genres cannot be null');
         }
         $this->container['genres'] = $genres;
 
@@ -690,7 +709,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getHomepage()
+    public function getHomepage(): ?string
     {
         return $this->container['homepage'];
     }
@@ -702,10 +721,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setHomepage($homepage)
+    public function setHomepage(?string $homepage): static
     {
-        if (is_null($homepage)) {
-            throw new \InvalidArgumentException('non-nullable homepage cannot be null');
+        if (is_null($homepage))
+        {
+            throw new InvalidArgumentException('non-nullable homepage cannot be null');
         }
         $this->container['homepage'] = $homepage;
 
@@ -717,7 +737,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
         return $this->container['id'];
     }
@@ -729,10 +749,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setId($id)
+    public function setId(?int $id): static
     {
-        if (is_null($id)) {
-            throw new \InvalidArgumentException('non-nullable id cannot be null');
+        if (is_null($id))
+        {
+            throw new InvalidArgumentException('non-nullable id cannot be null');
         }
         $this->container['id'] = $id;
 
@@ -744,7 +765,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return bool|null
      */
-    public function getInProduction()
+    public function getInProduction(): ?bool
     {
         return $this->container['in_production'];
     }
@@ -756,10 +777,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setInProduction($in_production)
+    public function setInProduction(?bool $in_production): static
     {
-        if (is_null($in_production)) {
-            throw new \InvalidArgumentException('non-nullable in_production cannot be null');
+        if (is_null($in_production))
+        {
+            throw new InvalidArgumentException('non-nullable in_production cannot be null');
         }
         $this->container['in_production'] = $in_production;
 
@@ -771,7 +793,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string[]|null
      */
-    public function getLanguages()
+    public function getLanguages(): ?array
     {
         return $this->container['languages'];
     }
@@ -783,10 +805,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setLanguages($languages)
+    public function setLanguages(?array $languages): static
     {
-        if (is_null($languages)) {
-            throw new \InvalidArgumentException('non-nullable languages cannot be null');
+        if (is_null($languages))
+        {
+            throw new InvalidArgumentException('non-nullable languages cannot be null');
         }
         $this->container['languages'] = $languages;
 
@@ -798,7 +821,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getLastAirDate()
+    public function getLastAirDate(): ?string
     {
         return $this->container['last_air_date'];
     }
@@ -810,10 +833,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setLastAirDate($last_air_date)
+    public function setLastAirDate(?string $last_air_date): static
     {
-        if (is_null($last_air_date)) {
-            throw new \InvalidArgumentException('non-nullable last_air_date cannot be null');
+        if (is_null($last_air_date))
+        {
+            throw new InvalidArgumentException('non-nullable last_air_date cannot be null');
         }
         $this->container['last_air_date'] = $last_air_date;
 
@@ -823,9 +847,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets last_episode_to_air
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseLastEpisodeToAir|null
+     * @return TvSeriesDetails200ResponseLastEpisodeToAir|null
      */
-    public function getLastEpisodeToAir()
+    public function getLastEpisodeToAir(): ?TvSeriesDetails200ResponseLastEpisodeToAir
     {
         return $this->container['last_episode_to_air'];
     }
@@ -833,14 +857,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets last_episode_to_air
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseLastEpisodeToAir|null $last_episode_to_air last_episode_to_air
+     * @param TvSeriesDetails200ResponseLastEpisodeToAir|null $last_episode_to_air last_episode_to_air
      *
      * @return self
      */
-    public function setLastEpisodeToAir($last_episode_to_air)
+    public function setLastEpisodeToAir(?TvSeriesDetails200ResponseLastEpisodeToAir $last_episode_to_air): static
     {
-        if (is_null($last_episode_to_air)) {
-            throw new \InvalidArgumentException('non-nullable last_episode_to_air cannot be null');
+        if (is_null($last_episode_to_air))
+        {
+            throw new InvalidArgumentException('non-nullable last_episode_to_air cannot be null');
         }
         $this->container['last_episode_to_air'] = $last_episode_to_air;
 
@@ -852,7 +877,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
         return $this->container['name'];
     }
@@ -864,10 +889,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setName($name)
+    public function setName(?string $name): static
     {
-        if (is_null($name)) {
-            throw new \InvalidArgumentException('non-nullable name cannot be null');
+        if (is_null($name))
+        {
+            throw new InvalidArgumentException('non-nullable name cannot be null');
         }
         $this->container['name'] = $name;
 
@@ -879,7 +905,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return mixed|null
      */
-    public function getNextEpisodeToAir()
+    public function getNextEpisodeToAir(): mixed
     {
         return $this->container['next_episode_to_air'];
     }
@@ -891,14 +917,18 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setNextEpisodeToAir($next_episode_to_air)
+    public function setNextEpisodeToAir(mixed $next_episode_to_air): static
     {
-        if (is_null($next_episode_to_air)) {
-            array_push($this->openAPINullablesSetToNull, 'next_episode_to_air');
-        } else {
+        if (is_null($next_episode_to_air))
+        {
+            $this->openAPINullablesSetToNull[] = 'next_episode_to_air';
+        }
+        else
+        {
             $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
             $index = array_search('next_episode_to_air', $nullablesSetToNull);
-            if ($index !== FALSE) {
+            if ($index !== FALSE)
+            {
                 unset($nullablesSetToNull[$index]);
                 $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
             }
@@ -911,9 +941,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets networks
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseNetworksInner[]|null
+     * @return TvSeriesDetails200ResponseNetworksInner[]|null
      */
-    public function getNetworks()
+    public function getNetworks(): ?array
     {
         return $this->container['networks'];
     }
@@ -921,14 +951,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets networks
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseNetworksInner[]|null $networks networks
+     * @param TvSeriesDetails200ResponseNetworksInner[]|null $networks networks
      *
      * @return self
      */
-    public function setNetworks($networks)
+    public function setNetworks(?array $networks): static
     {
-        if (is_null($networks)) {
-            throw new \InvalidArgumentException('non-nullable networks cannot be null');
+        if (is_null($networks))
+        {
+            throw new InvalidArgumentException('non-nullable networks cannot be null');
         }
         $this->container['networks'] = $networks;
 
@@ -940,7 +971,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return int|null
      */
-    public function getNumberOfEpisodes()
+    public function getNumberOfEpisodes(): ?int
     {
         return $this->container['number_of_episodes'];
     }
@@ -952,10 +983,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setNumberOfEpisodes($number_of_episodes)
+    public function setNumberOfEpisodes($number_of_episodes): static
     {
-        if (is_null($number_of_episodes)) {
-            throw new \InvalidArgumentException('non-nullable number_of_episodes cannot be null');
+        if (is_null($number_of_episodes))
+        {
+            throw new InvalidArgumentException('non-nullable number_of_episodes cannot be null');
         }
         $this->container['number_of_episodes'] = $number_of_episodes;
 
@@ -967,7 +999,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return int|null
      */
-    public function getNumberOfSeasons()
+    public function getNumberOfSeasons(): ?int
     {
         return $this->container['number_of_seasons'];
     }
@@ -979,10 +1011,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setNumberOfSeasons($number_of_seasons)
+    public function setNumberOfSeasons(?int $number_of_seasons): static
     {
-        if (is_null($number_of_seasons)) {
-            throw new \InvalidArgumentException('non-nullable number_of_seasons cannot be null');
+        if (is_null($number_of_seasons))
+        {
+            throw new InvalidArgumentException('non-nullable number_of_seasons cannot be null');
         }
         $this->container['number_of_seasons'] = $number_of_seasons;
 
@@ -994,7 +1027,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string[]|null
      */
-    public function getOriginCountry()
+    public function getOriginCountry(): ?array
     {
         return $this->container['origin_country'];
     }
@@ -1006,10 +1039,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setOriginCountry($origin_country)
+    public function setOriginCountry(?array $origin_country): static
     {
-        if (is_null($origin_country)) {
-            throw new \InvalidArgumentException('non-nullable origin_country cannot be null');
+        if (is_null($origin_country))
+        {
+            throw new InvalidArgumentException('non-nullable origin_country cannot be null');
         }
         $this->container['origin_country'] = $origin_country;
 
@@ -1021,7 +1055,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getOriginalLanguage()
+    public function getOriginalLanguage(): ?string
     {
         return $this->container['original_language'];
     }
@@ -1033,10 +1067,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setOriginalLanguage($original_language)
+    public function setOriginalLanguage(?string $original_language): static
     {
-        if (is_null($original_language)) {
-            throw new \InvalidArgumentException('non-nullable original_language cannot be null');
+        if (is_null($original_language))
+        {
+            throw new InvalidArgumentException('non-nullable original_language cannot be null');
         }
         $this->container['original_language'] = $original_language;
 
@@ -1048,7 +1083,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getOriginalName()
+    public function getOriginalName(): ?string
     {
         return $this->container['original_name'];
     }
@@ -1060,10 +1095,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setOriginalName($original_name)
+    public function setOriginalName(?string $original_name): static
     {
-        if (is_null($original_name)) {
-            throw new \InvalidArgumentException('non-nullable original_name cannot be null');
+        if (is_null($original_name))
+        {
+            throw new InvalidArgumentException('non-nullable original_name cannot be null');
         }
         $this->container['original_name'] = $original_name;
 
@@ -1075,7 +1111,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getOverview()
+    public function getOverview(): ?string
     {
         return $this->container['overview'];
     }
@@ -1087,10 +1123,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setOverview($overview)
+    public function setOverview(?string $overview): static
     {
-        if (is_null($overview)) {
-            throw new \InvalidArgumentException('non-nullable overview cannot be null');
+        if (is_null($overview))
+        {
+            throw new InvalidArgumentException('non-nullable overview cannot be null');
         }
         $this->container['overview'] = $overview;
 
@@ -1102,7 +1139,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return float|null
      */
-    public function getPopularity()
+    public function getPopularity(): ?float
     {
         return $this->container['popularity'];
     }
@@ -1114,10 +1151,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setPopularity($popularity)
+    public function setPopularity(?float $popularity): static
     {
-        if (is_null($popularity)) {
-            throw new \InvalidArgumentException('non-nullable popularity cannot be null');
+        if (is_null($popularity))
+        {
+            throw new InvalidArgumentException('non-nullable popularity cannot be null');
         }
         $this->container['popularity'] = $popularity;
 
@@ -1129,7 +1167,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getPosterPath()
+    public function getPosterPath(): ?string
     {
         return $this->container['poster_path'];
     }
@@ -1141,10 +1179,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setPosterPath($poster_path)
+    public function setPosterPath(?string $poster_path): static
     {
-        if (is_null($poster_path)) {
-            throw new \InvalidArgumentException('non-nullable poster_path cannot be null');
+        if (is_null($poster_path))
+        {
+            throw new InvalidArgumentException('non-nullable poster_path cannot be null');
         }
         $this->container['poster_path'] = $poster_path;
 
@@ -1154,9 +1193,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets production_companies
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseProductionCompaniesInner[]|null
+     * @return TvSeriesDetails200ResponseProductionCompaniesInner[]|null
      */
-    public function getProductionCompanies()
+    public function getProductionCompanies(): ?array
     {
         return $this->container['production_companies'];
     }
@@ -1164,14 +1203,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets production_companies
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseProductionCompaniesInner[]|null $production_companies production_companies
+     * @param TvSeriesDetails200ResponseProductionCompaniesInner[]|null $production_companies production_companies
      *
      * @return self
      */
-    public function setProductionCompanies($production_companies)
+    public function setProductionCompanies($production_companies): static
     {
-        if (is_null($production_companies)) {
-            throw new \InvalidArgumentException('non-nullable production_companies cannot be null');
+        if (is_null($production_companies))
+        {
+            throw new InvalidArgumentException('non-nullable production_companies cannot be null');
         }
         $this->container['production_companies'] = $production_companies;
 
@@ -1181,9 +1221,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets production_countries
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseProductionCountriesInner[]|null
+     * @return TvSeriesDetails200ResponseProductionCountriesInner[]|null
      */
-    public function getProductionCountries()
+    public function getProductionCountries(): ?array
     {
         return $this->container['production_countries'];
     }
@@ -1191,14 +1231,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets production_countries
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseProductionCountriesInner[]|null $production_countries production_countries
+     * @param TvSeriesDetails200ResponseProductionCountriesInner[]|null $production_countries production_countries
      *
      * @return self
      */
-    public function setProductionCountries($production_countries)
+    public function setProductionCountries(?array $production_countries): static
     {
-        if (is_null($production_countries)) {
-            throw new \InvalidArgumentException('non-nullable production_countries cannot be null');
+        if (is_null($production_countries))
+        {
+            throw new InvalidArgumentException('non-nullable production_countries cannot be null');
         }
         $this->container['production_countries'] = $production_countries;
 
@@ -1208,9 +1249,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets seasons
      *
-     * @return \App\TmdbApi\Model\TvSeriesDetails200ResponseSeasonsInner[]|null
+     * @return TvSeriesDetails200ResponseSeasonsInner[]|null
      */
-    public function getSeasons()
+    public function getSeasons(): ?array
     {
         return $this->container['seasons'];
     }
@@ -1218,14 +1259,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets seasons
      *
-     * @param \App\TmdbApi\Model\TvSeriesDetails200ResponseSeasonsInner[]|null $seasons seasons
+     * @param TvSeriesDetails200ResponseSeasonsInner[]|null $seasons seasons
      *
      * @return self
      */
-    public function setSeasons($seasons)
+    public function setSeasons(?array $seasons): static
     {
-        if (is_null($seasons)) {
-            throw new \InvalidArgumentException('non-nullable seasons cannot be null');
+        if (is_null($seasons))
+        {
+            throw new InvalidArgumentException('non-nullable seasons cannot be null');
         }
         $this->container['seasons'] = $seasons;
 
@@ -1235,9 +1277,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Gets spoken_languages
      *
-     * @return \App\TmdbApi\Model\MovieDetails200ResponseSpokenLanguagesInner[]|null
+     * @return MovieDetails200ResponseSpokenLanguagesInner[]|null
      */
-    public function getSpokenLanguages()
+    public function getSpokenLanguages(): ?array
     {
         return $this->container['spoken_languages'];
     }
@@ -1245,14 +1287,15 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
     /**
      * Sets spoken_languages
      *
-     * @param \App\TmdbApi\Model\MovieDetails200ResponseSpokenLanguagesInner[]|null $spoken_languages spoken_languages
+     * @param MovieDetails200ResponseSpokenLanguagesInner[]|null $spoken_languages spoken_languages
      *
      * @return self
      */
-    public function setSpokenLanguages($spoken_languages)
+    public function setSpokenLanguages($spoken_languages): static
     {
-        if (is_null($spoken_languages)) {
-            throw new \InvalidArgumentException('non-nullable spoken_languages cannot be null');
+        if (is_null($spoken_languages))
+        {
+            throw new InvalidArgumentException('non-nullable spoken_languages cannot be null');
         }
         $this->container['spoken_languages'] = $spoken_languages;
 
@@ -1264,7 +1307,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getStatus()
+    public function getStatus(): ?string
     {
         return $this->container['status'];
     }
@@ -1276,10 +1319,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setStatus($status)
+    public function setStatus(?string $status): static
     {
-        if (is_null($status)) {
-            throw new \InvalidArgumentException('non-nullable status cannot be null');
+        if (is_null($status))
+        {
+            throw new InvalidArgumentException('non-nullable status cannot be null');
         }
         $this->container['status'] = $status;
 
@@ -1291,7 +1335,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getTagline()
+    public function getTagline(): ?string
     {
         return $this->container['tagline'];
     }
@@ -1303,10 +1347,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setTagline($tagline)
+    public function setTagline(?string $tagline): static
     {
-        if (is_null($tagline)) {
-            throw new \InvalidArgumentException('non-nullable tagline cannot be null');
+        if (is_null($tagline))
+        {
+            throw new InvalidArgumentException('non-nullable tagline cannot be null');
         }
         $this->container['tagline'] = $tagline;
 
@@ -1318,7 +1363,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string|null
      */
-    public function getType()
+    public function getType(): ?string
     {
         return $this->container['type'];
     }
@@ -1330,10 +1375,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setType($type)
+    public function setType(?string $type): static
     {
-        if (is_null($type)) {
-            throw new \InvalidArgumentException('non-nullable type cannot be null');
+        if (is_null($type))
+        {
+            throw new InvalidArgumentException('non-nullable type cannot be null');
         }
         $this->container['type'] = $type;
 
@@ -1345,7 +1391,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return float|null
      */
-    public function getVoteAverage()
+    public function getVoteAverage(): ?float
     {
         return $this->container['vote_average'];
     }
@@ -1357,10 +1403,11 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setVoteAverage($vote_average)
+    public function setVoteAverage(?float $vote_average): static
     {
-        if (is_null($vote_average)) {
-            throw new \InvalidArgumentException('non-nullable vote_average cannot be null');
+        if (is_null($vote_average))
+        {
+            throw new InvalidArgumentException('non-nullable vote_average cannot be null');
         }
         $this->container['vote_average'] = $vote_average;
 
@@ -1372,7 +1419,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return int|null
      */
-    public function getVoteCount()
+    public function getVoteCount(): ?int
     {
         return $this->container['vote_count'];
     }
@@ -1384,15 +1431,65 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return self
      */
-    public function setVoteCount($vote_count)
+    public function setVoteCount(?int $vote_count): static
     {
-        if (is_null($vote_count)) {
-            throw new \InvalidArgumentException('non-nullable vote_count cannot be null');
+        if (is_null($vote_count))
+        {
+            throw new InvalidArgumentException('non-nullable vote_count cannot be null');
         }
         $this->container['vote_count'] = $vote_count;
 
         return $this;
     }
+
+    /**
+     * Gets external_ids
+     *
+     * @return TvSeriesDetails200ResponseExternalIds|null
+     */
+    public function getExternalIds(): ?TvSeriesDetails200ResponseExternalIds
+    {
+        return $this->container['external_ids'];
+    }
+
+    /**
+     * Sets external_ids
+     *
+     * @param TvSeriesDetails200ResponseExternalIds|null $external_ids
+     *
+     * @return self
+     */
+    public function setExternalIds(?TvSeriesDetails200ResponseExternalIds $external_ids): static
+    {
+        if (is_null($external_ids))
+        {
+            $this->openAPINullablesSetToNull[] = 'external_ids';
+        }
+        else
+        {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('external_ids', $nullablesSetToNull);
+            if ($index !== FALSE)
+            {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['external_ids'] = $external_ids;
+
+        return $this;
+    }
+
+    /**
+     * Convenience method to get imdb_id directly.
+     *
+     * @return string|null
+     */
+    public function getImdbId(): ?string
+    {
+        return $this->container['external_ids']?->getImdbId();
+    }
+
     /**
      * Returns true if offset exists. False otherwise.
      *
@@ -1413,7 +1510,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      * @return mixed|null
      */
     #[\ReturnTypeWillChange]
-    public function offsetGet($offset)
+    public function offsetGet($offset): mixed
     {
         return $this->container[$offset] ?? null;
     }
@@ -1422,15 +1519,18 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      * Sets value based on offset.
      *
      * @param int|null $offset Offset
-     * @param mixed    $value  Value to be set
+     * @param mixed $value Value to be set
      *
      * @return void
      */
-    public function offsetSet($offset, $value): void
+    public function offsetSet($offset, mixed $value): void
     {
-        if (is_null($offset)) {
+        if (is_null($offset))
+        {
             $this->container[] = $value;
-        } else {
+        }
+        else
+        {
             $this->container[$offset] = $value;
         }
     }
@@ -1455,9 +1555,9 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      * of any type other than a resource.
      */
     #[\ReturnTypeWillChange]
-    public function jsonSerialize()
+    public function jsonSerialize(): mixed
     {
-       return ObjectSerializer::sanitizeForSerialization($this);
+        return ObjectSerializer::sanitizeForSerialization($this);
     }
 
     /**
@@ -1478,7 +1578,7 @@ class TvSeriesDetails200Response implements ModelInterface, ArrayAccess, \JsonSe
      *
      * @return string
      */
-    public function toHeaderValue()
+    public function toHeaderValue(): string
     {
         return json_encode(ObjectSerializer::sanitizeForSerialization($this));
     }
