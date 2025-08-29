@@ -194,7 +194,7 @@ def recommendation(req: RecommendationRequest):
 
                 if response.status_code == 200:
                     posterPath = response.json().get("poster_path")
-                    recs_1.append(
+                    recs_2.append(
                         {"tmdb_id": int(val), "title": tmdb_lookup.get(int(val), "Unknown"), "media_type": "movie",
                          "poster_path": posterPath})
 
