@@ -99,10 +99,8 @@ export class StartMainComponent implements OnInit {
                 } else if (err.status === 0) {
                     this.isServerNotAvailable = true;
                 }
-                console.log("error", err.status)
             },
             complete: () => { this.isLoading = false; }
-        })
-        this.isLoading = false;
+        });
     }
 }
