@@ -84,6 +84,10 @@ class Tracklist
     #[Groups(['tracklist_details'])]
     private Collection $tracklistSeasons;
 
+    #[ORM\Column(options: ['default' => false])]
+    #[Groups(['tracklist_details'])]
+    private ?bool $isRewatching = null;
+
     public function __construct()
     {
         $this->tracklistSeasons = new ArrayCollection();
@@ -202,6 +206,18 @@ class Tracklist
                 $tracklistSeason->setTracklist(null);
             }
         }
+
+        return $this;
+    }
+
+    public function isRewatching(): ?bool
+    {
+        return $this->isRewatching;
+    }
+
+    public function setIsRewatching(bool $isRewatching): static
+    {
+        $this->isRewatching = $isRewatching;
 
         return $this;
     }
