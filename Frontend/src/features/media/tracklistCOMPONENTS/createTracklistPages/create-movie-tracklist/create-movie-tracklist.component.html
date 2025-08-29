@@ -28,38 +28,54 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </p-float-label>
 
                     @if (hasErrorField('trackListName') && tracklistForm.get('trackListName')?.invalid) {
-                    <p-message severity="error" size="small">
-                        Der Name für die Tracklist ist Pflicht.
-                    </p-message>
+                        <p-message severity="error" size="small">
+                            Der Name für die Tracklist ist Pflicht.
+                        </p-message>
                     }
                 </div>
                 <div>
                     <p-float-label variant="in">
-                        <p-select [options]="tracklistSelectionList" [checkmark]="true" formControlName="status"
-                            optionLabel="name" placeholder="Status auswählen ..." id="select" />
+                        <p-select 
+                            [options]="tracklistSelectionList" 
+                            [checkmark]="true" 
+                            formControlName="status"
+                            optionLabel="name" 
+                            placeholder="Status auswählen ..." 
+                            id="select" 
+                            />
                         <label for="select">Status der Trackliste</label>
                     </p-float-label>
 
                     @if (hasErrorField('status') && tracklistForm.get('status')?.invalid) {
-                    <p-message severity="error" size="small">
-                        Der Status ist Pflicht.
-                    </p-message>
+                        <p-message severity="error" size="small">
+                            Der Status ist Pflicht.
+                        </p-message>
                     }
                 </div>
 
                 <div>
                     <div class="movieListDIV">
                         <p-float-label variant="in">
-                            <p-date-picker formControlName="endDate" dateFormat="dd.mm.yy" inputId="end"
-                                [showIcon]="true" [showOnFocus]="false"
-                                [minDate]="tracklistForm.get('startDate')?.value" />
+                            <p-date-picker 
+                                formControlName="endDate" 
+                                dateFormat="dd.mm.yy" 
+                                inputId="end"
+                                [showIcon]="true" 
+                                [showOnFocus]="false"
+                                [minDate]="tracklistForm.get('startDate')?.value" 
+                                />
                             <label for="end">Enddatum</label>
                         </p-float-label>
                         <div class="gapDIV"></div>
                         <p-float-label variant="in">
-                            <p-date-picker formControlName="startDate" dateFormat="dd.mm.yy" inputId="start"
-                                [showIcon]="true" [showOnFocus]="false"
-                                [maxDate]="tracklistForm.get('endDate')?.value" />
+                            <p-date-picker 
+                                formControlName="startDate" 
+                                dateFormat="dd.mm.yy" 
+                                inputId="start"
+                                [showIcon]="true" 
+                                [showOnFocus]="false"
+                                [maxDate]="tracklistForm.get('endDate')?.value" 
+                                />
                             <label for="start">Startdatum</label>
                         </p-float-label>
                     </div>
@@ -69,14 +85,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <p-rating [stars]="10" formControlName="rating" />
 
                         @if (tracklistForm.get('rating')?.value) {
-                        <p>{{ tracklistForm.get("rating")?.value }} / 10</p>
+                            <p>{{ tracklistForm.get("rating")?.value }} / 10</p>
                         }
                     </div>
 
                     <div class="tracklistActions">
                         <p-button label="Speichern" type="submit" icon="pi pi-save" />
                         <div>
-                            <p-button label="Abbrechen" severity="secondary" icon="pi pi-times"
+                            <p-button 
+                                label="Abbrechen" 
+                                severity="secondary" 
+                                icon="pi pi-times"
                                 (onClick)="cancelNewTracklist()" />
                         </div>
                     </div>

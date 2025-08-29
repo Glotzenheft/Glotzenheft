@@ -25,45 +25,70 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </p-floatlabel>
 
                 @if (registerGroup.get('username')?.invalid && hasError('username')) {
-                <p-message severity="error" size="small">Nutzername ist Pflicht</p-message>
+                    <p-message severity="error" size="small">Nutzername ist Pflicht</p-message>
                 }
             </div>
 
             <div>
                 <p-floatlabel class="userInput" variant="in">
-                    <p-password type="password" id="password" class="passInput" fluid formControlName="password"
-                        name="password" [weakLabel]="'geringe Sicherheit'" [mediumLabel]="'mittlere Sicherheit'"
-                        [strongLabel]="'hohe Sicherheit'" [toggleMask]="true"></p-password>
+                    <p-password 
+                        type="password" 
+                        id="password" 
+                        class="passInput" 
+                        fluid 
+                        formControlName="password"
+                        name="password" 
+                        [weakLabel]="'geringe Sicherheit'" 
+                        [mediumLabel]="'mittlere Sicherheit'"
+                        [strongLabel]="'hohe Sicherheit'" 
+                        [toggleMask]="true"
+                        >
+                    </p-password>
                     <label for="password">Passwort</label>
                 </p-floatlabel>
 
                 @if (registerGroup.get('password')?.invalid && hasError('password')) {
-                <p-message class="formMessage" severity="error" size="small">Passwort ist Pflicht und muss mindestens 8
-                    Zeichen lang
-                    sein.</p-message>
+                    <p-message class="formMessage" severity="error" size="small">
+                        Passwort ist Pflicht und muss mindestens 8 Zeichen lang sein.
+                    </p-message>
                 }
             </div>
 
             <div>
                 <p-floatlabel class="userInput" variant="in">
-                    <p-password type="password" id="passwordConfirm" class="passInput" fluid
-                        formControlName="passwordConfirm" name="passwordConfirm" [feedback]="false"
-                        [toggleMask]="true"></p-password>
+                    <p-password 
+                        type="password" 
+                        id="passwordConfirm" 
+                        class="passInput" 
+                        fluid
+                        formControlName="passwordConfirm" 
+                        name="passwordConfirm" 
+                        [feedback]="false"
+                        [toggleMask]="true"
+                        >
+                    </p-password>
                     <label for="passwordConfirm">Passwort bestätigen</label>
                 </p-floatlabel>
 
                 @if (registerGroup.get('passwordConfirm')?.invalid && hasError('password')) {
-                <p-message severity="error" size="small">Das Passwort muss bestätigt werden und mit dem eingegebenen
-                    Passwort übereinstimmen.</p-message>
+                    <p-message severity="error" size="small">
+                        Das Passwort muss bestätigt werden und mit dem eingegebenen Passwort übereinstimmen.
+                    </p-message>
                 }
             </div>
 
             <div>
-                <p-select formControlName="validationQuestion" [options]="questionList" optionLabel="name"
-                    placeholder="Eine Frage auswählen ..." />
+                <p-select 
+                    formControlName="validationQuestion" 
+                    [options]="questionList" 
+                    optionLabel="name"
+                    placeholder="Eine Frage auswählen ..." 
+                    />
 
                 @if (registerGroup.get('validationQuestion')?.invalid && hasError('validationQuestion')) {
-                <p-message severity="error" size="small">Es muss eine Frage ausgewählt werden.</p-message>
+                    <p-message severity="error" size="small">
+                        Es muss eine Frage ausgewählt werden.
+                    </p-message>
                 }
             </div>
 
@@ -74,25 +99,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </p-floatlabel>
 
                 @if ( registerGroup.get('validationAnswer')?.invalid && hasError('validationAnswer')) {
-                <p-message severity="error" size="small">Antwort ist Pflicht</p-message>
+                    <p-message severity="error" size="small">Antwort ist Pflicht</p-message>
                 }
             </div>
 
             <div>
                 <p-checkbox inputId="agb" formControlName="agbAccept" [binary]="true" />
                 <label for="agb" class="agbLabel">
-                    Ich habe die AGB gelesen und akzeptiere diese.</label>
+                    Ich habe die AGB gelesen und akzeptiere diese.
+                </label>
 
                 @if (registerGroup.get('agbAccept')?.invalid && hasError('agbAccept')) {
-                <p-message severity="error" size="small">Die AGB müssen akzeptiert werden.</p-message>
+                    <p-message severity="error" size="small">Die AGB müssen akzeptiert werden.</p-message>
                 }
             </div>
             <p-button icon="pi pi-directions" label="Hier die AGB lesen" (onClick)="openAGBDialog()" [link]="true" />
 
             <div class="loginActions">
-                <p-button fluid label="Registrieren" icon="pi pi-user-plus" class="button2" type="submit" />
-                <p-button fluid class="button2" severity="secondary" (onClick)="navigateToStartPageUseCase.execute()"
-                    label="Abbrechen" icon="pi pi-times" />
+                <p-button 
+                    fluid label="Registrieren" 
+                    icon="pi pi-user-plus" 
+                    class="button2" 
+                    type="submit" 
+                    />
+                <p-button 
+                    fluid class="button2" 
+                    severity="secondary" 
+                    (onClick)="navigateToStartPageUseCase.execute()"
+                    label="Abbrechen" 
+                    icon="pi pi-times" 
+                    />
             </div>
         </form>
     </div>

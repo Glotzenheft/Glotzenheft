@@ -28,37 +28,52 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </p-float-label>
 
                     @if (hasErrorField('tracklist_name') && updateTracklistForm.get('tracklist_name')?.invalid) {
-                    <p-message size="small" severity="error">Der Name ist Pflicht.</p-message>
+                        <p-message size="small" severity="error">Der Name ist Pflicht.</p-message>
                     }
                 </div>
 
                 <div>
                     <p-float-label variant="in">
-                        <p-select [options]="tracklistStatusOptions" optionLabel="name"
-                            formControlName="tracklist_status" id="trackStatus" />
+                        <p-select 
+                            [options]="tracklistStatusOptions" 
+                            optionLabel="name"
+                            formControlName="tracklist_status" 
+                            id="trackStatus" 
+                            />
                         <label for="trackStatus">Status der Trackliste</label>
                     </p-float-label>
 
                     @if ( hasErrorField('tracklist_status') && updateTracklistForm.get('tracklist_status')?.invalid) {
-                    <p-message severity="error" size="small">Der Status ist Pflicht.</p-message>
+                        <p-message severity="error" size="small">Der Status ist Pflicht.</p-message>
                     }
                 </div>
 
                 <div class="gapDIV">
                     <p-float-label variant="in">
-                        <p-date-picker formControlName="tracklist_finish_date" dateFormat="dd.mm.yy" [showIcon]="true"
-                            inputId="end" [showOnFocus]="false"
-                            [minDate]="updateTracklistForm.get('tracklist_start_date')?.value" [showButtonBar]="true" />
+                        <p-date-picker 
+                            formControlName="tracklist_finish_date" 
+                            dateFormat="dd.mm.yy" 
+                            [showIcon]="true"
+                            inputId="end" 
+                            [showOnFocus]="false"
+                            [minDate]="updateTracklistForm.get('tracklist_start_date')?.value" 
+                            [showButtonBar]="true" 
+                            />
                         <label [for]="'end'">Enddatum</label>
                     </p-float-label>
                 </div>
 
                 <div>
                     <p-float-label variant="in">
-                        <p-date-picker formControlName="tracklist_start_date" dateFormat="dd.mm.yy" [showIcon]="true"
-                            inputId="start" [showOnFocus]="false" [maxDate]="
-                updateTracklistForm.get('tracklist_finish_date')?.value
-              " [showButtonBar]="true" />
+                        <p-date-picker 
+                            formControlName="tracklist_start_date" 
+                            dateFormat="dd.mm.yy" 
+                            [showIcon]="true"
+                            inputId="start" 
+                            [showOnFocus]="false" 
+                            [maxDate]="updateTracklistForm.get('tracklist_finish_date')?.value" 
+                            [showButtonBar]="true" 
+                            />
                         <label [for]="'start'">Startdatum</label>
                     </p-float-label>
                 </div>
@@ -68,15 +83,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <p-rating [stars]="10" formControlName="tracklist_rating" />
 
                     @if (updateTracklistForm.get('tracklist_rating')?.value) {
-                    <p>{{ updateTracklistForm.get("tracklist_rating")?.value }} / 10</p>
+                        <p>{{ updateTracklistForm.get("tracklist_rating")?.value }} / 10</p>
                     }
                 </div>
 
                 <div class="tracklistActions">
                     <p-button label="Speichern" type="submit" icon="pi pi-save" />
-                    <p-button label="Abbrechen" severity="secondary" icon="pi pi-times" (onClick)="cancelTracklist()" />
-                    <p-button label="Löschen" severity="danger" icon="pi pi-trash"
-                        (onClick)="setDeleteDialogVisibility(true)" />
+                    <p-button 
+                        label="Abbrechen" 
+                        severity="secondary" 
+                        icon="pi pi-times" 
+                        (onClick)="cancelTracklist()" 
+                        />
+                    <p-button 
+                        label="Löschen" 
+                        severity="danger" 
+                        icon="pi pi-trash"
+                        (onClick)="setDeleteDialogVisibility(true)" 
+                        />
                 </div>
             </form>
         </div>

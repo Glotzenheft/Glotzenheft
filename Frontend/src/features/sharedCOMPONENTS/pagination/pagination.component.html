@@ -16,19 +16,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <div class="pagination">
-    <p-button icon="pi pi-angle-left" pTooltip="zur vorherigen Seite" [raised]="true" [rounded]="true"
-        [disabled]="inpIsLeftButtonDisabled()" (onClick)="changeToPrevPage()" />
+    <p-button 
+        icon="pi pi-angle-left" 
+        pTooltip="zur vorherigen Seite" 
+        [raised]="true" 
+        [rounded]="true"
+        [disabled]="inpIsLeftButtonDisabled()" 
+        (onClick)="changeToPrevPage()" 
+        />
 
     <div
-        [pTooltip]="'Seite ' + inpCurrentPage() + ' von ' + inpTotalPages() + '-' + inpTotalPagesText() + ': ' + inpTotalResults()">
+        [pTooltip]="
+            'Seite ' + inpCurrentPage() + ' von ' + inpTotalPages() + '-' + inpTotalPagesText() + ': ' + inpTotalResults()
+        "
+        >
         Seite
-        <p-select [options]="inpSelectOptions()" [ngModel]="inpCurrentPage()" (ngModelChange)="changeSelection($event)"
-            [style]="{width: '6rem'}" />
-        <span>von
-            {{inpTotalPages() | stringFormatting}} - {{inpTotalPagesText()}}:
-            <strong>{{inpTotalResults() | stringFormatting}}</strong></span>
+        <p-select 
+            [options]="inpSelectOptions()" 
+            [ngModel]="inpCurrentPage()" 
+            (ngModelChange)="changeSelection($event)"
+            [style]="{width: '6rem'}" 
+            />
+        <span>
+            von {{inpTotalPages() | stringFormatting}} - {{inpTotalPagesText()}}:
+            <strong>{{inpTotalResults() | stringFormatting}}</strong>
+        </span>
     </div>
 
-    <p-button icon="pi pi-angle-right" pTooltip="zur nächsten Seite" [raised]="true" [rounded]="true"
-        [disabled]="inpIsRightButtonDisabled()" (onClick)="changeToNextPage()" />
+    <p-button 
+        icon="pi pi-angle-right" 
+        pTooltip="zur nächsten Seite" 
+        [raised]="true" 
+        [rounded]="true"
+        [disabled]="inpIsRightButtonDisabled()" 
+        (onClick)="changeToNextPage()" 
+        />
 </div>
