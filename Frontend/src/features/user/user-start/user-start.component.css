@@ -16,271 +16,271 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 @media (max-width: 850px) {
-  .diagrammDIV {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: var(--border--radius);
+    .diagrammDIV {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: var(--border--radius);
 
-    padding-left: calc(0.5 * var(--padding--left-right));
-    padding-right: calc(0.5 * var(--padding--left-right));
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        padding-left: calc(0.5 * var(--padding--left-right));
+        padding-right: calc(0.5 * var(--padding--left-right));
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-    box-shadow: var(--box--shadow-button);
+        box-shadow: var(--box--shadow-button);
 
-    height: 30rem;
-  }
+        height: 30rem;
+    }
 
-  .heatmap-container {
-    margin: 2rem 0;
-    overflow-x: auto;
-  }
+    .heatmap-container {
+        margin: 2rem 0;
+        overflow-x: auto;
+    }
 
-  .heatmap table {
-    border-collapse: collapse;
-    margin: 1rem auto;
-  }
+    .heatmap table {
+        border-collapse: collapse;
+        margin: 1rem auto;
+    }
 
-  .heatmap th,
-  .heatmap td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ffffff;
-    min-width: 60px;
-  }
+    .heatmap th,
+    .heatmap td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #ffffff;
+        min-width: 60px;
+    }
 
-  .heatmap th {
-    background-color: #059669;
-    font-weight: 600;
-  }
+    .heatmap th {
+        background-color: #059669;
+        font-weight: 600;
+    }
 
-  .heatmap-Years {
-    background-color: #059669;
-  }
+    .heatmap-Years {
+        background-color: #059669;
+    }
 
-  .heatmap td {
-    transition: background-color 0.2s;
-  }
-  .diagrammDIV {
-    height: auto;
-    min-height: 30rem;
-    overflow: visible;
-  }
+    .heatmap td {
+        transition: background-color 0.2s;
+    }
+    .diagrammDIV {
+        height: auto;
+        min-height: 30rem;
+        overflow: visible;
+    }
 
-  .diagramSelection {
-    margin-bottom: 4rem;
-  }
+    .diagramSelection {
+        margin-bottom: 4rem;
+    }
 
-  .diagrammDIV h1 {
-    color: rgba(0, 0, 0, 0.8);
-  }
-  .gapDIV {
-    height: 4rem;
-  }
+    .diagrammDIV h1 {
+        color: rgba(0, 0, 0, 0.8);
+    }
+    .gapDIV {
+        height: 4rem;
+    }
 
-  .barChartDIVWrapper {
-    width: 100%;
-    overflow: auto;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
-  .barChartDIV {
-    width: 50rem;
-    /* min-width: 10rem; */
-    min-height: 10rem;
-    height: 16rem;
-  }
+    .barChartDIVWrapper {
+        width: 100%;
+        overflow: auto;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+    .barChartDIV {
+        width: 50rem;
+        /* min-width: 10rem; */
+        min-height: 10rem;
+        height: 16rem;
+    }
 
-  .pieChartDIV {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .pieChartDIV {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .activitiesPage {
-    height: 15rem;
-  }
+    .activitiesPage {
+        height: 15rem;
+    }
 }
 
 @media (min-width: 850px) and (max-width: 1600px) {
-  .diagrammDIV {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: var(--border--radius);
+    .diagrammDIV {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: var(--border--radius);
 
-    padding-left: calc(0.5 * var(--padding--left-right));
-    padding-right: calc(0.5 * var(--padding--left-right));
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        padding-left: calc(0.5 * var(--padding--left-right));
+        padding-right: calc(0.5 * var(--padding--left-right));
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-    box-shadow: var(--box--shadow-button);
-    width: 100%;
-  }
+        box-shadow: var(--box--shadow-button);
+        width: 100%;
+    }
 
-  .barChartDIV {
-    width: 30rem;
-    min-width: 100%;
-    min-height: 30rem;
-    height: 30rem;
-    position: relative;
-  }
+    .barChartDIV {
+        width: 30rem;
+        min-width: 100%;
+        min-height: 30rem;
+        height: 30rem;
+        position: relative;
+    }
 
-  .diagrammDIV h1 {
-    color: black;
-  }
-  .gapDIV {
-    height: 4rem;
-  }
+    .diagrammDIV h1 {
+        color: black;
+    }
+    .gapDIV {
+        height: 4rem;
+    }
 
-  .pieChartDIV {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .pieChartDIV {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .activitiesPage {
-    height: 10rem;
-  }
+    .activitiesPage {
+        height: 10rem;
+    }
 
-  .heatmap-container {
-    margin: 2rem 0;
-    overflow-x: auto;
-  }
+    .heatmap-container {
+        margin: 2rem 0;
+        overflow-x: auto;
+    }
 
-  .heatmap table {
-    border-collapse: collapse;
-    margin: 1rem auto;
-  }
+    .heatmap table {
+        border-collapse: collapse;
+        margin: 1rem auto;
+    }
 
-  .heatmap th,
-  .heatmap td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ffffff;
-    min-width: 60px;
-  }
+    .heatmap th,
+    .heatmap td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #ffffff;
+        min-width: 60px;
+    }
 
-  .heatmap th {
-    background-color: #059669;
-    font-weight: 600;
-  }
+    .heatmap th {
+        background-color: #059669;
+        font-weight: 600;
+    }
 
-  .heatmap-Years {
-    background-color: #059669;
-  }
+    .heatmap-Years {
+        background-color: #059669;
+    }
 
-  .heatmap td {
-    transition: background-color 0.2s;
-  }
+    .heatmap td {
+        transition: background-color 0.2s;
+    }
 
-  .legend {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
+    .legend {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .legend-color {
-    width: 30px;
-    height: 20px;
-    border: 1px solid #ddd;
-  }
+    .legend-color {
+        width: 30px;
+        height: 20px;
+        border: 1px solid #ddd;
+    }
 }
 
 @media (min-width: 1600px) {
-  .diagrammDIV {
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: var(--border--radius);
+    .diagrammDIV {
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: var(--border--radius);
 
-    padding-left: calc(0.5 * var(--padding--left-right));
-    padding-right: calc(0.5 * var(--padding--left-right));
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        padding-left: calc(0.5 * var(--padding--left-right));
+        padding-right: calc(0.5 * var(--padding--left-right));
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-    box-shadow: var(--box--shadow-button);
-    width: 100%;
-  }
+        box-shadow: var(--box--shadow-button);
+        width: 100%;
+    }
 
-  .barChartDIV {
-    width: 30rem;
-    min-width: 100%;
-    min-height: 45rem;
-    height: 45rem;
-    position: relative;
-  }
+    .barChartDIV {
+        width: 30rem;
+        min-width: 100%;
+        min-height: 45rem;
+        height: 45rem;
+        position: relative;
+    }
 
-  .diagrammDIV h1 {
-    color: black;
-  }
-  .gapDIV {
-    height: 4rem;
-  }
+    .diagrammDIV h1 {
+        color: black;
+    }
+    .gapDIV {
+        height: 4rem;
+    }
 
-  .pieChartDIV {
-    width: 100%;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .pieChartDIV {
+        width: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .activitiesPage {
-    height: 10rem;
-  }
+    .activitiesPage {
+        height: 10rem;
+    }
 
-  .heatmap-container {
-    margin: 2rem 0;
-    overflow-x: auto;
-  }
+    .heatmap-container {
+        margin: 2rem 0;
+        overflow-x: auto;
+    }
 
-  .heatmap table {
-    border-collapse: collapse;
-    margin: 1rem auto;
-  }
+    .heatmap table {
+        border-collapse: collapse;
+        margin: 1rem auto;
+    }
 
-  .heatmap th,
-  .heatmap td {
-    padding: 8px;
-    text-align: center;
-    border: 1px solid #ffffff;
-    min-width: 60px;
-  }
+    .heatmap th,
+    .heatmap td {
+        padding: 8px;
+        text-align: center;
+        border: 1px solid #ffffff;
+        min-width: 60px;
+    }
 
-  .heatmap th {
-    background-color: #059669;
-    font-weight: 600;
-  }
+    .heatmap th {
+        background-color: #059669;
+        font-weight: 600;
+    }
 
-  .heatmap-Years {
-    background-color: #059669;
-  }
+    .heatmap-Years {
+        background-color: #059669;
+    }
 
-  .heatmap td {
-    transition: background-color 0.2s;
-  }
+    .heatmap td {
+        transition: background-color 0.2s;
+    }
 
-  .legend {
-    display: flex;
-    justify-content: center;
-    gap: 1rem;
-    margin-top: 1rem;
-  }
+    .legend {
+        display: flex;
+        justify-content: center;
+        gap: 1rem;
+        margin-top: 1rem;
+    }
 
-  .legend-item {
-    display: flex;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .legend-item {
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .legend-color {
-    width: 30px;
-    height: 20px;
-    border: 1px solid #ddd;
-  }
+    .legend-color {
+        width: 30px;
+        height: 20px;
+        border: 1px solid #ddd;
+    }
 }

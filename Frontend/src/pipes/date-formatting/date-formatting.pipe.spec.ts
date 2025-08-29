@@ -18,8 +18,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { DateFormattingPipe } from './date-formatting.pipe';
 
 describe('DateFormattingPipe', () => {
-  it('create an instance', () => {
-    const pipe = new DateFormattingPipe();
-    expect(pipe).toBeTruthy();
-  });
+    it('create an instance', () => {
+        const pipe = new DateFormattingPipe();
+        expect(pipe).toBeTruthy();
+    });
 });

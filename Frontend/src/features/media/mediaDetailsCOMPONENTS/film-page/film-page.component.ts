@@ -73,7 +73,12 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
-    providers: [UC_GetFilmDetails, UC_ValidateMediaURL, UC_ShortenString, UC_LogoutOfAccount]
+    providers: [
+        UC_GetFilmDetails,
+        UC_ValidateMediaURL,
+        UC_ShortenString,
+        UC_LogoutOfAccount,
+    ],
 })
 export class FilmPageComponent implements OnInit {
     public movieID: string | null = null;
@@ -87,7 +92,7 @@ export class FilmPageComponent implements OnInit {
     public visibilityStatus: number = 0;
     public selectedTracklist: SeasonTracklist | null = null;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
-    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "movie/"
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + 'movie/';
 
     public convertStatus = convertTracklistStatusIntoGerman;
 
@@ -105,8 +110,8 @@ export class FilmPageComponent implements OnInit {
         private router: Router,
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private getFilmDetailsUseCase: UC_GetFilmDetails,
-        private logOutOfAccountUseCase: UC_LogoutOfAccount
-    ) { }
+        private logOutOfAccountUseCase: UC_LogoutOfAccount,
+    ) {}
 
     ngOnInit(): void {
         this.loadData();
@@ -141,7 +146,10 @@ export class FilmPageComponent implements OnInit {
                     trackListName: [res.media.name, Validators.required],
                 });
 
-                if (this.movieID?.includes(MEDIA_ID_NOT_EXISTS) && res.media.id) {
+                if (
+                    this.movieID?.includes(MEDIA_ID_NOT_EXISTS) &&
+                    res.media.id
+                ) {
                     // replacing the url with "media_id" if necessary
                     this.location.replaceState(`/media/movie/${res.media.id}`);
                 }

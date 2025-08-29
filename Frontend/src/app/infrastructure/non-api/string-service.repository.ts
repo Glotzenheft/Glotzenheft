@@ -22,7 +22,7 @@ import { I_StringRepository } from '../../core/interfaces/string.repository';
     providedIn: 'root',
 })
 export class R_String implements I_StringRepository {
-    constructor() { }
+    constructor() {}
 
     public shortenString = (str: string): string => {
         // width in px

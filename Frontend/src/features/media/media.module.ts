@@ -46,4 +46,4 @@ const mediaRoutes: Routes = [
     declarations: [],
     imports: [CommonModule, RouterModule.forChild(mediaRoutes)],
 })
-export class MediaModule { }
+export class MediaModule {}

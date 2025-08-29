@@ -15,10 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    ApplicationConfig,
-    provideZoneChangeDetection,
-} from '@angular/core';
+import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
@@ -47,16 +44,44 @@ export const appConfig: ApplicationConfig = {
             translation: {
                 today: 'Heute',
                 clear: 'Löschen',
-                dayNames: ['Sonntag', 'Montag', 'Dienstag', 'Mittwoch', 'Donnerstag', 'Freitag', 'Samstag'],
+                dayNames: [
+                    'Sonntag',
+                    'Montag',
+                    'Dienstag',
+                    'Mittwoch',
+                    'Donnerstag',
+                    'Freitag',
+                    'Samstag',
+                ],
                 dayNamesShort: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
                 dayNamesMin: ['So', 'Mo', 'Di', 'Mi', 'Do', 'Fr', 'Sa'],
                 monthNames: [
-                    'Januar', 'Februar', 'März', 'April', 'Mai', 'Juni',
-                    'Juli', 'August', 'September', 'Oktober', 'November', 'Dezember'
+                    'Januar',
+                    'Februar',
+                    'März',
+                    'April',
+                    'Mai',
+                    'Juni',
+                    'Juli',
+                    'August',
+                    'September',
+                    'Oktober',
+                    'November',
+                    'Dezember',
                 ],
                 monthNamesShort: [
-                    'Jan', 'Feb', 'Mär', 'Apr', 'Mai', 'Jun',
-                    'Jul', 'Aug', 'Sep', 'Okt', 'Nov', 'Dez'
+                    'Jan',
+                    'Feb',
+                    'Mär',
+                    'Apr',
+                    'Mai',
+                    'Jun',
+                    'Jul',
+                    'Aug',
+                    'Sep',
+                    'Okt',
+                    'Nov',
+                    'Dez',
                 ],
                 firstDayOfWeek: 1,
             },
@@ -64,6 +89,6 @@ export const appConfig: ApplicationConfig = {
         provideHttpClient(),
         MessageService,
         ChartModule,
-        ...provideAppConfig()
+        ...provideAppConfig(),
     ],
 };

@@ -29,13 +29,35 @@ import { isPlatformBrowser } from '@angular/common';
 import { MessageService } from 'primeng/api';
 import { Router } from '@angular/router';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
-import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from '../../shared/interfaces/login';
-import { ROUTE_DELETE_USER_ACCOUNT, ROUTE_LOGIN, ROUTE_REGISTER, ROUTE_RESET_PASSWORD, ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, ROUTE_STATISTICS_GET_USER_RATINGS, ROUTE_USER_ACTIVITIES } from '../../shared/variables/api-routes';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../shared/variables/message-vars';
+import {
+    LoginAndMessageResponse,
+    LoginCredentials,
+    RegisterCredentials,
+    ResetPasswordCredentials,
+} from '../../shared/interfaces/login';
+import {
+    ROUTE_DELETE_USER_ACCOUNT,
+    ROUTE_LOGIN,
+    ROUTE_REGISTER,
+    ROUTE_RESET_PASSWORD,
+    ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+    ROUTE_STATISTICS_GET_USER_RATINGS,
+    ROUTE_USER_ACTIVITIES,
+} from '../../shared/variables/api-routes';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-import { KEY_LOCAL_STORAGE_LAST_LOG_IN, KEY_LOCAL_STORAGE_LOG_IN_TRIES } from '../../shared/variables/local-storage-keys';
+import {
+    KEY_LOCAL_STORAGE_LAST_LOG_IN,
+    KEY_LOCAL_STORAGE_LOG_IN_TRIES,
+} from '../../shared/variables/local-storage-keys';
 import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
-import { RatingStatistic, WatchTimeStatistic } from '../../shared/statistic-interfaces';
+import {
+    RatingStatistic,
+    WatchTimeStatistic,
+} from '../../shared/statistic-interfaces';
 import { UserActivitiesResponse } from '../../../shared/interfaces/user-interfaces';
 import { I_UserRepository } from '../../core/interfaces/user.repository';
 import { UC_GetHeader } from '../../core/use-cases/media/get-header.use-case';
@@ -62,15 +84,18 @@ export class R_UserHTTP implements I_UserRepository {
         @Inject(PLATFORM_ID) private platformId: Object,
         private messageService: MessageService,
         private router: Router,
-        private getHeaderUseCase: UC_GetHeader
-    ) { }
+        private getHeaderUseCase: UC_GetHeader,
+    ) {}
 
     // functions -----------------------------------------------------------------------
     loginIntoAccount = (
-        loginData: LoginCredentials
+        loginData: LoginCredentials,
     ): Observable<LoginAndMessageResponse> => {
         return this.http
-            .post<LoginAndMessageResponse>(ROUTE_LOGIN, JSON.stringify(loginData))
+            .post<LoginAndMessageResponse>(
+                ROUTE_LOGIN,
+                JSON.stringify(loginData),
+            )
             .pipe(
                 tap(() => {
                     this.isSearchBarVisible.next(true);
@@ -78,17 +103,17 @@ export class R_UserHTTP implements I_UserRepository {
                 }),
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
 
     registerAccount = (
-        registerData: RegisterCredentials
+        registerData: RegisterCredentials,
     ): Observable<LoginAndMessageResponse> => {
         return this.http
             .post<LoginAndMessageResponse>(
                 ROUTE_REGISTER,
-                JSON.stringify(registerData)
+                JSON.stringify(registerData),
             )
             .pipe(
                 tap(() => {
@@ -98,7 +123,7 @@ export class R_UserHTTP implements I_UserRepository {
 
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
 
@@ -113,7 +138,7 @@ export class R_UserHTTP implements I_UserRepository {
     };
 
     public resetPassword = (
-        resetPasswordCredentials: ResetPasswordCredentials
+        resetPasswordCredentials: ResetPasswordCredentials,
     ): Observable<any> | null => {
         const header = this.getHeaderUseCase.execute();
 
@@ -125,12 +150,12 @@ export class R_UserHTTP implements I_UserRepository {
             .post<any>(
                 ROUTE_RESET_PASSWORD,
                 JSON.stringify(resetPasswordCredentials),
-                { headers: header }
+                { headers: header },
             )
             .pipe(
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
 
@@ -146,8 +171,8 @@ export class R_UserHTTP implements I_UserRepository {
             getMessageObject(
                 'error',
                 'Kein Zugriff',
-                'Bitte melde dich an, um Zugriff zu erhalten.'
-            )
+                'Bitte melde dich an, um Zugriff zu erhalten.',
+            ),
         );
     };
 
@@ -155,22 +180,22 @@ export class R_UserHTTP implements I_UserRepository {
     public isUserLoginValid = (): boolean => {
         const calculateTimeDifference = (lastLogin: Date): number => {
             return Math.floor(
-                (new Date().getTime() - lastLogin.getTime()) / 60000 // in minutes
+                (new Date().getTime() - lastLogin.getTime()) / 60000, // in minutes
             );
         };
 
         if (isPlatformBrowser(this.platformId)) {
             const lastLogin: string | null = localStorage.getItem(
-                KEY_LOCAL_STORAGE_LAST_LOG_IN
+                KEY_LOCAL_STORAGE_LAST_LOG_IN,
             );
             const loginTries: string | null = localStorage.getItem(
-                KEY_LOCAL_STORAGE_LAST_LOG_IN
+                KEY_LOCAL_STORAGE_LAST_LOG_IN,
             );
 
             if (!lastLogin || !loginTries) {
                 localStorage.setItem(
                     KEY_LOCAL_STORAGE_LAST_LOG_IN,
-                    new Date().toISOString()
+                    new Date().toISOString(),
                 );
                 localStorage.setItem(KEY_LOCAL_STORAGE_LOG_IN_TRIES, '0');
 
@@ -194,7 +219,7 @@ export class R_UserHTTP implements I_UserRepository {
     public increaseLoginTries = () => {
         if (isPlatformBrowser(this.platformId)) {
             const loginTries: string | null = localStorage.getItem(
-                KEY_LOCAL_STORAGE_LOG_IN_TRIES
+                KEY_LOCAL_STORAGE_LOG_IN_TRIES,
             );
 
             if (!loginTries) {
@@ -204,13 +229,13 @@ export class R_UserHTTP implements I_UserRepository {
 
             localStorage.setItem(
                 KEY_LOCAL_STORAGE_LOG_IN_TRIES,
-                `${Number(loginTries) + 1}`
+                `${Number(loginTries) + 1}`,
             );
         }
     };
 
     public deleteUserAccount = (
-        userData: DeleteUserRequest
+        userData: DeleteUserRequest,
     ): Observable<any> | null => {
         const header = this.getHeaderUseCase.execute();
 
@@ -230,7 +255,7 @@ export class R_UserHTTP implements I_UserRepository {
                 shareReplay(1),
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
 
@@ -271,14 +296,17 @@ export class R_UserHTTP implements I_UserRepository {
             }
 
             return this.http
-                .get<WatchTimeStatistic>(ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY, {
-                    headers: header,
-                })
+                .get<WatchTimeStatistic>(
+                    ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY,
+                    {
+                        headers: header,
+                    },
+                )
                 .pipe(
                     shareReplay(1),
                     catchError((error: HttpErrorResponse) => {
                         return throwError(() => error);
-                    })
+                    }),
                 );
         };
 
@@ -288,7 +316,7 @@ export class R_UserHTTP implements I_UserRepository {
      * @returns Observable<UserActivity> | null
      */
     public getUserActivities = (
-        responsePage: number
+        responsePage: number,
     ): Observable<UserActivitiesResponse> | null => {
         const header = this.getHeaderUseCase.execute();
 
@@ -304,7 +332,7 @@ export class R_UserHTTP implements I_UserRepository {
                 shareReplay(1),
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
 
@@ -314,16 +342,17 @@ export class R_UserHTTP implements I_UserRepository {
             return null;
         }
 
-        return this.http.get<RatingStatistic>(
-            ROUTE_STATISTICS_GET_USER_RATINGS,
-            { headers: header }
-        ).pipe(
-            shareReplay(1),
-            catchError((error: HttpErrorResponse) => {
-                return throwError(() => this.handleError(error));
+        return this.http
+            .get<RatingStatistic>(ROUTE_STATISTICS_GET_USER_RATINGS, {
+                headers: header,
             })
-        );
-    }
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => this.handleError(error));
+                }),
+            );
+    };
 
     private handleError(error: HttpErrorResponse): Error {
         // Custom Error Handling

@@ -16,219 +16,219 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 @media (max-width: 670px) {
-  img {
-    height: 100%;
-    border: 0.2rem solid black;
-  }
+    img {
+        height: 100%;
+        border: 0.2rem solid black;
+    }
 
-  .tracklistDIV {
-    width: 100%;
-    height: 4rem;
-    border: 0.1rem solid white;
-    border-radius: var(--border--radius);
+    .tracklistDIV {
+        width: 100%;
+        height: 4rem;
+        border: 0.1rem solid white;
+        border-radius: var(--border--radius);
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-    transition-duration: var(--transition--duration);
-  }
+        transition-duration: var(--transition--duration);
+    }
 
-  .tracklistDIV:hover {
-    cursor: pointer;
-    background-color: white;
-    color: black;
-  }
+    .tracklistDIV:hover {
+        cursor: pointer;
+        background-color: white;
+        color: black;
+    }
 
-  .statusDIV {
-    height: 3rem;
-    width: 14rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--border--radius);
-    color: white;
-  }
+    .statusDIV {
+        height: 3rem;
+        width: 14rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        color: white;
+    }
 
-  .statusWatching {
-    background-color: #3e9c96;
-  }
-  .statusPausing {
-    background-color: #6b8e23;
-  }
-  .statusDropped {
-    background-color: #d32f2f;
-  }
-  .statusRewatching {
-    background-color: #028090;
-  }
-  .statusPlanToWatch {
-    background-color: #facc15;
-  }
-  .statusCompleted {
-    background-color: #059669;
-  }
+    .statusWatching {
+        background-color: #3e9c96;
+    }
+    .statusPausing {
+        background-color: #6b8e23;
+    }
+    .statusDropped {
+        background-color: #d32f2f;
+    }
+    .statusRewatching {
+        background-color: #028090;
+    }
+    .statusPlanToWatch {
+        background-color: #facc15;
+    }
+    .statusCompleted {
+        background-color: #059669;
+    }
 
-  .tracklistPanelMediaDetailsDIV {
-    width: 100%;
-  }
+    .tracklistPanelMediaDetailsDIV {
+        width: 100%;
+    }
 
-  .seasonPictureWrapper {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .seasonPictureWrapper {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .seasonMetaPicture {
-    width: auto;
-  }
+    .seasonMetaPicture {
+        width: auto;
+    }
 
-  .seasonMetaPicture {
-    width: 15rem;
-    height: 15rem;
-    border: 0.4rem solid white;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
+    .seasonMetaPicture {
+        width: 15rem;
+        height: 15rem;
+        border: 0.4rem solid white;
+        margin-right: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
 
-  .ratingDIV {
-    display: flex;
-    justify-content: flex-start;
-    flex-direction: column;
+    .ratingDIV {
+        display: flex;
+        justify-content: flex-start;
+        flex-direction: column;
 
-    /* align-items: center; */
-    width: 20rem;
-    margin-bottom: 4rem;
-  }
+        /* align-items: center; */
+        width: 20rem;
+        margin-bottom: 4rem;
+    }
 
-  .mediaButton {
-    margin-top: 1rem;
-    width: 100%;
-  }
+    .mediaButton {
+        margin-top: 1rem;
+        width: 100%;
+    }
 
-  .filterFORM {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 8rem;
-  }
+    .filterFORM {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 8rem;
+    }
 
-  .filterFORM div {
-    width: 80%;
-  }
+    .filterFORM div {
+        width: 80%;
+    }
 }
 
 @media (min-width: 670px) {
-  img {
-    height: 100%;
-    border: 0.2rem solid black;
-  }
+    img {
+        height: 100%;
+        border: 0.2rem solid black;
+    }
 
-  .tracklistDIV {
-    width: 100%;
-    height: 4rem;
-    border: 0.1rem solid white;
-    border-radius: var(--border--radius);
+    .tracklistDIV {
+        width: 100%;
+        height: 4rem;
+        border: 0.1rem solid white;
+        border-radius: var(--border--radius);
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
 
-    transition-duration: var(--transition--duration);
-  }
+        transition-duration: var(--transition--duration);
+    }
 
-  .tracklistDIV:hover {
-    cursor: pointer;
-    background-color: white;
-    color: black;
-  }
+    .tracklistDIV:hover {
+        cursor: pointer;
+        background-color: white;
+        color: black;
+    }
 
-  .statusDIV {
-    height: 3rem;
-    width: 14rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--border--radius);
-    color: white;
-  }
+    .statusDIV {
+        height: 3rem;
+        width: 14rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        color: white;
+    }
 
-  .statusWatching {
-    background-color: #3e9c96;
-  }
-  .statusPausing {
-    background-color: #6b8e23;
-  }
-  .statusDropped {
-    background-color: #d32f2f;
-  }
-  .statusRewatching {
-    background-color: #028090;
-  }
-  .statusPlanToWatch {
-    background-color: #facc15;
-  }
-  .statusCompleted {
-    background-color: #059669;
-  }
+    .statusWatching {
+        background-color: #3e9c96;
+    }
+    .statusPausing {
+        background-color: #6b8e23;
+    }
+    .statusDropped {
+        background-color: #d32f2f;
+    }
+    .statusRewatching {
+        background-color: #028090;
+    }
+    .statusPlanToWatch {
+        background-color: #facc15;
+    }
+    .statusCompleted {
+        background-color: #059669;
+    }
 
-  .tracklistPanelDIV {
-    display: flex;
-    justify-content: start;
-    align-items: center;
-  }
+    .tracklistPanelDIV {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+    }
 
-  .tracklistPanelMediaDetailsDIV {
-    width: calc(100% - 15rem);
-  }
+    .tracklistPanelMediaDetailsDIV {
+        width: calc(100% - 15rem);
+    }
 
-  .seasonMetaPicture {
-    width: auto;
-  }
+    .seasonMetaPicture {
+        width: auto;
+    }
 
-  .seasonMetaPicture {
-    width: 15rem;
-    height: 15rem;
-    border: 0.4rem solid white;
-    margin-right: 1rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    margin-bottom: 2rem;
-  }
+    .seasonMetaPicture {
+        width: 15rem;
+        height: 15rem;
+        border: 0.4rem solid white;
+        margin-right: 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        margin-bottom: 2rem;
+    }
 
-  .ratingDIV {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    width: 20rem;
-  }
+    .ratingDIV {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 20rem;
+    }
 
-  .mediaButton {
-    margin-top: 1rem;
-  }
+    .mediaButton {
+        margin-top: 1rem;
+    }
 
-  .filterFORM {
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
-  }
+    .filterFORM {
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
+    }
 
-  .filterFORM div {
-    width: 30%;
-  }
+    .filterFORM div {
+        width: 30%;
+    }
 }
 
 .userTracklistsWrapper {
-  width: 100%;
-  margin-bottom: 8rem;
+    width: 100%;
+    margin-bottom: 8rem;
 }

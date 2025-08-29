@@ -36,7 +36,10 @@ import { AgbComponent } from '../../footerCOMPONENTS/agb/agb.component';
 import { ValidationQuestion } from '../../../app/shared/interfaces/validation-question';
 import { VALIDATION_QUESTIONS } from '../../../app/shared/variables/validation-questions';
 import { getMessageObject } from '../../../app/shared/variables/message-vars';
-import { LoginAndMessageResponse, RegisterCredentials } from '../../../app/shared/interfaces/login';
+import {
+    LoginAndMessageResponse,
+    RegisterCredentials,
+} from '../../../app/shared/interfaces/login';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_NavigateToStartPage } from '../../../app/core/use-cases/navigation/navigate-to-start-page.use-case';
 import { UC_RegisterAccount } from '../../../app/core/use-cases/user/register-account.use-case';
@@ -59,7 +62,12 @@ import { UC_GetInvalidChars } from '../../../app/core/use-cases/security/get-inv
     ],
     templateUrl: './register.component.html',
     styleUrl: './register.component.css',
-    providers: [UC_NavigateToStartPage, UC_IsValidUserName, UC_GetInvalidChars, UC_RegisterAccount]
+    providers: [
+        UC_NavigateToStartPage,
+        UC_IsValidUserName,
+        UC_GetInvalidChars,
+        UC_RegisterAccount,
+    ],
 })
 export class RegisterComponent implements OnInit {
     registerGroup!: FormGroup;
@@ -71,7 +79,7 @@ export class RegisterComponent implements OnInit {
         (question) => ({
             name: question,
             code: question,
-        })
+        }),
     );
     private userName: string = '';
 
@@ -82,14 +90,17 @@ export class RegisterComponent implements OnInit {
         private router: Router,
         private registerAccountUseCase: UC_RegisterAccount,
         private isValidUserNameUseCase: UC_IsValidUserName,
-        private invalidCharsUseCase: UC_GetInvalidChars
-    ) { }
+        private invalidCharsUseCase: UC_GetInvalidChars,
+    ) {}
 
     ngOnInit(): void {
         this.registerGroup = this.formBuilder.group({
             username: ['', [Validators.required]],
             password: ['', [Validators.required, Validators.minLength(8)]],
-            passwordConfirm: ['', [Validators.required, Validators.minLength(8)]],
+            passwordConfirm: [
+                '',
+                [Validators.required, Validators.minLength(8)],
+            ],
             validationQuestion: [null, [Validators.required]],
             validationAnswer: ['', [Validators.required]],
             agbAccept: [false, Validators.requiredTrue],
@@ -118,10 +129,10 @@ export class RegisterComponent implements OnInit {
                 getMessageObject(
                     'error',
                     'Ungültiger Nutzername',
-                    `Nutzernamen dürfen keines der folgenden Zeichen enthalten: ${this.invalidCharsUseCase.observe().join(
-                        ', '
-                    )}`
-                )
+                    `Nutzernamen dürfen keines der folgenden Zeichen enthalten: ${this.invalidCharsUseCase
+                        .observe()
+                        .join(', ')}`,
+                ),
             );
             return;
         }
@@ -138,20 +149,23 @@ export class RegisterComponent implements OnInit {
         this.registerAccountUseCase.execute(registerData).subscribe({
             next: (res: LoginAndMessageResponse) => {
                 this.messageService.add(
-                    getMessageObject('success', 'Nutzer erfolgreich angelegt.')
+                    getMessageObject('success', 'Nutzer erfolgreich angelegt.'),
                 );
 
                 // navigate user to login page
                 this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
             },
             error: (err: any) => {
-                if (err.status === 409 && err.error.error === 'User already exists') {
+                if (
+                    err.status === 409 &&
+                    err.error.error === 'User already exists'
+                ) {
                     this.messageService.add(
                         getMessageObject(
                             'error',
                             'Nutzer existiert bereits',
-                            'Bitte wähle einen anderen Namen'
-                        )
+                            'Bitte wähle einen anderen Namen',
+                        ),
                     );
 
                     return;
@@ -160,8 +174,8 @@ export class RegisterComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Registrieren',
-                        'Bitte versuche es erneut.'
-                    )
+                        'Bitte versuche es erneut.',
+                    ),
                 );
             },
         });
@@ -171,7 +185,8 @@ export class RegisterComponent implements OnInit {
         const control = this.registerGroup.get(field);
 
         return (
-            control! && (control.dirty || control.touched || this.isFormSubmitted)
+            control! &&
+            (control.dirty || control.touched || this.isFormSubmitted)
         );
     };
 

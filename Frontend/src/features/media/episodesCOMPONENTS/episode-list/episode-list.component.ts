@@ -29,18 +29,17 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { SeasonEpisode } from '../../../../app/shared/interfaces/media-interfaces';
-import { SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    SeasonTracklist,
+    TracklistEpisode,
+    TVSeasonWithTracklist,
+} from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 
 @Component({
     selector: 'app-episode-list',
-    imports: [
-        DialogModule,
-        DateFormattingPipe,
-        ButtonModule,
-        TooltipModule,
-    ],
+    imports: [DialogModule, DateFormattingPipe, ButtonModule, TooltipModule],
     providers: [UC_ShortenString],
     templateUrl: './episode-list.component.html',
     styleUrl: './episode-list.component.css',
@@ -69,7 +68,7 @@ export class EpisodeListComponent {
     @Output() setEpisodeForEditing: EventEmitter<SeasonEpisode> =
         new EventEmitter<SeasonEpisode>();
 
-    constructor(public shortenStringUseCase: UC_ShortenString) { }
+    constructor(public shortenStringUseCase: UC_ShortenString) {}
 
     public openDialog = (currenEpisode: SeasonEpisode) => {
         this.currentEpisodeForDialog = currenEpisode;
@@ -81,7 +80,7 @@ export class EpisodeListComponent {
             this.inpSelectedTracklist()!.tracklistSeasons[0].tracklistEpisodes.map(
                 (epis: TracklistEpisode) => {
                     return epis.episode.id;
-                }
+                },
             );
 
         if (episodesOfTracklist.includes(episodeID)) {
@@ -92,7 +91,7 @@ export class EpisodeListComponent {
 
     public selectEpisode = (
         episode: SeasonEpisode,
-        isEpisodeEditing: boolean
+        isEpisodeEditing: boolean,
     ) => {
         if (!isEpisodeEditing) {
             this.setEpisode.emit(episode);

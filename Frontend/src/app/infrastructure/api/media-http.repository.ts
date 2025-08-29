@@ -32,11 +32,29 @@ import {
     HttpHeaders,
 } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
-import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from '../../shared/interfaces/media-interfaces';
-import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from '../../shared/interfaces/tracklist-interfaces';
+import {
+    Film,
+    MediaIDResponse,
+    Season,
+    UpdateTracklistRequest,
+} from '../../shared/interfaces/media-interfaces';
+import {
+    CreateMovieTracklistData,
+    CreateSeasonTracklistData,
+    Tracklist,
+} from '../../shared/interfaces/tracklist-interfaces';
 import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
-import { ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../shared/variables/api-routes';
+import {
+    ROUTE_CREATE_NEW_TRACKLIST,
+    ROUTE_DELETE_TRACKLIST,
+    ROUTE_GET_ALL_USER_TRACKLISTS,
+    ROUTE_MEDIA_DETAILS_SEARCH,
+    ROUTE_MEDIA_ID_FOR_MEDIA,
+    ROUTE_MOVIE_DETAILS_SEARCH,
+    ROUTE_MULTI_SEARCH,
+    ROUTE_UPDATE_TRACKLIST,
+} from '../../shared/variables/api-routes';
 import { I_MediaRepository } from '../../core/interfaces/media.repository';
 
 @Injectable({
@@ -65,19 +83,23 @@ export class R_MediaHttp implements I_MediaRepository {
 
     constructor(
         private http: HttpClient,
-        @Inject(PLATFORM_ID) private platformId: Object
+        @Inject(PLATFORM_ID) private platformId: Object,
     ) {
         // controlling the request frequence (via throttle time)
         this.tracklistUPDATESubject
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME), // wait 10 s
-                exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
-                shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
+                exhaustMap((tracklistData) =>
+                    this.updateTracklist(tracklistData),
+                ), // Führt den HTTP-Request aus
+                shareReplay(1), // Verhindert, dass der Request mehrmals ausgeführt wird
             )
             .subscribe({
                 // updating the response subject (response subject will return new response value to the components)
-                next: (response) => this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
-                error: (error) => this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
+                next: (response) =>
+                    this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
+                error: (error) =>
+                    this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
             });
 
         // deleting tracklist --------------------------------------------------
@@ -85,11 +107,13 @@ export class R_MediaHttp implements I_MediaRepository {
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME),
                 exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
-                shareReplay(1)
+                shareReplay(1),
             )
             .subscribe({
-                next: (response) => this.tracklistDELETEResponseSubject.next(response),
-                error: (error) => this.tracklistDELETEResponseSubject.error(error),
+                next: (response) =>
+                    this.tracklistDELETEResponseSubject.next(response),
+                error: (error) =>
+                    this.tracklistDELETEResponseSubject.error(error),
             });
 
         // creating a new movie tracklist ---------------------------------------------------
@@ -97,12 +121,13 @@ export class R_MediaHttp implements I_MediaRepository {
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME), // 20.000 ms
                 exhaustMap((tracklistData: CreateMovieTracklistData) =>
-                    this.createNewMovieTracklist(tracklistData)
+                    this.createNewMovieTracklist(tracklistData),
                 ),
-                shareReplay(1)
+                shareReplay(1),
             )
             .subscribe({
-                next: (res: any) => this.tracklistCREATEMOVIEResponseSubject.next(res),
+                next: (res: any) =>
+                    this.tracklistCREATEMOVIEResponseSubject.next(res),
                 error: (err: any) =>
                     this.tracklistCREATEMOVIEResponseSubject.error(err),
             });
@@ -112,9 +137,9 @@ export class R_MediaHttp implements I_MediaRepository {
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME),
                 exhaustMap((tracklistData: CreateSeasonTracklistData) =>
-                    this.createNewSeasonTracklist(tracklistData)
+                    this.createNewSeasonTracklist(tracklistData),
                 ),
-                shareReplay(1)
+                shareReplay(1),
             )
             .subscribe({
                 next: (res: Tracklist) =>
@@ -130,7 +155,8 @@ export class R_MediaHttp implements I_MediaRepository {
         let userToken: string = '';
 
         if (isPlatformBrowser(this.platformId)) {
-            userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
+            userToken =
+                localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
         }
 
         if (!userToken.trim()) {
@@ -159,7 +185,7 @@ export class R_MediaHttp implements I_MediaRepository {
         -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
         */
         tmdbID: number,
-        isMovie: boolean
+        isMovie: boolean,
     ): Observable<MediaIDResponse> => {
         const header = this.getHeader();
         if (!header) {
@@ -169,11 +195,11 @@ export class R_MediaHttp implements I_MediaRepository {
         const movieType: string = isMovie ? 'movie' : 'tv';
         const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
-        return this.http.get<MediaIDResponse>(url, {headers: header}).pipe(
+        return this.http.get<MediaIDResponse>(url, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -190,7 +216,7 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -207,28 +233,32 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
     public getMultiSearchResults = (
         searchString: string,
-        page: number
+        page: number,
     ): Observable<any> => {
         const includeAdult = true;
         const language = 'de-DE';
 
         const url = [
             ROUTE_MULTI_SEARCH[0],
-            ROUTE_MULTI_SEARCH[1], encodeURIComponent(searchString),
-            ROUTE_MULTI_SEARCH[2], String(includeAdult),
-            ROUTE_MULTI_SEARCH[3], language,
-            ROUTE_MULTI_SEARCH[4], String(page)
+            ROUTE_MULTI_SEARCH[1],
+            encodeURIComponent(searchString),
+            ROUTE_MULTI_SEARCH[2],
+            String(includeAdult),
+            ROUTE_MULTI_SEARCH[3],
+            language,
+            ROUTE_MULTI_SEARCH[4],
+            String(page),
         ].join('');
 
         return this.http.get(url).pipe(
             shareReplay(1),
-            catchError((error: HttpErrorResponse) => throwError(() => error))
+            catchError((error: HttpErrorResponse) => throwError(() => error)),
         );
     };
 
@@ -236,7 +266,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
     public triggerTracklistCREATESEASONSubject = (
         // function for triggering a new request for creating a new season tracklist
-        tracklistData: CreateSeasonTracklistData
+        tracklistData: CreateSeasonTracklistData,
     ) => {
         // updating the subject with the new data -> new request will be triggered
         this.tracklistCREATESEASONSubject.next(tracklistData);
@@ -250,7 +280,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
     public createNewSeasonTracklist = (
         // function for making the request to the backend for creating a new season tracklist
-        data: CreateSeasonTracklistData
+        data: CreateSeasonTracklistData,
     ): Observable<Tracklist> => {
         const header = this.getHeader();
 
@@ -295,14 +325,14 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
     // functions for creating a new movie tracklist --------------------------------------------
 
     public triggerTracklistCREATEMOVIESubject = (
-        tracklistData: CreateMovieTracklistData
+        tracklistData: CreateMovieTracklistData,
     ) => {
         this.tracklistCREATEMOVIESubject.next(tracklistData);
     };
@@ -312,7 +342,7 @@ export class R_MediaHttp implements I_MediaRepository {
     };
 
     public createNewMovieTracklist = (
-        data: CreateMovieTracklistData
+        data: CreateMovieTracklistData,
     ): Observable<any> => {
         const header = this.getHeader();
 
@@ -336,24 +366,27 @@ export class R_MediaHttp implements I_MediaRepository {
         }
 
         const url: string = `${ROUTE_CREATE_NEW_TRACKLIST[0]}${encodeURIComponent(
-            data.name
-        )}${ROUTE_CREATE_NEW_TRACKLIST[1]}${data.status}${ROUTE_CREATE_NEW_TRACKLIST[2]
-            }${data.mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${ROUTE_CREATE_NEW_TRACKLIST[5]
-            }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${ROUTE_CREATE_NEW_TRACKLIST[7]
-            }${data.rating ? data.rating : ''}`;
+            data.name,
+        )}${ROUTE_CREATE_NEW_TRACKLIST[1]}${data.status}${
+            ROUTE_CREATE_NEW_TRACKLIST[2]
+        }${data.mediaID}${ROUTE_CREATE_NEW_TRACKLIST[4]}movie${
+            ROUTE_CREATE_NEW_TRACKLIST[5]
+        }${formattedDate}${ROUTE_CREATE_NEW_TRACKLIST[6]}${formattedEndDate}${
+            ROUTE_CREATE_NEW_TRACKLIST[7]
+        }${data.rating ? data.rating : ''}`;
 
         return this.http.post<any>(url, {}, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
     // update tracklist functions -----------------------------------------------------------------------------------
 
     public triggerTracklistUPDATESubject = (
-        tracklistData: UpdateTracklistRequest
+        tracklistData: UpdateTracklistRequest,
     ) => {
         this.tracklistUPDATESubject.next(tracklistData); // Schicke die Daten an den Subject
     };
@@ -364,7 +397,7 @@ export class R_MediaHttp implements I_MediaRepository {
     };
 
     public updateTracklist = (
-        tracklistData: UpdateTracklistRequest
+        tracklistData: UpdateTracklistRequest,
     ): Observable<Tracklist> => {
         const header = this.getHeader();
 
@@ -376,14 +409,18 @@ export class R_MediaHttp implements I_MediaRepository {
         let formattedEndDate: string = '';
 
         if (tracklistData.tracklist_start_date) {
-            let startDateAsDate: Date = new Date(tracklistData.tracklist_start_date);
+            let startDateAsDate: Date = new Date(
+                tracklistData.tracklist_start_date,
+            );
 
             startDateAsDate.setDate(startDateAsDate.getDate() + 1);
             formattedStartDate = startDateAsDate.toISOString().split('T')[0];
         }
 
         if (tracklistData.tracklist_finish_date) {
-            let endDateAsDate: Date = new Date(tracklistData.tracklist_finish_date);
+            let endDateAsDate: Date = new Date(
+                tracklistData.tracklist_finish_date,
+            );
 
             endDateAsDate.setDate(endDateAsDate.getDate() + 1);
             formattedEndDate = endDateAsDate.toISOString().split('T')[0];
@@ -407,7 +444,7 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -434,7 +471,7 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -455,7 +492,7 @@ export class R_MediaHttp implements I_MediaRepository {
                 shareReplay(1),
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
 }

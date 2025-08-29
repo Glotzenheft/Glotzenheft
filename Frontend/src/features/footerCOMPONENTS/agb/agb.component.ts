@@ -21,8 +21,6 @@ import { Component } from '@angular/core';
     selector: 'app-agb',
     imports: [],
     templateUrl: './agb.component.html',
-    styleUrl: './agb.component.css'
+    styleUrl: './agb.component.css',
 })
-export class AgbComponent {
-
-}
+export class AgbComponent {}

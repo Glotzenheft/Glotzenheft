@@ -20,25 +20,24 @@ import { VisibleRoute } from '../../../../app/shared/interfaces/route-list-item'
 import { getVisibleRoutesForUser } from '../../../../app/shared/variables/routes-list';
 import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
 
-
 @Component({
     selector: 'app-user-links',
     imports: [],
     templateUrl: './user-links.component.html',
     styleUrl: './user-links.component.css',
-    providers: [UC_IsSearchBarVisible]
+    providers: [UC_IsSearchBarVisible],
 })
 export class UserLinksComponent implements OnInit {
     public isLoggedIn: boolean = false;
     public personalUserLinks: VisibleRoute[] = getVisibleRoutesForUser();
 
-    constructor(
-        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible
-    ) { }
+    constructor(private isSearchBarVisibleUseCase: UC_IsSearchBarVisible) {}
 
     ngOnInit(): void {
-        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
-            this.isLoggedIn = status;
-        });
+        this.isSearchBarVisibleUseCase
+            .observe()
+            .subscribe((status: boolean) => {
+                this.isLoggedIn = status;
+            });
     }
 }

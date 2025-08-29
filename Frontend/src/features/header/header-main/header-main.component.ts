@@ -21,8 +21,6 @@ import { Component } from '@angular/core';
     selector: 'app-header-main',
     imports: [],
     templateUrl: './header-main.component.html',
-    styleUrl: './header-main.component.css'
+    styleUrl: './header-main.component.css',
 })
-export class HeaderMainComponent {
-
-}
+export class HeaderMainComponent {}

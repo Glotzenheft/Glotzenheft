@@ -28,7 +28,7 @@ import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { RatingModule } from 'primeng/rating';
 import { TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
-import { CreateNewTracklistComponent } from "../../createTracklistPages/create-new-tracklist/create-new-tracklist.component";
+import { CreateNewTracklistComponent } from '../../createTracklistPages/create-new-tracklist/create-new-tracklist.component';
 
 @Component({
     selector: 'app-tracklist-form',
@@ -37,7 +37,7 @@ import { CreateNewTracklistComponent } from "../../createTracklistPages/create-n
         ButtonModule,
         RatingModule,
         MessageModule,
-        CreateNewTracklistComponent
+        CreateNewTracklistComponent,
     ],
     providers: [],
     templateUrl: './tracklist-form.component.html',
@@ -59,8 +59,7 @@ export class TracklistFormComponent implements OnInit {
     @Output() saveNewTracklist: EventEmitter<boolean> =
         new EventEmitter<boolean>();
 
-
-    ngOnInit(): void { }
+    ngOnInit(): void {}
 
     // functions ----------------------
     public saveNewUpdatedTracklist = () => {

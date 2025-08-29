@@ -15,16 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
-import { Observable } from "rxjs";
-import { RatingStatistic } from "../../../shared/statistic-interfaces";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_UserRepository,
+    IT_USER_REPOSITORY,
+} from '../../interfaces/user.repository';
+import { Observable } from 'rxjs';
+import { RatingStatistic } from '../../../shared/statistic-interfaces';
 
 @Injectable()
 export class UC_GetUserRatings {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+    constructor(
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: I_UserRepository,
+    ) {}
 
     public execute = (): Observable<RatingStatistic> | null => {
-        return this.userRepository.getUserRatings()
-    }
+        return this.userRepository.getUserRatings();
+    };
 }

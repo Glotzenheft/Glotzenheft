@@ -16,10 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 .startPage {
-  height: 80%;
-  width: 100%;
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
-  padding-top: var(--padding--top-bottom);
-  padding-bottom: var(--padding--top-bottom);
+    height: 80%;
+    width: 100%;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
 }

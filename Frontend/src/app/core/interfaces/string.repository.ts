@@ -15,11 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InjectionToken } from "@angular/core"
+import { InjectionToken } from '@angular/core';
 
 export interface I_StringRepository {
-    shortenString: (str: string) => string
+    shortenString: (str: string) => string;
 }
 
 // IT = Injection Token
-export const IT_STRING_REPOSITORY = new InjectionToken<I_StringRepository>("I_StringRepository")
+export const IT_STRING_REPOSITORY = new InjectionToken<I_StringRepository>(
+    'I_StringRepository',
+);

@@ -44,8 +44,17 @@ import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTr
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Season, SeasonEpisode, SeasonWithEpisodes } from '../../../../app/shared/interfaces/media-interfaces';
-import { SeasonTracklist, SeasonTracklistType, TVSeasonWithTracklist, TVWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    Season,
+    SeasonEpisode,
+    SeasonWithEpisodes,
+} from '../../../../app/shared/interfaces/media-interfaces';
+import {
+    SeasonTracklist,
+    SeasonTracklistType,
+    TVSeasonWithTracklist,
+    TVWithTracklist,
+} from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
@@ -82,7 +91,13 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
-    providers: [UC_GetSeasonForTV, UC_ValidateMediaURL, UC_GetSelectedTracklistInLocalStorage, UC_JoinTVWithTracklists, UC_LogoutOfAccount]
+    providers: [
+        UC_GetSeasonForTV,
+        UC_ValidateMediaURL,
+        UC_GetSelectedTracklistInLocalStorage,
+        UC_JoinTVWithTracklists,
+        UC_LogoutOfAccount,
+    ],
 })
 export class SeasonPageComponent implements OnInit {
     public tvSeriesID: string | null = null;
@@ -90,7 +105,7 @@ export class SeasonPageComponent implements OnInit {
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
-    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/"
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + 'tv/';
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -142,8 +157,8 @@ export class SeasonPageComponent implements OnInit {
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
         private joinTVWithTracklistsUseCase: UC_JoinTVWithTracklists,
-        private getSelectedTracklistsInLocalStorageUseCase: UC_GetSelectedTracklistInLocalStorage
-    ) { }
+        private getSelectedTracklistsInLocalStorageUseCase: UC_GetSelectedTracklistInLocalStorage,
+    ) {}
 
     ngOnInit(): void {
         this.loadData();
@@ -234,7 +249,9 @@ export class SeasonPageComponent implements OnInit {
 
             const currentTracklistInLocalStorageID: number | null =
                 this.getSelectedTracklistsInLocalStorageUseCase.execute()
-                    ? Number(this.getSelectedTracklistsInLocalStorageUseCase.execute())
+                    ? Number(
+                          this.getSelectedTracklistsInLocalStorageUseCase.execute(),
+                      )
                     : null;
 
             if (
@@ -244,10 +261,11 @@ export class SeasonPageComponent implements OnInit {
                     .map((tracklist: SeasonTracklist) => tracklist.id)
                     .includes(currentTracklistInLocalStorageID)
             ) {
-                currentTracklistInLocalStorage = season.tracklistsForSeason.filter(
-                    (tracklist: SeasonTracklist) =>
-                        tracklist.id === currentTracklistInLocalStorageID
-                )[0];
+                currentTracklistInLocalStorage =
+                    season.tracklistsForSeason.filter(
+                        (tracklist: SeasonTracklist) =>
+                            tracklist.id === currentTracklistInLocalStorageID,
+                    )[0];
             }
 
             this.tracklistSelectionForm
@@ -257,7 +275,7 @@ export class SeasonPageComponent implements OnInit {
                         ? currentTracklistInLocalStorage
                             ? currentTracklistInLocalStorage
                             : season.tracklistsForSeason[0]
-                        : this.EMPTY_TRACKLIST
+                        : this.EMPTY_TRACKLIST,
                 );
         }
 
@@ -277,7 +295,7 @@ export class SeasonPageComponent implements OnInit {
 
     public setCurrentEpisode = (
         episode: SeasonEpisode,
-        isEpisodeForEditing: boolean
+        isEpisodeForEditing: boolean,
     ) => {
         this.currentEpisode = episode;
 

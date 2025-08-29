@@ -20,21 +20,20 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { UserLayoutComponent } from './user-layout.component';
 
 describe('UserLayoutComponent', () => {
-  let component: UserLayoutComponent;
-  let fixture: ComponentFixture<UserLayoutComponent>;
+    let component: UserLayoutComponent;
+    let fixture: ComponentFixture<UserLayoutComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [UserLayoutComponent]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [UserLayoutComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(UserLayoutComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(UserLayoutComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

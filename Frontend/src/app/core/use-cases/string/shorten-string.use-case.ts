@@ -15,12 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_StringRepository, IT_STRING_REPOSITORY } from "../../interfaces/string.repository";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_StringRepository,
+    IT_STRING_REPOSITORY,
+} from '../../interfaces/string.repository';
 
 @Injectable()
 export class UC_ShortenString {
-    constructor(@Inject(IT_STRING_REPOSITORY) private readonly stringRepository: I_StringRepository) { }
+    constructor(
+        @Inject(IT_STRING_REPOSITORY)
+        private readonly stringRepository: I_StringRepository,
+    ) {}
 
-    public execute = (str: string): string => { return this.stringRepository.shortenString(str) }
+    public execute = (str: string): string => {
+        return this.stringRepository.shortenString(str);
+    };
 }

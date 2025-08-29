@@ -27,4 +27,4 @@ import { InputTextModule } from 'primeng/inputtext';
     templateUrl: './user-layout.component.html',
     styleUrl: './user-layout.component.css',
 })
-export class UserLayoutComponent { }
+export class UserLayoutComponent {}

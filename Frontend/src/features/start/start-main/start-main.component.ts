@@ -40,7 +40,7 @@ import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 export class StartMainComponent {
     public areLoginButtonsVisible: boolean = !isUserLoggedIn();
 
-    constructor(private router: Router) { }
+    constructor(private router: Router) {}
 
     navigateToLogin = () => {
         this.router.navigateByUrl('/login');

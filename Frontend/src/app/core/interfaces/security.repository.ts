@@ -15,14 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InjectionToken } from "@angular/core"
+import { InjectionToken } from '@angular/core';
 
 export interface I_SecurityRepository {
     // variables
-    INVALID_CHARS: string[],
-    validateMediaURL: (mediaURL: string) => boolean,
-    isValidUserName: (userName: string) => boolean
+    INVALID_CHARS: string[];
+    validateMediaURL: (mediaURL: string) => boolean;
+    isValidUserName: (userName: string) => boolean;
 }
 
 // IT = Injection Token
-export const IT_SECURITY_REPOSITORY = new InjectionToken<I_SecurityRepository>("I_SecurityRepository")
+export const IT_SECURITY_REPOSITORY = new InjectionToken<I_SecurityRepository>(
+    'I_SecurityRepository',
+);

@@ -15,16 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from "rxjs";
-import { I_MediaRepository, IT_MEDIA_REPOSITORY } from "../../interfaces/media.repository";
-import { Film } from "../../../shared/interfaces/media-interfaces";
-import { Inject, Injectable } from "@angular/core";
+import { Observable } from 'rxjs';
+import {
+    I_MediaRepository,
+    IT_MEDIA_REPOSITORY,
+} from '../../interfaces/media.repository';
+import { Film } from '../../../shared/interfaces/media-interfaces';
+import { Inject, Injectable } from '@angular/core';
 
 @Injectable()
 export class UC_GetFilmDetails {
-    constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
+    constructor(
+        @Inject(IT_MEDIA_REPOSITORY)
+        private readonly mediaRepository: I_MediaRepository,
+    ) {}
 
     public execute = (movieId: string): Observable<Film> | null => {
-        return this.mediaRepository.getFilmDetails(movieId)
-    }
+        return this.mediaRepository.getFilmDetails(movieId);
+    };
 }

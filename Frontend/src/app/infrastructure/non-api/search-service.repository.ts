@@ -27,7 +27,7 @@ export class R_Search implements I_SearchRepository {
     public searchTerm$: Observable<string> = this.searchTerm.asObservable();
     public isSearchTermGiven = signal(false);
 
-    constructor() { }
+    constructor() {}
 
     public updateSearchTerm = (newSearchTerm: string) => {
         this.searchTerm.next(newSearchTerm);

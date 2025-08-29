@@ -34,7 +34,7 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
     imports: [MenuModule, ButtonModule, TooltipModule],
     templateUrl: './user-menu.component.html',
     styleUrl: './user-menu.component.css',
-    providers: [UC_IsSearchBarVisible, UC_VisibleUserName, UC_LogoutOfAccount]
+    providers: [UC_IsSearchBarVisible, UC_VisibleUserName, UC_LogoutOfAccount],
 })
 export class UserMenuComponent implements OnInit {
     public userMenuList: UserMenuList[] = [
@@ -61,7 +61,10 @@ export class UserMenuComponent implements OnInit {
                     command: () => {
                         this.logoutOfAccountUseCase.execute();
                         this.messageService.add(
-                            getMessageObject('success', 'Erfolgreich ausgeloggt')
+                            getMessageObject(
+                                'success',
+                                'Erfolgreich ausgeloggt',
+                            ),
                         );
                         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     },
@@ -100,14 +103,16 @@ export class UserMenuComponent implements OnInit {
         private messageService: MessageService,
         private isSearchBarVisibleUseCase: UC_IsSearchBarVisible,
         private visibleUserNameUseCase: UC_VisibleUserName,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
-    ) { }
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+    ) {}
 
     ngOnInit(): void {
         // this.userName = this.userService.getUserName() ?? '';
-        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
-            this.isUserMenuVisible = status;
-        });
+        this.isSearchBarVisibleUseCase
+            .observe()
+            .subscribe((status: boolean) => {
+                this.isUserMenuVisible = status;
+            });
 
         this.visibleUserNameUseCase.observe().subscribe((userName: string) => {
             this.userName = localStorage.getItem('username') ?? userName;

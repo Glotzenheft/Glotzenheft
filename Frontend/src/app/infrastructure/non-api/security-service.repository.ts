@@ -49,7 +49,7 @@ export class R_Security implements I_SecurityRepository {
         '°',
         ' ',
     ];
-    constructor() { }
+    constructor() {}
 
     public validateMediaURL = (mediaURL: string): boolean => {
         const shortenedURL: string = mediaURL.trim();

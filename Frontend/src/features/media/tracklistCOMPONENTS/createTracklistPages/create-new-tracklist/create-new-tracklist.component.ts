@@ -40,9 +40,18 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import { Tracklist, TVSeasonWithTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import {
+    Tracklist,
+    TVSeasonWithTracklist,
+} from '../../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    convertTracklistStatusIntoGerman,
+    TRACK_LIST_STATUS_LIST,
+} from '../../../../../app/shared/variables/tracklist';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UC_GetTracklistCREATESEASONResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-create-season-response-subject.use-case';
 import { UC_TriggerTracklistCREATESEASONSubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-season-subject.use-case';
@@ -62,10 +71,11 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         SelectModule,
         RatingModule,
     ],
-    providers: [UC_GetTracklistCREATESEASONResponseSubject,
+    providers: [
+        UC_GetTracklistCREATESEASONResponseSubject,
         UC_TriggerTracklistCREATESEASONSubject,
         UC_SetSelectedTracklistInLocalStorage,
-        UC_LogoutOfAccount
+        UC_LogoutOfAccount,
     ],
     templateUrl: './create-new-tracklist.component.html',
     styleUrl: './create-new-tracklist.component.css',
@@ -103,36 +113,45 @@ export class CreateNewTracklistComponent implements OnInit {
         private getTracklistCREATESEASONResponseSubjectUseCase: UC_GetTracklistCREATESEASONResponseSubject,
         private triggerTracklistCREATESEASONSubjectUseCase: UC_TriggerTracklistCREATESEASONSubject,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
-        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage
-    ) { }
+        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage,
+    ) {}
 
     ngOnInit(): void {
-        this.getTracklistCREATESEASONResponseSubjectUseCase.execute().subscribe({
-            next: (res: Tracklist) => {
-                this.messageService.add(
-                    getMessageObject('success', 'Tracklist erfolgreich angelegt')
-                );
-                // set current tracklist to local storage
-                this.setSelectedTracklistInLocalStorageUseCase.execute(res.id);
-                this.saveUpdatedTracklist.emit(true);
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        'Fehler beim Anlegen der Trackliste',
-                        'Bitte lade die Seite neu und probiere es erneut.'
-                    )
-                );
-            },
-        });
+        this.getTracklistCREATESEASONResponseSubjectUseCase
+            .execute()
+            .subscribe({
+                next: (res: Tracklist) => {
+                    this.messageService.add(
+                        getMessageObject(
+                            'success',
+                            'Tracklist erfolgreich angelegt',
+                        ),
+                    );
+                    // set current tracklist to local storage
+                    this.setSelectedTracklistInLocalStorageUseCase.execute(
+                        res.id,
+                    );
+                    this.saveUpdatedTracklist.emit(true);
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // status 401 = user is not logged in anymore -> navigate to login page
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                        return;
+                    }
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Anlegen der Trackliste',
+                            'Bitte lade die Seite neu und probiere es erneut.',
+                        ),
+                    );
+                },
+            });
 
         this.trackListForm = this.formBuilder.group({
             trackListName: [
@@ -156,13 +175,17 @@ export class CreateNewTracklistComponent implements OnInit {
         let formattedEndDate: string = '';
 
         if (this.trackListForm.get('startDate')?.value) {
-            formattedStartDate = new Date(this.trackListForm.get('startDate')?.value)
+            formattedStartDate = new Date(
+                this.trackListForm.get('startDate')?.value,
+            )
                 .toISOString()
                 .split('T')[0];
         }
 
         if (this.trackListForm.get('endDate')?.value) {
-            formattedEndDate = new Date(this.trackListForm.get('endDate')?.value)
+            formattedEndDate = new Date(
+                this.trackListForm.get('endDate')?.value,
+            )
                 .toISOString()
                 .split('T')[0];
         }

@@ -135,7 +135,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
 
 export const getVisibleRoutes = (): VisibleRoute[] => {
     return ROUTES_LIST.filter(
-        (route: RoutesListItem) => route.showInLinkList
+        (route: RoutesListItem) => route.showInLinkList,
     ).map((route: RoutesListItem) => ({
         description: route.description,
         fullUrl: route.fullUrl,
@@ -146,7 +146,8 @@ export const getVisibleRoutes = (): VisibleRoute[] => {
 export const getVisibleRoutesForUser = (): VisibleRoute[] => {
     return ROUTES_LIST.filter((route: RoutesListItem) => {
         return (
-            route.fullUrl.startsWith('user') && !route.fullUrl.includes('delete')
+            route.fullUrl.startsWith('user') &&
+            !route.fullUrl.includes('delete')
         );
     }).map((route: RoutesListItem) => ({
         description: route.description,

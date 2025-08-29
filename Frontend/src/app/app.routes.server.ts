@@ -18,12 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { RenderMode, ServerRoute } from '@angular/ssr';
 
 export const serverRoutes: ServerRoute[] = [
-  {
-    path: '**',
-    renderMode: RenderMode.Client
-  }
-//   {
-//     path: "user/",
-//     renderMode: RenderMode.Server
-//   }
+    {
+        path: '**',
+        renderMode: RenderMode.Client,
+    },
+    //   {
+    //     path: "user/",
+    //     renderMode: RenderMode.Server
+    //   }
 ];
