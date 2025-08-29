@@ -15,16 +15,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
-import { Observable } from "rxjs";
-import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@Injectable()
-export class UC_GetUserActivites {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+import { MediaMetadataComponent } from './media-metadata.component';
 
-    public execute = (responsePage: number): Observable<UserActivitiesResponse> | null => {
-        return this.userRepository.getUserActivities(responsePage)
-    }
-}
+describe('MediaMetadataComponent', () => {
+  let component: MediaMetadataComponent;
+  let fixture: ComponentFixture<MediaMetadataComponent>;
+
+  beforeEach(async () => {
+    await TestBed.configureTestingModule({
+      imports: [MediaMetadataComponent]
+    })
+    .compileComponents();
+
+    fixture = TestBed.createComponent(MediaMetadataComponent);
+    component = fixture.componentInstance;
+    fixture.detectChanges();
+  });
+
+  it('should create', () => {
+    expect(component).toBeTruthy();
+  });
+});

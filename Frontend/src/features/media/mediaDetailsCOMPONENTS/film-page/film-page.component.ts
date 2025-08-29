@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { CommonModule, Location } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -33,8 +33,8 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { CreateMovieTracklistComponent } from '../../tracklistCOMPONENTS/createTracklistPages/create-movie-tracklist/create-movie-tracklist.component';
 import { UpdateFilmTracklistComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
@@ -51,6 +51,12 @@ import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
+import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
+import { TABLIST } from '../../../../app/shared/variables/tab-lists';
+import { I_APIRecommendationResponse, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { RecommendationsComponent } from '../recommendations/recommendations.component';
+// import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
+import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
 
 @Component({
     selector: 'app-film-page',
@@ -70,16 +76,27 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
         CreateMovieTracklistComponent,
         UpdateFilmTracklistComponent,
         ProgressSpinnerModule,
+        MediaTabsComponent,
+        RecommendationsComponent,
+        // ApiRecommendationComponent,
+        MediaMetadataComponent
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
-    providers: [UC_GetFilmDetails, UC_ValidateMediaURL, UC_ShortenString, UC_LogoutOfAccount]
+    providers: [
+        UC_GetFilmDetails,
+        UC_ValidateMediaURL,
+        UC_ShortenString,
+        UC_LogoutOfAccount
+    ]
 })
-export class FilmPageComponent implements OnInit {
+export class FilmPageComponent implements OnInit, OnDestroy {
     public movieID: string | null = null;
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
     public isInvalidID: boolean = false;
+    public currentTab: string = TABLIST[0];
+    public readonly tabsList: string[] = TABLIST;
 
     public filmData$: Observable<Film> | null = null;
     public trackListForm!: FormGroup;
@@ -95,27 +112,43 @@ export class FilmPageComponent implements OnInit {
     public activePanel: number | null = null;
 
     public isLoading: boolean = false;
+    public areRecommendationsLoading: boolean = false;
+    public recommendations: I_Recommendations | null = null;
+    public apiRecommendations: I_APIRecommendationResponse | null = null;
+    private subscription: Subscription | null = null
 
     constructor(
         public shortenStringUseCase: UC_ShortenString,
         private messageService: MessageService,
-        private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private location: Location,
         private router: Router,
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private getFilmDetailsUseCase: UC_GetFilmDetails,
-        private logOutOfAccountUseCase: UC_LogoutOfAccount
+        private logOutOfAccountUseCase: UC_LogoutOfAccount,
+        private activatedRoute: ActivatedRoute
     ) { }
 
     ngOnInit(): void {
-        this.loadData();
+        this.activatedRoute.params.subscribe((params: Params) => {
+            this.movieID = params["id"]
+            this.loadData(this.movieID);
+        });
     }
 
-    public loadData = () => {
+    ngOnDestroy(): void {
+        if (this.subscription) {
+            this.subscription.unsubscribe();
+        }
+    }
+
+    public loadData = (movieID: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.movieID = this.route.snapshot.paramMap.get('id');
+        this.movieID = movieID;
+        this.recommendations = null;
+        this.apiRecommendations = null;
+        this.currentTab = TABLIST[0];
 
         if (!this.movieID) {
             this.hasError = true;
@@ -135,7 +168,7 @@ export class FilmPageComponent implements OnInit {
             return;
         }
 
-        this.filmData$.subscribe({
+        this.subscription = this.filmData$.subscribe({
             next: (res: Film) => {
                 this.trackListForm = this.formBuilder.group({
                     trackListName: [res.media.name, Validators.required],
@@ -187,6 +220,16 @@ export class FilmPageComponent implements OnInit {
 
     public refreshPage = () => {
         this.setVisibilityStatus(0);
-        this.loadData();
+        this.loadData(this.movieID);
     };
+
+    public onChangeTab = (newTab: string) => {
+        this.currentTab = newTab;
+    }
+
+    public getRecommendations = (recs: I_Recommendations) => {
+        this.recommendations = recs;
+    }
+
+    public setAPIRecommendations = (recs: I_APIRecommendationResponse) => { this.apiRecommendations = recs; }
 }

@@ -22,5 +22,5 @@ import { I_NavigationRepository, IT_NAVIGATION_REPOSITORY } from "../../interfac
 export class UC_NavigateToPage {
     constructor(@Inject(IT_NAVIGATION_REPOSITORY) private readonly navigationRepository: I_NavigationRepository) { }
 
-    public execute = (url: string) => { return this.navigationRepository.navigateToPage(url); }
+    public execute = (tmdbId: string, isMovie: boolean) => { return this.navigationRepository.navigateToPage(tmdbId, isMovie) }
 }

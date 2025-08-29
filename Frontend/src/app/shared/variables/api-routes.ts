@@ -121,3 +121,8 @@ export const ROUTE_USER_ACTIVITIES: string =
 
 export const ROUTE_STATISTICS_GET_USER_RATINGS: string =
     API_ROUTE + 'statistic/user-ratings';
+
+export const ROUTE_CHECK_USER_AUTH: string = "http://172.17.164.32:8000/api/auth/check";
+
+export const ROUTE_GET_TV_RECOMMENDATIONS: string = API_ROUTE + "tv/recommendations?tmdb_series_id=";
+export const ROUTE_GET_MOVIE_RECOMMENDATIONS: string = API_ROUTE + "movie/recommendations?tmdb_movie_id=";
