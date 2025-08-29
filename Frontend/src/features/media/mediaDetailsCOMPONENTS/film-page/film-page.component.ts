@@ -55,7 +55,7 @@ import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-t
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { I_APIRecommendationResponse, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { RecommendationsComponent } from '../recommendations/recommendations.component';
-import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
+// import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
 import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
 
 @Component({
@@ -78,7 +78,7 @@ import { MediaMetadataComponent } from "../media-metadata/media-metadata.compone
         ProgressSpinnerModule,
         MediaTabsComponent,
         RecommendationsComponent,
-        ApiRecommendationComponent,
+        // ApiRecommendationComponent,
         MediaMetadataComponent
     ],
     templateUrl: './film-page.component.html',

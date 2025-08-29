@@ -162,6 +162,7 @@ export class SeasonPageComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
             this.tvSeriesID = params["id"];
+            console.log("changed id", this.tvSeriesID)
             this.loadData(this.tvSeriesID);
         });
     }
@@ -171,7 +172,8 @@ export class SeasonPageComponent implements OnInit {
     public loadData = (tmdbId: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.tvSeriesID = this.route.snapshot.paramMap.get('id');
+        this.apiRecommendations = null;
+        this.currentTab = TABLIST[0];
 
         if (!tmdbId) {
             this.hasError = true;

@@ -104,6 +104,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <app-media-tabs [inpTabList]="tabsList" (outChangeTab)="onChangeTab($event)" />
 
         @if (currentTab === tabsList[0]) {
+        <div class="backButtonDIV">
+            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+        </div>
         } @else if (currentTab === tabsList[1]) {
         <app-recommendations [inpMovieId]="filmData.media.tmdbID" [inpMovieTitle]="filmData.media.name"
             [inpRecommendations]="recommendations" [inpIsMovie]="true" [inpMediaPosterPath]="filmData.media.posterPath"
@@ -115,9 +118,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         }
 
 
-        <div class="backButtonDIV">
-            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
-        </div>
+
 
         <div class="newWatchlistButton">
             @for (tracklist of filmData.tracklists; track $index) {
@@ -127,10 +128,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     (onClick)="setSelectedTracklist(tracklist)" />
             </p-panel>
             }
-        </div>
-
-        <div class="backButtonDIV">
-            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
         </div>
     </div>
 </div>
