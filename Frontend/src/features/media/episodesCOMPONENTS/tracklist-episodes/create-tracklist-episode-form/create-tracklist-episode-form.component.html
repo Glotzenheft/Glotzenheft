@@ -41,17 +41,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                 <div class="formAcions">
                     @if (!inpIsEpisodeEditing()) {
-                    <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" [disabled]="!isCreateButtonEnabled" />
-
+                        <p-button label="Hinzufügen" icon="pi pi-plus" type="submit" [disabled]="!isCreateButtonEnabled" />
                     }
                     @else {
-                    <p-button label="Speichern" icon="pi pi-save" [disabled]="!isUpdateButtonEnabled"
-                        (onClick)="saveEditedEpisode()" />
-                    <div>
-                        <p-button label="Löschen" icon="pi pi-trash" severity="danger"
-                            [disabled]="!isDeleteButtonEnabled" (onClick)="setDeletionDialogVisibilityStatus(true)" />
-                    </div>
+                        <p-button label="Speichern" icon="pi pi-save" [disabled]="!isUpdateButtonEnabled"
+                            (onClick)="saveEditedEpisode()" />
+                        <div>
+                            <p-button label="Löschen" icon="pi pi-trash" severity="danger"
+                                [disabled]="!isDeleteButtonEnabled" (onClick)="setDeletionDialogVisibilityStatus(true)" />
+                        </div>
                     }
+
                     <div>
                         <p-button label="Abbrechen" icon="pi pi-times" severity="secondary"
                             [disabled]="!isCancelButtonEnabled" (onClick)="cancelEpisodeForm()" />
@@ -63,7 +63,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 </div>
 
 @if (isDeletionDialogVisible) {
-<app-delete-dialog [inpHeading]="'Episode löschen'" [inpText]="'Willst du die Episode wirklich löschen?'"
-    [inpIsButtonEnabled]="isDeleteButtonEnabled" (outDeleteMedia)="deleteEpisode()"
-    (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />
+    <app-delete-dialog [inpHeading]="'Episode löschen'" [inpText]="'Willst du die Episode wirklich löschen?'"
+        [inpIsButtonEnabled]="isDeleteButtonEnabled" (outDeleteMedia)="deleteEpisode()"
+        (outCancelDeletion)="setDeletionDialogVisibilityStatus(false)" />
 }
