@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const API_ROUTE: string = "http://127.0.0.1:8000/api/";
+const API_ROUTE: string = "/api/";
 const SEARCH_ROUTE: string = "search/";
 
 
