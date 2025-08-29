@@ -123,6 +123,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             (outGetMovieRecommendations)="getRecommendations($event)" />
         <!-- <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
             [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" /> -->
+        } @else {
+        <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
         }
     </div>
 </div>

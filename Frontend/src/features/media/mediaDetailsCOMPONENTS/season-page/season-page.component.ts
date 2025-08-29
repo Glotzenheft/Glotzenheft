@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, computed, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
@@ -60,34 +60,36 @@ import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-t
 import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
 import { TooltipModule } from 'primeng/tooltip';
+import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
 
 @Component({
     selector: 'app-season-page',
     imports: [
-        CommonModule,
-        PanelModule,
-        CardModule,
-        DialogModule,
-        RatingModule,
-        FormsModule,
-        ButtonModule,
-        DateFormattingPipe,
-        FloatLabelModule,
-        InputTextModule,
-        MessageModule,
-        ReactiveFormsModule,
-        EpisodeListComponent,
-        AccordionModule,
-        SelectModule,
-        MenuModule,
-        CreateTracklistEpisodeFormComponent,
-        TracklistFormComponent,
-        UpdateTracklistFormComponent,
-        ProgressSpinnerModule,
-        MediaTabsComponent,
-        TooltipModule,
-        ApiRecommendationComponent
-    ],
+    CommonModule,
+    PanelModule,
+    CardModule,
+    DialogModule,
+    RatingModule,
+    FormsModule,
+    ButtonModule,
+    DateFormattingPipe,
+    FloatLabelModule,
+    InputTextModule,
+    MessageModule,
+    ReactiveFormsModule,
+    EpisodeListComponent,
+    AccordionModule,
+    SelectModule,
+    MenuModule,
+    CreateTracklistEpisodeFormComponent,
+    TracklistFormComponent,
+    UpdateTracklistFormComponent,
+    ProgressSpinnerModule,
+    MediaTabsComponent,
+    TooltipModule,
+    ApiRecommendationComponent,
+    MediaMetadataComponent
+],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
     providers: [UC_GetSeasonForTV, UC_ValidateMediaURL, UC_GetSelectedTracklistInLocalStorage, UC_JoinTVWithTracklists, UC_LogoutOfAccount]
@@ -95,6 +97,7 @@ import { TooltipModule } from 'primeng/tooltip';
 export class SeasonPageComponent implements OnInit {
     public tvSeriesID: string | null = null;
     public seasonData$: Observable<Season> | null = null;
+    public numberOfEpisodes$: Observable<number> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
@@ -183,6 +186,14 @@ export class SeasonPageComponent implements OnInit {
 
         // checking if "media_id" already exists:
         this.seasonData$ = this.getSeasonForTVUseCase.execute(tmdbId);
+        this.numberOfEpisodes$ = this.seasonData$ && this.seasonData$?.pipe((map((season: Season) => {
+            let counter: number = 0;
+            for (const seasonAtt of season.media.seasons) {
+                counter += seasonAtt.episodeCount;
+            }
+            return counter;
+        }
+        )));
 
         if (!this.seasonData$) {
             this.hasError = true;

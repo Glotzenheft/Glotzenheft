@@ -194,6 +194,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     @else if (currentTab === tabList[1]) {
     <app-api-recommendation [inpIsMovie]="false" [inpRecommendations]="apiRecommendations"
         [inpTmdbId]="seasonData.media.tmdbID" (outSetRecommendations)="getRecommendations($event)" />
+    } @else {
+    <app-media-metadata [inpIsMovie]="false" [inpSeasonData]="seasonData" [inpFilmData]="null" />
     }
 </div>
 }

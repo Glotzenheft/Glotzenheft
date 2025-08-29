@@ -56,29 +56,31 @@ import { TABLIST } from '../../../../app/shared/variables/tab-lists';
 import { I_APIRecommendationResponse, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { RecommendationsComponent } from '../recommendations/recommendations.component';
 import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
+import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
 
 @Component({
     selector: 'app-film-page',
     imports: [
-        CommonModule,
-        PanelModule,
-        CardModule,
-        DialogModule,
-        RatingModule,
-        FormsModule,
-        ButtonModule,
-        DateFormattingPipe,
-        FloatLabelModule,
-        InputTextModule,
-        MessageModule,
-        ReactiveFormsModule,
-        CreateMovieTracklistComponent,
-        UpdateFilmTracklistComponent,
-        ProgressSpinnerModule,
-        MediaTabsComponent,
-        RecommendationsComponent,
-        ApiRecommendationComponent
-    ],
+    CommonModule,
+    PanelModule,
+    CardModule,
+    DialogModule,
+    RatingModule,
+    FormsModule,
+    ButtonModule,
+    DateFormattingPipe,
+    FloatLabelModule,
+    InputTextModule,
+    MessageModule,
+    ReactiveFormsModule,
+    CreateMovieTracklistComponent,
+    UpdateFilmTracklistComponent,
+    ProgressSpinnerModule,
+    MediaTabsComponent,
+    RecommendationsComponent,
+    ApiRecommendationComponent,
+    MediaMetadataComponent
+],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
     providers: [
