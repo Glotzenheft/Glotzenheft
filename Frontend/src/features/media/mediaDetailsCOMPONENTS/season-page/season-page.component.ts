@@ -16,8 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
@@ -55,6 +55,12 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
 import { UC_JoinTVWithTracklists } from '../../../../app/core/use-cases/tracklist/join-tv-with-tracklists.use-case';
 import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/get-selected-tracklist-in-local-storage.use-case';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
+import { TABLIST } from '../../../../app/shared/variables/tab-lists';
+import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
+import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
+import { TooltipModule } from 'primeng/tooltip';
+import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
 
 @Component({
     selector: 'app-season-page',
@@ -79,6 +85,10 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
         TracklistFormComponent,
         UpdateTracklistFormComponent,
         ProgressSpinnerModule,
+        MediaTabsComponent,
+        TooltipModule,
+        ApiRecommendationComponent,
+        MediaMetadataComponent
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -87,10 +97,14 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 export class SeasonPageComponent implements OnInit {
     public tvSeriesID: string | null = null;
     public seasonData$: Observable<Season> | null = null;
+    public numberOfEpisodes$: Observable<number> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
-    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/"
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/";
+    public currentTab: string = TABLIST[0];
+    public tabList: string[] = TABLIST;
+    public apiRecommendations: I_APIRecommendationResponse | null = null;
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -146,28 +160,39 @@ export class SeasonPageComponent implements OnInit {
     ) { }
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.params.subscribe((params: Params) => {
+            this.tvSeriesID = params["id"];
+            this.loadData(this.tvSeriesID);
+        });
     }
 
     // functions -----------------------------------------------------
 
-    public loadData = () => {
+    public loadData = (tmdbId: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
         this.tvSeriesID = this.route.snapshot.paramMap.get('id');
 
-        if (!this.tvSeriesID) {
+        if (!tmdbId) {
             this.hasError = true;
             return;
         }
 
-        if (!this.validateMediaURLUseCase.execute(this.tvSeriesID)) {
+        if (!this.validateMediaURLUseCase.execute(tmdbId)) {
             this.isInvalidID = true;
             return;
         }
 
         // checking if "media_id" already exists:
-        this.seasonData$ = this.getSeasonForTVUseCase.execute(this.tvSeriesID);
+        this.seasonData$ = this.getSeasonForTVUseCase.execute(tmdbId);
+        this.numberOfEpisodes$ = this.seasonData$ && this.seasonData$?.pipe((map((season: Season) => {
+            let counter: number = 0;
+            for (const seasonAtt of season.media.seasons) {
+                counter += seasonAtt.episodeCount;
+            }
+            return counter;
+        }
+        )));
 
         if (!this.seasonData$) {
             this.hasError = true;
@@ -291,7 +316,7 @@ export class SeasonPageComponent implements OnInit {
     public refreshPage = () => {
         this.currentSeason = null;
         this.setVisibility(0);
-        this.loadData();
+        this.loadData(this.tvSeriesID);
     };
     public cancelTracklistForm = () => {
         this.isTracklistFormVisible = 0;
@@ -305,4 +330,12 @@ export class SeasonPageComponent implements OnInit {
         this.currentTracklistSelection = tracklist;
         this.isTracklistFormVisible = 3;
     };
+
+    public onChangeTab = (newTab: string) => {
+        this.currentTab = newTab;
+    };
+
+    public getRecommendations = (recs: I_APIRecommendationResponse) => {
+        this.apiRecommendations = recs;
+    }
 }

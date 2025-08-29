@@ -21,6 +21,7 @@ import {
     EMPTY,
     exhaustMap,
     Observable,
+    of,
     shareReplay,
     Subject,
     throttleTime,
@@ -36,8 +37,9 @@ import { Film, MediaIDResponse, Season, UpdateTracklistRequest } from '../../sha
 import { CreateMovieTracklistData, CreateSeasonTracklistData, Tracklist } from '../../shared/interfaces/tracklist-interfaces';
 import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
-import { ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../shared/variables/api-routes';
+import { ROUTE_CHECK_USER_AUTH, ROUTE_CREATE_NEW_TRACKLIST, ROUTE_DELETE_TRACKLIST, ROUTE_GET_ALL_USER_TRACKLISTS, ROUTE_GET_MOVIE_RECOMMENDATIONS, ROUTE_GET_TV_RECOMMENDATIONS, ROUTE_MEDIA_DETAILS_SEARCH, ROUTE_MEDIA_ID_FOR_MEDIA, ROUTE_MOVIE_DETAILS_SEARCH, ROUTE_MULTI_SEARCH, ROUTE_UPDATE_TRACKLIST } from '../../shared/variables/api-routes';
 import { I_MediaRepository } from '../../core/interfaces/media.repository';
+import { I_APIRecommendationResponse, I_HighestRecommendations, I_Recommendation, I_Recommendations } from '../../shared/interfaces/recommendation-interfaces';
 
 @Injectable({
     providedIn: 'root',
@@ -125,6 +127,18 @@ export class R_MediaHttp implements I_MediaRepository {
     }
 
     // functions ---------------------------------------------------------------------------------------
+    public getUserToken = (): string | null => {
+        let userToken: string | null = null
+
+        if (isPlatformBrowser(this.platformId)) {
+            userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN)
+        }
+        if (!userToken) return null
+
+        return userToken
+    }
+
+
 
     public getHeader = (): HttpHeaders | null => {
         let userToken: string = '';
@@ -169,7 +183,7 @@ export class R_MediaHttp implements I_MediaRepository {
         const movieType: string = isMovie ? 'movie' : 'tv';
         const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
-        return this.http.get<MediaIDResponse>(url, {headers: header}).pipe(
+        return this.http.get<MediaIDResponse>(url, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
@@ -458,4 +472,38 @@ export class R_MediaHttp implements I_MediaRepository {
                 })
             );
     };
+
+    public getRecommendations = (tmdb_id: number, title: string, isMovie: boolean, posterPath: string): Observable<I_Recommendations> => {
+        const token = this.getUserToken()
+
+        if (!token) return EMPTY;
+
+        return this.http.post<I_Recommendations>(`http://localhost:80/${isMovie ? "movie" : "tv"}-recommendation`, { tmdbid: tmdb_id, title, backendIP: ROUTE_CHECK_USER_AUTH, token, posterPath }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    }
+
+    public getAPIRecommendations = (tmdbId: number, isMovie: boolean): Observable<I_APIRecommendationResponse | null> => {
+        const headers = this.getHeader();
+
+        if (!headers) return of(null);
+
+        return this.http.get<I_APIRecommendationResponse>(`${isMovie ? ROUTE_GET_MOVIE_RECOMMENDATIONS : ROUTE_GET_TV_RECOMMENDATIONS}${tmdbId}`, { headers });
+    }
+
+    public getHighestRecommendations = (): Observable<I_HighestRecommendations> => {
+        const token = this.getUserToken();
+
+        if (!token) return EMPTY;
+
+        return this.http.post<I_HighestRecommendations>("http://127.0.0.1:80/highest-media", { backendIP: ROUTE_CHECK_USER_AUTH, token }).pipe(
+            shareReplay(1),
+            catchError((error: HttpErrorResponse) => {
+                return throwError(() => error);
+            })
+        );
+    }
 }

@@ -21,7 +21,7 @@ import { MenuModule } from 'primeng/menu';
 import { Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { TooltipModule } from 'primeng/tooltip';
-import { UserMenuList } from '../../../../shared/interfaces/user-interfaces';
+import { UserMenuList } from '../../../../app/shared/interfaces/user-interfaces';
 import { isUserLoggedIn } from '../../../../guards/auth.guard';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { getMessageObject } from '../../../../app/shared/variables/message-vars';

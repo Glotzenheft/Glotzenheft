@@ -1,30 +1,23 @@
 /*
 This file is part of Glotzenheft.
-
 Glotzenheft is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
 the Free Software Foundation, either version 3 of the License, or
 (at your option) any later version.
-
 Glotzenheft is distributed in the hope that it will be useful,
 but WITHOUT ANY WARRANTY; without even the implied warranty of
 MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 GNU General Public License for more details.
-
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Inject, Injectable } from "@angular/core";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
-import { Observable } from "rxjs";
-import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
+import { I_NavigationRepository, IT_NAVIGATION_REPOSITORY } from "../../interfaces/navigation.repository";
 
 @Injectable()
-export class UC_GetUserActivites {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+export class UC_NavigateToSpecificPage {
+    constructor(@Inject(IT_NAVIGATION_REPOSITORY) private readonly navigationRepository: I_NavigationRepository) { }
 
-    public execute = (responsePage: number): Observable<UserActivitiesResponse> | null => {
-        return this.userRepository.getUserActivities(responsePage)
-    }
+    public execute = (url: string) => { return this.navigationRepository.navigateToSpecificPage(url); }
 }

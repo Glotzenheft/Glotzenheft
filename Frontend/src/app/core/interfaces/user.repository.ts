@@ -17,9 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Observable } from "rxjs";
 import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from "../../shared/interfaces/login";
-import { DeleteUserRequest } from "../../shared/interfaces/user-interfaces";
+import { DeleteUserRequest, UserActivitiesResponse } from "../../shared/interfaces/user-interfaces";
 import { RatingStatistic, WatchTimeStatistic } from "../../shared/statistic-interfaces";
-import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
 import { InjectionToken } from "@angular/core";
 
 export interface I_UserRepository {
