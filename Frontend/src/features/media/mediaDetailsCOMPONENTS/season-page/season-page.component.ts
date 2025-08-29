@@ -186,7 +186,6 @@ export class SeasonPageComponent implements OnInit {
 
         if (!this.seasonData$) {
             this.hasError = true;
-
             return;
         }
 
@@ -219,7 +218,6 @@ export class SeasonPageComponent implements OnInit {
                 }
 
                 this.hasError = true;
-
                 this.isLoading = false;
             },
         });
