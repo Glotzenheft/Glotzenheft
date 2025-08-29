@@ -14,6 +14,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <div class="recommendationsWrapper">
     @if (!isLoading) {
+    @if (!isError) {
     @if (recommendations && areRecommendationsShown) {
     <div>
         @if (inpIsMovie()) {
@@ -45,6 +46,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             [inpTitle]="null" />
                         }
                         }
+    </div>
+    }
+    } @else {
+    <div class="serverNotAvailableDIV">
+        <p>Empfehlungen können nicht geladen werden.</p>
     </div>
     }
     } @else {

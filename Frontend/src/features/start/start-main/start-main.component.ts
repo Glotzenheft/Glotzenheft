@@ -89,6 +89,7 @@ export class StartMainComponent implements OnInit {
         this.getHighestMediaUseCase.execute().subscribe({
             next: (response: I_HighestRecommendations) => {
                 this.highestMedia = response;
+                this.isLoading = false;
             },
             error: (err) => {
                 if (err.status === 401) {
@@ -99,8 +100,8 @@ export class StartMainComponent implements OnInit {
                 } else if (err.status === 0) {
                     this.isServerNotAvailable = true;
                 }
+                this.isLoading = false;
             },
-            complete: () => { this.isLoading = false; }
         });
     }
 }

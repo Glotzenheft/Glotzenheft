@@ -51,6 +51,7 @@ export class RecommendationsComponent implements OnInit {
     public recommendations: I_Recommendations | null = null;
     public apiRecommendations: I_Recommendation[] | null = null;
     public isLoading: boolean = false;
+    public isError: boolean = false;
     public subscription: Subscription | null = null;
     public apiSubscription: Subscription | null = null;
     public areRecommendationsShown: boolean = false;
@@ -95,6 +96,7 @@ export class RecommendationsComponent implements OnInit {
                 this.recommendations = response;
                 this.outGetMovieRecommendations.emit(response);
                 this.areRecommendationsShown = true;
+                this.isLoading = false;
             },
             error: (err) => {
                 if (err.status === 401 || err.status === 400) {
@@ -106,8 +108,9 @@ export class RecommendationsComponent implements OnInit {
                     // server not available
                     this.outServerNotAvailable.emit(true);
                 }
+                this.isError = true;
+                this.isLoading = false;
             },
-            complete: () => { this.isLoading = false; }
         })
     }
 
