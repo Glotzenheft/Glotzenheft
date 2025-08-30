@@ -47,6 +47,7 @@ import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
 import { UC_TriggerTracklistCREATEMOVIESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-movie-subject.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import {Checkbox} from "primeng/checkbox";
 
 @Component({
     selector: 'app-create-movie-tracklist',
@@ -60,6 +61,7 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
         DatePickerModule,
         SelectModule,
         RatingModule,
+        Checkbox,
     ],
     providers: [UC_getTracklistCREATEMOVIESubjectResponse, UC_TriggerTracklistCREATEMOVIESubject, UC_LogoutOfAccount],
     templateUrl: './create-movie-tracklist.component.html',
@@ -126,6 +128,7 @@ export class CreateMovieTracklistComponent implements OnInit {
             endDate: [null],
             status: ['', Validators.required],
             rating: [null],
+            isRewatching: [false],
         });
     }
 
@@ -137,12 +140,14 @@ export class CreateMovieTracklistComponent implements OnInit {
         }
 
         this.triggerTracklistCREATEMOVIESubjectUseCase.execute({
-            name: this.tracklistForm.get('trackListName')?.value,
-            mediaID: this.mediaID(),
-            startDate: this.tracklistForm.get('startDate')?.value,
-            endDate: this.tracklistForm.get('endDate')?.value,
-            status: this.tracklistForm.get('status')?.value.value,
-            rating: this.tracklistForm.get('rating')?.value,
+            tracklist_name: this.tracklistForm.get('trackListName')?.value,
+            media_id: this.mediaID(),
+            tracklist_start_date: this.tracklistForm.get('startDate')?.value,
+            tracklist_finish_date: this.tracklistForm.get('endDate')?.value,
+            tracklist_status: this.tracklistForm.get('status')?.value.value,
+            tracklist_rating: this.tracklistForm.get('rating')?.value,
+            is_rewatching: this.tracklistForm.get('isRewatching')?.value,
+            media_type: 'movie',
         });
     };
 

@@ -24,22 +24,26 @@ export interface TrackListCreation {
 }
 
 export interface CreateMovieTracklistData {
-    name: string;
-    mediaID: number;
-    startDate: string | null;
-    endDate: string | null;
-    status: string;
-    rating: number | null;
+    tracklist_name: string;
+    media_id: number;
+    tracklist_start_date: string | null;
+    tracklist_finish_date: string | null;
+    tracklist_status: string;
+    tracklist_rating: number | null;
+    is_rewatching: boolean;
+    media_type: 'movie';
 }
 
 export interface CreateSeasonTracklistData {
-    name: string;
-    mediaID: number;
-    seasonID: number;
-    startDate: string;
-    endDate: string | null;
-    status: string | null;
-    rating: number | null;
+    tracklist_name: string;
+    media_id: number;
+    season_id: number;
+    tracklist_start_date: string | null;
+    tracklist_finish_date: string | null;
+    tracklist_status: string;
+    tracklist_rating: number | null;
+    is_rewatching: boolean;
+    media_type: 'tv';
 }
 
 // tracklists for season -----------------------------------------
@@ -111,6 +115,7 @@ export interface SeasonTracklist {
             seasonNumber: number;
         };
     }[];
+    isRewatching: boolean;
 }
 
 // interfaces for season together with tracklists ----------------------------------------------------

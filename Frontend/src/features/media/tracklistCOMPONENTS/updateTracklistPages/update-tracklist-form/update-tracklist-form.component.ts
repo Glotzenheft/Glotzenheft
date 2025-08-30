@@ -51,6 +51,7 @@ import { UC_GetTracklistUPDATEResponseSubject } from '../../../../../app/core/us
 import { UC_GetTracklistDELETEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
 import { UC_TriggerTracklistUPDATESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import {Checkbox} from "primeng/checkbox";
 
 @Component({
     selector: 'app-update-tracklist-form',
@@ -64,6 +65,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-ca
         DatePickerModule,
         RatingModule,
         DeleteDialogComponent,
+        Checkbox,
     ],
     providers: [
         UC_GetTracklistDELETEResponseSubject,
@@ -201,6 +203,7 @@ export class UpdateTracklistFormComponent implements OnInit {
                     ? new Date(this.inpSelectedTracklist().finishDate!)
                     : null,
             ],
+            is_rewatching: [this.inpSelectedTracklist().isRewatching],
         });
     };
 
@@ -242,6 +245,7 @@ export class UpdateTracklistFormComponent implements OnInit {
             tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
             tracklist_start_date: formattedStartDate,
             tracklist_finish_date: formattedEndDate,
+            is_rewatching: this.updateTracklistForm.get('is_rewatching')?.value,
         };
 
         this.triggerTracklistUPDATESubjectUseCase.execute(updateTracklistData);

@@ -60,17 +60,7 @@ export const ROUTE_REGISTER: string = API_ROUTE + "register";
 
 export const ROUTE_LOGIN: string = API_ROUTE + 'login';
 
-// example: https://127.0.0.1:8000/api/tracklist?tracklist_name=Solo Hannes Up&tracklist_status=watching&media_id=2&season_id=1&media_type=tv
-export const ROUTE_CREATE_NEW_TRACKLIST: string[] = [
-    API_ROUTE + 'tracklist?tracklist_name=', // 0
-    '&tracklist_status=', // 1
-    '&media_id=', // 2
-    '&season_id=', // 3
-    '&media_type=', // 4
-    '&tracklist_start_date=', // 5
-    '&tracklist_finish_date=', // 6
-    '&tracklist_rating=', // 7
-];
+export const ROUTE_CREATE_NEW_TRACKLIST: string = API_ROUTE + 'tracklist';
 
 export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
     API_ROUTE + 'user-tracklists';
@@ -78,14 +68,9 @@ export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
 export const ROUTE_DELETE_USER_ACCOUNT: string =
     API_ROUTE + 'user';
 
-export const ROUTE_UPDATE_TRACKLIST: string[] = [
-    API_ROUTE + 'tracklist?tracklist_id=', // 0
-    '&tracklist_status=', // 1
-    '&tracklist_name=', // 2
-    '&tracklist_rating=', // 3
-    '&tracklist_start_date=', // 4
-    '&tracklist_finish_date=', // 5
-];
+export const ROUTE_UPDATE_TRACKLIST: string = API_ROUTE + 'tracklist';
+
+export const ROUTE_GET_TRACKLIST: string = API_ROUTE + 'tracklist?tracklist_id=';
 
 export const ROUTE_DELETE_TRACKLIST: string =
     API_ROUTE + 'tracklist?tracklist_id=';

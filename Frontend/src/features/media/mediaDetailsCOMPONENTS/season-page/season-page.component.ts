@@ -129,6 +129,7 @@ export class SeasonPageComponent implements OnInit {
         finishDate: '',
         tracklistName: '',
         tracklistSeasons: [],
+        isRewatching: false,
     };
 
     public isLoading: boolean = false;
