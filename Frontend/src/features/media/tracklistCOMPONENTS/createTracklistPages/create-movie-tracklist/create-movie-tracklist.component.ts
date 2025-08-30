@@ -30,7 +30,6 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -90,7 +89,6 @@ export class CreateMovieTracklistComponent implements OnInit {
     // variables for submitting the form
     public isTracklistSubmitted: boolean = false;
     public tracklistForm!: FormGroup;
-    public createNewTracklist$: Observable<any> | null = null;
     public tracklistSelectionList: { name: string; value: string }[] =
         TRACK_LIST_STATUS_LIST.map((selection: string) => ({
             name: convertTracklistStatusIntoGerman(selection),
@@ -122,7 +120,7 @@ export class CreateMovieTracklistComponent implements OnInit {
                     // status 401 = user is not logged in anymore -> navigate to login page
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
                 }
                 this.messageService.add(

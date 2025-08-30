@@ -60,7 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 inputId="end"
                                 [showIcon]="true" 
                                 [showOnFocus]="false"
-                                [minDate]="tracklistForm.get('startDate')?.value" 
+                                [minDate]="tracklistForm.get('startDate')?.value"
+                                [showButtonBar]="true"
                                 />
                             <label for="end">Enddatum</label>
                         </p-float-label>
@@ -72,7 +73,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 inputId="start"
                                 [showIcon]="true" 
                                 [showOnFocus]="false"
-                                [maxDate]="tracklistForm.get('endDate')?.value" 
+                                [maxDate]="tracklistForm.get('endDate')?.value"
+                                [showButtonBar]="true"
                                 />
                             <label for="start">Startdatum</label>
                         </p-float-label>
