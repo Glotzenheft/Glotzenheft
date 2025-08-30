@@ -196,6 +196,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         display: flex;
         flex-wrap: wrap;
         width: 100%;
+        min-height: 36rem;
         align-items: center;
         justify-content: center;
         gap: 2rem;
