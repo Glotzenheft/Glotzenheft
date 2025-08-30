@@ -1627,7 +1627,7 @@ p {
     color: #10b981 !important;
 }
 
-.cardContainer {
+.recommendationCardContainer {
     list-style: none;
     padding: 0;
     gap: 2rem;
