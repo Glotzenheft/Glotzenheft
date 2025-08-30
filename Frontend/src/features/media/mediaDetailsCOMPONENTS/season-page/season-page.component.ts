@@ -65,11 +65,11 @@ import { UC_JoinTVWithTracklists } from '../../../../app/core/use-cases/tracklis
 import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/get-selected-tracklist-in-local-storage.use-case';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
-import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
+import { MediaTabsComponent } from '../../../sharedCOMPONENTS/media-tabs/media-tabs.component';
 import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
-import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
+import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
 import { TooltipModule } from 'primeng/tooltip';
-import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
+import { MediaMetadataComponent } from '../media-metadata/media-metadata.component';
 
 @Component({
     selector: 'app-season-page',
@@ -97,7 +97,7 @@ import { MediaMetadataComponent } from "../media-metadata/media-metadata.compone
         MediaTabsComponent,
         TooltipModule,
         ApiRecommendationComponent,
-        MediaMetadataComponent
+        MediaMetadataComponent,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -116,7 +116,7 @@ export class SeasonPageComponent implements OnInit {
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
-    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/";
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + 'tv/';
     public currentTab: string = TABLIST[0];
     public tabList: string[] = TABLIST;
     public apiRecommendations: I_APIRecommendationResponse | null = null;
@@ -176,8 +176,8 @@ export class SeasonPageComponent implements OnInit {
 
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
-            this.tvSeriesID = params["id"];
-            console.log("changed id", this.tvSeriesID)
+            this.tvSeriesID = params['id'];
+            console.log('changed id', this.tvSeriesID);
             this.loadData(this.tvSeriesID);
         });
     }
@@ -202,14 +202,17 @@ export class SeasonPageComponent implements OnInit {
 
         // checking if "media_id" already exists:
         this.seasonData$ = this.getSeasonForTVUseCase.execute(tmdbId);
-        this.numberOfEpisodes$ = this.seasonData$ && this.seasonData$?.pipe((map((season: Season) => {
-            let counter: number = 0;
-            for (const seasonAtt of season.media.seasons) {
-                counter += seasonAtt.episodeCount;
-            }
-            return counter;
-        }
-        )));
+        this.numberOfEpisodes$ =
+            this.seasonData$ &&
+            this.seasonData$?.pipe(
+                map((season: Season) => {
+                    let counter: number = 0;
+                    for (const seasonAtt of season.media.seasons) {
+                        counter += seasonAtt.episodeCount;
+                    }
+                    return counter;
+                }),
+            );
 
         if (!this.seasonData$) {
             this.hasError = true;
@@ -355,5 +358,5 @@ export class SeasonPageComponent implements OnInit {
 
     public getRecommendations = (recs: I_APIRecommendationResponse) => {
         this.apiRecommendations = recs;
-    }
+    };
 }

@@ -27,12 +27,19 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { TMDB_POSTER_PATH } from '../../../app/shared/variables/tmdb-vars';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 
-import { UserActivitiesResponse, UserActivity, UserActivityWithDaySplitt } from '../../../app/shared/interfaces/user-interfaces';
+import {
+    UserActivitiesResponse,
+    UserActivity,
+    UserActivityWithDaySplitt,
+} from '../../../app/shared/interfaces/user-interfaces';
 import { PaginationComponent } from '../../sharedCOMPONENTS/pagination/pagination.component';
 import { UC_NavigateToSpecificPage } from '../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { SelectOption } from '../../../shared/interfaces/select-option.interface';
@@ -56,8 +63,8 @@ import { SelectOption } from '../../../shared/interfaces/select-option.interface
     providers: [
         UC_GetUserActivites,
         UC_LogoutOfAccount,
-        UC_NavigateToSpecificPage
-    ]
+        UC_NavigateToSpecificPage,
+    ],
 })
 export class ActivitiesPageComponent implements OnInit {
     // variables for user activities overview
@@ -83,8 +90,8 @@ export class ActivitiesPageComponent implements OnInit {
         private messageService: MessageService,
         private getActivitiesUseCase: UC_GetUserActivites,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
-        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage
-    ) { }
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+    ) {}
 
     ngOnInit(): void {
         this.loadUserActivities(1);
@@ -231,7 +238,9 @@ export class ActivitiesPageComponent implements OnInit {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
 
                     return;
                 } else if (err.status === 0) {
@@ -277,9 +286,13 @@ export class ActivitiesPageComponent implements OnInit {
 
     public onClickActivity = (activity: UserActivityWithDaySplitt) => {
         if (activity.type === 'movie') {
-            void this.navigateToSpecificPageUseCase.execute(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
+            void this.navigateToSpecificPageUseCase.execute(
+                `${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`,
+            );
         } else {
-            void this.navigateToSpecificPageUseCase.execute(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+            void this.navigateToSpecificPageUseCase.execute(
+                `${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`,
+            );
         }
     };
 

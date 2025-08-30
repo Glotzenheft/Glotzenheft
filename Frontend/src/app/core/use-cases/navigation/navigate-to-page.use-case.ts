@@ -28,5 +28,7 @@ export class UC_NavigateToPage {
         private readonly navigationRepository: I_NavigationRepository,
     ) {}
 
-    public execute = (tmdbId: string, isMovie: boolean) => { return this.navigationRepository.navigateToPage(tmdbId, isMovie) }
+    public execute = (tmdbId: string, isMovie: boolean) => {
+        return this.navigationRepository.navigateToPage(tmdbId, isMovie);
+    };
 }

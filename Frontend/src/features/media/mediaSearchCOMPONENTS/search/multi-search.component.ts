@@ -45,7 +45,7 @@ import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-sear
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
-import { PaginationComponent } from "../../../sharedCOMPONENTS/pagination/pagination.component";
+import { PaginationComponent } from '../../../sharedCOMPONENTS/pagination/pagination.component';
 import { SelectOption } from '../../../../shared/interfaces/select-option.interface';
 
 @Component({
@@ -71,8 +71,8 @@ import { SelectOption } from '../../../../shared/interfaces/select-option.interf
         UC_GetMultiSearchResults,
         UC_GetSearchTerm,
         UC_ShowLoginMessage,
-        UC_NavigateToSpecificPage
-    ]
+        UC_NavigateToSpecificPage,
+    ],
     //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit, OnDestroy {
@@ -123,8 +123,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         private getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
         private getSearchTermUseCase: UC_GetSearchTerm,
         private showLoginMessageUseCase: UC_ShowLoginMessage,
-        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage
-    ) { }
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+    ) {}
 
     ngOnInit(): void {
         this.tracklistFilterForm = this.formBuilder.group({
@@ -161,10 +161,12 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                         // 401 = user token not valid anymore -> navigate to login page
                         this.showLoginMessageUseCase.execute();
 
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                }
-            },
-        });
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                    }
+                },
+            });
     }
 
     ngOnDestroy(): void {
@@ -277,15 +279,17 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                             ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
                             : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
 
-                void this.navigateToSpecificPageUseCase.execute(url);
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // 401 = user token is not logged in anymore -> navigate to login page
-                    this.showLoginMessageUseCase.execute();
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
+                    void this.navigateToSpecificPageUseCase.execute(url);
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // 401 = user token is not logged in anymore -> navigate to login page
+                        this.showLoginMessageUseCase.execute();
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
                     const message: string = `Fehler beim Weiterleiten ${
                         mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'

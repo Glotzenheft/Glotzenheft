@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { InjectionToken } from '@angular/core';
 
 export interface I_NavigationRepository {
-    navigateToStartPage: () => void,
-    navigateToUserStart: () => void,
-    navigateToMultiSearch: () => void,
-    navigateToPage: (tmdbId: string, isMovie: boolean) => void,
-    navigateToSpecificPage: (url: string) => void
+    navigateToStartPage: () => void;
+    navigateToUserStart: () => void;
+    navigateToMultiSearch: () => void;
+    navigateToPage: (tmdbId: string, isMovie: boolean) => void;
+    navigateToSpecificPage: (url: string) => void;
 }
 
 // IT = Injection Token

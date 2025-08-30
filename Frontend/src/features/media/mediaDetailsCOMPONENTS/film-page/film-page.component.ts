@@ -51,12 +51,15 @@ import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
-import { MediaTabsComponent } from "../../../sharedCOMPONENTS/media-tabs/media-tabs.component";
+import { MediaTabsComponent } from '../../../sharedCOMPONENTS/media-tabs/media-tabs.component';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
-import { I_APIRecommendationResponse, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import {
+    I_APIRecommendationResponse,
+    I_Recommendations,
+} from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { RecommendationsComponent } from '../recommendations/recommendations.component';
 // import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
-import { MediaMetadataComponent } from "../media-metadata/media-metadata.component";
+import { MediaMetadataComponent } from '../media-metadata/media-metadata.component';
 
 @Component({
     selector: 'app-film-page',
@@ -79,7 +82,7 @@ import { MediaMetadataComponent } from "../media-metadata/media-metadata.compone
         MediaTabsComponent,
         RecommendationsComponent,
         // ApiRecommendationComponent,
-        MediaMetadataComponent
+        MediaMetadataComponent,
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -87,8 +90,8 @@ import { MediaMetadataComponent } from "../media-metadata/media-metadata.compone
         UC_GetFilmDetails,
         UC_ValidateMediaURL,
         UC_ShortenString,
-        UC_LogoutOfAccount
-    ]
+        UC_LogoutOfAccount,
+    ],
 })
 export class FilmPageComponent implements OnInit, OnDestroy {
     public movieID: string | null = null;
@@ -115,7 +118,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public areRecommendationsLoading: boolean = false;
     public recommendations: I_Recommendations | null = null;
     public apiRecommendations: I_APIRecommendationResponse | null = null;
-    private subscription: Subscription | null = null
+    private subscription: Subscription | null = null;
 
     constructor(
         public shortenStringUseCase: UC_ShortenString,
@@ -126,12 +129,12 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private getFilmDetailsUseCase: UC_GetFilmDetails,
         private logOutOfAccountUseCase: UC_LogoutOfAccount,
-        private activatedRoute: ActivatedRoute
-    ) { }
+        private activatedRoute: ActivatedRoute,
+    ) {}
 
     ngOnInit(): void {
         this.activatedRoute.params.subscribe((params: Params) => {
-            this.movieID = params["id"]
+            this.movieID = params['id'];
             this.loadData(this.movieID);
         });
     }
@@ -228,11 +231,13 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     public onChangeTab = (newTab: string) => {
         this.currentTab = newTab;
-    }
+    };
 
     public getRecommendations = (recs: I_Recommendations) => {
         this.recommendations = recs;
-    }
+    };
 
-    public setAPIRecommendations = (recs: I_APIRecommendationResponse) => { this.apiRecommendations = recs; }
+    public setAPIRecommendations = (recs: I_APIRecommendationResponse) => {
+        this.apiRecommendations = recs;
+    };
 }

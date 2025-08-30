@@ -13,39 +13,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export interface I_Recommendation {
-    title: string, tmdb_id: number, media_type: string, poster_path: string
+    title: string;
+    tmdb_id: number;
+    media_type: string;
+    poster_path: string;
 }
 
 export interface I_Recommendations {
-    recommendation1: I_Recommendation[],
-    recommendation2: I_Recommendation[],
-    recommendation3: I_Recommendation[]
+    recommendation1: I_Recommendation[];
+    recommendation2: I_Recommendation[];
+    recommendation3: I_Recommendation[];
 }
 
 export interface I_HighestRecommendations {
-    recommendations: I_Recommendation[]
+    recommendations: I_Recommendation[];
 }
 
 export interface I_APIRecommendation {
-    adult: boolean,
-    backdrop_path: string,
-    id: number,
-    name: string,
-    title: string,
-    original_language: string,
-    original_name: string,
-    overview: string,
-    poster_path: string,
-    media_type: string,
-    genre_ids: string[],
-    popularity: number,
-    first_air_date: string,
-    vote_average: number,
-    vote_count: number,
-    origin_country: string[]
+    adult: boolean;
+    backdrop_path: string;
+    id: number;
+    name: string;
+    title: string;
+    original_language: string;
+    original_name: string;
+    overview: string;
+    poster_path: string;
+    media_type: string;
+    genre_ids: string[];
+    popularity: number;
+    first_air_date: string;
+    vote_average: number;
+    vote_count: number;
+    origin_country: string[];
 }
 
 export interface I_APIRecommendationResponse {
-    page: number,
-    recommendations: I_APIRecommendation[]
+    page: number;
+    recommendations: I_APIRecommendation[];
 }

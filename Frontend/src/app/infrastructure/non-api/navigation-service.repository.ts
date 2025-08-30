@@ -39,10 +39,12 @@ export class R_Navigation implements I_NavigationRepository {
     };
 
     public navigateToPage = (tmdbId: string, isMovie: boolean) => {
-        this.router.navigateByUrl(`${isMovie ? ROUTES_LIST[5].fullUrl : ROUTES_LIST[6].fullUrl}/${tmdbId}`)
-    }
+        this.router.navigateByUrl(
+            `${isMovie ? ROUTES_LIST[5].fullUrl : ROUTES_LIST[6].fullUrl}/${tmdbId}`,
+        );
+    };
 
     public navigateToSpecificPage = (url: string) => {
         this.router.navigateByUrl(url);
-    }
+    };
 }

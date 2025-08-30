@@ -15,11 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from "rxjs";
-import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from "../../shared/interfaces/login";
-import { DeleteUserRequest, UserActivitiesResponse } from "../../shared/interfaces/user-interfaces";
-import { RatingStatistic, WatchTimeStatistic } from "../../shared/statistic-interfaces";
-import { InjectionToken } from "@angular/core";
+import { Observable } from 'rxjs';
+import {
+    LoginAndMessageResponse,
+    LoginCredentials,
+    RegisterCredentials,
+    ResetPasswordCredentials,
+} from '../../shared/interfaces/login';
+import {
+    DeleteUserRequest,
+    UserActivitiesResponse,
+} from '../../shared/interfaces/user-interfaces';
+import {
+    RatingStatistic,
+    WatchTimeStatistic,
+} from '../../shared/statistic-interfaces';
+import { InjectionToken } from '@angular/core';
 
 export interface I_UserRepository {
     // variables
