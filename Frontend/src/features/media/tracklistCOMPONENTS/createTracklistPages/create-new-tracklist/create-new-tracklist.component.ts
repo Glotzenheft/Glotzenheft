@@ -86,15 +86,11 @@ export class CreateNewTracklistComponent implements OnInit {
     // variables for tracklist submitting
     public isTracklistSubmitted: boolean = false;
     public trackListForm!: FormGroup;
-    public createNewTracklist$: Observable<any> | null = null;
     public tracklistSelectionList: { name: string; value: string }[] =
         TRACK_LIST_STATUS_LIST.map((selection: string) => ({
             name: convertTracklistStatusIntoGerman(selection),
             value: selection,
         }));
-
-    // other variables
-    public convertStatus = convertTracklistStatusIntoGerman;
 
     constructor(
         private messageService: MessageService,

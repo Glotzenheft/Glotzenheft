@@ -78,6 +78,7 @@ export interface Tracklist {
         posterPath: string;
     };
     tracklistSeasons: TracklistSeason[];
+    isRewatching: boolean;
 }
 
 export interface SeasonTracklistEpisode {
