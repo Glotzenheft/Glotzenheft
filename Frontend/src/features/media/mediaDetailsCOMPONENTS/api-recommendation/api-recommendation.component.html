@@ -13,31 +13,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if (isLoading) {
-<div class="loadingWrapper">
-    <h1>Laden ...</h1>
-    <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-</div>
-} @else {
-@if (recommendations && recommendations.recommendations) {
-<ul class="cardContainer">
-    @for (rec of recommendations.recommendations; track $index) {
-    <li class="recCard" (click)="onClickRecommendation(rec.id, rec.media_type === 'movie')" [pTooltip]="rec.name">
-        <img [alt]="'Poster zu ' + rec.name" [src]="POSTER_PATH + rec.poster_path">
-        @if (rec.name && rec.name.length > 0) {
-        <p>{{rec.name | titleFormatting}}</p>
-        } @else {
-        <p>{{rec.title | titleFormatting}}</p>
-        }
-    </li>
+    <div class="loadingWrapper">
+        <h1>Laden ...</h1>
+        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+    </div>
+} 
+@else {
+    @if (recommendations && recommendations.recommendations) {
+        <ul class="cardContainer">
+            @for (rec of recommendations.recommendations; track $index) {
+                <li class="recCard" (click)="onClickRecommendation(rec.id, rec.media_type === 'movie')" [pTooltip]="rec.name">
+                    <img [alt]="'Poster zu ' + rec.name" [src]="POSTER_PATH + rec.poster_path">
+
+                    @if (rec.name && rec.name.length > 0) {
+                        <p>{{rec.name | titleFormatting}}</p>
+                    } 
+                    @else {
+                        <p>{{rec.title | titleFormatting}}</p>
+                    }
+                </li>
+            }
+        </ul>
+    } 
+    @else {
+        <span><i>keine Empfehlungen vorhanden</i></span>
     }
-</ul>
-} @else {
-<span><i>keine Empfehlungen vorhanden</i></span>
-}
 }
 
 @if (isError) {
-<div class="serverNotAvailableDIV">
-    <p>Empfehlungen können nicht geladen werden.</p>
-</div>
+    <div class="serverNotAvailableDIV">
+        <p>Empfehlungen können nicht geladen werden.</p>
+    </div>
 }

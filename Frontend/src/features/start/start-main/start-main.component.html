@@ -52,7 +52,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 (onClick)="navigateToLogin()" 
                 />
         </div>
-    } @else {
+    } 
+    @else {
         <div class="button">
             <p-button 
                 icon="pi-sign-in" 
@@ -66,20 +67,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     @if (!isLoading) {
-    @if (highestMedia) {
-    <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
-    }
-    } @else {
-    <div class="loadingWrapper">
-        <h1>Laden ...</h1>
-        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-    </div>
+        @if (highestMedia) {
+            <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
+        }
+    } 
+    @else {
+        <div class="loadingWrapper">
+            <h1>Laden ...</h1>
+            <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+        </div>
     }
 </div>
 
 
 @if (isServerNotAvailable) {
-<div class="serverNotAvailableDIV">
-    <p>Empfehlungen können nicht geladen werden.</p>
-</div>
+    <div class="serverNotAvailableDIV">
+        <p>Empfehlungen können nicht geladen werden.</p>
+    </div>
 }

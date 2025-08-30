@@ -59,14 +59,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             @else if (selectedDiagramType.value === 2) {
             <div class="barChartDIVWrapper">
                 <div class="barChartDIV">
-                    <p-chart type="bar" [data]="barChartForMediaStatistic" [options]="barChartMediaStatisticOptions" />
+                    <p-chart 
+                        type="bar" 
+                        [data]="barChartForMediaStatistic" 
+                        [options]="barChartMediaStatisticOptions" 
+                        />
                 </div>
             </div>
             }
             @else if (selectedDiagramType.value === 3) {
                 <div class="barChartDIVWrapper">
                     <div class="barChartDIV">
-                        <p-chart type="bar" [data]="barChartForYearlyMediaStatistic" [options]="barChartYearlyStatisticOptions" />
+                        <p-chart 
+                            type="bar" 
+                            [data]="barChartForYearlyMediaStatistic" 
+                            [options]="barChartYearlyStatisticOptions" 
+                            />
                     </div>
                 </div>
             } 

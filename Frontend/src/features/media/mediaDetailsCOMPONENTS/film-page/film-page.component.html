@@ -66,9 +66,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 <p>kein Bild vorhanden</p>
                             }
                             @else {
-                                <img [src]="POSTER_PATH + filmData.media.posterPath" 
-                                    [alt]="'Dies ist das Bild für von ' + filmData.media.name" loading="lazy" 
-                                />
+                                <img 
+                                    [src]="POSTER_PATH + filmData.media.posterPath" 
+                                    [alt]="'Dies ist das Bild für von ' + filmData.media.name" 
+                                    loading="lazy" 
+                                    />
                             }
                         </div>
                     </div>
@@ -77,22 +79,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <h2>Beschreibung</h2>
                             @if (filmData.media.description) {
                                 <p class="descriptionP">{{ filmData.media.description }}</p>    
-                            } @else {
+                            } 
+                            @else {
                                 <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
                             }
 
                             <a [href]="TMDB_ROUTE + filmData.media.tmdbID" class="linkA">> Link zur The Movie Database</a>
 
                     @if (filmData.media.firstAirDate) {
-                    <p>Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
-
-                    } @else {
-                    <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
+                        <p>Ausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
+                    } 
+                    @else {
+                        <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
                     }
 
 
                     @if (filmData.media.seasons.length > 0) {
-                    <p>Anzahl der Staffeln: {{ filmData.media.seasons.length }}</p>
+                        <p>Anzahl der Staffeln: {{ filmData.media.seasons.length }}</p>
                     }
                 </div>
             </div>
@@ -101,29 +104,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <app-media-tabs [inpTabList]="tabsList" (outChangeTab)="onChangeTab($event)" />
 
         @if (currentTab === tabsList[0]) {
-        <div class="backButtonDIV">
-            <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
-        </div>
+            <div class="backButtonDIV">
+                <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+            </div>
         } @else if (currentTab === tabsList[1]) {
-        <app-recommendations [inpMovieId]="filmData.media.tmdbID" [inpMovieTitle]="filmData.media.name"
-            [inpRecommendations]="recommendations" [inpIsMovie]="true" [inpMediaPosterPath]="filmData.media.posterPath"
-            (outGetMovieRecommendations)="getRecommendations($event)" />
-        <!-- <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
-            [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" /> -->
-        } @else {
-        <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
+            <app-recommendations 
+                [inpMovieId]="filmData.media.tmdbID" 
+                [inpMovieTitle]="filmData.media.name"
+                [inpRecommendations]="recommendations" 
+                [inpIsMovie]="true" 
+                [inpMediaPosterPath]="filmData.media.posterPath"
+                (outGetMovieRecommendations)="getRecommendations($event)" 
+                />
+            <!-- <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
+                [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" /> -->
+        } 
+        @else {
+            <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
         }
-
-
-
 
         <div class="newWatchlistButton">
             @for (tracklist of filmData.tracklists; track $index) {
-            <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
-                <p>Status: {{ convertStatus(tracklist.status) }}</p>
-                <p-button label="Tracklist bearbeiten" icon="pi pi-pencil"
-                    (onClick)="setSelectedTracklist(tracklist)" />
-            </p-panel>
+                <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
+                    <p>Status: {{ convertStatus(tracklist.status) }}</p>
+                    <p-button 
+                        label="Tracklist bearbeiten" 
+                        icon="pi pi-pencil"
+                        (onClick)="setSelectedTracklist(tracklist)" 
+                        />
+                </p-panel>
             }
         </div>
     </div>
@@ -136,7 +145,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             [mediaID]="filmData.media.id" 
             [mediaName]="filmData.media.name"
             (cancelTracklistCreation)="setVisibilityStatus(0)" (saveNewTracklist)="refreshPage()" 
-        />
+            />
     </ng-container>
 
 
@@ -149,6 +158,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             [inpTracklist]="selectedTracklist" 
             (cancelTracklistForm)="setVisibilityStatus(0)"
             (refreshFilmPage)="refreshPage()" 
-        />
+            />
     </ng-container>
 }

@@ -26,16 +26,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         />
 
     <div
-        [pTooltip]="
-            'Seite ' + inpCurrentPage() + ' von ' + inpTotalPages() + '-' + inpTotalPagesText() + ': ' + inpTotalResults()
-        "
+        [pTooltip]="'Seite ' + inpCurrentPage() + ' von ' + inpTotalPages() + '-' + inpTotalPagesText() + ': ' + inpTotalResults()"
         >
         Seite
         <p-select 
             [options]="inpSelectOptions()" 
             [ngModel]="inpCurrentPage()" 
-            (ngModelChange)="changeSelection($event)"
             [style]="{width: '6rem'}" 
+            (ngModelChange)="changeSelection($event)"
             />
         <span>
             von {{inpTotalPages() | stringFormatting}} - {{inpTotalPagesText()}}:
