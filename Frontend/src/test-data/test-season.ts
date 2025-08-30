@@ -31,7 +31,7 @@ export const TEST_SEASON: Season = {
         type: '',
         posterPath: '',
         backdropPath: '',
-        mediaID: null
+        mediaID: null,
     },
-    tracklists: []
+    tracklists: [],
 };

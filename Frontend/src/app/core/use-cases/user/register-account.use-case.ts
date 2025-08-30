@@ -15,16 +15,27 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from "rxjs";
-import { LoginAndMessageResponse, RegisterCredentials } from "../../../shared/interfaces/login";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
-import { Inject, Injectable } from "@angular/core";
+import { Observable } from 'rxjs';
+import {
+    LoginAndMessageResponse,
+    RegisterCredentials,
+} from '../../../shared/interfaces/login';
+import {
+    I_UserRepository,
+    IT_USER_REPOSITORY,
+} from '../../interfaces/user.repository';
+import { Inject, Injectable } from '@angular/core';
 
 @Injectable()
 export class UC_RegisterAccount {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+    constructor(
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: I_UserRepository,
+    ) {}
 
-    public execute = (registerData: RegisterCredentials): Observable<LoginAndMessageResponse> => {
-        return this.userRepository.registerAccount(registerData)
-    }
+    public execute = (
+        registerData: RegisterCredentials,
+    ): Observable<LoginAndMessageResponse> => {
+        return this.userRepository.registerAccount(registerData);
+    };
 }

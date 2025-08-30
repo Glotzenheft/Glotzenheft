@@ -63,27 +63,29 @@ export class AppComponent implements OnInit, OnDestroy {
     constructor(
         public messageService: MessageService,
         public getSearchTermUseCase: UC_GetSearchTerm,
-        public getShowToastUseCase: UC_GetShowToast
-    ) { }
+        public getShowToastUseCase: UC_GetShowToast,
+    ) {}
 
     ngOnInit(): void {
         this.getSearchTermUseCase.observe().subscribe((searchTerm: string) => {
-            this.isMultiSearchResponseVisible = !searchTerm.trim() ? false : true;
+            this.isMultiSearchResponseVisible = !searchTerm.trim()
+                ? false
+                : true;
         });
 
-        this.toastSubscription = this.getShowToastUseCase.observe().subscribe(
-            (show: boolean) => {
+        this.toastSubscription = this.getShowToastUseCase
+            .observe()
+            .subscribe((show: boolean) => {
                 if (show) {
                     this.messageService.add(
                         getMessageObject(
                             'error',
                             'Kein Zugriff',
-                            'Bitte melde dich an, um Zugriff zu erhalten.'
-                        )
+                            'Bitte melde dich an, um Zugriff zu erhalten.',
+                        ),
                     );
                 }
-            }
-        );
+            });
     }
 
     ngOnDestroy(): void {

@@ -15,15 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_AuthRepository, IT_AUTH_REPOSITORY } from "../../interfaces/auth.repository";
-import { BehaviorSubject } from "rxjs";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_AuthRepository,
+    IT_AUTH_REPOSITORY,
+} from '../../interfaces/auth.repository';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable()
 export class UC_GetShowToast {
-    constructor(@Inject(IT_AUTH_REPOSITORY) private readonly authRepository: I_AuthRepository) { }
+    constructor(
+        @Inject(IT_AUTH_REPOSITORY)
+        private readonly authRepository: I_AuthRepository,
+    ) {}
 
     public observe = (): BehaviorSubject<boolean> => {
-        return this.authRepository.showToast$
-    }
+        return this.authRepository.showToast$;
+    };
 }

@@ -15,4 +15,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export const TMDB_IMG_ROUTE = "https://image.tmdb.org/t/p/w500"
+export const TMDB_IMG_ROUTE = 'https://image.tmdb.org/t/p/w500';

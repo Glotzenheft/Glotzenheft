@@ -15,11 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InjectionToken } from "@angular/core";
-import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { InjectionToken } from '@angular/core';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 export interface I_ValidationRepository {
-    passwordMatchValidatorForResetPassword: (control: AbstractControl) => ValidationErrors | null
+    passwordMatchValidatorForResetPassword: (
+        control: AbstractControl,
+    ) => ValidationErrors | null;
 }
 
-export const IT_VALIDATION_REPOSITORY = new InjectionToken<I_ValidationRepository>("I_ValidationRepository")
+export const IT_VALIDATION_REPOSITORY =
+    new InjectionToken<I_ValidationRepository>('I_ValidationRepository');

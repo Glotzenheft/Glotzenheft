@@ -32,8 +32,14 @@ import { Message } from 'primeng/message';
 import { MessageService } from 'primeng/api';
 import { PanelModule } from 'primeng/panel';
 import { Router } from '@angular/router';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
-import { LoginAndMessageResponse, LoginCredentials } from '../../../app/shared/interfaces/login';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../app/shared/variables/message-vars';
+import {
+    LoginAndMessageResponse,
+    LoginCredentials,
+} from '../../../app/shared/interfaces/login';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_NavigateToUserStart } from '../../../app/core/use-cases/navigation/navigate-to-user-start.use-case';
 import { UC_NavigateToStartPage } from '../../../app/core/use-cases/navigation/navigate-to-start-page.use-case';
@@ -65,8 +71,8 @@ import { UC_IsValidUserName } from '../../../app/core/use-cases/security/check-v
         UC_IncreaseLoginTries,
         UC_IsUserLoginValid,
         UC_LogoutOfAccount,
-        UC_LoginIntoAccount
-    ]
+        UC_LoginIntoAccount,
+    ],
 })
 export class LoginComponent implements OnInit {
     loginGroup!: FormGroup;
@@ -85,8 +91,8 @@ export class LoginComponent implements OnInit {
         private increaseLoginTriesUseCase: UC_IncreaseLoginTries,
         private loginIntoAccountUseCase: UC_LoginIntoAccount,
         private logoutOfAccount: UC_LogoutOfAccount,
-        private isValidUserNameUseCase: UC_IsValidUserName
-    ) { }
+        private isValidUserNameUseCase: UC_IsValidUserName,
+    ) {}
 
     ngOnInit(): void {
         this.loginGroup = this.formBuilder.group({
@@ -109,8 +115,8 @@ export class LoginComponent implements OnInit {
                 getMessageObject(
                     'error',
                     'Ungültiger Loginversuch',
-                    'Du hast zu viele Anmeldeversuche unternommen und kannst dich daher für eine Minute nicht anmelden.'
-                )
+                    'Du hast zu viele Anmeldeversuche unternommen und kannst dich daher für eine Minute nicht anmelden.',
+                ),
             );
             return;
         }
@@ -119,11 +125,11 @@ export class LoginComponent implements OnInit {
 
         if (
             !this.isValidUserNameUseCase.execute(
-                this.loginGroup.get('username')?.value
+                this.loginGroup.get('username')?.value,
             )
         ) {
             this.messageService.add(
-                getMessageObject('error', 'Ungültiger Nutzername')
+                getMessageObject('error', 'Ungültiger Nutzername'),
             );
             return;
         }
@@ -151,11 +157,13 @@ export class LoginComponent implements OnInit {
                             getMessageObject(
                                 'error',
                                 'Fehlerhafte Daten',
-                                'Wir haben keinen Nutzer mit diesen Daten gefunden. Bitte probiere es erneut.'
-                            )
+                                'Wir haben keinen Nutzer mit diesen Daten gefunden. Bitte probiere es erneut.',
+                            ),
                         );
                     } else {
-                        this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
                     }
 
                     this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
@@ -168,8 +176,8 @@ export class LoginComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Loginversuch fehlgeschlagen',
-                        'Die eingegebenen Daten sind fehlerhaft. Bitte prüfe deine Eingaben und probiere es erneut.'
-                    )
+                        'Die eingegebenen Daten sind fehlerhaft. Bitte prüfe deine Eingaben und probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -179,7 +187,8 @@ export class LoginComponent implements OnInit {
         const control = this.loginGroup.get(field);
 
         return (
-            control! && (control.dirty || control.touched || this.isFormSubmitted)
+            control! &&
+            (control.dirty || control.touched || this.isFormSubmitted)
         );
     };
 

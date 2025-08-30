@@ -15,12 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_UserRepository,
+    IT_USER_REPOSITORY,
+} from '../../interfaces/user.repository';
 
 @Injectable()
 export class UC_GetUserName {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+    constructor(
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: I_UserRepository,
+    ) {}
 
-    public execute = () => { return this.userRepository.getUserName() }
+    public execute = () => {
+        return this.userRepository.getUserName();
+    };
 }

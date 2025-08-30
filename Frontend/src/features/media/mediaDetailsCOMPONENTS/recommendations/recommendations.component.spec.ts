@@ -17,24 +17,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { HeaderMainComponent } from './header-main.component';
+import { RecommendationsComponent } from './recommendations.component';
 
-describe('HeaderMainComponent', () => {
-  let component: HeaderMainComponent;
-  let fixture: ComponentFixture<HeaderMainComponent>;
+describe('RecommendationsComponent', () => {
+    let component: RecommendationsComponent;
+    let fixture: ComponentFixture<RecommendationsComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      imports: [HeaderMainComponent]
-    })
-    .compileComponents();
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [RecommendationsComponent],
+        }).compileComponents();
 
-    fixture = TestBed.createComponent(HeaderMainComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+        fixture = TestBed.createComponent(RecommendationsComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });

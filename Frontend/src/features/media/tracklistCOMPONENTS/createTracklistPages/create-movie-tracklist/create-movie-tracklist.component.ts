@@ -40,8 +40,14 @@ import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
 import { Router } from '@angular/router';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import {
+    convertTracklistStatusIntoGerman,
+    TRACK_LIST_STATUS_LIST,
+} from '../../../../../app/shared/variables/tracklist';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
 import { UC_TriggerTracklistCREATEMOVIESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-movie-subject.use-case';
@@ -62,7 +68,11 @@ import {Checkbox} from "primeng/checkbox";
         RatingModule,
         Checkbox,
     ],
-    providers: [UC_getTracklistCREATEMOVIESubjectResponse, UC_TriggerTracklistCREATEMOVIESubject, UC_LogoutOfAccount],
+    providers: [
+        UC_getTracklistCREATEMOVIESubjectResponse,
+        UC_TriggerTracklistCREATEMOVIESubject,
+        UC_LogoutOfAccount,
+    ],
     templateUrl: './create-movie-tracklist.component.html',
     styleUrl: './create-movie-tracklist.component.css',
 })
@@ -74,7 +84,8 @@ export class CreateMovieTracklistComponent implements OnInit {
     // output variables
     @Output() cancelTracklistCreation: EventEmitter<boolean> =
         new EventEmitter<boolean>(false);
-    @Output() saveNewTracklist: EventEmitter<number> = new EventEmitter<number>();
+    @Output() saveNewTracklist: EventEmitter<number> =
+        new EventEmitter<number>();
 
     // variables for submitting the form
     public isTracklistSubmitted: boolean = false;
@@ -92,14 +103,17 @@ export class CreateMovieTracklistComponent implements OnInit {
         private router: Router,
         private getTracklistCREATEMOVIESubjectResponseUseCase: UC_getTracklistCREATEMOVIESubjectResponse,
         private triggerTracklistCREATEMOVIESubjectUseCase: UC_TriggerTracklistCREATEMOVIESubject,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
-    ) { }
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+    ) {}
 
     ngOnInit(): void {
         this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
-                    getMessageObject('success', 'Trackliste erfolgreich angelegt')
+                    getMessageObject(
+                        'success',
+                        'Trackliste erfolgreich angelegt',
+                    ),
                 );
                 this.saveNewTracklist.emit(0);
             },
@@ -115,8 +129,8 @@ export class CreateMovieTracklistComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Anlegen der Trackliste',
-                        'Bitte lade die Seite neu und probiere es erneut.'
-                    )
+                        'Bitte lade die Seite neu und probiere es erneut.',
+                    ),
                 );
             },
         });

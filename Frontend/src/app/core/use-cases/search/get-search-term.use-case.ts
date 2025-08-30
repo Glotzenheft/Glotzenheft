@@ -15,13 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_SearchRepository, IT_SEARCH_REPOSITORY } from "../../interfaces/search.repository";
-import { Observable } from "rxjs";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_SearchRepository,
+    IT_SEARCH_REPOSITORY,
+} from '../../interfaces/search.repository';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UC_GetSearchTerm {
-    constructor(@Inject(IT_SEARCH_REPOSITORY) private readonly searchRepository: I_SearchRepository) { }
+    constructor(
+        @Inject(IT_SEARCH_REPOSITORY)
+        private readonly searchRepository: I_SearchRepository,
+    ) {}
 
-    public observe = (): Observable<string> => { return this.searchRepository.searchTerm$ }
+    public observe = (): Observable<string> => {
+        return this.searchRepository.searchTerm$;
+    };
 }

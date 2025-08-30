@@ -16,15 +16,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 .userLinks {
-  padding-left: var(--padding--left-right);
-  padding-right: var(--padding--left-right);
-  padding-top: var(--padding--top-bottom);
-  padding-bottom: var(--padding--top-bottom);
-  height: 10rem;
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    height: 10rem;
 }
 
 .userLinks ul {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-evenly;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
 }

@@ -16,28 +16,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {catchError, EMPTY, exhaustMap, Observable, shareReplay, Subject, throttleTime, throwError,} from 'rxjs';
+import {catchError, EMPTY, exhaustMap, Observable,of, shareReplay, Subject, throttleTime, throwError,} from 'rxjs';
 import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
 import {isPlatformBrowser} from '@angular/common';
-import {Film, MediaIDResponse, Season, UpdateTracklistRequest} from '../../shared/interfaces/media-interfaces';
+import {Film, MediaIDResponse, Season, UpdateTracklistRequest,} from '../../shared/interfaces/media-interfaces';
 import {
     CreateMovieTracklistData,
     CreateSeasonTracklistData,
     Tracklist
-} from '../../shared/interfaces/tracklist-interfaces';
+,} from '../../shared/interfaces/tracklist-interfaces';
 import {REQUEST_THROTTLE_TIME} from '../../shared/variables/message-vars';
 import {KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN} from '../../shared/variables/local-storage-keys';
 import {
-    ROUTE_CREATE_NEW_TRACKLIST,
+   ROUTE_CHECK_USER_AUTH, ROUTE_CREATE_NEW_TRACKLIST,
     ROUTE_DELETE_TRACKLIST,
     ROUTE_GET_ALL_USER_TRACKLISTS,
-    ROUTE_MEDIA_DETAILS_SEARCH,
+   ROUTE_GET_MOVIE_RECOMMENDATIONS,
+    ROUTE_GET_TV_RECOMMENDATIONS, ROUTE_MEDIA_DETAILS_SEARCH,
     ROUTE_MEDIA_ID_FOR_MEDIA,
     ROUTE_MOVIE_DETAILS_SEARCH,
     ROUTE_MULTI_SEARCH,
     ROUTE_UPDATE_TRACKLIST
-} from '../../shared/variables/api-routes';
-import {I_MediaRepository} from '../../core/interfaces/media.repository';
+,} from '../../shared/variables/api-routes';
+import {I_MediaRepository} from '../../core/interfaces/media.repository';import {
+    I_APIRecommendationResponse,
+    I_HighestRecommendations,
+    I_Recommendation,
+    I_Recommendations,
+} from '../../shared/interfaces/recommendation-interfaces';
 
 @Injectable({
     providedIn: 'root',
@@ -65,19 +71,23 @@ export class R_MediaHttp implements I_MediaRepository {
 
     constructor(
         private http: HttpClient,
-        @Inject(PLATFORM_ID) private platformId: Object
+        @Inject(PLATFORM_ID) private platformId: Object,
     ) {
         // controlling the request frequence (via throttle time)
         this.tracklistUPDATESubject
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME), // wait 10 s
-                exhaustMap((tracklistData) => this.updateTracklist(tracklistData)), // Führt den HTTP-Request aus
-                shareReplay(1) // Verhindert, dass der Request mehrmals ausgeführt wird
+                exhaustMap((tracklistData) =>
+                    this.updateTracklist(tracklistData),
+                ), // Führt den HTTP-Request aus
+                shareReplay(1), // Verhindert, dass der Request mehrmals ausgeführt wird
             )
             .subscribe({
                 // updating the response subject (response subject will return new response value to the components)
-                next: (response) => this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
-                error: (error) => this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
+                next: (response) =>
+                    this.tracklistUPDATEResponseSubject.next(response), // Antwort an den Component weitergeben
+                error: (error) =>
+                    this.tracklistUPDATEResponseSubject.error(error), // Fehler an den Component weitergeben
             });
 
         // deleting tracklist --------------------------------------------------
@@ -85,11 +95,13 @@ export class R_MediaHttp implements I_MediaRepository {
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME),
                 exhaustMap((tracklistID) => this.deleteTracklist(tracklistID)),
-                shareReplay(1)
+                shareReplay(1),
             )
             .subscribe({
-                next: (response) => this.tracklistDELETEResponseSubject.next(response),
-                error: (error) => this.tracklistDELETEResponseSubject.error(error),
+                next: (response) =>
+                    this.tracklistDELETEResponseSubject.next(response),
+                error: (error) =>
+                    this.tracklistDELETEResponseSubject.error(error),
             });
 
         // creating a new movie tracklist ---------------------------------------------------
@@ -97,12 +109,13 @@ export class R_MediaHttp implements I_MediaRepository {
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME), // 20.000 ms
                 exhaustMap((tracklistData: CreateMovieTracklistData) =>
-                    this.createNewMovieTracklist(tracklistData)
+                    this.createNewMovieTracklist(tracklistData),
                 ),
-                shareReplay(1)
+                shareReplay(1),
             )
             .subscribe({
-                next: (res: any) => this.tracklistCREATEMOVIEResponseSubject.next(res),
+                next: (res: any) =>
+                    this.tracklistCREATEMOVIEResponseSubject.next(res),
                 error: (err: any) =>
                     this.tracklistCREATEMOVIEResponseSubject.error(err),
             });
@@ -112,9 +125,9 @@ export class R_MediaHttp implements I_MediaRepository {
             .pipe(
                 throttleTime(REQUEST_THROTTLE_TIME),
                 exhaustMap((tracklistData: CreateSeasonTracklistData) =>
-                    this.createNewSeasonTracklist(tracklistData)
+                    this.createNewSeasonTracklist(tracklistData),
                 ),
-                shareReplay(1)
+                shareReplay(1),
             )
             .subscribe({
                 next: (res: Tracklist) =>
@@ -125,12 +138,23 @@ export class R_MediaHttp implements I_MediaRepository {
     }
 
     // functions ---------------------------------------------------------------------------------------
+    public getUserToken = (): string | null => {
+        let userToken: string | null = null;
+
+        if (isPlatformBrowser(this.platformId)) {
+            userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN);
+        }
+        if (!userToken) return null;
+
+        return userToken;
+    };
 
     public getHeader = (): HttpHeaders | null => {
         let userToken: string = '';
 
         if (isPlatformBrowser(this.platformId)) {
-            userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
+            userToken =
+                localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
         }
 
         if (!userToken.trim()) {
@@ -159,7 +183,7 @@ export class R_MediaHttp implements I_MediaRepository {
         -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
         */
         tmdbID: number,
-        isMovie: boolean
+        isMovie: boolean,
     ): Observable<MediaIDResponse> => {
         const header = this.getHeader();
         if (!header) {
@@ -169,11 +193,11 @@ export class R_MediaHttp implements I_MediaRepository {
         const movieType: string = isMovie ? 'movie' : 'tv';
         const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
-        return this.http.get<MediaIDResponse>(url, {headers: header}).pipe(
+        return this.http.get<MediaIDResponse>(url, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -190,7 +214,7 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -207,28 +231,32 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
     public getMultiSearchResults = (
         searchString: string,
-        page: number
+        page: number,
     ): Observable<any> => {
         const includeAdult = true;
         const language = 'de-DE';
 
         const url = [
             ROUTE_MULTI_SEARCH[0],
-            ROUTE_MULTI_SEARCH[1], encodeURIComponent(searchString),
-            ROUTE_MULTI_SEARCH[2], String(includeAdult),
-            ROUTE_MULTI_SEARCH[3], language,
-            ROUTE_MULTI_SEARCH[4], String(page)
+            ROUTE_MULTI_SEARCH[1],
+            encodeURIComponent(searchString),
+            ROUTE_MULTI_SEARCH[2],
+            String(includeAdult),
+            ROUTE_MULTI_SEARCH[3],
+            language,
+            ROUTE_MULTI_SEARCH[4],
+            String(page),
         ].join('');
 
         return this.http.get(url).pipe(
             shareReplay(1),
-            catchError((error: HttpErrorResponse) => throwError(() => error))
+            catchError((error: HttpErrorResponse) => throwError(() => error)),
         );
     };
 
@@ -236,7 +264,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
     public triggerTracklistCREATESEASONSubject = (
         // function for triggering a new request for creating a new season tracklist
-        tracklistData: CreateSeasonTracklistData
+        tracklistData: CreateSeasonTracklistData,
     ) => {
         // updating the subject with the new data -> new request will be triggered
         this.tracklistCREATESEASONSubject.next(tracklistData);
@@ -250,7 +278,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
     public createNewSeasonTracklist = (
         // function for making the request to the backend for creating a new season tracklist
-        data: CreateSeasonTracklistData
+        data: CreateSeasonTracklistData,
     ): Observable<Tracklist> => {
         const header = this.getHeader();
 
@@ -262,14 +290,14 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
     // functions for creating a new movie tracklist --------------------------------------------
 
     public triggerTracklistCREATEMOVIESubject = (
-        tracklistData: CreateMovieTracklistData
+        tracklistData: CreateMovieTracklistData,
     ) => {
         this.tracklistCREATEMOVIESubject.next(tracklistData);
     };
@@ -279,7 +307,7 @@ export class R_MediaHttp implements I_MediaRepository {
     };
 
     public createNewMovieTracklist = (
-        data: CreateMovieTracklistData
+        data: CreateMovieTracklistData,
     ): Observable<any> => {
         const header = this.getHeader();
 
@@ -291,14 +319,14 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
     // update tracklist functions -----------------------------------------------------------------------------------
 
     public triggerTracklistUPDATESubject = (
-        tracklistData: UpdateTracklistRequest
+        tracklistData: UpdateTracklistRequest,
     ) => {
         this.tracklistUPDATESubject.next(tracklistData); // Schicke die Daten an den Subject
     };
@@ -309,7 +337,7 @@ export class R_MediaHttp implements I_MediaRepository {
     };
 
     public updateTracklist = (
-        tracklistData: UpdateTracklistRequest
+        tracklistData: UpdateTracklistRequest,
     ): Observable<Tracklist> => {
         const header = this.getHeader();
 
@@ -321,7 +349,7 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -348,7 +376,7 @@ export class R_MediaHttp implements I_MediaRepository {
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
-            })
+            }),
         );
     };
 
@@ -369,7 +397,69 @@ export class R_MediaHttp implements I_MediaRepository {
                 shareReplay(1),
                 catchError((error: HttpErrorResponse) => {
                     return throwError(() => error);
-                })
+                }),
             );
     };
+
+    public getRecommendations = (
+        tmdb_id: number,
+        title: string,
+        isMovie: boolean,
+        posterPath: string,
+    ): Observable<I_Recommendations> => {
+        const token = this.getUserToken();
+
+        if (!token) return EMPTY;
+
+        return this.http
+            .post<I_Recommendations>(
+                `http://localhost:80/${isMovie ? 'movie' : 'tv'}-recommendation`,
+                {
+                    tmdbid: tmdb_id,
+                    title,
+                    backendIP: ROUTE_CHECK_USER_AUTH,
+                    token,
+                    posterPath,
+                },
+            )
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => error);
+                }),
+            );
+    };
+
+    public getAPIRecommendations = (
+        tmdbId: number,
+        isMovie: boolean,
+    ): Observable<I_APIRecommendationResponse | null> => {
+        const headers = this.getHeader();
+
+        if (!headers) return of(null);
+
+        return this.http.get<I_APIRecommendationResponse>(
+            `${isMovie ? ROUTE_GET_MOVIE_RECOMMENDATIONS : ROUTE_GET_TV_RECOMMENDATIONS}${tmdbId}`,
+            { headers },
+        );
+    };
+
+    public getHighestRecommendations =
+        (): Observable<I_HighestRecommendations> => {
+            const token = this.getUserToken();
+
+            if (!token) return EMPTY;
+
+            return this.http
+                .post<I_HighestRecommendations>(
+                    'http://127.0.0.1:80/highest-media',
+                    { backendIP: ROUTE_CHECK_USER_AUTH, token },
+                )
+                .pipe(
+                    shareReplay(1),
+                    catchError((error: HttpErrorResponse) => {
+                        return throwError(() => error);
+                    }),
+                );
+        };
 }

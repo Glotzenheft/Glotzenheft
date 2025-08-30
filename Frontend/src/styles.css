@@ -19,1584 +19,1655 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @import "primeicons/primeicons.css";
 
 input {
-  width: 100%;
+    width: 100%;
 }
 
 h1 {
-  font-size: x-large;
+    font-size: x-large;
 }
 
 ul {
-  list-style: none;
-  width: 100%;
-  height: 100%;
-  padding: 0;
+    list-style: none;
+    width: 100%;
+    height: 100%;
+    padding: 0;
 }
 
 a {
-  color: var(--link--color);
-  text-decoration: none;
-  font-weight: bolder;
+    color: var(--link--color);
+    text-decoration: none;
+    font-weight: bolder;
 }
 
 a:hover {
-  text-decoration: underline;
+    text-decoration: underline;
 }
 
 p {
-  text-align: justify;
+    text-align: justify;
 }
 
 .button {
-  margin: 1rem;
+    margin: 1rem;
 }
 
 .button2 {
-  width: 12rem;
+    width: 12rem;
 }
 
 .buttonShadow {
-  box-shadow: var(--box--shadow-button);
+    box-shadow: var(--box--shadow-button);
 }
 
 /* customizing scrollbar */
 
 /* Für Webkit-basierte Browser (z. B. Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-  width: 1rem; /* Breite der Scrollbar */
-  height: 12px; /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
+    width: 1rem;
+    /* Breite der Scrollbar */
+    height: 12px;
+    /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
 }
 
 ::-webkit-scrollbar-track {
-  background: black; /* Hintergrund der Scrollbar-Spur */
+    background: black;
+    /* Hintergrund der Scrollbar-Spur */
 }
 
 ::-webkit-scrollbar-thumb {
-  background: var(--link--color); /* Farbe des Scrollbalkens */
+    background: var(--link--color);
+    /* Farbe des Scrollbalkens */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: var(
-    --link--color--hover
-  ); /* Farbe des Scrollbalkens beim Hover */
-  cursor: pointer;
+    background: var(--link--color--hover);
+    /* Farbe des Scrollbalkens beim Hover */
+    cursor: pointer;
 }
 
 /* media query for smart phones and tablets */
 @media (max-width: 500px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-    color: white;
-  }
+        color: white;
+    }
 
-  :root {
-    --transition--duration: 0.3s;
+    :root {
+        --transition--duration: 0.3s;
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  input {
-    width: 100%;
-  }
+    input {
+        width: 100%;
+    }
 
-  h1 {
-    font-size: x-large;
-  }
+    h1 {
+        font-size: x-large;
+    }
 
-  ul {
-    list-style: none;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-  }
+    ul {
+        list-style: none;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
 
-  a {
-    color: var(--link--color);
-    text-decoration: none;
-    font-weight: bolder;
-  }
+    a {
+        color: var(--link--color);
+        text-decoration: none;
+        font-weight: bolder;
+    }
 
-  a:hover {
-    text-decoration: underline;
-  }
+    a:hover {
+        text-decoration: underline;
+    }
 
-  p {
-    text-align: justify;
-  }
+    p {
+        text-align: justify;
+    }
 
-  .button {
-    margin: 1rem;
-  }
+    .button {
+        margin: 1rem;
+    }
 
-  .button2 {
-    width: 8rem;
-  }
+    .button2 {
+        width: 8rem;
+    }
 
-  .buttonShadow {
-    box-shadow: var(--box--shadow-button);
-  }
+    .buttonShadow {
+        box-shadow: var(--box--shadow-button);
+    }
 
-  .sidebar {
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .sidebar {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .closedSidebar {
-    height: 4rem;
-    width: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    box-shadow: var(--box--shadow);
+    .closedSidebar {
+        height: 4rem;
+        width: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        box-shadow: var(--box--shadow);
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  .content {
-    width: 100%;
-    height: 100%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 15rem;
-  }
+    .content {
+        width: 100%;
+        height: 100%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 15rem;
+    }
 
-  .login {
-    height: 120%;
-    width: 100%;
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-    display: flex;
-    justify-content: center;
-  }
+    .login {
+        height: 120%;
+        width: 100%;
 
-  .loginWindow {
-    width: 100%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+        display: flex;
+        justify-content: center;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .loginWindow {
+        width: 100%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .loginWindow form .loginActions {
-    display: block;
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .loginWindow form .loginActions .marginBottom {
-    margin-bottom: 0.5rem;
-  }
+    .loginWindow form .loginActions {
+        display: block;
+    }
 
-  .register {
-    width: 100%;
-    height: 90%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    border-radius: 0.6rem;
-  }
+    .loginWindow form .loginActions .marginBottom {
+        margin-bottom: 0.5rem;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .register {
+        width: 100%;
+        height: 90%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        border-radius: 0.6rem;
+    }
 
-  .register .loginActions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 8rem;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .register .loginActions .button2 {
-    width: 100%;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .register .loginActions {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 8rem;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register .loginActions .button2 {
+        width: 100%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .resCard .p-card {
-    height: 5rem;
-    width: 5rem;
-    margin-bottom: 2rem;
-  }
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel-header {
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .resCard .p-card {
+        height: 5rem;
+        width: 5rem;
+        margin-bottom: 2rem;
+    }
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: auto;
-  }
+        transition-duration: var(--transition--duration);
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .heading {
-    height: 4rem;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .dialog .p-dialog {
+        width: 90%;
+        height: auto;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    width: 10rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .tracklistActions .p-button {
-    width: 100%;
-    height: 3rem;
-  }
+    .heading {
+        height: 4rem;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 100%;
-    height: 2.5rem;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .userActivitiesTable {
-    width: 100%;
-    margin-bottom: 10rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        width: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-  }
+    .tracklistActions .p-button {
+        width: 100%;
+        height: 3rem;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 60rem;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 100%;
+        height: 2.5rem;
+    }
 
-  .barChartDIV p-chart {
-    display: block !important;
-    width: 30rem !important;
-    height: 100% !important;
-    margin-left: 12rem;
-  }
+    .userActivitiesTable {
+        width: 100%;
+        margin-bottom: 10rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 
-  .barChartDIV p-chart div {
-    display: block !important;
-    width: 130% !important;
-    height: 100% !important;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+    }
+
+    .userActivitiesTable .p-datatable {
+        width: 60rem;
+    }
+
+    .barChartDIV p-chart {
+        display: block !important;
+        width: 30rem !important;
+        height: 100% !important;
+        margin-left: 12rem;
+    }
+
+    .barChartDIV p-chart div {
+        display: block !important;
+        width: 130% !important;
+        height: 100% !important;
+    }
 }
 
 /* media query for smart phones and tablets */
 @media (min-width: 500px) and (max-width: 850px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-    color: white;
-  }
+        color: white;
+    }
 
-  :root {
-    --transition--duration: 0.3s;
+    :root {
+        --transition--duration: 0.3s;
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-  input {
-    width: 100%;
-  }
+    input {
+        width: 100%;
+    }
 
-  h1 {
-    font-size: x-large;
-  }
+    h1 {
+        font-size: x-large;
+    }
 
-  ul {
-    list-style: none;
-    width: 100%;
-    height: 100%;
-    padding: 0;
-  }
+    ul {
+        list-style: none;
+        width: 100%;
+        height: 100%;
+        padding: 0;
+    }
 
-  a {
-    color: var(--link--color);
-    text-decoration: none;
-    font-weight: bolder;
-  }
+    a {
+        color: var(--link--color);
+        text-decoration: none;
+        font-weight: bolder;
+    }
 
-  a:hover {
-    text-decoration: underline;
-  }
+    a:hover {
+        text-decoration: underline;
+    }
 
-  p {
-    text-align: justify;
-  }
+    p {
+        text-align: justify;
+    }
 
-  .button {
-    margin: 1rem;
-  }
+    .button {
+        margin: 1rem;
+    }
 
-  .button2 {
-    width: 8rem;
-  }
+    .button2 {
+        width: 8rem;
+    }
 
-  .buttonShadow {
-    box-shadow: var(--box--shadow-button);
-  }
+    .buttonShadow {
+        box-shadow: var(--box--shadow-button);
+    }
 
-  .sidebar {
-    width: 100%;
-    height: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .sidebar {
+        width: 100%;
+        height: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .closedSidebar {
-    height: 4rem;
-    width: 100%;
-    background-color: black;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    box-shadow: var(--box--shadow);
+    .closedSidebar {
+        height: 4rem;
+        width: 100%;
+        background-color: black;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        box-shadow: var(--box--shadow);
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  .content {
-    width: 100%;
-    height: 100%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 15rem;
-  }
+    .content {
+        width: 100%;
+        height: 100%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 15rem;
+    }
 
-  .login {
-    height: 120%;
-    width: 100%;
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-    display: flex;
-    justify-content: center;
-  }
+    .login {
+        height: 120%;
+        width: 100%;
 
-  .loginWindow {
-    width: 100%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+        display: flex;
+        justify-content: center;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .loginWindow {
+        width: 100%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .loginWindow form .loginActions {
-    display: block;
-  }
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-  .loginWindow form .loginActions .marginBottom {
-    margin-bottom: 0.5rem;
-  }
+    .loginWindow form .loginActions {
+        display: block;
+    }
 
-  .register {
-    width: 100%;
-    height: 90%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: 0.5rem;
-    padding-bottom: 0.5rem;
-    background-color: rgba(255, 255, 255, 0.8);
-    box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    border-radius: 0.6rem;
-  }
+    .loginWindow form .loginActions .marginBottom {
+        margin-bottom: 0.5rem;
+    }
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .register {
+        width: 100%;
+        height: 90%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: 0.5rem;
+        padding-bottom: 0.5rem;
+        background-color: rgba(255, 255, 255, 0.8);
+        box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        border-radius: 0.6rem;
+    }
 
-  .register .loginActions {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    height: 8rem;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .register .loginActions .button2 {
-    width: 100%;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .register .loginActions {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        height: 8rem;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .register .loginActions .button2 {
+        width: 100%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .resCard .p-card {
-    height: 5rem;
-    width: 5rem;
-    margin-bottom: 2rem;
-  }
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel-header {
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .resCard .p-card {
+        height: 5rem;
+        width: 5rem;
+        margin-bottom: 2rem;
+    }
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: auto;
-  }
+        transition-duration: var(--transition--duration);
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .heading {
-    height: 4rem;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .dialog .p-dialog {
+        width: 90%;
+        height: auto;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    width: 10rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .tracklistActions .p-button {
-    width: 100%;
-    height: 3rem;
-  }
+    .heading {
+        height: 4rem;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 100%;
-    height: 2.5rem;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .userActivitiesTable {
-    width: 100%;
-    margin-bottom: 10rem;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        width: 10rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-  }
+    .tracklistActions .p-button {
+        width: 100%;
+        height: 3rem;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 60rem;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 100%;
+        height: 2.5rem;
+    }
 
-  .barChartDIV p-chart {
-    display: block !important;
-    width: 30rem !important;
-    height: 100% !important;
-    margin-left: 2rem;
-  }
+    .userActivitiesTable {
+        width: 100%;
+        margin-bottom: 10rem;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 
-  .barChartDIV p-chart div {
-    display: block !important;
-    width: 130% !important;
-    height: 100% !important;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+    }
+
+    .userActivitiesTable .p-datatable {
+        width: 60rem;
+    }
+
+    .barChartDIV p-chart {
+        display: block !important;
+        width: 30rem !important;
+        height: 100% !important;
+        margin-left: 2rem;
+    }
+
+    .barChartDIV p-chart div {
+        display: block !important;
+        width: 130% !important;
+        height: 100% !important;
+    }
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-    color: white;
-  }
+        color: white;
+    }
 
-  :root {
-    --transition--duration: 0.3s;
+    :root {
+        --transition--duration: 0.3s;
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
-  .sidebar {
-    background-color: black;
-    height: 100%;
-    width: 25%;
-    left: 0;
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: var(--sidebar--box--shadow);
-  }
+    .sidebar {
+        background-color: black;
+        height: 100%;
+        width: 25%;
+        left: 0;
+        color: white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .closedSidebar {
-    width: 4rem;
-    height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--sidebar--box--shadow);
+    }
 
-    background-color: black;
-    box-shadow: var(--sidebar--box--shadow);
+    .closedSidebar {
+        width: 4rem;
+        height: 100%;
 
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+        background-color: black;
+        box-shadow: var(--sidebar--box--shadow);
 
-  .closedSidebar div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+    .closedSidebar div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+    .content {
+        height: 100%;
+        width: calc(100% - 2 * var(--padding--left-right));
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        color: white;
 
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 1rem;
-  }
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
 
-  /* specific classes */
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .login {
-    padding-top: var(--padding--top-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 120%;
-  }
+    /* specific classes */
 
-  .loginWindow {
-    width: 70%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .login {
+        padding-top: var(--padding--top-bottom);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 120%;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .loginWindow {
+        width: 70%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .register {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 80%;
-    height: 98%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-    border-radius: var(--border--radius);
-    box-shadow: var(--box--shadow);
-  }
+    .register {
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 80%;
+        height: 98%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+        border-radius: var(--border--radius);
+        box-shadow: var(--box--shadow);
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .loginActions {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginActions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .error .p-panel-header {
+        color: white;
+    }
 
-    border-radius: var(--border--radius);
-  }
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+        transition-duration: var(--transition--duration);
 
-  .dialog .p-dialog {
-    width: 80%;
-    height: auto;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
+    .dialog .p-dialog {
+        width: 80%;
+        height: auto;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 100%;
-    height: 3rem;
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .userActivitiesTable {
-    width: 100%;
-    margin-bottom: 10rem;
-    display: flex;
-    height: 100rem;
-    justify-content: space-between;
-    align-items: flex-start;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 100%;
+        height: 3rem;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 60rem;
-    box-shadow: var(--box--shadow);
-  }
+    .userActivitiesTable {
+        width: 100%;
+        margin-bottom: 10rem;
+        display: flex;
+        height: 100rem;
+        justify-content: space-between;
+        align-items: flex-start;
+    }
 
-  p-chart {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+    }
 
-  p-chart div {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable .p-datatable {
+        width: 60rem;
+        box-shadow: var(--box--shadow);
+    }
+
+    p-chart {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    p-chart div {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 @media (min-width: 940px) and (max-width: 1000px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-    color: white;
-  }
+        color: white;
+    }
 
-  :root {
-    --transition--duration: 0.3s;
+    :root {
+        --transition--duration: 0.3s;
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
-  .sidebar {
-    background-color: black;
-    height: 100%;
-    width: 20%;
-    left: 0;
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: var(--sidebar--box--shadow);
-  }
+    .sidebar {
+        background-color: black;
+        height: 100%;
+        width: 20%;
+        left: 0;
+        color: white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .closedSidebar {
-    width: 4rem;
-    height: 100%;
-    background-color: black;
-    box-shadow: var(--sidebar--box--shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--sidebar--box--shadow);
+    }
 
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .closedSidebar {
+        width: 4rem;
+        height: 100%;
+        background-color: black;
+        box-shadow: var(--sidebar--box--shadow);
 
-  .closedSidebar div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+    .closedSidebar div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+    .content {
+        height: 100%;
+        width: calc(100% - 2 * var(--padding--left-right));
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        color: white;
 
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 1rem;
-  }
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
 
-  /* specific classes */
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .login {
-    padding-top: var(--padding--top-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 115%;
-  }
+    /* specific classes */
 
-  .p-message {
-    background-color: white;
-  }
+    .login {
+        padding-top: var(--padding--top-bottom);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 115%;
+    }
 
-  .loginWindow {
-    width: 50%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .p-message {
+        background-color: white;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .loginWindow {
+        width: 50%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .register {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 80%;
-    height: 98%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-    border-radius: var(--border--radius);
-    box-shadow: var(--box--shadow);
-  }
+    .register {
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 80%;
+        height: 98%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
+        border-radius: var(--border--radius);
+        box-shadow: var(--box--shadow);
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .loginActions {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginActions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel-header {
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-    border-radius: var(--border--radius);
-  }
+        transition-duration: var(--transition--duration);
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: 100%;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+    .dialog .p-dialog {
+        width: 90%;
+        height: 100%;
+    }
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 4rem;
-    margin-bottom: 8rem;
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 4rem;
+        margin-bottom: 8rem;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .tracklistDialog .p-dialog {
-    width: 90%;
-    height: 90%;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .tracklistActions .p-button {
-    width: 10rem;
-  }
+    .tracklistDialog .p-dialog {
+        width: 90%;
+        height: 90%;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 120%;
-    height: 3rem;
-  }
+    .tracklistActions .p-button {
+        width: 10rem;
+    }
 
-  .userActivitiesTable {
-    border-radius: var(--border--radius);
-    /* background-color: white; */
-    width: 100%;
-    height: 85%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    overflow-y: auto;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 120%;
+        height: 3rem;
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-    width: 100%;
-  }
+    .userActivitiesTable {
+        border-radius: var(--border--radius);
+        /* background-color: white; */
+        width: 100%;
+        height: 85%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 100%;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+        width: 100%;
+    }
 
-  p-chart {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable .p-datatable {
+        width: 100%;
+    }
 
-  p-chart div {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    p-chart {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    p-chart div {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 @media (min-width: 1000px) {
-  html,
-  body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    width: 100%;
+    html,
+    body {
+        margin: 0;
+        padding: 0;
+        height: 100%;
+        width: 100%;
 
-    font-family: "Open Sans", serif;
-    font-optical-sizing: auto;
-    font-weight: 300;
-    font-style: normal;
+        font-family: "Open Sans", serif;
+        font-optical-sizing: auto;
+        font-weight: 300;
+        font-style: normal;
 
-    color: white;
-  }
+        color: white;
+    }
 
-  :root {
-    --transition--duration: 0.3s;
+    :root {
+        --transition--duration: 0.3s;
 
-    --content-background-color: rgba(38, 148, 141, 0.655);
-    --content-background-color2: rgba(0, 0, 0, 0.8);
-    --padding--left-right: 1.2rem;
-    --padding--top-bottom: 0.8rem;
-    --border--radius: 0.6rem;
-    --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
-    --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
+        --content-background-color: rgba(38, 148, 141, 0.655);
+        --content-background-color2: rgba(0, 0, 0, 0.8);
+        --padding--left-right: 1.2rem;
+        --padding--top-bottom: 0.8rem;
+        --border--radius: 0.6rem;
+        --box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
+        --box--shadow-button: 0.2rem 0.2rem 0.2rem rgba(0, 0, 0, 0.3);
 
-    --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
+        --sidebar--box--shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.4);
 
-    --link--color: rgb(5, 150, 105);
-    --link--color--hover: rgb(26, 109, 83);
-  }
-  .sidebar {
-    background-color: black;
-    height: 100%;
-    width: 20%;
-    left: 0;
-    color: white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+        --link--color: rgb(5, 150, 105);
+        --link--color--hover: rgb(26, 109, 83);
+    }
 
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    box-shadow: var(--sidebar--box--shadow);
-  }
+    .sidebar {
+        background-color: black;
+        height: 100%;
+        width: 20%;
+        left: 0;
+        color: white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .closedSidebar {
-    width: 4rem;
-    height: 100%;
-    background-color: black;
-    box-shadow: var(--sidebar--box--shadow);
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+        box-shadow: var(--sidebar--box--shadow);
+    }
 
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .closedSidebar {
+        width: 4rem;
+        height: 100%;
+        background-color: black;
+        box-shadow: var(--sidebar--box--shadow);
 
-  .closedSidebar div {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-  }
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .content {
-    height: 100%;
-    width: calc(100% - 2 * var(--padding--left-right));
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    color: white;
+    .closedSidebar div {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
 
-    overflow-x: hidden;
-    overflow-y: auto;
-  }
+    .content {
+        height: 100%;
+        width: calc(100% - 2 * var(--padding--left-right));
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+        color: white;
 
-  .mainDIV {
-    margin-top: 4rem;
-    margin-bottom: 1rem;
-  }
+        overflow-x: hidden;
+        overflow-y: auto;
+    }
 
-  .marginRight {
-    margin-right: 1rem;
-  }
+    .mainDIV {
+        margin-top: 4rem;
+        margin-bottom: 1rem;
+    }
 
-  /* specific classes */
+    .marginRight {
+        margin-right: 1rem;
+    }
 
-  .login {
-    padding-top: var(--padding--top-bottom);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 115%;
-  }
+    /* specific classes */
 
-  .p-message {
-    background-color: white;
-  }
+    .login {
+        padding-top: var(--padding--top-bottom);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 115%;
+    }
 
-  .loginWindow {
-    width: 50%;
-    height: 50%;
-    background-color: rgba(255, 255, 255, 0.8);
-    border-radius: 0.6rem;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-  }
+    .p-message {
+        background-color: white;
+    }
 
-  .loginWindow form {
-    height: 100%;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-  }
+    .loginWindow {
+        width: 50%;
+        height: 50%;
+        background-color: rgba(255, 255, 255, 0.8);
+        border-radius: 0.6rem;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+    }
 
-  .register {
-    background-color: rgba(255, 255, 255, 0.8);
-    width: 80%;
-    height: 98%;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
+    .loginWindow form {
+        height: 100%;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+    }
 
-    border-radius: var(--border--radius);
-    box-shadow: var(--box--shadow);
-  }
+    .register {
+        background-color: rgba(255, 255, 255, 0.8);
+        width: 80%;
+        height: 98%;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
 
-  .register form {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
-    width: 100%;
-    height: 100%;
-  }
+        border-radius: var(--border--radius);
+        box-shadow: var(--box--shadow);
+    }
 
-  .loginTall {
-    height: 60%;
-  }
+    .register form {
+        display: flex;
+        flex-direction: column;
+        justify-content: space-evenly;
+        width: 100%;
+        height: 100%;
+    }
 
-  .loginSmall {
-    height: 50%;
-  }
+    .loginTall {
+        height: 60%;
+    }
 
-  .loginActions {
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    gap: 0.5rem;
-  }
+    .loginSmall {
+        height: 50%;
+    }
 
-  .userInput {
-    width: 100%;
-  }
+    .loginActions {
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+    }
 
-  .loginWindow div,
-  .p-password {
-    width: 100%;
-  }
+    .userInput {
+        width: 100%;
+    }
 
-  .p-panel {
-    box-shadow: var(--box--shadow);
-    margin-top: 1rem;
-    margin-bottom: 1rem;
-  }
+    .loginWindow div,
+    .p-password {
+        width: 100%;
+    }
 
-  .error .p-panel {
-    background-color: rgba(227, 17, 63, 0.655);
-    color: white;
-  }
+    .p-panel {
+        box-shadow: var(--box--shadow);
+        margin-top: 1rem;
+        margin-bottom: 1rem;
+    }
 
-  .error .p-panel-header {
-    color: white;
-  }
+    .error .p-panel {
+        background-color: rgba(227, 17, 63, 0.655);
+        color: white;
+    }
 
-  .card {
-    width: 100%;
-    height: 3rem;
-    margin-bottom: 1rem;
-    background-color: rgba(0, 0, 0, 0.3);
-    border: 0.1rem solid white;
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    display: flex;
-    justify-content: space-evenly;
-    align-items: center;
+    .error .p-panel-header {
+        color: white;
+    }
 
-    transition-duration: var(--transition--duration);
+    .card {
+        width: 100%;
+        height: 3rem;
+        margin-bottom: 1rem;
+        background-color: rgba(0, 0, 0, 0.3);
+        border: 0.1rem solid white;
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        display: flex;
+        justify-content: space-evenly;
+        align-items: center;
 
-    border-radius: var(--border--radius);
-  }
+        transition-duration: var(--transition--duration);
 
-  .card:hover {
-    background-color: white;
-    color: black;
-    cursor: pointer;
-  }
+        border-radius: var(--border--radius);
+    }
 
-  .dialog .p-dialog {
-    width: 90%;
-    height: 100%;
-  }
+    .card:hover {
+        background-color: white;
+        color: black;
+        cursor: pointer;
+    }
 
-  .dialogActions {
-    width: 100%;
-    display: flex;
-    justify-content: flex-end;
-    align-items: center;
-    bottom: 0;
-  }
+    .dialog .p-dialog {
+        width: 90%;
+        height: 100%;
+    }
 
-  .heading {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    height: 4rem;
-    margin-bottom: 8rem;
-  }
+    .dialogActions {
+        width: 100%;
+        display: flex;
+        justify-content: flex-end;
+        align-items: center;
+        bottom: 0;
+    }
 
-  .heading p {
-    background-color: var(--link--color);
-    box-shadow: var(--box--shadow-button);
-    height: 100%;
+    .heading {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        height: 4rem;
+        margin-bottom: 8rem;
+    }
 
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-  }
+    .heading p {
+        background-color: var(--link--color);
+        box-shadow: var(--box--shadow-button);
+        height: 100%;
 
-  .tracklistDialog .p-dialog {
-    width: 90%;
-    height: 90%;
-  }
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        padding-top: var(--padding--top-bottom);
+        padding-bottom: var(--padding--top-bottom);
+    }
 
-  .tracklistActions .p-button {
-    width: 10rem;
-  }
+    .tracklistDialog .p-dialog {
+        width: 90%;
+        height: 90%;
+    }
 
-  .createTracklistEpisodeFormDIV form .formAcions .p-button {
-    width: 120%;
-    height: 3rem;
-  }
+    .tracklistActions .p-button {
+        width: 10rem;
+    }
 
-  .userActivitiesTable {
-    border-radius: var(--border--radius);
-    /* background-color: white; */
-    width: 100%;
-    height: 85%;
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    overflow-y: auto;
-  }
+    .createTracklistEpisodeFormDIV form .formAcions .p-button {
+        width: 120%;
+        height: 3rem;
+    }
 
-  .userActivitesTableDIV {
-    overflow-x: auto;
-    overflow-y: auto;
-    box-shadow: var(--box--shadow);
-    width: 100%;
-  }
+    .userActivitiesTable {
+        border-radius: var(--border--radius);
+        /* background-color: white; */
+        width: 100%;
+        height: 85%;
+        display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        overflow-y: auto;
+    }
 
-  .userActivitiesTable .p-datatable {
-    width: 100%;
-  }
+    .userActivitesTableDIV {
+        overflow-x: auto;
+        overflow-y: auto;
+        box-shadow: var(--box--shadow);
+        width: 100%;
+    }
 
-  p-chart {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    .userActivitiesTable .p-datatable {
+        width: 100%;
+    }
 
-  p-chart div {
-    display: block !important;
-    width: 100% !important;
-    height: 100% !important;
-  }
+    p-chart {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
+
+    p-chart div {
+        display: block !important;
+        width: 100% !important;
+        height: 100% !important;
+    }
 }
 
 .p-select {
-  width: 100%;
+    width: 100%;
 }
 
 .panel .p-accordionpanel {
-  background-color: rgba(255, 255, 255, 0.7);
+    background-color: rgba(255, 255, 255, 0.7);
 }
 
 .panel .p-panel-header {
-  background-color: white;
+    background-color: white;
 }
 
 .userMenuButton .p-button {
-  background-color: transparent;
+    background-color: transparent;
 }
 
 .p-dialog {
-  width: 90%;
+    width: 90%;
 }
 
 /* for loading state */
 .loadingWrapper {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .serverNotAvailableDIV {
-  width: 100%;
-  display: flex;
-  justify-content: center;
-  align-items: center;
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 
-  background-color: rgba(227, 17, 63, 0.655);
-  border: 0.1rem solid white;
-  color: white;
+    background-color: rgba(227, 17, 63, 0.655);
+    border: 0.1rem solid white;
+    color: white;
 }
 
 .serverNotAvailableDIV h1 {
-  height: 2rem;
+    height: 2rem;
+}
+
+.p-tablist-tab-list,
+.p-tabpanels {
+    background: transparent !important;
+}
+
+.p-tab {
+    color: white !important;
+}
+
+.p-tab-active {
+    color: #10b981 !important;
+}
+
+.cardContainer {
+    list-style: none;
+    padding: 0;
+    gap: 2rem;
+    height: 23rem;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+}
+
+.recCard {
+    background-color: white;
+    height: 20rem;
+    flex: 0 0 12rem;
+    border-radius: 0.3rem;
+    box-shadow: 0.2rem 0.4rem 0.2rem rgba(0, 0, 0, 0.4);
+    transition-duration: var(--transition--duration);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 0.1rem;
+}
+
+.recCard:hover {
+    cursor: pointer;
+    background-color: var(--link--color);
+}
+
+.recCard img {
+    height: calc(78% - 0.1rem);
+    width: 96%;
+    border-radius: 0.3rem;
+}
+
+.recCard p {
+    width: 100%;
+    height: 10%;
+    color: black;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    text-align: center;
 }

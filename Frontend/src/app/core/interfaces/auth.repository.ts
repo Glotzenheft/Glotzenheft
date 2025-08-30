@@ -15,16 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InjectionToken } from "@angular/core"
-import { BehaviorSubject } from "rxjs"
+import { InjectionToken } from '@angular/core';
+import { BehaviorSubject } from 'rxjs';
 
 export interface I_AuthRepository {
     // variables
-    showToast$: BehaviorSubject<boolean>,
+    showToast$: BehaviorSubject<boolean>;
     // functions
-    triggerToast: () => void,
-    isUserLoggedIn: () => boolean
+    triggerToast: () => void;
+    isUserLoggedIn: () => boolean;
 }
 
 // IT = Injection Token
-export const IT_AUTH_REPOSITORY = new InjectionToken<I_AuthRepository>("I_AuthRepository") 
+export const IT_AUTH_REPOSITORY = new InjectionToken<I_AuthRepository>(
+    'I_AuthRepository',
+);

@@ -24,10 +24,10 @@ import { I_AuthRepository } from '../../core/interfaces/auth.repository';
 })
 export class R_Auth implements I_AuthRepository {
     public showToast$: BehaviorSubject<boolean> = new BehaviorSubject<boolean>(
-        false
+        false,
     );
 
-    constructor() { }
+    constructor() {}
 
     public triggerToast = () => {
         this.showToast$.next(true);

@@ -15,15 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from "rxjs";
-import { I_MediaRepository, IT_MEDIA_REPOSITORY } from "../../interfaces/media.repository";
-import { Inject, Injectable } from "@angular/core";
+import { Observable } from 'rxjs';
+import {
+    I_MediaRepository,
+    IT_MEDIA_REPOSITORY,
+} from '../../interfaces/media.repository';
+import { Inject, Injectable } from '@angular/core';
 
 @Injectable()
 export class UC_GetMultiSearchResults {
-    constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
+    constructor(
+        @Inject(IT_MEDIA_REPOSITORY)
+        private readonly mediaRepository: I_MediaRepository,
+    ) {}
 
     public execute = (searchString: string, page: number): Observable<any> => {
-        return this.mediaRepository.getMultiSearchResults(searchString, page)
-    }
+        return this.mediaRepository.getMultiSearchResults(searchString, page);
+    };
 }

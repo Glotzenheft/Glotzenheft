@@ -16,8 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { Observable } from 'rxjs';
+import { ActivatedRoute, Params, Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
@@ -44,8 +44,17 @@ import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTr
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Season, SeasonEpisode, SeasonWithEpisodes } from '../../../../app/shared/interfaces/media-interfaces';
-import { SeasonTracklist, SeasonTracklistType, TVSeasonWithTracklist, TVWithTracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    Season,
+    SeasonEpisode,
+    SeasonWithEpisodes,
+} from '../../../../app/shared/interfaces/media-interfaces';
+import {
+    SeasonTracklist,
+    SeasonTracklistType,
+    TVSeasonWithTracklist,
+    TVWithTracklist,
+} from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
@@ -55,6 +64,12 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
 import { UC_JoinTVWithTracklists } from '../../../../app/core/use-cases/tracklist/join-tv-with-tracklists.use-case';
 import { UC_GetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/get-selected-tracklist-in-local-storage.use-case';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
+import { TABLIST } from '../../../../app/shared/variables/tab-lists';
+import { MediaTabsComponent } from '../../../sharedCOMPONENTS/media-tabs/media-tabs.component';
+import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
+import { TooltipModule } from 'primeng/tooltip';
+import { MediaMetadataComponent } from '../media-metadata/media-metadata.component';
 
 @Component({
     selector: 'app-season-page',
@@ -79,18 +94,32 @@ import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
         TracklistFormComponent,
         UpdateTracklistFormComponent,
         ProgressSpinnerModule,
+        MediaTabsComponent,
+        TooltipModule,
+        ApiRecommendationComponent,
+        MediaMetadataComponent,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
-    providers: [UC_GetSeasonForTV, UC_ValidateMediaURL, UC_GetSelectedTracklistInLocalStorage, UC_JoinTVWithTracklists, UC_LogoutOfAccount]
+    providers: [
+        UC_GetSeasonForTV,
+        UC_ValidateMediaURL,
+        UC_GetSelectedTracklistInLocalStorage,
+        UC_JoinTVWithTracklists,
+        UC_LogoutOfAccount,
+    ],
 })
 export class SeasonPageComponent implements OnInit {
     public tvSeriesID: string | null = null;
     public seasonData$: Observable<Season> | null = null;
+    public numberOfEpisodes$: Observable<number> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
-    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + "tv/"
+    public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + 'tv/';
+    public currentTab: string = TABLIST[0];
+    public tabList: string[] = TABLIST;
+    public apiRecommendations: I_APIRecommendationResponse | null = null;
 
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
@@ -143,36 +172,51 @@ export class SeasonPageComponent implements OnInit {
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
         private joinTVWithTracklistsUseCase: UC_JoinTVWithTracklists,
-        private getSelectedTracklistsInLocalStorageUseCase: UC_GetSelectedTracklistInLocalStorage
-    ) { }
+        private getSelectedTracklistsInLocalStorageUseCase: UC_GetSelectedTracklistInLocalStorage,
+    ) {}
 
     ngOnInit(): void {
-        this.loadData();
+        this.route.params.subscribe((params: Params) => {
+            this.tvSeriesID = params['id'];
+            console.log('changed id', this.tvSeriesID);
+            this.loadData(this.tvSeriesID);
+        });
     }
 
     // functions -----------------------------------------------------
 
-    public loadData = () => {
+    public loadData = (tmdbId: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.tvSeriesID = this.route.snapshot.paramMap.get('id');
+        this.apiRecommendations = null;
+        this.currentTab = TABLIST[0];
 
-        if (!this.tvSeriesID) {
+        if (!tmdbId) {
             this.hasError = true;
             return;
         }
 
-        if (!this.validateMediaURLUseCase.execute(this.tvSeriesID)) {
+        if (!this.validateMediaURLUseCase.execute(tmdbId)) {
             this.isInvalidID = true;
             return;
         }
 
         // checking if "media_id" already exists:
-        this.seasonData$ = this.getSeasonForTVUseCase.execute(this.tvSeriesID);
+        this.seasonData$ = this.getSeasonForTVUseCase.execute(tmdbId);
+        this.numberOfEpisodes$ =
+            this.seasonData$ &&
+            this.seasonData$?.pipe(
+                map((season: Season) => {
+                    let counter: number = 0;
+                    for (const seasonAtt of season.media.seasons) {
+                        counter += seasonAtt.episodeCount;
+                    }
+                    return counter;
+                }),
+            );
 
         if (!this.seasonData$) {
             this.hasError = true;
-
             return;
         }
 
@@ -205,7 +249,6 @@ export class SeasonPageComponent implements OnInit {
                 }
 
                 this.hasError = true;
-
                 this.isLoading = false;
             },
         });
@@ -235,7 +278,9 @@ export class SeasonPageComponent implements OnInit {
 
             const currentTracklistInLocalStorageID: number | null =
                 this.getSelectedTracklistsInLocalStorageUseCase.execute()
-                    ? Number(this.getSelectedTracklistsInLocalStorageUseCase.execute())
+                    ? Number(
+                          this.getSelectedTracklistsInLocalStorageUseCase.execute(),
+                      )
                     : null;
 
             if (
@@ -245,10 +290,11 @@ export class SeasonPageComponent implements OnInit {
                     .map((tracklist: SeasonTracklist) => tracklist.id)
                     .includes(currentTracklistInLocalStorageID)
             ) {
-                currentTracklistInLocalStorage = season.tracklistsForSeason.filter(
-                    (tracklist: SeasonTracklist) =>
-                        tracklist.id === currentTracklistInLocalStorageID
-                )[0];
+                currentTracklistInLocalStorage =
+                    season.tracklistsForSeason.filter(
+                        (tracklist: SeasonTracklist) =>
+                            tracklist.id === currentTracklistInLocalStorageID,
+                    )[0];
             }
 
             this.tracklistSelectionForm
@@ -258,7 +304,7 @@ export class SeasonPageComponent implements OnInit {
                         ? currentTracklistInLocalStorage
                             ? currentTracklistInLocalStorage
                             : season.tracklistsForSeason[0]
-                        : this.EMPTY_TRACKLIST
+                        : this.EMPTY_TRACKLIST,
                 );
         }
 
@@ -278,7 +324,7 @@ export class SeasonPageComponent implements OnInit {
 
     public setCurrentEpisode = (
         episode: SeasonEpisode,
-        isEpisodeForEditing: boolean
+        isEpisodeForEditing: boolean,
     ) => {
         this.currentEpisode = episode;
 
@@ -292,7 +338,7 @@ export class SeasonPageComponent implements OnInit {
     public refreshPage = () => {
         this.currentSeason = null;
         this.setVisibility(0);
-        this.loadData();
+        this.loadData(this.tvSeriesID);
     };
     public cancelTracklistForm = () => {
         this.isTracklistFormVisible = 0;
@@ -305,5 +351,13 @@ export class SeasonPageComponent implements OnInit {
     public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {
         this.currentTracklistSelection = tracklist;
         this.isTracklistFormVisible = 3;
+    };
+
+    public onChangeTab = (newTab: string) => {
+        this.currentTab = newTab;
+    };
+
+    public getRecommendations = (recs: I_APIRecommendationResponse) => {
+        this.apiRecommendations = recs;
     };
 }

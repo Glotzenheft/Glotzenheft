@@ -20,8 +20,17 @@ import { FormGroup } from '@angular/forms';
 import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { I_TracklistRepository } from '../../core/interfaces/tracklist.repository';
-import { Season, SeasonWithEpisodes } from '../../shared/interfaces/media-interfaces';
-import { ExtractedTracklist, SeasonTracklist, TracklistEpisode, TVSeasonWithTracklist, TVWithTracklist } from '../../shared/interfaces/tracklist-interfaces';
+import {
+    Season,
+    SeasonWithEpisodes,
+} from '../../shared/interfaces/media-interfaces';
+import {
+    ExtractedTracklist,
+    SeasonTracklist,
+    TracklistEpisode,
+    TVSeasonWithTracklist,
+    TVWithTracklist,
+} from '../../shared/interfaces/tracklist-interfaces';
 import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/local-storage-keys';
 
 @Injectable({
@@ -32,7 +41,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
     private filmRefreshSubject = new BehaviorSubject<void>(undefined);
     public refreshFilmPage$ = this.filmRefreshSubject.asObservable();
 
-    constructor(@Inject(PLATFORM_ID) private platformId: Object) { }
+    constructor(@Inject(PLATFORM_ID) private platformId: Object) {}
 
     /**
      * Function for converting a tv (with "media" and "tracklists") into a tv with the tracklists mapped to the seasons.
@@ -91,7 +100,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
                         return {
                             episodeID: epi.id,
                         };
-                    }
+                    },
                 );
 
             return {
@@ -105,22 +114,24 @@ export class R_TracklistHttp implements I_TracklistRepository {
         episodeID: number,
         selectedSeason: TVSeasonWithTracklist | null,
         tracklistsOfSeason: SeasonTracklist[],
-        tracklistSelectionForm: FormGroup<any>
+        tracklistSelectionForm: FormGroup<any>,
     ): boolean => {
         if (!selectedSeason) {
             return true;
         }
 
-        const selectedTracklistFull: SeasonTracklist[] = tracklistsOfSeason.filter(
-            (tracklist: SeasonTracklist) => {
+        const selectedTracklistFull: SeasonTracklist[] =
+            tracklistsOfSeason.filter((tracklist: SeasonTracklist) => {
                 return (
                     tracklist.id ===
-                    tracklistSelectionForm.get('selectedTracklist')?.value.tracklistId
+                    tracklistSelectionForm.get('selectedTracklist')?.value
+                        .tracklistId
                 );
-            }
-        );
+            });
 
-        if (selectedTracklistFull.length !== 1) { return true; }
+        if (selectedTracklistFull.length !== 1) {
+            return true;
+        }
 
         // checking if given episode is in the first season of all seasons of the tracklist
         // selectedTracklistFull will only be one tracklist + there is only one season per tracklist!
@@ -128,7 +139,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
             selectedTracklistFull[0].tracklistSeasons[0].tracklistEpisodes.map(
                 (episode: TracklistEpisode) => {
                     return episode.id;
-                }
+                },
             );
 
         if (trackSeasonEpisodeIDs.includes(episodeID)) {
@@ -149,7 +160,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
         if (isPlatformBrowser(this.platformId)) {
             localStorage.setItem(
                 KEY_LOCAL_STORAGE_SELECTED_TRACKLIST,
-                tracklistID.toString()
+                tracklistID.toString(),
             );
         }
     };

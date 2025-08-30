@@ -34,7 +34,10 @@ import { Router } from '@angular/router';
 import { ValidationQuestion } from '../../../app/shared/interfaces/validation-question';
 import { VALIDATION_QUESTIONS } from '../../../app/shared/variables/validation-questions';
 import { ResetPasswordCredentials } from '../../../app/shared/interfaces/login';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_ResetPassword } from '../../../app/core/use-cases/user/reset-password.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
@@ -54,13 +57,18 @@ import { UC_NavigateToStartPage } from '../../../app/core/use-cases/navigation/n
     ],
     templateUrl: './reset-password.component.html',
     styleUrl: './reset-password.component.css',
-    providers: [UC_NavigateToStartPage, UC_LogoutOfAccount, UC_ResetPassword, UC_PasswordMatchValidationForResetPassword]
+    providers: [
+        UC_NavigateToStartPage,
+        UC_LogoutOfAccount,
+        UC_ResetPassword,
+        UC_PasswordMatchValidationForResetPassword,
+    ],
 })
 export class ResetPasswordComponent implements OnInit {
     public resetPasswordGroup!: FormGroup;
     public isFormSubmitted: boolean = false;
     public questionList: ValidationQuestion[] = VALIDATION_QUESTIONS.map(
-        (question: string) => ({ name: question, code: question })
+        (question: string) => ({ name: question, code: question }),
     );
     public resetPasswordData$: Observable<any> | null = null;
 
@@ -72,20 +80,25 @@ export class ResetPasswordComponent implements OnInit {
         private resetPasswordUseCase: UC_ResetPassword,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
         private validationPasswordsMatchUseCase: UC_PasswordMatchValidationForResetPassword,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.resetPasswordGroup = this.formBuilder.group(
             {
                 validationQuestion: [null, Validators.required],
                 validationAnswer: ['', Validators.required],
-                newPassword: ['', [Validators.required, Validators.minLength(8)]],
-                repeatPassword: ['', [Validators.required, Validators.minLength(8)]],
+                newPassword: [
+                    '',
+                    [Validators.required, Validators.minLength(8)],
+                ],
+                repeatPassword: [
+                    '',
+                    [Validators.required, Validators.minLength(8)],
+                ],
             },
             {
-                validators:
-                    this.validationPasswordsMatchUseCase.execute,
-            }
+                validators: this.validationPasswordsMatchUseCase.execute,
+            },
         );
     }
 
@@ -99,19 +112,21 @@ export class ResetPasswordComponent implements OnInit {
         const newPasswordData: ResetPasswordCredentials = {
             security_question:
                 this.resetPasswordGroup.get('validationQuestion')?.value.name,
-            security_answer: this.resetPasswordGroup.get('validationAnswer')?.value,
+            security_answer:
+                this.resetPasswordGroup.get('validationAnswer')?.value,
             new_password: this.resetPasswordGroup.get('newPassword')?.value,
         };
 
-        this.resetPasswordData$ = this.resetPasswordUseCase.execute(newPasswordData);
+        this.resetPasswordData$ =
+            this.resetPasswordUseCase.execute(newPasswordData);
 
         if (!this.resetPasswordData$) {
             this.messageService.add(
                 getMessageObject(
                     'error',
                     'Fehler beim Ändern des Passwortes',
-                    'Bitte versuche es erneut.'
-                )
+                    'Bitte versuche es erneut.',
+                ),
             );
             return;
         }
@@ -122,8 +137,8 @@ export class ResetPasswordComponent implements OnInit {
                     getMessageObject(
                         'success',
                         'Passwort erfolgreich geändert',
-                        'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit diesem anmelden. Sie werden automatisch ausgeloggt'
-                    )
+                        'Ihr Passwort wurde erfolgreich geändert. Sie können sich nun mit diesem anmelden. Sie werden automatisch ausgeloggt',
+                    ),
                 );
 
                 this.logoutOfAccountUseCase.execute();
@@ -141,8 +156,8 @@ export class ResetPasswordComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Ändern des Passwortes',
-                        'Bitte versuche es erneut.'
-                    )
+                        'Bitte versuche es erneut.',
+                    ),
                 );
             },
         });
@@ -152,7 +167,8 @@ export class ResetPasswordComponent implements OnInit {
         const control = this.resetPasswordGroup.get(field);
 
         return (
-            control! && (control.dirty || control.touched || this.isFormSubmitted)
+            control! &&
+            (control.dirty || control.touched || this.isFormSubmitted)
         );
     };
 

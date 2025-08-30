@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
+
+
 <div class="startPage">
     <h1>Glotzenheft</h1>
 
@@ -29,22 +31,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </p>
 
     @if (areLoginButtonsVisible) {
-    <div class="button">
-        <p-button label="Registrieren"
-            pTooltip="Hier klicken, um sich mit einem neuen Account zu registrieren. Beim Klicken wird man auf die Register-Seite geleitet."
-            tooltipPosition="right" (onClick)="navigateToRegister()" icon="pi pi-user-plus" class="buttonShadow" />
-    </div>
-    <div class="button">
-        <p-button icon="pi-sign-in" class="buttonShadow" label="Einloggen"
-            pTooltip="Hier klicken, um sich in einen bestehenden Account einzuloggen. Beim Klicken wird man auf die Login-Seite geleitet."
-            tooltipPosition="right" (onClick)="navigateToLogin()" icon="pi pi-sign-in" />
-    </div>
+        <div class="button">
+            <p-button 
+                label="Registrieren"
+                pTooltip="Hier klicken, um sich mit einem neuen Account zu registrieren. Beim Klicken wird man auf die Register-Seite geleitet."
+                tooltipPosition="right" 
+                icon="pi pi-user-plus" 
+                class="buttonShadow" 
+                (onClick)="navigateToRegister()" 
+                />
+        </div>
+        <div class="button">
+            <p-button 
+                icon="pi-sign-in" 
+                class="buttonShadow" 
+                label="Einloggen"
+                pTooltip="Hier klicken, um sich in einen bestehenden Account einzuloggen. Beim Klicken wird man auf die Login-Seite geleitet."
+                tooltipPosition="right" 
+                icon="pi pi-sign-in" 
+                (onClick)="navigateToLogin()" 
+                />
+        </div>
+    } 
+    @else {
+        <div class="button">
+            <p-button 
+                icon="pi-sign-in" 
+                class="buttonShadow" 
+                label="zu meiner Startseite"
+                pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden." tooltipPosition="right"
+                icon="pi pi-sign-in" 
+                (onClick)="navigateToStartPage()" 
+                />
+        </div>
+    }
 
-    } @else {
-    <div class="button">
-        <p-button icon="pi-sign-in" class="buttonShadow" label="zu meiner Startseite"
-            pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden." tooltipPosition="right"
-            (onClick)="navigateToStartPage()" icon="pi pi-sign-in" />
-    </div>
+    @if (!isLoading) {
+        @if (highestMedia) {
+            <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
+        }
+    } 
+    @else {
+        <div class="loadingWrapper">
+            <h1>Laden ...</h1>
+            <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+        </div>
     }
 </div>
+
+
+@if (isServerNotAvailable) {
+    <div class="serverNotAvailableDIV">
+        <p>Empfehlungen können nicht geladen werden.</p>
+    </div>
+}

@@ -30,14 +30,17 @@ import {
     Validators,
 } from '@angular/forms';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { DeleteUserRequest } from '../../../shared/interfaces/user-interfaces';
 import { Observable } from 'rxjs';
 import { DeleteDialogComponent } from '../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import { VALIDATION_QUESTIONS } from '../../../app/shared/variables/validation-questions';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_DeleteUserAccount } from '../../../app/core/use-cases/user/delete-user-account.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { DeleteUserRequest } from '../../../app/shared/interfaces/user-interfaces';
 
 @Component({
     selector: 'app-delete-user-account-page',
@@ -53,7 +56,7 @@ import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-
     ],
     templateUrl: './delete-user-account-page.component.html',
     styleUrl: './delete-user-account-page.component.css',
-    providers: [UC_DeleteUserAccount, UC_LogoutOfAccount]
+    providers: [UC_DeleteUserAccount, UC_LogoutOfAccount],
 })
 export class DeleteUserAccountPageComponent implements OnInit {
     // variables for form submitting
@@ -72,8 +75,8 @@ export class DeleteUserAccountPageComponent implements OnInit {
         private router: Router,
         private formBuilder: FormBuilder,
         private deleteUserAccountUseCase: UC_DeleteUserAccount,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
-    ) { }
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+    ) {}
 
     ngOnInit(): void {
         this.deleteUserForm = this.formBuilder.group({
@@ -103,8 +106,8 @@ export class DeleteUserAccountPageComponent implements OnInit {
                 getMessageObject(
                     'error',
                     'Fehler beim Löschen des Accounts',
-                    'Beim Löschen des Account ist ein Fehler aufgetreten. Bitte probiere es erneut.'
-                )
+                    'Beim Löschen des Account ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+                ),
             );
             return;
         }
@@ -115,8 +118,8 @@ export class DeleteUserAccountPageComponent implements OnInit {
                     getMessageObject(
                         'success',
                         'Account erfolgreich gelöscht',
-                        'Du wirst nun ausgeloggt.'
-                    )
+                        'Du wirst nun ausgeloggt.',
+                    ),
                 );
                 this.logoutOfAccountUseCase.execute();
                 this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
@@ -133,8 +136,8 @@ export class DeleteUserAccountPageComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Löschen des Accounts',
-                        'Beim Löschen ist ein Fehler aufgetreten. Bitte probiere es erneut.'
-                    )
+                        'Beim Löschen ist ein Fehler aufgetreten. Bitte probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -145,7 +148,9 @@ export class DeleteUserAccountPageComponent implements OnInit {
 
         return (
             fieldControl! &&
-            (fieldControl!.dirty || fieldControl!.touched || this.isFormSubmitted)
+            (fieldControl!.dirty ||
+                fieldControl!.touched ||
+                this.isFormSubmitted)
         );
     };
 

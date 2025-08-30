@@ -1,0 +1,13 @@
+*.yml
+*.html
+*.php
+*.py
+*.json
+*.env
+*.md
+*.dockerignore
+*.prettierrc
+*.yaml
+*.txt
+*.conf
+*.gitignore

@@ -23,8 +23,7 @@ import { UC_TriggerToast } from '../app/core/use-cases/auth/trigger-toast.use-ca
 
 export const authGuard: CanActivateFn = (route, state) => {
     const router = inject(Router);
-    const triggerToastUseCase = inject(UC_TriggerToast)
-
+    const triggerToastUseCase = inject(UC_TriggerToast);
 
     if (state.url === '/login' || state.url === '/register') {
         if (isUserLoggedIn()) {

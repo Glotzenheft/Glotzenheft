@@ -15,12 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_NavigationRepository, IT_NAVIGATION_REPOSITORY } from "../../interfaces/navigation.repository";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_NavigationRepository,
+    IT_NAVIGATION_REPOSITORY,
+} from '../../interfaces/navigation.repository';
 
 @Injectable()
 export class UC_NavigateToMultiSearch {
-    constructor(@Inject(IT_NAVIGATION_REPOSITORY) private readonly navigationRepository: I_NavigationRepository) { }
+    constructor(
+        @Inject(IT_NAVIGATION_REPOSITORY)
+        private readonly navigationRepository: I_NavigationRepository,
+    ) {}
 
-    public execute = () => { return this.navigationRepository.navigateToMultiSearch() }
+    public execute = () => {
+        return this.navigationRepository.navigateToMultiSearch();
+    };
 }

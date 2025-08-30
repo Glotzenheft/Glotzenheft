@@ -32,7 +32,11 @@ import { MessageService } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { MediaIDResponse, MediaResult, MultiSearchResponse } from '../../../../app/shared/interfaces/media-interfaces';
+import {
+    MediaIDResponse,
+    MediaResult,
+    MultiSearchResponse,
+} from '../../../../app/shared/interfaces/media-interfaces';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { getMessageObject } from '../../../../app/shared/variables/message-vars';
 import { UC_GetMultiSearchResults } from '../../../../app/core/use-cases/media/get-multisearch-results.use-case';
@@ -40,9 +44,9 @@ import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-
 import { UC_GetSearchTerm } from '../../../../app/core/use-cases/search/get-search-term.use-case';
 import { UC_ShowLoginMessage } from '../../../../app/core/use-cases/user/show-login-message.use-case';
 import { TMDB_IMG_ROUTE } from '../../../../app/shared/variables/image-route';
-import { SelectOption } from "../../../../shared/interfaces/select-option.interface";
-import { PaginationComponent } from "../../../sharedCOMPONENTS/pagination/pagination.component";
-import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/navigate-to-page.use-case';
+import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
+import { PaginationComponent } from '../../../sharedCOMPONENTS/pagination/pagination.component';
+import { SelectOption } from '../../../../shared/interfaces/select-option.interface';
 
 @Component({
     selector: 'app-multi-search',
@@ -59,7 +63,7 @@ import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/nav
         SelectModule,
         FloatLabelModule,
         ReactiveFormsModule,
-        PaginationComponent
+        PaginationComponent,
     ],
     styleUrls: ['./multi-search.component.css'],
     providers: [
@@ -67,14 +71,14 @@ import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/nav
         UC_GetMultiSearchResults,
         UC_GetSearchTerm,
         UC_ShowLoginMessage,
-        UC_NavigateToPage
-    ]
+        UC_NavigateToSpecificPage,
+    ],
     //   changeDetection: ChangeDetectionStrategy.OnPush,
 })
 export class MultiSearchComponent implements OnInit, OnDestroy {
     public searchQuery: string = ''; // Suchtext aus der Eingabe
     public results$: Observable<MultiSearchResponse> | null = null;
-    public IMG_ROUTE: string = TMDB_IMG_ROUTE
+    public IMG_ROUTE: string = TMDB_IMG_ROUTE;
 
     // variables for sorting the results
     public resultsForCurrentPage: MediaResult[] | null = null;
@@ -106,7 +110,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public currentPage: number = 1; // >= 1
     public totalPages: number = 1;
     public totalResults: number = 0;
-    public pageOptions: SelectOption[] = [{ label: "1", value: 1 }];
+    public pageOptions: SelectOption[] = [{ label: '1', value: 1 }];
     public visibleCountOnPage: number = 0;
     public nextPagesLimit: number | null = null; // the limit for the next page button => for disabling the button
     public isNextPageButtonDisabled: boolean = true;
@@ -119,46 +123,50 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         private getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
         private getSearchTermUseCase: UC_GetSearchTerm,
         private showLoginMessageUseCase: UC_ShowLoginMessage,
-        private navigateToPageUseCase: UC_NavigateToPage
-    ) { }
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+    ) {}
 
     ngOnInit(): void {
         this.tracklistFilterForm = this.formBuilder.group({
             tracklistMediaTypeSelection: this.tracklistMediaSelectionList[0],
         });
 
-        this.searchSubscription = this.getSearchTermUseCase.observe().subscribe({
-            next: (searchTerm) => {
-                if (!searchTerm.trim()) {
-                    this.pageOptions = [{ label: '1', value: 1 }];
-                    this.totalPages = 0;
-                    this.showErrorDialog();
-                    return;
-                }
+        this.searchSubscription = this.getSearchTermUseCase
+            .observe()
+            .subscribe({
+                next: (searchTerm) => {
+                    if (!searchTerm.trim()) {
+                        this.pageOptions = [{ label: '1', value: 1 }];
+                        this.totalPages = 0;
+                        this.showErrorDialog();
+                        return;
+                    }
 
-                this.currentSearchTerm = searchTerm;
+                    this.currentSearchTerm = searchTerm;
 
-                if (searchTerm.trim() === this.searchQuery.trim()) {
-                    // return if old search query is equal to the new search query, e.g. user hits button multiple times while query term remains the same
-                    return;
-                }
+                    if (searchTerm.trim() === this.searchQuery.trim()) {
+                        // return if old search query is equal to the new search query, e.g. user hits button multiple times while query term remains the same
+                        return;
+                    }
 
-                // resetting page limit and current page
-                this.nextPagesLimit = null;
-                this.currentPage = 1;
+                    // resetting page limit and current page
+                    this.nextPagesLimit = null;
+                    this.currentPage = 1;
 
-                this.isLoading = true;
-                this.loadMultiSearchResults(this.currentSearchTerm);
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // 401 = user token not valid anymore -> navigate to login page
-                    this.showLoginMessageUseCase.execute();
+                    this.isLoading = true;
+                    this.loadMultiSearchResults(this.currentSearchTerm);
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // 401 = user token not valid anymore -> navigate to login page
+                        this.showLoginMessageUseCase.execute();
 
-                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                }
-            },
-        });
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                    }
+                },
+            });
     }
 
     ngOnDestroy(): void {
@@ -171,17 +179,17 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         this.hasError = false;
         this.results$ = this.getMultiSearchResultUseCase.execute(
             searchTerm,
-            this.currentPage
+            this.currentPage,
         );
 
         this.results$.subscribe({
             next: (res) => {
                 this.item = res.results.filter(
-                    (r) => r.media_type === 'tv' || r.media_type === 'movie'
+                    (r) => r.media_type === 'tv' || r.media_type === 'movie',
                 );
 
                 this.resultsForCurrentPage = res.results.filter(
-                    (r) => r.media_type === 'tv' || r.media_type === 'movie'
+                    (r) => r.media_type === 'tv' || r.media_type === 'movie',
                 );
 
                 this.visibleCountOnPage = this.resultsForCurrentPage.length;
@@ -191,12 +199,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                 this.totalResults = res.total_results;
                 this.totalPages = res.total_pages;
 
-                this.pageOptions = this.totalPages > 0
-                    ? Array.from({ length: this.totalPages }, (_, i) => ({
-                        label: (i + 1).toString(),
-                        value: i + 1,
-                    }))
-                    : [{ label: '0', value: 0 }];
+                this.pageOptions =
+                    this.totalPages > 0
+                        ? Array.from({ length: this.totalPages }, (_, i) => ({
+                              label: (i + 1).toString(),
+                              value: i + 1,
+                          }))
+                        : [{ label: '0', value: 0 }];
 
                 // pages limit is delivered in every response
                 this.nextPagesLimit = res.total_pages + 1;
@@ -208,13 +217,13 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     this.currentPage = 0;
                     this.isPrevPageButtonDisabled = true;
                     this.isNextPageButtonDisabled = true;
-                }
-                else if (this.currentPage === 1) {
-                    this.isNextPageButtonDisabled = this.currentPage == this.totalPages;
+                } else if (this.currentPage === 1) {
+                    this.isNextPageButtonDisabled =
+                        this.currentPage == this.totalPages;
                     this.isPrevPageButtonDisabled = true;
-                }
-                else if (this.currentPage > 1) {
-                    this.isNextPageButtonDisabled = this.currentPage >= this.totalPages;
+                } else if (this.currentPage > 1) {
+                    this.isNextPageButtonDisabled =
+                        this.currentPage >= this.totalPages;
                     this.isPrevPageButtonDisabled = false;
                 }
                 this.isLoading = false;
@@ -236,62 +245,65 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             getMessageObject(
                 'warn',
                 'Das Suchfeld darf nicht leer sein.',
-                'Das Suchfeld muss mindestens ein Zeichen enthalten.'
-            )
+                'Das Suchfeld muss mindestens ein Zeichen enthalten.',
+            ),
         );
     };
 
     navigateToMediaPage = (id: number, mediaGenre: string) => {
-        this.getMediaIdForMediaUseCase.execute(id, mediaGenre === 'movie').subscribe({
-            next: (res: MediaIDResponse) => {
-                let url: string = '';
+        this.getMediaIdForMediaUseCase
+            .execute(id, mediaGenre === 'movie')
+            .subscribe({
+                next: (res: MediaIDResponse) => {
+                    let url: string = '';
 
-                if (res.media_id === undefined || res.media_id === null) {
-                    // if no media_id exists in the db -> because media is not already saved
-                    const summaryMessage: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
-                        ? 'zum Film.'
-                        : 'zur Serie.'
+                    if (res.media_id === undefined || res.media_id === null) {
+                        // if no media_id exists in the db -> because media is not already saved
+                        const summaryMessage: string = `Fehler beim Weiterleiten ${
+                            mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
                         }`;
+
+                        this.messageService.add(
+                            getMessageObject(
+                                'error',
+                                summaryMessage,
+                                'Bitte lade die Seite erneut und versuche es noch einmal.',
+                            ),
+                        );
+                        return;
+                    }
+
+                    // media_id already exists
+                    url =
+                        mediaGenre === 'movie'
+                            ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
+                            : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
+
+                    void this.navigateToSpecificPageUseCase.execute(url);
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // 401 = user token is not logged in anymore -> navigate to login page
+                        this.showLoginMessageUseCase.execute();
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
+
+                    const message: string = `Fehler beim Weiterleiten ${
+                        mediaGenre === 'movie' ? 'zum Film.' : 'zur Serie.'
+                    }`;
 
                     this.messageService.add(
                         getMessageObject(
                             'error',
-                            summaryMessage,
-                            'Bitte lade die Seite erneut und versuche es noch einmal.'
-                        )
+                            message,
+                            'Bitte lade die Seite erneut und versuche es noch einmal.',
+                        ),
                     );
-                    return;
-                }
-
-                // media_id already exists
-                url = mediaGenre === 'movie'
-                    ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
-                    : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
-
-                void this.navigateToPageUseCase.execute(url);
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // 401 = user token is not logged in anymore -> navigate to login page
-                    this.showLoginMessageUseCase.execute();
-                    void this.navigateToPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
-
-                const message: string = `Fehler beim Weiterleiten ${mediaGenre === 'movie'
-                    ? 'zum Film.'
-                    : 'zur Serie.'
-                    }`;
-
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        message,
-                        'Bitte lade die Seite erneut und versuche es noch einmal.'
-                    )
-                );
-            },
-        });
+                },
+            });
     };
 
     public changeToNextPage = () => {
@@ -324,8 +336,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
         this.sortedResults = this.resultsForCurrentPage.filter(
             (result: MediaResult) => {
                 if (
-                    this.tracklistFilterForm.get('tracklistMediaTypeSelection')?.value
-                        .value === 'all'
+                    this.tracklistFilterForm.get('tracklistMediaTypeSelection')
+                        ?.value.value === 'all'
                 ) {
                     return true;
                 } else {
@@ -335,7 +347,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                             ?.value.value.trim() === result.media_type.trim()
                     );
                 }
-            }
+            },
         );
     };
 

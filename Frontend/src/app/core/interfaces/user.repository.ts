@@ -15,33 +15,53 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from "rxjs";
-import { LoginAndMessageResponse, LoginCredentials, RegisterCredentials, ResetPasswordCredentials } from "../../shared/interfaces/login";
-import { DeleteUserRequest } from "../../shared/interfaces/user-interfaces";
-import { RatingStatistic, WatchTimeStatistic } from "../../shared/statistic-interfaces";
-import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
-import { InjectionToken } from "@angular/core";
+import { Observable } from 'rxjs';
+import {
+    LoginAndMessageResponse,
+    LoginCredentials,
+    RegisterCredentials,
+    ResetPasswordCredentials,
+} from '../../shared/interfaces/login';
+import {
+    DeleteUserRequest,
+    UserActivitiesResponse,
+} from '../../shared/interfaces/user-interfaces';
+import {
+    RatingStatistic,
+    WatchTimeStatistic,
+} from '../../shared/statistic-interfaces';
+import { InjectionToken } from '@angular/core';
 
 export interface I_UserRepository {
     // variables
-    isSearchBarVisible$: Observable<boolean>,
-    visibleUserName$: Observable<string>,
+    isSearchBarVisible$: Observable<boolean>;
+    visibleUserName$: Observable<string>;
 
     // functions
-    loginIntoAccount: (loginData: LoginCredentials) => Observable<LoginAndMessageResponse>,
-    registerAccount: (registerData: RegisterCredentials) => Observable<LoginAndMessageResponse>,
-    logoutOfAccount: () => void,
-    resetPassword: (resetPasswordCredentials: ResetPasswordCredentials) => Observable<any> | null,
-    showLoginMessage: () => void,
-    showNoAccessMessage: () => void,
-    isUserLoginValid: () => boolean,
-    increaseLoginTries: () => void,
-    deleteUserAccount: (userData: DeleteUserRequest) => Observable<any> | null,
-    getUserName: () => string | null,
-    getUserStatisticWatchTime: () => Observable<WatchTimeStatistic> | null,
-    getUserActivities: (responsePage: number) => Observable<UserActivitiesResponse> | null,
-    getUserRatings: () => Observable<RatingStatistic> | null,
+    loginIntoAccount: (
+        loginData: LoginCredentials,
+    ) => Observable<LoginAndMessageResponse>;
+    registerAccount: (
+        registerData: RegisterCredentials,
+    ) => Observable<LoginAndMessageResponse>;
+    logoutOfAccount: () => void;
+    resetPassword: (
+        resetPasswordCredentials: ResetPasswordCredentials,
+    ) => Observable<any> | null;
+    showLoginMessage: () => void;
+    showNoAccessMessage: () => void;
+    isUserLoginValid: () => boolean;
+    increaseLoginTries: () => void;
+    deleteUserAccount: (userData: DeleteUserRequest) => Observable<any> | null;
+    getUserName: () => string | null;
+    getUserStatisticWatchTime: () => Observable<WatchTimeStatistic> | null;
+    getUserActivities: (
+        responsePage: number,
+    ) => Observable<UserActivitiesResponse> | null;
+    getUserRatings: () => Observable<RatingStatistic> | null;
 }
 
 // IT = Injection Token
-export const IT_USER_REPOSITORY = new InjectionToken<I_UserRepository>("I_UserRepository")
+export const IT_USER_REPOSITORY = new InjectionToken<I_UserRepository>(
+    'I_UserRepository',
+);

@@ -15,15 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { InjectionToken } from "@angular/core"
-import { Observable } from "rxjs"
+import { InjectionToken } from '@angular/core';
+import { Observable } from 'rxjs';
 
 export interface I_SearchRepository {
     // variables
-    searchTerm$: Observable<string>,
+    searchTerm$: Observable<string>;
     // functions
-    updateSearchTerm: (newSearchTerm: string) => void
+    updateSearchTerm: (newSearchTerm: string) => void;
 }
 
 // IT = Injection Token
-export const IT_SEARCH_REPOSITORY = new InjectionToken<I_SearchRepository>("I_SearchRepository")
+export const IT_SEARCH_REPOSITORY = new InjectionToken<I_SearchRepository>(
+    'I_SearchRepository',
+);
