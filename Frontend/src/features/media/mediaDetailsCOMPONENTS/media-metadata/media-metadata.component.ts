@@ -26,13 +26,15 @@ import { CommonModule } from '@angular/common';
     template: `
         <ul>
             @if (!inpIsMovie() && inpSeasonData() !== null) {
-                @if (inpSeasonData()?.tracklists &&(inpSeasonData()?.tracklists)!.length > 0) {
+                @if (
+                    inpSeasonData()?.tracklists &&
+                    (inpSeasonData()?.tracklists)!.length > 0
+                ) {
                     <li>
                         {{ (inpSeasonData()?.tracklists)!.length }} Tracklisten
                         insgesamt
                     </li>
-                } 
-                @else {
+                } @else {
                     <li><i>keine Tracklisten vorhanden</i></li>
                 }
                 <li>
@@ -44,10 +46,15 @@ import { CommonModule } from '@angular/common';
                 </li>
             }
             @if (inpIsMovie() && inpFilmData()) {
-                @if (inpFilmData()?.tracklists && (inpFilmData()?.tracklists)!.length) {
-                    <li>{{ (inpFilmData()?.tracklists)!.length }} Tracklisten insgesamt</li>
-                } 
-                @else {
+                @if (
+                    inpFilmData()?.tracklists &&
+                    (inpFilmData()?.tracklists)!.length
+                ) {
+                    <li>
+                        {{ (inpFilmData()?.tracklists)!.length }} Tracklisten
+                        insgesamt
+                    </li>
+                } @else {
                     <li><i>keine Tracklisten vorhanden</i></li>
                 }
             }
