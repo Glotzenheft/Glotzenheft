@@ -49,16 +49,9 @@ import {
     getMessageObject,
 } from '../../shared/variables/message-vars';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
-import {
-    KEY_LOCAL_STORAGE_LAST_LOG_IN,
-    KEY_LOCAL_STORAGE_LOG_IN_TRIES,
-} from '../../shared/variables/local-storage-keys';
-import { DeleteUserRequest } from '../../shared/interfaces/user-interfaces';
-import {
-    RatingStatistic,
-    WatchTimeStatistic,
-} from '../../shared/statistic-interfaces';
-import { UserActivitiesResponse } from '../../../shared/interfaces/user-interfaces';
+import { KEY_LOCAL_STORAGE_LAST_LOG_IN, KEY_LOCAL_STORAGE_LOG_IN_TRIES } from '../../shared/variables/local-storage-keys';
+import { RatingStatistic, WatchTimeStatistic } from '../../shared/statistic-interfaces';
+import { DeleteUserRequest, UserActivitiesResponse } from '../../shared/interfaces/user-interfaces';
 import { I_UserRepository } from '../../core/interfaces/user.repository';
 import { UC_GetHeader } from '../../core/use-cases/media/get-header.use-case';
 

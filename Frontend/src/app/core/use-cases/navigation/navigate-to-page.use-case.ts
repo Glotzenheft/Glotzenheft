@@ -28,7 +28,5 @@ export class UC_NavigateToPage {
         private readonly navigationRepository: I_NavigationRepository,
     ) {}
 
-    public execute = (url: string) => {
-        return this.navigationRepository.navigateToPage(url);
-    };
+    public execute = (tmdbId: string, isMovie: boolean) => { return this.navigationRepository.navigateToPage(tmdbId, isMovie) }
 }

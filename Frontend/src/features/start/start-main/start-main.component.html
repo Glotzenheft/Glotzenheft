@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
+
+
 <div class="startPage">
     <h1>Glotzenheft</h1>
 
@@ -62,4 +64,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 />
         </div>
     }
+
+    @if (!isLoading) {
+    @if (highestMedia) {
+    <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
+    }
+    } @else {
+    <div class="loadingWrapper">
+        <h1>Laden ...</h1>
+        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+    </div>
+    }
 </div>
+
+
+@if (isServerNotAvailable) {
+<div class="serverNotAvailableDIV">
+    <p>Empfehlungen können nicht geladen werden.</p>
+</div>
+}

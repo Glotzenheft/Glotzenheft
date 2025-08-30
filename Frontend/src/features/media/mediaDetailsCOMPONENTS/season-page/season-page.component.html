@@ -90,16 +90,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
                         }
 
-                        @if (seasonData.media.seasons.length > 0) {
-                            <p>Anzahl der Staffeln: {{ seasonData.media.seasons.length }}</p>
-                        }
-                    </div>
-                </div>
-            </div>
 
-            @if (seasonData.media.seasons.length > 0) {
-            <div class="mainDIV episodes">
-                <h2>Staffeln</h2>
+
+
+            </div>
+        </div>
+    </div>
+
+    <app-media-tabs [inpTabList]="tabList" (outChangeTab)="onChangeTab($event)" />
+
+    @if (currentTab === tabList[0]) {
+    @if (seasonData.media.seasons.length > 0) {
+    <div class="episodes">
+        <h2>Staffeln</h2>
 
                 <form action="" [formGroup]="tracklistSelectionForm">
                     @if (tvDataWithTracklist && tvDataWithTracklist.seasons && tvDataWithTracklist.seasons.length > 0) {
@@ -183,27 +186,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                         }
 
 
-                                        @if (
-                                            !tracklistSelectionForm.get('selectedTracklist')?.value ||
-                                            tracklistSelectionForm.get('selectedTracklist')?.value === EMPTY_TRACKLIST
-                                            ) {
-                                            <app-episode-list 
-                                                [episodeList]="season.episodes"
-                                                [tracklistSelectionForm]="tracklistSelectionForm" 
-                                                [selectedSeason]="null"
-                                                [tracklistsOfSeason]="[]" 
-                                                [inpSelectedTracklist]="null" 
-                                                [inpIsWithTracklist]="false" 
-                                                />
-                                        }
-                                    </p-accordion-content>
-                                </p-accordion-panel>
-                            }
-                        </p-accordion>
-                    }
-                </form>
-            </div>
+                        @if (!tracklistSelectionForm.get('selectedTracklist')?.value ||
+                        tracklistSelectionForm.get('selectedTracklist')?.value === EMPTY_TRACKLIST) {
+                        <app-episode-list [episodeList]="season.episodes"
+                            [tracklistSelectionForm]="tracklistSelectionForm" [selectedSeason]="null"
+                            [tracklistsOfSeason]="[]" [inpSelectedTracklist]="null" [inpIsWithTracklist]="false" />
+                        }
+                    </p-accordion-content>
+                </p-accordion-panel>
+                }
+            </p-accordion>
             }
+        </form>
+    </div>
+    }
+    }
+    @else if (currentTab === tabList[1]) {
+    <app-api-recommendation [inpIsMovie]="false" [inpRecommendations]="apiRecommendations"
+        [inpTmdbId]="seasonData.media.tmdbID" (outSetRecommendations)="getRecommendations($event)" />
+    } @else {
+    <app-media-metadata [inpIsMovie]="false" [inpSeasonData]="seasonData" [inpFilmData]="null" />
+    }
 
         </div>
     }

@@ -15,19 +15,13 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {
-    Component,
-    input,
-    InputSignal,
-    output,
-    OutputEmitterRef,
-} from '@angular/core';
-import { SelectOption } from '../../../shared/interfaces/select-option.interface';
+import { Component, input, InputSignal, output, OutputEmitterRef } from '@angular/core';
 import { SelectModule } from 'primeng/select';
 import { FormsModule } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
-import { Tooltip } from 'primeng/tooltip';
-import { StringFormattingPipe } from '../../../pipes/string-formatting/string-formatting.pipe';
+import { Tooltip } from "primeng/tooltip";
+import { StringFormattingPipe } from "../../../pipes/string-formatting/string-formatting.pipe";
+import { SelectOption } from '../../../shared/interfaces/select-option.interface';
 
 @Component({
     selector: 'app-pagination',

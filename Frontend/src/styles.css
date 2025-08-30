@@ -19,7 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @import "primeicons/primeicons.css";
 
 input {
-    width: 100%;
+      width: 100%;
 }
 
 h1 {
@@ -63,27 +63,31 @@ p {
 
 /* Für Webkit-basierte Browser (z. B. Chrome, Edge, Safari) */
 ::-webkit-scrollbar {
-    width: 1rem; /* Breite der Scrollbar */
-    height: 12px; /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
+    width: 1rem;
+    /* Breite der Scrollbar */
+    height: 12px;
+    /* Höhe der Scrollbar (bei horizontalen Scrollbars) */
 }
 
 ::-webkit-scrollbar-track {
-    background: black; /* Hintergrund der Scrollbar-Spur */
+    background: black;
+    /* Hintergrund der Scrollbar-Spur */
 }
 
 ::-webkit-scrollbar-thumb {
-    background: var(--link--color); /* Farbe des Scrollbalkens */
+    background: var(--link--color);
+    /* Farbe des Scrollbalkens */
 }
 
 ::-webkit-scrollbar-thumb:hover {
-    background: var(
-        --link--color--hover
-    ); /* Farbe des Scrollbalkens beim Hover */
+    background: var(--link--color--hover);
+    /* Farbe des Scrollbalkens beim Hover */
     cursor: pointer;
 }
 
 /* media query for smart phones and tablets */
 @media (max-width: 500px) {
+
     html,
     body {
         margin: 0;
@@ -192,6 +196,7 @@ p {
         overflow-x: hidden;
         overflow-y: auto;
     }
+
     .mainDIV {
         margin-top: 4rem;
         margin-bottom: 15rem;
@@ -253,6 +258,7 @@ p {
         width: 100%;
         height: 100%;
     }
+
     .loginWindow div,
     .p-password {
         width: 100%;
@@ -301,6 +307,7 @@ p {
         width: 5rem;
         margin-bottom: 2rem;
     }
+
     .card {
         width: 100%;
         height: 3rem;
@@ -400,6 +407,7 @@ p {
 
 /* media query for smart phones and tablets */
 @media (min-width: 500px) and (max-width: 850px) {
+
     html,
     body {
         margin: 0;
@@ -508,6 +516,7 @@ p {
         overflow-x: hidden;
         overflow-y: auto;
     }
+
     .mainDIV {
         margin-top: 4rem;
         margin-bottom: 15rem;
@@ -569,6 +578,7 @@ p {
         width: 100%;
         height: 100%;
     }
+
     .loginWindow div,
     .p-password {
         width: 100%;
@@ -617,6 +627,7 @@ p {
         width: 5rem;
         margin-bottom: 2rem;
     }
+
     .card {
         width: 100%;
         height: 3rem;
@@ -715,6 +726,7 @@ p {
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
+
     html,
     body {
         margin: 0;
@@ -746,6 +758,7 @@ p {
         --link--color: rgb(5, 150, 105);
         --link--color--hover: rgb(26, 109, 83);
     }
+
     .sidebar {
         background-color: black;
         height: 100%;
@@ -783,10 +796,8 @@ p {
     .content {
         height: 100%;
         width: calc(100% - 2 * var(--padding--left-right));
-        background: linear-gradient(
-            var(--content-background-color),
-            var(--content-background-color2)
-        );
+        background: linear-gradient(var(--content-background-color),
+                var(--content-background-color2));
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         padding-top: var(--padding--top-bottom);
@@ -854,6 +865,7 @@ p {
         width: 100%;
         height: 100%;
     }
+
     .loginWindow div,
     .p-password {
         width: 100%;
@@ -985,6 +997,7 @@ p {
 }
 
 @media (min-width: 940px) and (max-width: 1000px) {
+
     html,
     body {
         margin: 0;
@@ -1016,6 +1029,7 @@ p {
         --link--color: rgb(5, 150, 105);
         --link--color--hover: rgb(26, 109, 83);
     }
+
     .sidebar {
         background-color: black;
         height: 100%;
@@ -1052,10 +1066,8 @@ p {
     .content {
         height: 100%;
         width: calc(100% - 2 * var(--padding--left-right));
-        background: linear-gradient(
-            var(--content-background-color),
-            var(--content-background-color2)
-        );
+        background: linear-gradient(var(--content-background-color),
+                var(--content-background-color2));
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         padding-top: var(--padding--top-bottom);
@@ -1272,6 +1284,7 @@ p {
 }
 
 @media (min-width: 1000px) {
+
     html,
     body {
         margin: 0;
@@ -1303,6 +1316,7 @@ p {
         --link--color: rgb(5, 150, 105);
         --link--color--hover: rgb(26, 109, 83);
     }
+
     .sidebar {
         background-color: black;
         height: 100%;
@@ -1339,10 +1353,8 @@ p {
     .content {
         height: 100%;
         width: calc(100% - 2 * var(--padding--left-right));
-        background: linear-gradient(
-            var(--content-background-color),
-            var(--content-background-color2)
-        );
+        background: linear-gradient(var(--content-background-color),
+                var(--content-background-color2));
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         padding-top: var(--padding--top-bottom);
@@ -1599,4 +1611,63 @@ p {
 
 .serverNotAvailableDIV h1 {
     height: 2rem;
+}
+
+.p-tablist-tab-list,
+.p-tabpanels {
+    background: transparent !important;
+}
+
+.p-tab {
+    color: white !important;
+}
+
+.p-tab-active {
+    color: #10b981 !important;
+}
+
+
+.cardContainer {
+    list-style: none;
+    padding: 0;
+    gap: 2rem;
+    height: 23rem;
+    max-width: 100%;
+    overflow-x: auto;
+    overflow-y: hidden;
+    display: flex;
+}
+
+.recCard {
+    background-color: white;
+    height: 20rem;
+    flex: 0 0 12rem;
+    border-radius: 0.3rem;
+    box-shadow: 0.2rem 0.4rem 0.2rem rgba(0, 0, 0, 0.4);
+    transition-duration: var(--transition--duration);
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    flex-direction: column;
+    padding-top: 0.1rem;
+}
+
+.recCard:hover {
+    cursor: pointer;
+    background-color: var(--link--color);
+}
+
+.recCard img {
+    height: calc(78% - 0.1rem);
+    width: 96%;
+    border-radius: 0.3rem;
+}
+
+.recCard p {
+    width: 100%;
+    height: 10%;
+    color: black;
+    padding-left: 0.2rem;
+    padding-right: 0.2rem;
+    text-align: center;
 }
