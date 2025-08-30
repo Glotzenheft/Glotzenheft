@@ -35,7 +35,6 @@ import { MessageModule } from 'primeng/message';
 import { DialogModule } from 'primeng/dialog';
 import { MessageService } from 'primeng/api';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { Observable } from 'rxjs';
 import { DatePickerModule } from 'primeng/datepicker';
 import { SelectModule } from 'primeng/select';
 import { RatingModule } from 'primeng/rating';
@@ -57,6 +56,7 @@ import { UC_GetTracklistCREATESEASONResponseSubject } from '../../../../../app/c
 import { UC_TriggerTracklistCREATESEASONSubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-season-subject.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
+import {Checkbox} from "primeng/checkbox";
 
 @Component({
     selector: 'app-create-new-tracklist',
@@ -70,6 +70,7 @@ import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/u
         DatePickerModule,
         SelectModule,
         RatingModule,
+        Checkbox,
     ],
     providers: [
         UC_GetTracklistCREATESEASONResponseSubject,
@@ -96,15 +97,11 @@ export class CreateNewTracklistComponent implements OnInit {
     // variables for tracklist submitting
     public isTracklistSubmitted: boolean = false;
     public trackListForm!: FormGroup;
-    public createNewTracklist$: Observable<any> | null = null;
     public tracklistSelectionList: { name: string; value: string }[] =
         TRACK_LIST_STATUS_LIST.map((selection: string) => ({
             name: convertTracklistStatusIntoGerman(selection),
             value: selection,
         }));
-
-    // other variables
-    public convertStatus = convertTracklistStatusIntoGerman;
 
     constructor(
         private messageService: MessageService,
@@ -140,14 +137,14 @@ export class CreateNewTracklistComponent implements OnInit {
                         this.messageService.add(
                             ERR_OBJECT_INVALID_AUTHENTICATION,
                         );
-                        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-                        return;
-                    }
-                    this.messageService.add(
-                        getMessageObject(
-                            'error',
-                            'Fehler beim Anlegen der Trackliste',
-                            'Bitte lade die Seite neu und probiere es erneut.',
+                        void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Anlegen der Trackliste',
+                        'Bitte lade die Seite neu und probiere es erneut.',
                         ),
                     );
                 },
@@ -162,6 +159,7 @@ export class CreateNewTracklistComponent implements OnInit {
             startDate: [''],
             endDate: [''],
             rating: [null],
+            isRewatching: [false],
         });
     }
 
@@ -191,13 +189,15 @@ export class CreateNewTracklistComponent implements OnInit {
         }
 
         this.triggerTracklistCREATESEASONSubjectUseCase.execute({
-            name: this.trackListForm.get('trackListName')?.value,
-            mediaID: this.mediaID(),
-            seasonID: this.inputSeason().id,
-            startDate: formattedStartDate,
-            endDate: formattedEndDate,
-            status: this.trackListForm.get('status')?.value.value,
-            rating: this.trackListForm.get('rating')?.value,
+            tracklist_name: this.trackListForm.get('trackListName')?.value,
+            media_id: this.mediaID(),
+            season_id: this.inputSeason().id,
+            tracklist_start_date: formattedStartDate,
+            tracklist_finish_date: formattedEndDate,
+            tracklist_status: this.trackListForm.get('status')?.value.value,
+            tracklist_rating: this.trackListForm.get('rating')?.value,
+            is_rewatching: this.trackListForm.get('isRewatching')?.value,
+            media_type: 'tv',
         });
     };
 

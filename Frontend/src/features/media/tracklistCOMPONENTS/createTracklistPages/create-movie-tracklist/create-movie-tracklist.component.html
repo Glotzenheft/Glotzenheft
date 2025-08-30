@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <div class="createMovieWindow">
         <div class="createNewTracklist">
-            <form action="submit" (ngSubmit)="createNewTracklist()" [formGroup]="tracklistForm">
+            <form (ngSubmit)="createNewTracklist()" [formGroup]="tracklistForm">
                 <div>
                     <p-float-label variant="in">
                         <input type="text" pInputText formControlName="trackListName" id="listName" />
@@ -60,7 +60,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 inputId="end"
                                 [showIcon]="true" 
                                 [showOnFocus]="false"
-                                [minDate]="tracklistForm.get('startDate')?.value" 
+                                [minDate]="tracklistForm.get('startDate')?.value"
+                                [showButtonBar]="true"
                                 />
                             <label for="end">Enddatum</label>
                         </p-float-label>
@@ -72,10 +73,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 inputId="start"
                                 [showIcon]="true" 
                                 [showOnFocus]="false"
-                                [maxDate]="tracklistForm.get('endDate')?.value" 
+                                [maxDate]="tracklistForm.get('endDate')?.value"
+                                [showButtonBar]="true"
                                 />
                             <label for="start">Startdatum</label>
                         </p-float-label>
+                    </div>
+
+                    <div class="rewatching-checkbox">
+                        <p-checkbox
+                                formControlName="isRewatching"
+                                [binary]="true"
+                                inputId="isRewatchingCheckbox"
+                        />
+                        <label for="isRewatchingCheckbox" class="ml-2">Erneut glotzen?</label>
                     </div>
 
                     <div class="ratingDIV">

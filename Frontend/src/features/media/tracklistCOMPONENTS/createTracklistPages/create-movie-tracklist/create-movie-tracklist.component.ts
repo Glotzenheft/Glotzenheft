@@ -30,8 +30,6 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
-import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';
@@ -53,6 +51,7 @@ import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
 import { UC_TriggerTracklistCREATEMOVIESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-create-movie-subject.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import {Checkbox} from "primeng/checkbox";
 
 @Component({
     selector: 'app-create-movie-tracklist',
@@ -66,6 +65,7 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
         DatePickerModule,
         SelectModule,
         RatingModule,
+        Checkbox,
     ],
     providers: [
         UC_getTracklistCREATEMOVIESubjectResponse,
@@ -89,7 +89,6 @@ export class CreateMovieTracklistComponent implements OnInit {
     // variables for submitting the form
     public isTracklistSubmitted: boolean = false;
     public tracklistForm!: FormGroup;
-    public createNewTracklist$: Observable<any> | null = null;
     public tracklistSelectionList: { name: string; value: string }[] =
         TRACK_LIST_STATUS_LIST.map((selection: string) => ({
             name: convertTracklistStatusIntoGerman(selection),
@@ -121,7 +120,7 @@ export class CreateMovieTracklistComponent implements OnInit {
                     // status 401 = user is not logged in anymore -> navigate to login page
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                     return;
                 }
                 this.messageService.add(
@@ -140,6 +139,7 @@ export class CreateMovieTracklistComponent implements OnInit {
             endDate: [null],
             status: ['', Validators.required],
             rating: [null],
+            isRewatching: [false],
         });
     }
 
@@ -151,12 +151,14 @@ export class CreateMovieTracklistComponent implements OnInit {
         }
 
         this.triggerTracklistCREATEMOVIESubjectUseCase.execute({
-            name: this.tracklistForm.get('trackListName')?.value,
-            mediaID: this.mediaID(),
-            startDate: this.tracklistForm.get('startDate')?.value,
-            endDate: this.tracklistForm.get('endDate')?.value,
-            status: this.tracklistForm.get('status')?.value.value,
-            rating: this.tracklistForm.get('rating')?.value,
+            tracklist_name: this.tracklistForm.get('trackListName')?.value,
+            media_id: this.mediaID(),
+            tracklist_start_date: this.tracklistForm.get('startDate')?.value,
+            tracklist_finish_date: this.tracklistForm.get('endDate')?.value,
+            tracklist_status: this.tracklistForm.get('status')?.value.value,
+            tracklist_rating: this.tracklistForm.get('rating')?.value,
+            is_rewatching: this.tracklistForm.get('isRewatching')?.value,
+            media_type: 'movie',
         });
     };
 

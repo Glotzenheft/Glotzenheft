@@ -18,14 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 declare(strict_types=1);
 
-namespace App\Enum;
+namespace App\Model\Request\Tracklist;
 
-enum TracklistStatus: string
+use Symfony\Component\Serializer\Attribute\SerializedName;
+use Symfony\Component\Validator\Constraints as Assert;
+
+readonly class TracklistIdDto
 {
-    case WATCHING = 'watching';
-    case PAUSING = 'pausing';
-    case DROPPED = 'dropped';
-    case PLAN_TO_WATCH = 'plan to watch';
-    case COMPLETED = 'completed';
+    public function __construct(
+        #[SerializedName('tracklist_id')]
+        #[Assert\NotBlank(message: 'Query parameter "tracklist_id" is required.')]
+        #[Assert\Type('integer')]
+        public ?int $tracklistId = null
+    ) {}
 }
-

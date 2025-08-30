@@ -56,6 +56,7 @@ import { UC_GetTracklistDELETEResponseSubject } from '../../../../../app/core/us
 import { UC_TriggerTracklistUPDATESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import {Checkbox} from "primeng/checkbox";
 
 @Component({
     selector: 'app-update-film-tracklist',
@@ -69,6 +70,7 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
         RatingModule,
         DatePickerModule,
         DeleteDialogComponent,
+        Checkbox,
     ],
     providers: [
         UC_GetTracklistDELETEResponseSubject,
@@ -169,6 +171,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
                     ? new Date(this.inpTracklist().finishDate!)
                     : null,
             ],
+            is_rewatching: [this.inpTracklist().isRewatching],
         });
 
         // delete tracklist -------------------------------------------
@@ -236,6 +239,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
                 this.updateTracklistForm.get('tracklist_rating')?.value,
             tracklist_start_date: formattedStartDate,
             tracklist_finish_date: formattedEndDate,
+            is_rewatching: this.updateTracklistForm.get('is_rewatching')?.value,
         };
 
         this.triggerTracklistUPDATESubjectUseCase.execute(updateTracklistData);

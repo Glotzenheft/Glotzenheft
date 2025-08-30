@@ -83,6 +83,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </p-float-label>
                 </div>
 
+                <div class="rewatching-checkbox">
+                    <p-checkbox
+                            formControlName="isRewatching"
+                            [binary]="true"
+                            inputId="isRewatchingCheckbox"
+                    />
+                    <label for="isRewatchingCheckbox" class="ml-2">Erneut glotzen?</label>
+                </div>
+
                 <div class="ratingDIV">
                     <p>Bewertung:</p>
                     <p-rating [stars]="10" formControlName="rating" />

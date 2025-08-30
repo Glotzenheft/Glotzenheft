@@ -62,9 +62,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .statusDropped {
         background-color: #d32f2f;
     }
-    .statusRewatching {
-        background-color: #028090;
-    }
     .statusPlanToWatch {
         background-color: #facc15;
     }
@@ -170,9 +167,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
     .statusDropped {
         background-color: #d32f2f;
-    }
-    .statusRewatching {
-        background-color: #028090;
     }
     .statusPlanToWatch {
         background-color: #facc15;

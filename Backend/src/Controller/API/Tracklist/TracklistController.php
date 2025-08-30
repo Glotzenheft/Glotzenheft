@@ -20,11 +20,18 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Tracklist;
 
+use App\Entity\User;
+use App\Model\Request\Tracklist\CreateTracklistDto;
+use App\Model\Request\Tracklist\TracklistIdDto;
+use App\Model\Request\Tracklist\UpdateTracklistDto;
 use App\Security\IsAuthenticated;
 use App\Service\Tracklist\TracklistService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
+use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistController extends AbstractController
@@ -37,125 +44,215 @@ class TracklistController extends AbstractController
      * Retrieve all tracklists from a user.
      * User identification by the bearer token.
      * @example https://127.0.0.1:8000/api/user-tracklists
-     * @param Request $request
+     * @param User $user
      * @return JsonResponse
      */
     #[IsAuthenticated]
-    #[Route('/api/user-tracklists', name: 'get_tracklists', methods: ['GET'])]
-    public function getTracklists(Request $request): JsonResponse
+    #[Route(
+        path: '/api/user-tracklists',
+        name: 'get_tracklists',
+        methods: ['GET']
+    )]
+    public function getTracklistsEndpoint(User $user): JsonResponse
     {
-        $response = $this->tracklistService->getUserTracklists($request);
+        $tracklists = $this->tracklistService->getUserTracklists($user);
 
-        if (isset($response['error']))
-        {
-            return $this->json(['error' => $response['error']], $response['code']);
-        }
-
-        return $this->json($response['tracklists'], context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
+        return $this->json(
+            data: $tracklists,
+            context: ['groups' => ['tracklist_details', 'tracklist_episodes']]
+        );
     }
 
     /**
-     * @param Request $request
+     * @param TracklistIdDto $dto
+     * @param User $user
      * @return JsonResponse
      */
     #[IsAuthenticated]
-    #[Route('/api/tracklist', name: 'get_tracklist', methods: ['GET'])]
-    public function getTracklist(Request $request): JsonResponse
+    #[Route(
+        path: '/api/tracklist',
+        name: 'get_tracklist',
+        methods: ['GET']
+    )]
+    public function getTracklistEndpoint(
+        #[MapQueryString] TracklistIdDto $dto,
+        User $user
+    ): JsonResponse
     {
-        $response = $this->tracklistService->getTracklist($request);
-
-        if (isset($response['error']))
-        {
-            return $this->json($response['error'], (int) $response['code']);
-        }
-
-        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
+        $tracklist = $this->tracklistService->getTracklist(
+            tracklistId: $dto->tracklistId,
+            user: $user
+        );
+        return $this->json(
+            data: $tracklist,
+            context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
     }
 
     /**
      *  Creates a tracklist.
      *
+     * @param CreateTracklistDto $dto
+     * @param User $user
      * @param Request $request
      * @return JsonResponse
      * @example POST /api/tracklist
      *          Header: Authorization: Bearer <JWT-TOKEN>
-     *          Required request parameters:
+     *          Required parameter in json body:
      *          - `tracklist_status` (string) - Status of the tracklist.
      *          - `tracklist_name` (string) - Name of the tracklist.
      *          - `media_id` (int) - ID of the associated media.
      *          - `media_type` (string) - Type of the media.
-     *          Optional request parameters:
+     *          Optional parameter in json body:
      *          - `tracklist_rating` (int) - Rating of the tracklist.
      *          - `tracklist_start_date` (date)
      *          - `tracklist_finish_date` (date)
-     *
+     *          Optimonal request parameter:
+     *          - `return` - set to "minimal" for a 204 response
+     *          Optional header paramter:
+     *          - `Prefer` - set to "return=minimal" for a 204 response
      */
     #[IsAuthenticated]
-    #[Route('/api/tracklist', name: 'create_tracklist', methods: ['POST'])]
-    public function createTracklist(Request $request): JsonResponse
+    #[Route(
+        path: '/api/tracklist',
+        name: 'create_tracklist',
+        methods: ['POST'])]
+    public function createTracklistEndpoint(
+        #[MapRequestPayload] CreateTracklistDto $dto,
+        User $user,
+        Request $request
+    ): JsonResponse
     {
-        $response = $this->tracklistService->createTracklist($request);
+        $tracklist = $this->tracklistService->createTracklist(
+            dto: $dto,
+            user: $user
+        );
 
-        if (isset($response['error']))
-        {
-            return $this->json($response['error'], (int) $response['code']);
-        }
-
-        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
+        return $this->createConditionalResponse(
+            request: $request,
+            data: $tracklist,
+            successStatus: Response::HTTP_CREATED,
+            context: ['groups' => ['tracklist_details']]
+        );
     }
 
     /**
      * Updates a tracklist.
      *
+     * @param UpdateTracklistDto $dto
+     * @param User $user
+     * @param Request $request
+     * @return JsonResponse
      * @example PATCH /api/tracklist
      *          Header: Authorization: Bearer <JWT-TOKEN>
-     *          Required request parameter:
+     *          Required parameter in json body:
      *          - `tracklist_id` (int) - The ID of the tracklist to update.
-     *          Optional request parameters:
+     *          Optional parameter in json body:
      *          - `tracklist_status` (string) - Status of the tracklist.
      *          - `tracklist_name` (string) - Name of the tracklist.
      *          - `tracklist_rating` (int) - Rating of the tracklist.
      *          - `tracklist_start_date` (date)
      *          - `tracklist_finish_date` (date)
+     *          Optimonal request parameter:
+     *          - `return` - set to "minimal" for a 204 response
+     *          Optional header paramter:
+     *          - `Prefer` - set to "return=minimal" for a 204 response
      *
-     * @param Request $request
-     * @return JsonResponse
      */
     #[IsAuthenticated]
-    #[Route('/api/tracklist', name: 'update_tracklist', methods: ['PATCH'])]
-    public function updateTracklist(Request $request): JsonResponse
+    #[Route(
+        path: '/api/tracklist',
+        name: 'update_tracklist',
+        methods: ['PATCH']
+    )]
+    public function updateTracklistEndpoint(
+        #[MapRequestPayload] UpdateTracklistDto $dto,
+        User $user,
+        Request $request
+    ): JsonResponse
     {
-        $response = $this->tracklistService->updateTracklist($request);
+        $tracklist = $this->tracklistService->updateTracklist(
+            dto: $dto,
+            user: $user,
+            requestData: $request->toArray()
+        );
 
-        if (isset($response['error']))
-        {
-            return $this->json($response['error'], (int) $response['code']);
-        }
-
-        return $this->json($response['tracklist'], context: ['groups' => ['tracklist_details']]);
+        return $this->createConditionalResponse(
+            request: $request,
+            data: $tracklist,
+            successStatus: Response::HTTP_OK,
+            context: ['groups' => ['tracklist_details']]
+        );
     }
 
     /**
      * Delete a tracklist and its tracklist season and tracklist episodes if avaible.
      *
+     * @param TracklistIdDto $dto
+     * @param User $user
+     * @return JsonResponse
      * @example DELETE /api/tracklist
      *          Header: Authorization: Bearer <JWT-TOKEN>
      *          Required request parameter:
      *          - `tracklist_id` (int) - The ID of the tracklist to delete.
-     * @param Request $request
-     * @return JsonResponse
      */
     #[IsAuthenticated]
-    #[Route('/api/tracklist', name: 'delete_tracklist', methods: ['DELETE'])]
-    public function deleteTracklist(Request $request): JsonResponse
+    #[Route(
+        path: '/api/tracklist',
+        name: 'delete_tracklist',
+        methods: ['DELETE']
+    )]
+    public function deleteTracklist(
+        #[MapQueryString] TracklistIdDto $dto,
+        User $user
+    ): JsonResponse
     {
-        $respone = $this->tracklistService->deleteTracklist($request);
+        $this->tracklistService->deleteTracklist(
+            tracklistId: $dto->tracklistId,
+            user: $user
+        );
 
-        if (isset($respone['error']))
+        return $this->json(
+            data: null,
+            status: Response::HTTP_NO_CONTENT
+        );
+    }
+
+    /**
+     * Erstellt eine HTTP-Antwort, die entweder das volle Datenobjekt (2xx)
+     * oder eine leere Antwort (204) zurückgibt, basierend auf den
+     * Client-Präferenzen im Query oder Header.
+     *
+     * @param Request $request
+     * @param mixed $data
+     * @param int $successStatus
+     * @param array $context
+     * @return JsonResponse
+     */
+    private function createConditionalResponse(
+        Request $request,
+        mixed $data,
+        int $successStatus,
+        array $context = []
+    ): JsonResponse
+    {
+        $wantsMinimalByQuery = $request->query->get('return') === 'minimal';
+        $preferHeader = $request->headers->get(
+            key: 'Prefer',
+            default: ''
+        );
+        $wantsMinimalByHeader = str_contains($preferHeader, 'return=minimal');
+        if ($wantsMinimalByQuery || $wantsMinimalByHeader)
         {
-            return $this->json($respone['error'], (int) $respone['code']);
+            return $this->json(
+                data: null,
+                status: Response::HTTP_NO_CONTENT
+            );
         }
 
-        return $this->json($respone['message'], $respone['code']);
+        return $this->json(
+            data: $data,
+            status: $successStatus,
+            context: $context
+        );
     }
 }

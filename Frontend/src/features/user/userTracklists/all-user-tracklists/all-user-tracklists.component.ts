@@ -203,10 +203,6 @@ export class AllUserTracklistsComponent implements OnInit {
                 this.tracklistStatusClass = 'statusDropped';
                 return 'statusDropped';
 
-            case 'rewatching':
-                this.tracklistStatusClass = 'statusRewatching';
-                return 'statusRewatching';
-
             case 'plan to watch':
                 this.tracklistStatusClass = 'statusPlanToWatch';
                 return 'statusPlanToWatch';

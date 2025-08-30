@@ -78,6 +78,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </p-float-label>
                 </div>
 
+                <div class="rewatching-checkbox">
+                    <p-checkbox
+                            formControlName="is_rewatching"
+                            [binary]="true"
+                            inputId="isRewatchingUpdateCheckbox"
+                    />
+                    <label for="isRewatchingUpdateCheckbox" class="ml-2">Erneut glotzen?</label>
+                </div>
+
                 <div class="ratingDIV">
                     <p>Bewertung</p>
                     <p-rating [stars]="10" formControlName="tracklist_rating" />
