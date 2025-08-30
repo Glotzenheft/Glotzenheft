@@ -31,7 +31,6 @@ import {
     Validators,
 } from '@angular/forms';
 import { Observable } from 'rxjs';
-import { CommonModule } from '@angular/common';
 import { ButtonModule } from 'primeng/button';
 import { MessageModule } from 'primeng/message';
 import { InputTextModule } from 'primeng/inputtext';

@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <div class="createMovieWindow">
         <div class="createNewTracklist">
-            <form action="submit" (ngSubmit)="createNewTracklist()" [formGroup]="tracklistForm">
+            <form (ngSubmit)="createNewTracklist()" [formGroup]="tracklistForm">
                 <div>
                     <p-float-label variant="in">
                         <input type="text" pInputText formControlName="trackListName" id="listName" />
