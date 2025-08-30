@@ -12,7 +12,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
+import {
+    Component,
+    input,
+    InputSignal,
+    OnInit,
+    output,
+    OutputEmitterRef,
+} from '@angular/core';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_GetMovieRecommendations } from '../../../../app/core/use-cases/media/get-movie-recommendations.use-case';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
@@ -26,8 +33,11 @@ import { ButtonModule } from 'primeng/button';
 import { CommonModule } from '@angular/common';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ProgressSpinner } from 'primeng/progressspinner';
-import { I_Recommendation, I_Recommendations } from '../../../../app/shared/interfaces/recommendation-interfaces';
-import { RecommendationCardComponent } from "../recommendation-card/recommendation-card.component";
+import {
+    I_Recommendation,
+    I_Recommendations,
+} from '../../../../app/shared/interfaces/recommendation-interfaces';
+import { RecommendationCardComponent } from '../recommendation-card/recommendation-card.component';
 
 @Component({
     selector: 'app-recommendations',
@@ -35,7 +45,7 @@ import { RecommendationCardComponent } from "../recommendation-card/recommendati
         ButtonModule,
         CommonModule,
         ProgressSpinner,
-        RecommendationCardComponent
+        RecommendationCardComponent,
     ],
     templateUrl: './recommendations.component.html',
     styleUrl: './recommendations.component.css',
@@ -45,7 +55,7 @@ import { RecommendationCardComponent } from "../recommendation-card/recommendati
         UC_GetMediaIdForMedia,
         UC_LogoutOfAccount,
         UC_NavigateToSpecificPage,
-    ]
+    ],
 })
 export class RecommendationsComponent implements OnInit {
     public recommendations: I_Recommendations | null = null;
@@ -61,12 +71,14 @@ export class RecommendationsComponent implements OnInit {
     public inpMovieId: InputSignal<number> = input.required<number>();
     public inpMovieTitle: InputSignal<string> = input.required<string>();
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
-    public inpRecommendations: InputSignal<I_Recommendations | null> = input.required<I_Recommendations | null>();
+    public inpRecommendations: InputSignal<I_Recommendations | null> =
+        input.required<I_Recommendations | null>();
     public inpMediaPosterPath: InputSignal<string> = input.required<string>();
 
     // output variables
     public outServerNotAvailable: OutputEmitterRef<boolean> = output<boolean>();
-    public outGetMovieRecommendations: OutputEmitterRef<I_Recommendations> = output<I_Recommendations>();
+    public outGetMovieRecommendations: OutputEmitterRef<I_Recommendations> =
+        output<I_Recommendations>();
 
     constructor(
         public readonly shortenStringUseCase: UC_ShortenString,
@@ -74,8 +86,7 @@ export class RecommendationsComponent implements OnInit {
         private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
         private readonly logOutOfAccountUseCase: UC_LogoutOfAccount,
         private readonly messageService: MessageService,
-    ) { }
-
+    ) {}
 
     ngOnInit(): void {
         this.getMovieRecommendations();
@@ -89,33 +100,42 @@ export class RecommendationsComponent implements OnInit {
             return;
         }
 
-
         this.isLoading = true;
-        this.subscription = this.getMovieRecommendationsUseCase.execute(this.inpMovieId(), this.inpMovieTitle(), this.inpIsMovie(), this.inpMediaPosterPath()).subscribe({
-            next: (response: I_Recommendations) => {
-                this.recommendations = response;
-                this.outGetMovieRecommendations.emit(response);
-                this.areRecommendationsShown = true;
-                this.isLoading = false;
-            },
-            error: (err) => {
-                if (err.status === 401 || err.status === 400) {
-                    this.logOutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                } else if (err.status === 0) {
-                    // server not available
-                    this.outServerNotAvailable.emit(true);
-                }
-                this.isError = true;
-                this.isLoading = false;
-            },
-        })
-    }
+        this.subscription = this.getMovieRecommendationsUseCase
+            .execute(
+                this.inpMovieId(),
+                this.inpMovieTitle(),
+                this.inpIsMovie(),
+                this.inpMediaPosterPath(),
+            )
+            .subscribe({
+                next: (response: I_Recommendations) => {
+                    this.recommendations = response;
+                    this.outGetMovieRecommendations.emit(response);
+                    this.areRecommendationsShown = true;
+                    this.isLoading = false;
+                },
+                error: (err) => {
+                    if (err.status === 401 || err.status === 400) {
+                        this.logOutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    } else if (err.status === 0) {
+                        // server not available
+                        this.outServerNotAvailable.emit(true);
+                    }
+                    this.isError = true;
+                    this.isLoading = false;
+                },
+            });
+    };
 
     public hideRecommendations = () => {
         this.areRecommendationsShown = false;
-    }
-
+    };
 }

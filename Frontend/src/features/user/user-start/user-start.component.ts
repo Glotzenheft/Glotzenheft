@@ -31,9 +31,15 @@ import { TableModule } from 'primeng/table';
 import { PaginatorModule } from 'primeng/paginator';
 import { ButtonModule } from 'primeng/button';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { RatingStatistic, WatchTimeStatistic } from '../../../app/shared/statistic-interfaces';
+import {
+    RatingStatistic,
+    WatchTimeStatistic,
+} from '../../../app/shared/statistic-interfaces';
 import { BarDiagram } from '../../../app/shared/interfaces/diagram-interfaces';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_GetUserRatings } from '../../../app/core/use-cases/user/get-user-ratings.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
@@ -58,7 +64,11 @@ import { UC_GetUserStatisticWatchTime } from '../../../app/core/use-cases/user/g
     ],
     templateUrl: './user-start.component.html',
     styleUrl: './user-start.component.css',
-    providers: [UC_GetUserRatings, UC_GetUserStatisticWatchTime, UC_LogoutOfAccount]
+    providers: [
+        UC_GetUserRatings,
+        UC_GetUserStatisticWatchTime,
+        UC_LogoutOfAccount,
+    ],
 })
 export class UserStartComponent implements OnInit {
     public userMediaStatistic$: Observable<WatchTimeStatistic> | null = null;
@@ -144,8 +154,8 @@ export class UserStartComponent implements OnInit {
         private router: Router,
         private getUserRatingsUseCase: UC_GetUserRatings,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
-        private getUserStatisticWatchTime: UC_GetUserStatisticWatchTime
-    ) { }
+        private getUserStatisticWatchTime: UC_GetUserStatisticWatchTime,
+    ) {}
 
     ngOnInit(): void {
         this.loadUserRatings();
@@ -249,7 +259,10 @@ export class UserStartComponent implements OnInit {
                     scales: {
                         x: { title: { display: true, text: 'Bewertung' } },
                         y: {
-                            title: { display: true, text: 'Anzahl der Bewertungen' },
+                            title: {
+                                display: true,
+                                text: 'Anzahl der Bewertungen',
+                            },
                             beginAtZero: true,
                             stepSize: 1,
                         },
@@ -265,9 +278,14 @@ export class UserStartComponent implements OnInit {
                         },
                     },
                     scales: {
-                        x: { title: { display: true, text: 'Datum (geschaut)' } },
+                        x: {
+                            title: { display: true, text: 'Datum (geschaut)' },
+                        },
                         y: {
-                            title: { display: true, text: 'geschaute Zeit [min]' },
+                            title: {
+                                display: true,
+                                text: 'geschaute Zeit [min]',
+                            },
                             beginAtZero: true,
                             stepSize: 1,
                         },
@@ -285,7 +303,10 @@ export class UserStartComponent implements OnInit {
                     scales: {
                         x: { title: { display: true, text: 'Jahr' } },
                         y: {
-                            title: { display: true, text: 'geschaute Zeit [h]' },
+                            title: {
+                                display: true,
+                                text: 'geschaute Zeit [h]',
+                            },
                             beginAtZero: true,
                             stepSize: 1,
                         },
@@ -303,7 +324,10 @@ export class UserStartComponent implements OnInit {
                     scales: {
                         x: { title: { display: true, text: 'Tag' } },
                         y: {
-                            title: { display: true, text: 'geschaute Zeit [min]' },
+                            title: {
+                                display: true,
+                                text: 'geschaute Zeit [min]',
+                            },
                             beginAtZero: true,
                             stepSize: 1,
                         },
@@ -344,19 +368,25 @@ export class UserStartComponent implements OnInit {
 
         this.userMediaStatistic$.subscribe({
             next: (res: WatchTimeStatistic) => {
-                const resAsList: [string, number][] = Object.entries(res).slice(1, 31);
+                const resAsList: [string, number][] = Object.entries(res).slice(
+                    1,
+                    31,
+                );
                 const yearlyDataMap = new Map<string, number>();
                 this.prepareHeatmapData(res);
 
                 Object.entries(res).forEach(([date, time]) => {
                     if (date !== 'unknown_date') {
                         const year = date.split('-')[0]; // Jahr extrahieren
-                        yearlyDataMap.set(year, (yearlyDataMap.get(year) || 0) + time / 60);
+                        yearlyDataMap.set(
+                            year,
+                            (yearlyDataMap.get(year) || 0) + time / 60,
+                        );
                     }
                 });
 
                 const yearlyDataList: [string, number][] = Array.from(
-                    yearlyDataMap.entries()
+                    yearlyDataMap.entries(),
                 );
 
                 // Erstellen des Balkendiagramms
@@ -380,12 +410,14 @@ export class UserStartComponent implements OnInit {
                             return val[0] !== 'unknown_date';
                         })
                         .map((val: [string, number]) =>
-                            new Date(val[0]).toLocaleDateString()
+                            new Date(val[0]).toLocaleDateString(),
                         ),
                     datasets: [
                         {
                             label: 'geschaute Zeit [min]',
-                            data: resAsList.map((val: [string, number]) => val[1]),
+                            data: resAsList.map(
+                                (val: [string, number]) => val[1],
+                            ),
                             fill: true,
                             borderColor: '#059669',
                             tension: 0.4,
@@ -401,7 +433,7 @@ export class UserStartComponent implements OnInit {
 
                 this.barChartForMostWatchedDaysMediaStatistic = {
                     labels: mostWatchedDays.map(([date]) =>
-                        new Date(date).toLocaleDateString()
+                        new Date(date).toLocaleDateString(),
                     ),
                     datasets: [
                         {
@@ -429,8 +461,8 @@ export class UserStartComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Laden der Daten',
-                        'Bitte probiere es erneut.'
-                    )
+                        'Bitte probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -478,11 +510,13 @@ export class UserStartComponent implements OnInit {
         this.maxHours = Math.max(
             ...Array.from(heatmap.values())
                 .flat()
-                .map((h) => Math.ceil(h))
+                .map((h) => Math.ceil(h)),
         );
 
         // Konvertiere für die Anzeige
-        this.heatmapData = Array.from(heatmap.entries()).sort(([a], [b]) => b - a); // Neuere Jahre zuerst
+        this.heatmapData = Array.from(heatmap.entries()).sort(
+            ([a], [b]) => b - a,
+        ); // Neuere Jahre zuerst
     };
 
     public getHeatmapColor(hours: number, isBackgroundColor: boolean): string {

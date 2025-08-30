@@ -15,12 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_SearchRepository, IT_SEARCH_REPOSITORY } from "../../interfaces/search.repository";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_SearchRepository,
+    IT_SEARCH_REPOSITORY,
+} from '../../interfaces/search.repository';
 
 @Injectable()
 export class UC_UpdateSearchTerm {
-    constructor(@Inject(IT_SEARCH_REPOSITORY) private readonly searchRepository: I_SearchRepository) { }
+    constructor(
+        @Inject(IT_SEARCH_REPOSITORY)
+        private readonly searchRepository: I_SearchRepository,
+    ) {}
 
-    public execute = (newSearchTerm: string) => { return this.searchRepository.updateSearchTerm(newSearchTerm) }
+    public execute = (newSearchTerm: string) => {
+        return this.searchRepository.updateSearchTerm(newSearchTerm);
+    };
 }

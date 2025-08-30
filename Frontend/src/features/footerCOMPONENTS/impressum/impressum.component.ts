@@ -21,8 +21,6 @@ import { Component } from '@angular/core';
     selector: 'app-impressum',
     imports: [],
     templateUrl: './impressum.component.html',
-    styleUrl: './impressum.component.css'
+    styleUrl: './impressum.component.css',
 })
-export class ImpressumComponent {
-
-}
+export class ImpressumComponent {}

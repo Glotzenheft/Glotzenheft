@@ -39,7 +39,11 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST_AS_OBJECT, TracklistStatusType } from '../../../../app/shared/variables/tracklist';
+import {
+    convertTracklistStatusIntoGerman,
+    TRACK_LIST_STATUS_LIST_AS_OBJECT,
+    TracklistStatusType,
+} from '../../../../app/shared/variables/tracklist';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/get-all-user-tracklists.use-case';
@@ -66,7 +70,7 @@ import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/ge
     ],
     templateUrl: './all-user-tracklists.component.html',
     styleUrl: './all-user-tracklists.component.css',
-    providers: [UC_GetAllUserTracklists]
+    providers: [UC_GetAllUserTracklists],
 })
 export class AllUserTracklistsComponent implements OnInit {
     public userTracklists$: Observable<Tracklist[]> | null = null;
@@ -110,8 +114,8 @@ export class AllUserTracklistsComponent implements OnInit {
     constructor(
         private router: Router,
         private formBuilder: FormBuilder,
-        private getAllUserTracklists: UC_GetAllUserTracklists
-    ) { }
+        private getAllUserTracklists: UC_GetAllUserTracklists,
+    ) {}
 
     ngOnInit(): void {
         this.currentFilterForm = this.formBuilder.group({
@@ -138,18 +142,21 @@ export class AllUserTracklistsComponent implements OnInit {
                     .filter((tracklist: Tracklist) => {
                         return (
                             tracklist.status ===
-                            this.currentFilterForm.get('statusFilter')?.value.value
+                            this.currentFilterForm.get('statusFilter')?.value
+                                .value
                         );
                     })
                     .filter((tracklist: Tracklist) => {
                         if (
-                            this.currentFilterForm.get('mediaFilter')?.value.value === 'all'
+                            this.currentFilterForm.get('mediaFilter')?.value
+                                .value === 'all'
                         ) {
                             return true;
                         } else {
                             return (
                                 tracklist.media.type ===
-                                this.currentFilterForm.get('mediaFilter')?.value.value
+                                this.currentFilterForm.get('mediaFilter')?.value
+                                    .value
                             );
                         }
                     });
@@ -251,7 +258,10 @@ export class AllUserTracklistsComponent implements OnInit {
                 );
             })
             .filter((tracklist: Tracklist) => {
-                if (this.currentFilterForm.get('mediaFilter')?.value.value === 'all') {
+                if (
+                    this.currentFilterForm.get('mediaFilter')?.value.value ===
+                    'all'
+                ) {
                     return true;
                 }
 

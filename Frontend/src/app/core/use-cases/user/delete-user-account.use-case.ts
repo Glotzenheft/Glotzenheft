@@ -15,16 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
-import { DeleteUserRequest } from "../../../shared/interfaces/user-interfaces";
-import { Observable } from "rxjs";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_UserRepository,
+    IT_USER_REPOSITORY,
+} from '../../interfaces/user.repository';
+import { DeleteUserRequest } from '../../../shared/interfaces/user-interfaces';
+import { Observable } from 'rxjs';
 
 @Injectable()
 export class UC_DeleteUserAccount {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+    constructor(
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: I_UserRepository,
+    ) {}
 
     public execute = (userData: DeleteUserRequest): Observable<any> | null => {
-        return this.userRepository.deleteUserAccount(userData)
-    }
+        return this.userRepository.deleteUserAccount(userData);
+    };
 }

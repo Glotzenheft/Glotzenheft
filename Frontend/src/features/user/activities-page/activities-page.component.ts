@@ -27,12 +27,19 @@ import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
 import { FormsModule } from '@angular/forms';
 import { TMDB_POSTER_PATH } from '../../../app/shared/variables/tmdb-vars';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
 import { UC_GetUserActivites } from '../../../app/core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 
-import { UserActivitiesResponse, UserActivity, UserActivityWithDaySplitt } from '../../../app/shared/interfaces/user-interfaces';
+import {
+    UserActivitiesResponse,
+    UserActivity,
+    UserActivityWithDaySplitt,
+} from '../../../app/shared/interfaces/user-interfaces';
 import { PaginationComponent } from '../../sharedCOMPONENTS/pagination/pagination.component';
 import { UC_NavigateToSpecificPage } from '../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { SelectOption } from '../../../shared/interfaces/select-option.interface';
@@ -49,19 +56,20 @@ import { SelectOption } from '../../../shared/interfaces/select-option.interface
         ProgressSpinnerModule,
         DropdownModule,
         FormsModule,
-        PaginationComponent
+        PaginationComponent,
     ],
     templateUrl: './activities-page.component.html',
     styleUrl: './activities-page.component.css',
     providers: [
         UC_GetUserActivites,
         UC_LogoutOfAccount,
-        UC_NavigateToSpecificPage
-    ]
+        UC_NavigateToSpecificPage,
+    ],
 })
 export class ActivitiesPageComponent implements OnInit {
     // variables for user activities overview
-    public userActivitiesRequest$: Observable<UserActivitiesResponse> | null = null;
+    public userActivitiesRequest$: Observable<UserActivitiesResponse> | null =
+        null;
     public userActivitiesListWithDaySplitter: UserActivityWithDaySplitt[] = [];
 
     public currentPage: number = 1;
@@ -82,8 +90,8 @@ export class ActivitiesPageComponent implements OnInit {
         private messageService: MessageService,
         private getActivitiesUseCase: UC_GetUserActivites,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
-        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage
-    ) { }
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+    ) {}
 
     ngOnInit(): void {
         this.loadUserActivities(1);
@@ -106,26 +114,38 @@ export class ActivitiesPageComponent implements OnInit {
                 const userActivities = response.results;
                 this.currentPage = response.page;
                 this.isLeftButtonDisabled = this.currentPage === 1;
-                this.isRightButtonDisabled = this.currentPage === this.totalPages;
+                this.isRightButtonDisabled =
+                    this.currentPage === this.totalPages;
                 this.totalPages = response.total_pages;
                 this.totalResults = response.total_results;
 
-                this.pageOptions = this.totalPages > 0
-                    ? Array.from({ length: this.totalPages }, (_, i) => ({
-                        label: (i + 1).toString(),
-                        value: i + 1,
-                    }))
-                    : [{ label: '0', value: 0 }];
+                this.pageOptions =
+                    this.totalPages > 0
+                        ? Array.from({ length: this.totalPages }, (_, i) => ({
+                              label: (i + 1).toString(),
+                              value: i + 1,
+                          }))
+                        : [{ label: '0', value: 0 }];
 
-                const sortedUserActivities: UserActivity[] = userActivities.sort(
-                    (a: UserActivity, b: UserActivity) => {
-                        return new Date(b.date).getTime() - new Date(a.date).getTime();
-                    }
-                );
+                const sortedUserActivities: UserActivity[] =
+                    userActivities.sort((a: UserActivity, b: UserActivity) => {
+                        return (
+                            new Date(b.date).getTime() -
+                            new Date(a.date).getTime()
+                        );
+                    });
 
                 this.userActivitiesListWithDaySplitter = [];
 
-                const weekDays = ['So.', 'Mo.', 'Di.', 'Mi.', 'Do.', 'Fr.', 'Sa.'];
+                const weekDays = [
+                    'So.',
+                    'Mo.',
+                    'Di.',
+                    'Mi.',
+                    'Do.',
+                    'Fr.',
+                    'Sa.',
+                ];
                 const dailyStats = new Map<
                     string,
                     { totalRuntime: number; mediaCount: number }
@@ -135,7 +155,10 @@ export class ActivitiesPageComponent implements OnInit {
                     const dateKey = userActivity.date.split(' ')[0];
 
                     if (!dailyStats.has(dateKey)) {
-                        dailyStats.set(dateKey, { totalRuntime: 0, mediaCount: 0 });
+                        dailyStats.set(dateKey, {
+                            totalRuntime: 0,
+                            mediaCount: 0,
+                        });
                     }
 
                     const stats = dailyStats.get(dateKey)!;
@@ -147,11 +170,14 @@ export class ActivitiesPageComponent implements OnInit {
 
                 sortedUserActivities.forEach((userActivity) => {
                     const dateAsDate = new Date(userActivity.date);
-                    const formattedDate = dateAsDate.toLocaleDateString('de-DE', {
-                        day: '2-digit',
-                        month: '2-digit',
-                        year: 'numeric',
-                    });
+                    const formattedDate = dateAsDate.toLocaleDateString(
+                        'de-DE',
+                        {
+                            day: '2-digit',
+                            month: '2-digit',
+                            year: 'numeric',
+                        },
+                    );
                     const weekDay = weekDays[dateAsDate.getDay()];
                     const dateKey = userActivity.date.split(' ')[0];
 
@@ -175,7 +201,7 @@ export class ActivitiesPageComponent implements OnInit {
                             tracklistSeasinID: null,
                             type: '',
                             isDateSplitter: true,
-                            picture: null
+                            picture: null,
                         });
 
                         lastDateKey = dateKey;
@@ -185,9 +211,10 @@ export class ActivitiesPageComponent implements OnInit {
                     this.userActivitiesListWithDaySplitter.push({
                         ...userActivity,
                         isDateSplitter: false,
-                        picture: userActivity.stillPath !== null
-                            ? userActivity.stillPath
-                            : userActivity.posterPath
+                        picture:
+                            userActivity.stillPath !== null
+                                ? userActivity.stillPath
+                                : userActivity.posterPath,
                     });
                 });
 
@@ -196,13 +223,13 @@ export class ActivitiesPageComponent implements OnInit {
                     this.currentPage = 0;
                     this.isLeftButtonDisabled = true;
                     this.isRightButtonDisabled = true;
-                }
-                else if (this.currentPage === 1) {
-                    this.isRightButtonDisabled = this.currentPage == this.totalPages;
+                } else if (this.currentPage === 1) {
+                    this.isRightButtonDisabled =
+                        this.currentPage == this.totalPages;
                     this.isLeftButtonDisabled = true;
-                }
-                else if (this.currentPage > 1) {
-                    this.isRightButtonDisabled = this.currentPage >= this.totalPages;
+                } else if (this.currentPage > 1) {
+                    this.isRightButtonDisabled =
+                        this.currentPage >= this.totalPages;
                     this.isLeftButtonDisabled = false;
                 }
                 this.isLoading = false;
@@ -211,7 +238,9 @@ export class ActivitiesPageComponent implements OnInit {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
 
                     return;
                 } else if (err.status === 0) {
@@ -223,8 +252,8 @@ export class ActivitiesPageComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Laden der Daten',
-                        'Bitte probiere es erneut.'
-                    )
+                        'Bitte probiere es erneut.',
+                    ),
                 );
 
                 this.isLoading = false;
@@ -257,9 +286,13 @@ export class ActivitiesPageComponent implements OnInit {
 
     public onClickActivity = (activity: UserActivityWithDaySplitt) => {
         if (activity.type === 'movie') {
-            void this.navigateToSpecificPageUseCase.execute(`${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`);
+            void this.navigateToSpecificPageUseCase.execute(
+                `${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`,
+            );
         } else {
-            void this.navigateToSpecificPageUseCase.execute(`${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`);
+            void this.navigateToSpecificPageUseCase.execute(
+                `${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`,
+            );
         }
     };
 

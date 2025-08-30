@@ -49,4 +49,4 @@ const userModuleRoutes: Routes = [
     declarations: [],
     imports: [CommonModule, RouterModule.forChild(userModuleRoutes)],
 })
-export class UserModule { }
+export class UserModule {}

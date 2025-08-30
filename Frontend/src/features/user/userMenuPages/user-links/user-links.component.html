@@ -16,11 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if (isLoggedIn) {
-<div class="userLinks">
-    <ul>
-        @for (route of personalUserLinks; track $index) {
-        <li><a [href]="route.fullUrl">{{ route.description }}</a></li>
-        }
-    </ul>
-</div>
+    <div class="userLinks">
+        <ul>
+            @for (route of personalUserLinks; track $index) {
+                <li>
+                    <a [href]="route.fullUrl">{{ route.description }}</a>
+                </li>
+            }
+        </ul>
+    </div>
 }

@@ -15,9 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-const API_ROUTE: string = "/api/";
-const SEARCH_ROUTE: string = "search/";
-
+const API_ROUTE: string = '/api/';
+const SEARCH_ROUTE: string = 'search/';
 
 export const ROUTE_MULTI_SEARCH: string[] = [
     API_ROUTE + SEARCH_ROUTE + 'multi?',
@@ -51,12 +50,11 @@ export const ROUTE_MEDIA_ID_FOR_MEDIA: string[] = [
 ];
 // example: https://127.0.0.1:8000/api/media?tmdb_id=205366&media_type=tv
 
-export const ROUTE_SEASON_DETAILS: string =
-    API_ROUTE + 'tv/season';
+export const ROUTE_SEASON_DETAILS: string = API_ROUTE + 'tv/season';
 
 export const ROUTE_RESET_PASSWORD: string = API_ROUTE + 'user';
 
-export const ROUTE_REGISTER: string = API_ROUTE + "register";
+export const ROUTE_REGISTER: string = API_ROUTE + 'register';
 
 export const ROUTE_LOGIN: string = API_ROUTE + 'login';
 
@@ -75,8 +73,7 @@ export const ROUTE_CREATE_NEW_TRACKLIST: string[] = [
 export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
     API_ROUTE + 'user-tracklists';
 
-export const ROUTE_DELETE_USER_ACCOUNT: string =
-    API_ROUTE + 'user';
+export const ROUTE_DELETE_USER_ACCOUNT: string = API_ROUTE + 'user';
 
 export const ROUTE_UPDATE_TRACKLIST: string[] = [
     API_ROUTE + 'tracklist?tracklist_id=', // 0
@@ -122,7 +119,10 @@ export const ROUTE_USER_ACTIVITIES: string =
 export const ROUTE_STATISTICS_GET_USER_RATINGS: string =
     API_ROUTE + 'statistic/user-ratings';
 
-export const ROUTE_CHECK_USER_AUTH: string = "http://172.17.164.32:8000/api/auth/check";
+export const ROUTE_CHECK_USER_AUTH: string =
+    'http://172.17.164.32:8000/api/auth/check';
 
-export const ROUTE_GET_TV_RECOMMENDATIONS: string = API_ROUTE + "tv/recommendations?tmdb_series_id=";
-export const ROUTE_GET_MOVIE_RECOMMENDATIONS: string = API_ROUTE + "movie/recommendations?tmdb_movie_id=";
+export const ROUTE_GET_TV_RECOMMENDATIONS: string =
+    API_ROUTE + 'tv/recommendations?tmdb_series_id=';
+export const ROUTE_GET_MOVIE_RECOMMENDATIONS: string =
+    API_ROUTE + 'movie/recommendations?tmdb_movie_id=';

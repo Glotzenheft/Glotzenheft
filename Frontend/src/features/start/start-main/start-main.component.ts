@@ -29,7 +29,7 @@ import { CommonModule } from '@angular/common';
 import { UC_LogoutOfAccount } from '../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { MessageService } from 'primeng/api';
 import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../app/shared/variables/message-vars';
-import { RecommendationCardComponent } from "../../media/mediaDetailsCOMPONENTS/recommendation-card/recommendation-card.component";
+import { RecommendationCardComponent } from '../../media/mediaDetailsCOMPONENTS/recommendation-card/recommendation-card.component';
 import { ProgressSpinner } from 'primeng/progressspinner';
 import { I_HighestRecommendations } from '../../../app/shared/interfaces/recommendation-interfaces';
 
@@ -43,15 +43,15 @@ import { I_HighestRecommendations } from '../../../app/shared/interfaces/recomme
         ButtonModule,
         CommonModule,
         RecommendationCardComponent,
-        ProgressSpinner
+        ProgressSpinner,
     ],
     templateUrl: './start-main.component.html',
     styleUrl: './start-main.component.css',
     providers: [
         UC_NavigateToSpecificPage,
         UC_GetHighestMedia,
-        UC_LogoutOfAccount
-    ]
+        UC_LogoutOfAccount,
+    ],
 })
 export class StartMainComponent implements OnInit {
     public areLoginButtonsVisible: boolean = !isUserLoggedIn();
@@ -64,7 +64,7 @@ export class StartMainComponent implements OnInit {
         private readonly getHighestMediaUseCase: UC_GetHighestMedia,
         private readonly logOutOfAccountUseCase: UC_LogoutOfAccount,
         private readonly messageService: MessageService,
-    ) { }
+    ) {}
 
     ngOnInit(): void {
         this.getHighestMedia();
@@ -95,7 +95,9 @@ export class StartMainComponent implements OnInit {
                 if (err.status === 401) {
                     this.logOutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl)
+                    this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 } else if (err.status === 0) {
                     this.isServerNotAvailable = true;
@@ -103,5 +105,5 @@ export class StartMainComponent implements OnInit {
                 this.isLoading = false;
             },
         });
-    }
+    };
 }

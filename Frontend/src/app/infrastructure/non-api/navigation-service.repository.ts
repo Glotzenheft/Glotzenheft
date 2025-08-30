@@ -20,12 +20,11 @@ import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
 import { I_NavigationRepository } from '../../core/interfaces/navigation.repository';
 
-
 @Injectable({
     providedIn: 'root',
 })
 export class R_Navigation implements I_NavigationRepository {
-    constructor(private router: Router) { }
+    constructor(private router: Router) {}
 
     public navigateToStartPage = () => {
         this.router.navigateByUrl('');
@@ -40,10 +39,12 @@ export class R_Navigation implements I_NavigationRepository {
     };
 
     public navigateToPage = (tmdbId: string, isMovie: boolean) => {
-        this.router.navigateByUrl(`${isMovie ? ROUTES_LIST[5].fullUrl : ROUTES_LIST[6].fullUrl}/${tmdbId}`)
-    }
+        this.router.navigateByUrl(
+            `${isMovie ? ROUTES_LIST[5].fullUrl : ROUTES_LIST[6].fullUrl}/${tmdbId}`,
+        );
+    };
 
     public navigateToSpecificPage = (url: string) => {
         this.router.navigateByUrl(url);
-    }
+    };
 }

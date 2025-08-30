@@ -22,13 +22,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <form action="submit" [formGroup]="deleteUserForm" (ngSubmit)="setDialogStatus(true)">
             <div>
                 <p-float-label variant="in">
-                    <p-select [options]="validationQuestions" optionLabel="name" formControlName="security_question"
-                        id="question" placeholder="Sicherheitsfrage auswählen ..." />
+                    <p-select 
+                        [options]="validationQuestions" 
+                        optionLabel="name" 
+                        formControlName="security_question"
+                        id="question" 
+                        placeholder="Sicherheitsfrage auswählen ..." 
+                        />
                     <label for="question">Sicherheitsfrage</label>
                 </p-float-label>
 
-                @if ( deleteUserForm.get('security_question')?.invalid && hasErrorField('security_question')) {
-                <p-message severity="error" size="small">Sicherheitsfrage muss ausgewählt sein.</p-message>
+                @if (deleteUserForm.get('security_question')?.invalid && hasErrorField('security_question')) {
+                    <p-message severity="error" size="small">Sicherheitsfrage muss ausgewählt sein.</p-message>
                 }
             </div>
             <div>
@@ -38,20 +43,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </p-float-label>
 
                 @if (deleteUserForm.get('security_answer')?.invalid && hasErrorField('security_answer')) {
-                <p-message severity="error" size="small">Die Antwort darf nicht leer sein.</p-message>
+                    <p-message severity="error" size="small">Die Antwort darf nicht leer sein.</p-message>
                 }
             </div>
 
             <div class="loginActions">
-                <p-button label="Löschen" type="submit" icon="pi pi-trash" severity="danger" />
-                <p-button label="Abbrechen" icon="pi pi-times" severity="secondary" (onClick)="cancelDeletion()" />
+                <p-button 
+                    label="Löschen" 
+                    type="submit" 
+                    icon="pi pi-trash" 
+                    severity="danger" 
+                    />
+                <p-button 
+                    label="Abbrechen" 
+                    icon="pi pi-times" 
+                    severity="secondary" 
+                    (onClick)="cancelDeletion()" 
+                    />
             </div>
         </form>
     </div>
 </div>
 
 @if (isDeleteDialogVisible) {
-<app-delete-dialog [inpHeading]="'Account löschen'" [inpText]="
-    'Willst du deinen Account wirklich löschen? Das kann nicht mehr rückgängig gemacht werden.'
-  " (outCancelDeletion)="setDialogStatus(false)" (outDeleteMedia)="submitForm()" [inpIsButtonEnabled]="true" />
+    <app-delete-dialog 
+        [inpHeading]="'Account löschen'" 
+        [inpText]="'Willst du deinen Account wirklich löschen? Das kann nicht mehr rückgängig gemacht werden.'" 
+        [inpIsButtonEnabled]="true" 
+        (outCancelDeletion)="setDialogStatus(false)" 
+        (outDeleteMedia)="submitForm()" 
+        />
 }

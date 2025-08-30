@@ -30,83 +30,83 @@ import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
 import { ROUTES_LIST } from './shared/variables/routes-list';
 
 export const routes: Routes = [
-  {
-    // 0
-    path: '',
-    component: StartMainComponent,
-  },
-  {
-    // 1
-    path: 'login',
-    component: LoginComponent,
-    canActivate: [authGuard],
-  },
-  {
-    // 2
-    path: 'register',
-    component: RegisterComponent,
-    canActivate: [authGuard],
-  },
-  {
-    // 3
-    path: 'reset-password',
-    component: ResetPasswordComponent,
-    canActivate: [authGuard],
-  },
-  {
-    // 4
-    path: 'user',
-    loadChildren: () =>
-      import('../features/user/user.module').then(
-        (module) => module.UserModule
-      ),
-    canActivate: [authGuard],
-  },
-  {
-    // 5
-    path: 'media',
-    loadChildren: () =>
-      import('../features/media/media.module').then(
-        (module) => module.MediaModule
-      ),
-    canActivate: [authGuard],
-  },
-  {
-    // 6
-    path: 'imprint',
-    component: ImpressumComponent,
-  },
-  {
-    // 7
-    path: 'about',
-    component: AboutComponent,
-  },
-  {
-    // 7
-    path: 'privacy-policy',
-    component: PrivacyPolicyComponent,
-  },
-  {
-    // 8
-    path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
-    component: MultiSearchComponent,
-    canActivate: [authGuard],
-  },
-  {
-    // 9
-    path: ROUTES_LIST[12].fullUrl,
-    component: AllUserTracklistsComponent,
-    canActivate: [authGuard],
-  },
-  {
-    // 10
-    path: ROUTES_LIST[15].fullUrl,
-    component: AgbComponent,
-  },
-  {
-    // 19
-    path: '**',
-    redirectTo: '/',
-    pathMatch: 'full',
-  },
+    {
+        // 0
+        path: '',
+        component: StartMainComponent,
+    },
+    {
+        // 1
+        path: 'login',
+        component: LoginComponent,
+        canActivate: [authGuard],
+    },
+    {
+        // 2
+        path: 'register',
+        component: RegisterComponent,
+        canActivate: [authGuard],
+    },
+    {
+        // 3
+        path: 'reset-password',
+        component: ResetPasswordComponent,
+        canActivate: [authGuard],
+    },
+    {
+        // 4
+        path: 'user',
+        loadChildren: () =>
+            import('../features/user/user.module').then(
+                (module) => module.UserModule,
+            ),
+        canActivate: [authGuard],
+    },
+    {
+        // 5
+        path: 'media',
+        loadChildren: () =>
+            import('../features/media/media.module').then(
+                (module) => module.MediaModule,
+            ),
+        canActivate: [authGuard],
+    },
+    {
+        // 6
+        path: 'imprint',
+        component: ImpressumComponent,
+    },
+    {
+        // 7
+        path: 'about',
+        component: AboutComponent,
+    },
+    {
+        // 7
+        path: 'privacy-policy',
+        component: PrivacyPolicyComponent,
+    },
+    {
+        // 8
+        path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
+        component: MultiSearchComponent,
+        canActivate: [authGuard],
+    },
+    {
+        // 9
+        path: ROUTES_LIST[12].fullUrl,
+        component: AllUserTracklistsComponent,
+        canActivate: [authGuard],
+    },
+    {
+        // 10
+        path: ROUTES_LIST[15].fullUrl,
+        component: AgbComponent,
+    },
+    {
+        // 19
+        path: '**',
+        redirectTo: '/',
+        pathMatch: 'full',
+    },
 ];

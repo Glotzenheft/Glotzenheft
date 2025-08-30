@@ -16,19 +16,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if (isVisible) {
-<div class="searchBar">
-    <div class="searchDIV">
-        @if (isBackButtonVisible) {
-        <p-button [raised]="true" icon="pi pi-arrow-left" severity="secondary" pTooltip="zurück zur Suche"
-            (onClick)="navigateToMultiSearch()" class="backButtonB" />
-        }
-        <p-iconfield class="search">
-            <p-inputicon styleClass="pi pi-search" />
-            <input type="text" pInputText pTooltip="Hier etwas zur Suche eingeben. Dabei werden alle Serien durchsucht."
-                tooltipPosition="bottom" placeholder="Suchen ..." (input)="handleInput($event)"
-                (keyup.enter)="navigateToSearch()" />
-        </p-iconfield>
-        <p-button (onClick)="navigateToSearch()" class="buttonShadow" pTooltip="Suchen" icon="pi pi-search" />
+    <div class="searchBar">
+        <div class="searchDIV">
+            @if (isBackButtonVisible) {
+                <p-button 
+                    [raised]="true" 
+                    icon="pi pi-arrow-left" 
+                    severity="secondary" 
+                    pTooltip="zurück zur Suche"
+                    (onClick)="navigateToMultiSearch()" 
+                    class="backButtonB" 
+                    />
+            }
+            
+            <p-iconfield class="search">
+                <p-inputicon styleClass="pi pi-search" />
+                <input 
+                    type="text" 
+                    pInputText 
+                    pTooltip="Hier etwas zur Suche eingeben. Dabei werden alle Serien durchsucht."
+                    tooltipPosition="bottom" 
+                    placeholder="Suchen ..." 
+                    (input)="handleInput($event)"
+                    (keyup.enter)="navigateToSearch()" 
+                    />
+            </p-iconfield>
+            <p-button 
+                class="buttonShadow" 
+                pTooltip="Suchen" 
+                icon="pi pi-search" 
+                (onClick)="navigateToSearch()" 
+                />
+        </div>
     </div>
-</div>
 }

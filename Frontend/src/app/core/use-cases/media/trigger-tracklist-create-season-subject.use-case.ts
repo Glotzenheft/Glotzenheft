@@ -15,15 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { CreateSeasonTracklistData } from "../../../shared/interfaces/tracklist-interfaces";
-import { I_MediaRepository, IT_MEDIA_REPOSITORY } from "../../interfaces/media.repository";
+import { Inject, Injectable } from '@angular/core';
+import { CreateSeasonTracklistData } from '../../../shared/interfaces/tracklist-interfaces';
+import {
+    I_MediaRepository,
+    IT_MEDIA_REPOSITORY,
+} from '../../interfaces/media.repository';
 
 @Injectable()
 export class UC_TriggerTracklistCREATESEASONSubject {
-    constructor(@Inject(IT_MEDIA_REPOSITORY) private readonly mediaRepository: I_MediaRepository) { }
+    constructor(
+        @Inject(IT_MEDIA_REPOSITORY)
+        private readonly mediaRepository: I_MediaRepository,
+    ) {}
 
     public execute = (tracklistData: CreateSeasonTracklistData) => {
-        this.mediaRepository.triggerTracklistCREATESEASONSubject(tracklistData)
-    }
+        this.mediaRepository.triggerTracklistCREATESEASONSubject(tracklistData);
+    };
 }

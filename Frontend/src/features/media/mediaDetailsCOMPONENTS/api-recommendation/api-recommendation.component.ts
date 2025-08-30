@@ -12,7 +12,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
+import {
+    Component,
+    input,
+    InputSignal,
+    OnInit,
+    output,
+    OutputEmitterRef,
+} from '@angular/core';
 import { Tooltip } from 'primeng/tooltip';
 import { TitleFormattingPipe } from '../../../../pipes/titleFormatting/title-formatting.pipe';
 import { ProgressSpinner } from 'primeng/progressspinner';
@@ -26,7 +33,10 @@ import { UC_NavigateToPage } from '../../../../app/core/use-cases/navigation/nav
 import { I_APIRecommendationResponse } from '../../../../app/shared/interfaces/recommendation-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { MessageService } from 'primeng/api';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { MediaIDResponse } from '../../../../app/shared/interfaces/media-interfaces';
 
@@ -42,8 +52,8 @@ import { MediaIDResponse } from '../../../../app/shared/interfaces/media-interfa
         UC_GetMediaIdForMedia,
         UC_ShowLoginMessage,
         UC_ShortenString,
-        UC_NavigateToPage
-    ]
+        UC_NavigateToPage,
+    ],
 })
 export class ApiRecommendationComponent implements OnInit {
     public isLoading: boolean = false;
@@ -52,12 +62,14 @@ export class ApiRecommendationComponent implements OnInit {
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
 
     // input variables
-    public inpRecommendations: InputSignal<I_APIRecommendationResponse | null> = input.required<I_APIRecommendationResponse | null>();
+    public inpRecommendations: InputSignal<I_APIRecommendationResponse | null> =
+        input.required<I_APIRecommendationResponse | null>();
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
     public inpTmdbId: InputSignal<number> = input.required<number>();
 
     // output variables
-    public outSetRecommendations: OutputEmitterRef<I_APIRecommendationResponse> = output<I_APIRecommendationResponse>();
+    public outSetRecommendations: OutputEmitterRef<I_APIRecommendationResponse> =
+        output<I_APIRecommendationResponse>();
 
     constructor(
         private readonly getAPIRecommendationsUseCase: UC_GetAPIRecommendations,
@@ -67,8 +79,8 @@ export class ApiRecommendationComponent implements OnInit {
         private readonly navigateToPageUseCase: UC_NavigateToPage,
         private readonly getMediaIdForMediaUseCase: UC_GetMediaIdForMedia,
         private readonly showLoginMessageUseCase: UC_ShowLoginMessage,
-        public readonly shortenStringUseCase: UC_ShortenString
-    ) { }
+        public readonly shortenStringUseCase: UC_ShortenString,
+    ) {}
 
     ngOnInit(): void {
         this.getRecommendations();
@@ -77,38 +89,48 @@ export class ApiRecommendationComponent implements OnInit {
     public getRecommendations = () => {
         if (this.inpRecommendations()) {
             this.recommendations = this.inpRecommendations();
-            return
-        };
+            return;
+        }
 
         this.isLoading = true;
-        this.getAPIRecommendationsUseCase.execute(this.inpTmdbId(), this.inpIsMovie()).subscribe({
-            next: (response: I_APIRecommendationResponse | null) => {
-                this.recommendations = response;
+        this.getAPIRecommendationsUseCase
+            .execute(this.inpTmdbId(), this.inpIsMovie())
+            .subscribe({
+                next: (response: I_APIRecommendationResponse | null) => {
+                    this.recommendations = response;
 
-                if (response) {
-                    this.outSetRecommendations.emit(response);
-                }
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    this.logOutOfAccountUseCase.execute();
-                    this.showLoginMessageUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
+                    if (response) {
+                        this.outSetRecommendations.emit(response);
+                    }
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        this.logOutOfAccountUseCase.execute();
+                        this.showLoginMessageUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
-                this.isError = true;
-            },
-            complete: () => { this.isLoading = false; }
-        });
-    }
+                    this.isError = true;
+                },
+                complete: () => {
+                    this.isLoading = false;
+                },
+            });
+    };
 
     public onClickRecommendation = (tmdbId: number, isMovie: boolean) => {
         this.getMediaIdForMediaUseCase.execute(tmdbId, isMovie).subscribe({
             next: (res: MediaIDResponse) => {
                 if (res.media_id === undefined || res.media_id === null) {
-                    this.messageService.add(getMessageObject("error", "Fehler beim Weiterleiten"));
+                    this.messageService.add(
+                        getMessageObject('error', 'Fehler beim Weiterleiten'),
+                    );
                     return;
                 }
                 this.navigateToPageUseCase.execute(res.media_id, isMovie);
@@ -117,12 +139,14 @@ export class ApiRecommendationComponent implements OnInit {
                 if (err.status === 401) {
                     this.showLoginMessageUseCase.execute();
                     this.logOutOfAccountUseCase.execute();
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 }
 
                 this.isError = true;
-            }
-        })
-    }
+            },
+        });
+    };
 }

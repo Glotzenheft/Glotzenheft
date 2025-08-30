@@ -87,7 +87,6 @@ p {
 
 /* media query for smart phones and tablets */
 @media (max-width: 500px) {
-
     html,
     body {
         margin: 0;
@@ -407,7 +406,6 @@ p {
 
 /* media query for smart phones and tablets */
 @media (min-width: 500px) and (max-width: 850px) {
-
     html,
     body {
         margin: 0;
@@ -726,7 +724,6 @@ p {
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
-
     html,
     body {
         margin: 0;
@@ -796,8 +793,10 @@ p {
     .content {
         height: 100%;
         width: calc(100% - 2 * var(--padding--left-right));
-        background: linear-gradient(var(--content-background-color),
-                var(--content-background-color2));
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         padding-top: var(--padding--top-bottom);
@@ -997,7 +996,6 @@ p {
 }
 
 @media (min-width: 940px) and (max-width: 1000px) {
-
     html,
     body {
         margin: 0;
@@ -1066,8 +1064,10 @@ p {
     .content {
         height: 100%;
         width: calc(100% - 2 * var(--padding--left-right));
-        background: linear-gradient(var(--content-background-color),
-                var(--content-background-color2));
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         padding-top: var(--padding--top-bottom);
@@ -1284,7 +1284,6 @@ p {
 }
 
 @media (min-width: 1000px) {
-
     html,
     body {
         margin: 0;
@@ -1353,8 +1352,10 @@ p {
     .content {
         height: 100%;
         width: calc(100% - 2 * var(--padding--left-right));
-        background: linear-gradient(var(--content-background-color),
-                var(--content-background-color2));
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         padding-top: var(--padding--top-bottom);
@@ -1625,7 +1626,6 @@ p {
 .p-tab-active {
     color: #10b981 !important;
 }
-
 
 .cardContainer {
     list-style: none;

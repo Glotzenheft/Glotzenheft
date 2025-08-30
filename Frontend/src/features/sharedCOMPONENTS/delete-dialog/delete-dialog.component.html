@@ -17,6 +17,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <p-dialog [header]="inpHeading()" [(visible)]="isDialogVisible" (onHide)="cancelDeletion()">
     <P>{{ inpText() }}</P>
-    <p-button label="Löschen" severity="danger" icon="pi pi-trash" [disabled]="!inpIsButtonEnabled()"
-        (onClick)="deleteMedia()" />
+    <p-button 
+        label="Löschen" 
+        severity="danger" 
+        icon="pi pi-trash" 
+        [disabled]="!inpIsButtonEnabled()"
+        (onClick)="deleteMedia()" 
+        />
 </p-dialog>

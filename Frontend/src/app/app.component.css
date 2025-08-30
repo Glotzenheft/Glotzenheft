@@ -16,207 +16,207 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 @media (max-width: 850px) {
-  .appwrapper {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    /* overflow: hidden; */
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
-    overflow: hidden;
-  }
-  .appHeading {
-    width: 100%;
+    .appwrapper {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        /* overflow: hidden; */
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
+        overflow: hidden;
+    }
+    .appHeading {
+        width: 100%;
 
-    padding: 0;
-    display: flex;
-    justify-content: space-between;
-    align-items: start;
-  }
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+    }
 
-  .appHeading h1:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+    .appHeading h1:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 
-  .appHeading h1 a {
-    text-decoration: none;
-    color: white;
-  }
+    .appHeading h1 a {
+        text-decoration: none;
+        color: white;
+    }
 
-  .closedSidebarToggleDIV {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    height: 3rem;
-  }
+    .closedSidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        height: 3rem;
+    }
 
-  .sidebarToggleDIV {
-    display: flex;
-    align-items: center;
-    justify-content: flex-start;
-    width: 100%;
-    height: 3rem;
-    /* height: 100%; */
-  }
+    .sidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        height: 3rem;
+        /* height: 100%; */
+    }
 
-  .sidebarToggleDIV div,
-  .closedSidebarToggleDIV div {
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--border--radius);
-    transition-duration: var(--transition--duration);
-  }
+    .sidebarToggleDIV div,
+    .closedSidebarToggleDIV div {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        transition-duration: var(--transition--duration);
+    }
 
-  .sidebarToggleDIV div:hover,
-  .closedSidebarToggleDIV div:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-  }
+    .sidebarToggleDIV div:hover,
+    .closedSidebarToggleDIV div:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
-  .appwrapper {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    /* overflow: hidden; */
+    .appwrapper {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        /* overflow: hidden; */
 
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .appHeading {
-    width: 100%;
-    font-size: 1.2rem;
-  }
-  .toggleButton {
-    display: none;
-  }
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .appHeading {
+        width: 100%;
+        font-size: 1.2rem;
+    }
+    .toggleButton {
+        display: none;
+    }
 
-  .appHeading h1:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+    .appHeading h1:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 
-  .appHeading h1 a {
-    text-decoration: none;
-    color: white;
-  }
+    .appHeading h1 a {
+        text-decoration: none;
+        color: white;
+    }
 
-  .closedSidebarToggleDIV {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 100%;
-    height: 3rem;
-  }
+    .closedSidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 3rem;
+    }
 
-  .sidebarToggleDIV {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 3rem;
-  }
+    .sidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 3rem;
+    }
 
-  .sidebarToggleDIV div,
-  .closedSidebarToggleDIV div {
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--border--radius);
-    transition-duration: var(--transition--duration);
-  }
+    .sidebarToggleDIV div,
+    .closedSidebarToggleDIV div {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        transition-duration: var(--transition--duration);
+    }
 
-  .sidebarToggleDIV div:hover,
-  .closedSidebarToggleDIV div:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-  }
+    .sidebarToggleDIV div:hover,
+    .closedSidebarToggleDIV div:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
 }
 
 @media (min-width: 940px) {
-  .appwrapper {
-    height: 100%;
-    width: 100%;
-    margin: 0;
-    padding: 0;
-    /* overflow: hidden; */
+    .appwrapper {
+        height: 100%;
+        width: 100%;
+        margin: 0;
+        padding: 0;
+        /* overflow: hidden; */
 
-    background: linear-gradient(
-      var(--content-background-color),
-      var(--content-background-color2)
-    );
+        background: linear-gradient(
+            var(--content-background-color),
+            var(--content-background-color2)
+        );
 
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-  }
-  .toggleButton {
-    display: none;
-  }
-  .appHeading {
-    width: 100%;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+    }
+    .toggleButton {
+        display: none;
+    }
+    .appHeading {
+        width: 100%;
 
-    display: flex;
-    flex-direction: column;
-    justify-content: start;
-    align-items: center;
-  }
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+    }
 
-  .closedSidebarToggleDIV {
-    width: 100%;
-    height: 3rem;
-  }
+    .closedSidebarToggleDIV {
+        width: 100%;
+        height: 3rem;
+    }
 
-  .sidebarToggleDIV {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-    height: 3rem;
-  }
+    .sidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 3rem;
+    }
 
-  .sidebarToggleDIV div,
-  .closedSidebarToggleDIV div {
-    width: 2rem;
-    height: 2rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    border-radius: var(--border--radius);
-    transition-duration: var(--transition--duration);
-  }
+    .sidebarToggleDIV div,
+    .closedSidebarToggleDIV div {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        transition-duration: var(--transition--duration);
+    }
 
-  .sidebarToggleDIV div:hover,
-  .closedSidebarToggleDIV div:hover {
-    background-color: rgba(255, 255, 255, 0.3);
-    cursor: pointer;
-  }
+    .sidebarToggleDIV div:hover,
+    .closedSidebarToggleDIV div:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
 
-  .appHeading h1:hover {
-    text-decoration: underline;
-    cursor: pointer;
-  }
+    .appHeading h1:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
 
-  .appHeading h1 a {
-    text-decoration: none;
-    color: white;
-  }
+    .appHeading h1 a {
+        text-decoration: none;
+        color: white;
+    }
 }

@@ -39,25 +39,28 @@ import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-i
     ],
     templateUrl: './search-bar.component.html',
     styleUrl: './search-bar.component.css',
-    providers: [UC_UpdateSearchTerm, UC_IsSearchBarVisible]
+    providers: [UC_UpdateSearchTerm, UC_IsSearchBarVisible],
 })
 export class SearchBarComponent implements OnInit {
     searchQuery: string = '';
     public isVisible: boolean = isUserLoggedIn();
     public isBackButtonVisible: boolean = false;
 
-    @Output() emitSearchQuery: EventEmitter<string> = new EventEmitter<string>();
+    @Output() emitSearchQuery: EventEmitter<string> =
+        new EventEmitter<string>();
 
     constructor(
         private router: Router,
         private updateSearchTermUseCase: UC_UpdateSearchTerm,
-        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible
-    ) { }
+        private isSearchBarVisibleUseCase: UC_IsSearchBarVisible,
+    ) {}
 
     ngOnInit(): void {
-        this.isSearchBarVisibleUseCase.observe().subscribe((status: boolean) => {
-            this.isVisible = status;
-        });
+        this.isSearchBarVisibleUseCase
+            .observe()
+            .subscribe((status: boolean) => {
+                this.isVisible = status;
+            });
 
         this.router.events.subscribe(() => {
             // checking url and if url is movie or tv details page make back button visible; otherwise invisible

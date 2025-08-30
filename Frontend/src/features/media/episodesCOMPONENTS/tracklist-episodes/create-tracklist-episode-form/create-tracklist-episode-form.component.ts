@@ -35,10 +35,16 @@ import { Observable } from 'rxjs';
 import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
-import { SeasonTracklist, TracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    SeasonTracklist,
+    TracklistEpisode,
+} from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { SeasonEpisode } from '../../../../../app/shared/interfaces/media-interfaces';
 import { CreateTracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UC_CreateTracklistEpisode } from '../../../../../app/core/use-cases/episode/create-tracklist-episode';
 import { UC_UpdateTracklistEpisode } from '../../../../../app/core/use-cases/episode/update-tracklist-episode.use-case';
@@ -59,14 +65,14 @@ import { DatePipe } from '@angular/common';
         SelectModule,
         TooltipModule,
         DeleteDialogComponent,
-        DatePipe
+        DatePipe,
     ],
     providers: [
         UC_CreateTracklistEpisode,
         UC_DeleteTracklistEpisode,
         UC_UpdateTracklistEpisode,
         UC_SetSelectedTracklistInLocalStorage,
-        UC_LogoutOfAccount
+        UC_LogoutOfAccount,
     ],
     templateUrl: './create-tracklist-episode-form.component.html',
     styleUrl: './create-tracklist-episode-form.component.css',
@@ -78,11 +84,13 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public inpEpisode: InputSignal<SeasonEpisode> =
         input.required<SeasonEpisode>();
     public inpSeasonID: InputSignal<number> = input.required<number>();
-    public inpIsEpisodeEditing: InputSignal<boolean> = input.required<boolean>();
+    public inpIsEpisodeEditing: InputSignal<boolean> =
+        input.required<boolean>();
 
     // output variables
     @Output() saveEpisode: EventEmitter<boolean> = new EventEmitter<boolean>();
-    @Output() cancelEpisode: EventEmitter<boolean> = new EventEmitter<boolean>();
+    @Output() cancelEpisode: EventEmitter<boolean> =
+        new EventEmitter<boolean>();
 
     // other variables
     public createEpisodeForm!: FormGroup;
@@ -95,7 +103,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public isCreateButtonEnabled: boolean = true;
     public isUpdateButtonEnabled: boolean = true;
     public isDeleteButtonEnabled: boolean = true;
-    public isCancelButtonEnabled: boolean = true
+    public isCancelButtonEnabled: boolean = true;
 
     constructor(
         private messageService: MessageService,
@@ -105,8 +113,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         private updateTracklistEpisodeUseCase: UC_UpdateTracklistEpisode,
         private deleteTracklistEpisodeUseCase: UC_DeleteTracklistEpisode,
         private logOutOfAccountUseCase: UC_LogoutOfAccount,
-        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage
-    ) { }
+        private setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage,
+    ) {}
 
     ngOnInit(): void {
         // extract the episode of the tracklist (for retrieving e. g. watchDate and trakcklist episode id)
@@ -114,7 +122,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
                 (epis: TracklistEpisode) => {
                     return this.inpEpisode().id === epis.episode.id;
-                }
+                },
             );
 
         const isEpisodeInTracklist: boolean =
@@ -126,9 +134,9 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.createEpisodeForm = this.formBuilder.group({
                 watchDate: [
                     isEpisodeInTracklist &&
-                        episodeInTracklist[0] &&
-                        episodeInTracklist[0].watchDate &&
-                        episodeInTracklist[0].watchDate.length > 0
+                    episodeInTracklist[0] &&
+                    episodeInTracklist[0].watchDate &&
+                    episodeInTracklist[0].watchDate.length > 0
                         ? watchDateAsDate
                         : null,
                 ],
@@ -141,7 +149,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
         // set local storage tracklist to selected tracklist
         this.setSelectedTracklistInLocalStorageUseCase.execute(
-            this.inpTracklist().id
+            this.inpTracklist().id,
         );
     }
 
@@ -150,14 +158,14 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.isUpdateButtonEnabled = false;
         this.isDeleteButtonEnabled = false;
         this.isCancelButtonEnabled = false;
-    }
+    };
 
     public enableAllButtons = () => {
         this.isCreateButtonEnabled = true;
         this.isUpdateButtonEnabled = true;
         this.isDeleteButtonEnabled = true;
         this.isCancelButtonEnabled = true;
-    }
+    };
 
     /**
      * Function for add a new episode of the current selected season to the current selected episode.
@@ -166,7 +174,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public submitForm = () => {
         this.disableAllButtons();
 
-        this.isCreateButtonEnabled = false
+        this.isCreateButtonEnabled = false;
         const watchDate: string | null =
             this.createEpisodeForm.get('watchDate')?.value;
         let formattedDate: string = '';
@@ -175,11 +183,20 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             const watchDateAsDate = new Date(watchDate);
 
             const year = watchDateAsDate.getFullYear();
-            const month = String(watchDateAsDate.getMonth() + 1).padStart(2, '0');
+            const month = String(watchDateAsDate.getMonth() + 1).padStart(
+                2,
+                '0',
+            );
             const day = String(watchDateAsDate.getDate()).padStart(2, '0');
             const hours = String(watchDateAsDate.getHours()).padStart(2, '0');
-            const minutes = String(watchDateAsDate.getMinutes()).padStart(2, '0');
-            const seconds = String(watchDateAsDate.getSeconds()).padStart(2, '0');
+            const minutes = String(watchDateAsDate.getMinutes()).padStart(
+                2,
+                '0',
+            );
+            const seconds = String(watchDateAsDate.getSeconds()).padStart(
+                2,
+                '0',
+            );
 
             formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
@@ -205,11 +222,20 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             const watchDateAsDate = new Date(watchDate);
 
             const year = watchDateAsDate.getFullYear();
-            const month = String(watchDateAsDate.getMonth() + 1).padStart(2, '0');
+            const month = String(watchDateAsDate.getMonth() + 1).padStart(
+                2,
+                '0',
+            );
             const day = String(watchDateAsDate.getDate()).padStart(2, '0');
             const hours = String(watchDateAsDate.getHours()).padStart(2, '0');
-            const minutes = String(watchDateAsDate.getMinutes()).padStart(2, '0');
-            const seconds = String(watchDateAsDate.getSeconds()).padStart(2, '0');
+            const minutes = String(watchDateAsDate.getMinutes()).padStart(
+                2,
+                '0',
+            );
+            const seconds = String(watchDateAsDate.getSeconds()).padStart(
+                2,
+                '0',
+            );
 
             formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
@@ -218,7 +244,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
                 (epis: TracklistEpisode) => {
                     return this.inpEpisode().id === epis.episode.id;
-                }
+                },
             );
 
         const updateEpisodeData: CreateTracklistEpisode = {
@@ -239,7 +265,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
                 (epis: TracklistEpisode) => {
                     return this.inpEpisode().id === epis.episode.id;
-                }
+                },
             );
 
         if (episodeInTracklist.length < 1) {
@@ -247,8 +273,8 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                 getMessageObject(
                     'error',
                     'Episode nicht gefunden',
-                    'Das Löschen ist fehlgeschlagen. Bitte probiere es erneut.'
-                )
+                    'Das Löschen ist fehlgeschlagen. Bitte probiere es erneut.',
+                ),
             );
 
             return;
@@ -272,7 +298,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
      */
     public makeAPIRequest = (
         episodeData: CreateTracklistEpisode,
-        episodeActionNumber: number
+        episodeActionNumber: number,
     ) => {
         this.disableAllButtons();
 
@@ -281,15 +307,15 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             episodeActionNumber === 0
                 ? 'Fehler beim Hinzufügen der Episode'
                 : episodeActionNumber === 1
-                    ? 'Fehler beim Speichern der Episode'
-                    : 'Fehler beim Löschen der Episode';
+                  ? 'Fehler beim Speichern der Episode'
+                  : 'Fehler beim Löschen der Episode';
 
         const errorMessageDetail: string =
             episodeActionNumber === 0
                 ? 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
                 : episodeActionNumber === 1
-                    ? 'Beim Speichern der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
-                    : 'Beim Löschen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
+                  ? 'Beim Speichern der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
+                  : 'Beim Löschen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
 
         if (episodeActionNumber === 0) {
             // create episode
@@ -298,7 +324,11 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
             if (!this.createEpisodeRequestData$) {
                 this.messageService.add(
-                    getMessageObject('error', errorMessageSummary, errorMessageDetail)
+                    getMessageObject(
+                        'error',
+                        errorMessageSummary,
+                        errorMessageDetail,
+                    ),
                 );
                 return;
             }
@@ -306,7 +336,10 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.createEpisodeRequestData$.subscribe({
                 next: () => {
                     this.messageService.add(
-                        getMessageObject('success', 'Episode erfolgreich hinzugefügt')
+                        getMessageObject(
+                            'success',
+                            'Episode erfolgreich hinzugefügt',
+                        ),
                     );
                     this.saveEpisode.emit(true);
                     this.enableAllButtons();
@@ -315,13 +348,19 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                     if (err.status === 401) {
                         // logout user of account
                         this.logOutOfAccountUseCase.execute();
-                        this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
                         this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
                         this.enableAllButtons();
                         return;
                     }
                     this.messageService.add(
-                        getMessageObject('error', errorMessageSummary, errorMessageDetail)
+                        getMessageObject(
+                            'error',
+                            errorMessageSummary,
+                            errorMessageDetail,
+                        ),
                     );
                     this.enableAllButtons();
                 },
@@ -335,7 +374,11 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
             if (!this.updateEpisodeRequestData$) {
                 this.messageService.add(
-                    getMessageObject('error', errorMessageSummary, errorMessageDetail)
+                    getMessageObject(
+                        'error',
+                        errorMessageSummary,
+                        errorMessageDetail,
+                    ),
                 );
                 return;
             }
@@ -343,19 +386,28 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.updateEpisodeRequestData$.subscribe({
                 next: () => {
                     this.messageService.add(
-                        getMessageObject('success', 'Episode erfolgreich gespeichert')
+                        getMessageObject(
+                            'success',
+                            'Episode erfolgreich gespeichert',
+                        ),
                     );
                     this.saveEpisode.emit(true);
                     this.enableAllButtons();
                 },
                 error: (err: any) => {
                     if (err.status === 401) {
-                        this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
                         this.enableAllButtons();
                         return;
                     }
                     this.messageService.add(
-                        getMessageObject('error', errorMessageSummary, errorMessageDetail)
+                        getMessageObject(
+                            'error',
+                            errorMessageSummary,
+                            errorMessageDetail,
+                        ),
                     );
                     this.enableAllButtons();
                 },
@@ -366,12 +418,16 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                 this.deleteTracklistEpisodeUseCase.execute(
                     episodeData.tracklistID,
                     episodeData.tracklistSeasonID,
-                    episodeData.episodeID
+                    episodeData.episodeID,
                 );
 
             if (!this.deleteEpisodeRequestData$) {
                 this.messageService.add(
-                    getMessageObject('error', errorMessageSummary, errorMessageDetail)
+                    getMessageObject(
+                        'error',
+                        errorMessageSummary,
+                        errorMessageDetail,
+                    ),
                 );
                 return;
             }
@@ -379,19 +435,28 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             this.deleteEpisodeRequestData$.subscribe({
                 next: () => {
                     this.messageService.add(
-                        getMessageObject('success', 'Episode erfolgreich gelöscht')
+                        getMessageObject(
+                            'success',
+                            'Episode erfolgreich gelöscht',
+                        ),
                     );
                     this.saveEpisode.emit(true);
                     this.enableAllButtons();
                 },
                 error: (err: any) => {
                     if (err.status === 401) {
-                        this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
                         this.enableAllButtons();
                         return;
                     }
                     this.messageService.add(
-                        getMessageObject('error', errorMessageSummary, errorMessageDetail)
+                        getMessageObject(
+                            'error',
+                            errorMessageSummary,
+                            errorMessageDetail,
+                        ),
                     );
                     this.enableAllButtons();
                 },

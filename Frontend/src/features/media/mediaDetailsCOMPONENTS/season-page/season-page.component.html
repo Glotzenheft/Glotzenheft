@@ -16,221 +16,267 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if (isLoading) {
-<div class="loadingWrapper">
-    <h1>Laden ...</h1>
-    <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-</div>
+    <div class="loadingWrapper">
+        <h1>Laden ...</h1>
+        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+    </div>
 }
 
 @if (serverNotAvailablePage) {
-<div class="serverNotAvailableDIV">
-    <h1>Server nicht erreichbar</h1>
-</div>
+    <div class="serverNotAvailableDIV">
+        <h1>Server nicht erreichbar</h1>
+    </div>
 }
 
 @if (!isLoading && !serverNotAvailablePage) {
-@if (isTracklistFormVisible === 0) {
-@if (hasError) {
-<div>
-    <p-panel header="Fehler beim Laden der Seite" class="error">
-        <p>
-            Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
-            versuchen Sie es erneut durch ein erneutes Laden der Seite.
-        </p>
-    </p-panel>
-</div>
-}
-
-@if (isInvalidID) {
-<div>
-    <p-panel header="Fehler beim Laden der Seite" class="error">
-        <p>
-            Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
-            erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
-            dieser Seite.
-        </p>
-    </p-panel>
-</div>
-}
-
-
-<div *ngIf="seasonData$ | async as seasonData">
-    <div class="headingDIV">
-        <h1>{{ seasonData.media.name }}</h1>
-    </div>
-    <div class="seasonMeta">
-        <div class="seasonPictureWrapper">
-            <div class="seasonMetaPicture">
-                @if (!seasonData.media.posterPath) {
-                <p><i>kein Bild vorhanden</i></p>
-
-                } @else {
-                <img [src]="POSTER_PATH + seasonData.media.posterPath"
-                    [alt]="'Dies ist das Bild für von ' + seasonData.media.name" loading="lazy" />
-                }
-            </div>
-        </div>
-        <div class="seasonMetaContent">
+    @if (isTracklistFormVisible === 0) {
+        @if (hasError) {
             <div>
-                <h2>Beschreibung</h2>
-                @if (seasonData.media.description) {
-                <p class="descriptionP">{{ seasonData.media.description }}</p>
-
-                } @else {
-                <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
-                }
-
-                <a [href]="TMDB_ROUTE + seasonData.media.tmdbID" class="linkA">> Link zur The Movie Database</a>
-
-                @if (seasonData.media.firstAirDate) {
-                <p>Ausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
-
-                } @else {
-                <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
-                }
-
-
-
-
+                <p-panel header="Fehler beim Laden der Seite" class="error">
+                    <p>
+                        Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
+                        versuchen Sie es erneut durch ein erneutes Laden der Seite.
+                    </p>
+                </p-panel>
             </div>
-        </div>
-    </div>
+        }
 
-    <app-media-tabs [inpTabList]="tabList" (outChangeTab)="onChangeTab($event)" />
+        @if (isInvalidID) {
+            <div>
+                <p-panel header="Fehler beim Laden der Seite" class="error">
+                    <p>
+                        Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
+                        erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
+                        dieser Seite.
+                    </p>
+                </p-panel>
+            </div>
+        }
 
-    @if (currentTab === tabList[0]) {
-    @if (seasonData.media.seasons.length > 0) {
-    <div class="episodes">
-        <h2>Staffeln</h2>
+        <div *ngIf="seasonData$ | async as seasonData">
+            <div class="headingDIV">
+                <h1>{{ seasonData.media.name }}</h1>
+            </div>
+            <div class="seasonMeta">
+                <div class="seasonPictureWrapper">
+                    <div class="seasonMetaPicture">
+                        @if (!seasonData.media.posterPath) {
+                            <p><i>kein Bild vorhanden</i></p>
+                        } 
+                        @else {
+                            <img 
+                                [src]="POSTER_PATH + seasonData.media.posterPath"
+                                [alt]="'Dies ist das Bild für von ' + seasonData.media.name" 
+                                loading="lazy" 
+                            />
+                        }
+                    </div>
+                </div>
+                <div class="seasonMetaContent">
+                    <div>
+                        <h2>Beschreibung</h2>
+                        @if (seasonData.media.description) {
+                            <p class="descriptionP">{{ seasonData.media.description }}</p>
+                        } 
+                        @else {
+                            <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
+                        }
 
-        <form action="" [formGroup]="tracklistSelectionForm">
-            @if (tvDataWithTracklist && tvDataWithTracklist.seasons && tvDataWithTracklist.seasons.length > 0) {
-            <p-accordion>
-                @for (season of tvDataWithTracklist.seasons; track $index) {
-                <p-accordion-panel [value]="$index" class="panel" (click)="setSelectedSeason(season)">
-                    <p-accordion-header>{{ season.name }}</p-accordion-header>
-                    <p-accordion-content>
-                        <div class="seasonWrapper">
-                            <div class="seasonPoster">
-                                @if (!season.posterPath) {
-                                <p>kein Bild vorhanden</p>
+                        <a [href]="TMDB_ROUTE + seasonData.media.tmdbID" class="linkA">> Link zur The Movie Database</a>
 
-                                } @else {
-                                <img [src]="POSTER_PATH + season.posterPath" [alt]="
-                                'Dies ist das Bild für von ' + seasonData.media.name
-                              " loading="lazy" />
-                                }
-                            </div>
-                            <div class="seasonMeta">
-                                <div>
-                                    @if (season.overview) {
-                                    <p class="descriptionP">
-                                        Beschreibung: <br />
-                                        {{ season.overview }}
-                                    </p>
+                        @if (seasonData.media.firstAirDate) {
+                            <p>Ausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
+                        } 
+                        @else {
+                            <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
+                        }
+                    </div>
+                </div>
+            </div>
 
-                                    } @else {
-                                    <p>Beschreibung: <i>keine Beschreibung vorhanden</i></p>
+            <app-media-tabs [inpTabList]="tabList" (outChangeTab)="onChangeTab($event)" />
+
+            @if (currentTab === tabList[0]) {
+                @if (seasonData.media.seasons.length > 0) {
+                    <div class="episodes">
+                        <h2>Staffeln</h2>
+                        <form action="" [formGroup]="tracklistSelectionForm">
+                            @if (tvDataWithTracklist && tvDataWithTracklist.seasons && tvDataWithTracklist.seasons.length > 0) {
+                                <p-accordion>
+                                @for (season of tvDataWithTracklist.seasons; track $index) {
+                                    <p-accordion-panel 
+                                        [value]="$index" 
+                                        class="panel" 
+                                        (click)="setSelectedSeason(season)"
+                                        >
+                                        <p-accordion-header>{{ season.name }}</p-accordion-header>
+                                        <p-accordion-content>
+                                            <div class="seasonWrapper">
+                                                <div class="seasonPoster">
+                                                    @if (!season.posterPath) {
+                                                        <p>kein Bild vorhanden</p>
+                                                    } 
+                                                    @else {
+                                                        <img 
+                                                            [src]="POSTER_PATH + season.posterPath" 
+                                                            [alt]="'Dies ist das Bild für von ' + seasonData.media.name" 
+                                                            loading="lazy" 
+                                                        />
+                                                    }
+                                                </div>
+                                                <div class="seasonMeta">
+                                                    <div>
+                                                        @if (season.overview) {
+                                                            <p class="descriptionP">
+                                                                Beschreibung: <br />
+                                                                {{ season.overview }}
+                                                            </p>
+                                                        } 
+                                                        @else {
+                                                            <p>Beschreibung: <i>keine Beschreibung vorhanden</i></p>
+                                                        }
+
+                                                        @if (season.airDate) {
+                                                            <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+                                                        } 
+                                                        @else {
+                                                            <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
+                                                        }
+                                                    </div>
+                                                </div>
+                                            </div>
+
+
+                                            @if (season.tracklistsForSeason && season.tracklistsForSeason.length > 0) {
+                                                <div class="tracklistSelectionDIV">
+                                                    <p-select 
+                                                        [options]="season.tracklistsForSeason" 
+                                                        optionLabel="tracklistName"
+                                                        formControlName="selectedTracklist" 
+                                                        placeholder="Trackliste auswählen ..."
+                                                        >
+                                                    </p-select>
+
+                                                    @if (isEditingButtonVisible) {
+                                                        <p-button label="Bearbeiten" (onClick)="setVisibility(2)" icon="pi pi-pencil" />
+                                                    }
+                                                </div>
+                                            }
+
+                                            <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="openTracklistForm(season)" />
+
+                                            @if (
+                                                tracklistSelectionForm.get('selectedTracklist')?.value &&
+                                                tracklistSelectionForm.get('selectedTracklist')?.value !== EMPTY_TRACKLIST
+                                                ) {
+                                                <app-episode-list 
+                                                    [episodeList]="season.episodes"
+                                                    [tracklistSelectionForm]="tracklistSelectionForm" 
+                                                    [selectedSeason]="selectedSeason"
+                                                    [tracklistsOfSeason]="tracklistsOfSeason" [inpSelectedTracklist]="
+                                                        tracklistSelectionForm.get('selectedTracklist')?.value
+                                                        ? tracklistSelectionForm.get('selectedTracklist')?.value
+                                                        : null
+                                                    " 
+                                                    [inpIsWithTracklist]="true" (setEpisode)="setCurrentEpisode($event, false)"
+                                                    (setEpisodeForEditing)="setCurrentEpisode($event, true)" 
+                                                    />
+                                            }
+
+
+                                            @if (
+                                                !tracklistSelectionForm.get('selectedTracklist')?.value ||
+                                                tracklistSelectionForm.get('selectedTracklist')?.value === EMPTY_TRACKLIST
+                                                ) {
+                                                <app-episode-list 
+                                                    [episodeList]="season.episodes"
+                                                    [tracklistSelectionForm]="tracklistSelectionForm" 
+                                                    [selectedSeason]="null"
+                                                    [tracklistsOfSeason]="[]" 
+                                                    [inpSelectedTracklist]="null" 
+                                                    [inpIsWithTracklist]="false" 
+                                                    />
+                                                }
+                                        </p-accordion-content>
+                                    </p-accordion-panel>
                                     }
-
-                                    @if (season.airDate) {
-                                    <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
-
-                                    } @else {
-                                    <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
-                                    }
-
-                                </div>
-                            </div>
-                        </div>
-
-
-                        @if (season.tracklistsForSeason && season.tracklistsForSeason.length > 0) {
-                        <div class="tracklistSelectionDIV">
-                            <p-select [options]="season.tracklistsForSeason" optionLabel="tracklistName"
-                                formControlName="selectedTracklist" placeholder="Trackliste auswählen ..."></p-select>
-
-                            @if (isEditingButtonVisible) {
-                            <p-button label="Bearbeiten" (onClick)="setVisibility(2)" icon="pi pi-pencil" />
+                                </p-accordion>
                             }
-                        </div>
-
-                        }
-                        <p-button label="Neue Trackliste anlegen" icon="pi pi-plus"
-                            (onClick)="openTracklistForm(season)" />
-
-
-                        @if (tracklistSelectionForm.get('selectedTracklist')?.value &&
-                        tracklistSelectionForm.get('selectedTracklist')?.value !== EMPTY_TRACKLIST) {
-                        <app-episode-list [episodeList]="season.episodes"
-                            [tracklistSelectionForm]="tracklistSelectionForm" [selectedSeason]="selectedSeason"
-                            [tracklistsOfSeason]="tracklistsOfSeason" [inpSelectedTracklist]="
-                                tracklistSelectionForm.get('selectedTracklist')?.value
-                                  ? tracklistSelectionForm.get('selectedTracklist')?.value
-                                  : null
-                              " [inpIsWithTracklist]="true" (setEpisode)="setCurrentEpisode($event, false)"
-                            (setEpisodeForEditing)="setCurrentEpisode($event, true)" />
-                        }
-
-
-                        @if (!tracklistSelectionForm.get('selectedTracklist')?.value ||
-                        tracklistSelectionForm.get('selectedTracklist')?.value === EMPTY_TRACKLIST) {
-                        <app-episode-list [episodeList]="season.episodes"
-                            [tracklistSelectionForm]="tracklistSelectionForm" [selectedSeason]="null"
-                            [tracklistsOfSeason]="[]" [inpSelectedTracklist]="null" [inpIsWithTracklist]="false" />
-                        }
-                    </p-accordion-content>
-                </p-accordion-panel>
+                        </form>
+                    </div>
                 }
-            </p-accordion>
             }
-        </form>
-    </div>
+            @else if (currentTab === tabList[1]) {
+                <app-api-recommendation 
+                    [inpIsMovie]="false" 
+                    [inpRecommendations]="apiRecommendations"
+                    [inpTmdbId]="seasonData.media.tmdbID" 
+                    (outSetRecommendations)="getRecommendations($event)" 
+                    />
+            } 
+            @else {
+                <app-media-metadata [inpIsMovie]="false" [inpSeasonData]="seasonData" [inpFilmData]="null" />
+            }
+
+        </div>
     }
+
+
+    <ng-container *ngIf="
+        isTracklistFormVisible === 1 &&
+        currentSeason &&
+        (seasonData$ | async) as seasonData
+        ">
+        <app-tracklist-form 
+            [isNewTracklistForm]="true" 
+            [isNewTracklistOfTypeTV]="true" 
+            [inputTVSeason]="currentSeason"
+            [mediaID]="seasonData.media.id" 
+            (cancelTracklistFormSubmission)="cancelTracklistForm()"
+            (saveNewTracklist)="refreshPage()" [inpTVName]="seasonData.media.name" 
+            />
+    </ng-container>
+
+    <ng-container *ngIf="
+        isTracklistFormVisible === 2 &&
+        tracklistSelectionForm.get('selectedTracklist')?.value &&
+        (seasonData$ | async) as seasonData
+        ">
+        <app-update-tracklist-form 
+            [inpSelectedTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value" 
+            (cancelTracklistEditing)="cancelTracklistForm()" 
+            (saveUpdatedTracklist)="refreshPage()" 
+            />
+    </ng-container>
+
+    @if (
+        isTracklistFormVisible === 3 
+        && tracklistSelectionForm.get('selectedTracklist')?.value 
+        && currentEpisode && currentSeason
+        ) {
+        <app-create-tracklist-episode-form 
+            [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
+            [inpEpisode]="currentEpisode" 
+            [inpSeasonID]="currentSeason.id" 
+            [inpIsEpisodeEditing]="false"
+            (saveEpisode)="refreshPage()" 
+            (cancelEpisode)="cancelTracklistForm()" 
+            />
     }
-    @else if (currentTab === tabList[1]) {
-    <app-api-recommendation [inpIsMovie]="false" [inpRecommendations]="apiRecommendations"
-        [inpTmdbId]="seasonData.media.tmdbID" (outSetRecommendations)="getRecommendations($event)" />
-    } @else {
-    <app-media-metadata [inpIsMovie]="false" [inpSeasonData]="seasonData" [inpFilmData]="null" />
+
+    @if (
+        isTracklistFormVisible === 4 
+        && tracklistSelectionForm.get('selectedTracklist')?.value 
+        && currentEpisode 
+        && currentSeason
+        ) {
+        <app-create-tracklist-episode-form 
+            [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
+            [inpEpisode]="currentEpisode" 
+            [inpSeasonID]="currentSeason.id" 
+            [inpIsEpisodeEditing]="true"
+            (saveEpisode)="refreshPage()" 
+            (cancelEpisode)="cancelTracklistForm()" 
+            />
     }
-
-</div>
-}
-
-
-<ng-container *ngIf="
-      isTracklistFormVisible === 1 &&
-      currentSeason &&
-      (seasonData$ | async) as seasonData
-    ">
-    <app-tracklist-form [isNewTracklistForm]="true" [isNewTracklistOfTypeTV]="true" [inputTVSeason]="currentSeason"
-        [mediaID]="seasonData.media.id" (cancelTracklistFormSubmission)="cancelTracklistForm()"
-        (saveNewTracklist)="refreshPage()" [inpTVName]="seasonData.media.name" />
-</ng-container>
-
-<ng-container *ngIf="
-      isTracklistFormVisible === 2 &&
-      tracklistSelectionForm.get('selectedTracklist')?.value &&
-      (seasonData$ | async) as seasonData
-    ">
-    <app-update-tracklist-form [inpSelectedTracklist]="
-        tracklistSelectionForm.get('selectedTracklist')?.value
-      " (cancelTracklistEditing)="cancelTracklistForm()" (saveUpdatedTracklist)="refreshPage()" />
-</ng-container>
-
-@if (isTracklistFormVisible === 3 && tracklistSelectionForm.get('selectedTracklist')?.value && currentEpisode &&
-currentSeason) {
-<app-create-tracklist-episode-form [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
-    [inpEpisode]="currentEpisode" [inpSeasonID]="currentSeason.id" [inpIsEpisodeEditing]="false"
-    (saveEpisode)="refreshPage()" (cancelEpisode)="cancelTracklistForm()" />
-}
-
-@if (isTracklistFormVisible === 4 && tracklistSelectionForm.get('selectedTracklist')?.value && currentEpisode &&
-currentSeason
-) {
-<app-create-tracklist-episode-form [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
-    [inpEpisode]="currentEpisode" [inpSeasonID]="currentSeason.id" [inpIsEpisodeEditing]="true"
-    (saveEpisode)="refreshPage()" (cancelEpisode)="cancelTracklistForm()" />
-}
 }

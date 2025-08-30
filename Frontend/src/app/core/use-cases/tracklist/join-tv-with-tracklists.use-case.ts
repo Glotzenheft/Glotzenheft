@@ -15,14 +15,22 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { Season } from "../../../shared/interfaces/media-interfaces";
-import { TVWithTracklist } from "../../../shared/interfaces/tracklist-interfaces";
-import { I_TracklistRepository, IT_TRACKLIST_REPOSITORY } from "../../interfaces/tracklist.repository";
+import { Inject, Injectable } from '@angular/core';
+import { Season } from '../../../shared/interfaces/media-interfaces';
+import { TVWithTracklist } from '../../../shared/interfaces/tracklist-interfaces';
+import {
+    I_TracklistRepository,
+    IT_TRACKLIST_REPOSITORY,
+} from '../../interfaces/tracklist.repository';
 
 @Injectable()
 export class UC_JoinTVWithTracklists {
-    constructor(@Inject(IT_TRACKLIST_REPOSITORY) private readonly tracklistRepository: I_TracklistRepository) { }
+    constructor(
+        @Inject(IT_TRACKLIST_REPOSITORY)
+        private readonly tracklistRepository: I_TracklistRepository,
+    ) {}
 
-    public execute = (data: Season): TVWithTracklist => { return this.tracklistRepository.joinTVWithTracklists(data) }
+    public execute = (data: Season): TVWithTracklist => {
+        return this.tracklistRepository.joinTVWithTracklists(data);
+    };
 }

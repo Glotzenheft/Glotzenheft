@@ -18,100 +18,114 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <h1>Suche</h1>
 
 <div class="pagination">
-    <app-pagination [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
-        [inpIsRightButtonDisabled]="isNextPageButtonDisabled" [inpSelectOptions]="pageOptions"
-        [inpTotalPages]="totalPages" [inpCurrentPage]="currentPage" [inpTotalResults]="totalResults"
-        [inpTotalPagesText]="'Gesamtergebnisse'" (outOnClickLeftButton)="changeToPrevPage()"
-        (outOnClickRightButton)="changeToNextPage()" (outOnChangeSelection)="onPageSelect($event)" />
+    <app-pagination 
+        [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
+        [inpIsRightButtonDisabled]="isNextPageButtonDisabled" 
+        [inpSelectOptions]="pageOptions"
+        [inpTotalPages]="totalPages" 
+        [inpCurrentPage]="currentPage" 
+        [inpTotalResults]="totalResults"
+        [inpTotalPagesText]="'Gesamtergebnisse'" 
+        (outOnClickLeftButton)="changeToPrevPage()"
+        (outOnClickRightButton)="changeToNextPage()" 
+        (outOnChangeSelection)="onPageSelect($event)" 
+        />
 </div>
 
 @if (isLoading) {
-<div class="loadingWrapper">
-    <h1>Laden ...</h1>
-    <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-</div>
+    <div class="loadingWrapper">
+        <h1>Laden ...</h1>
+        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+    </div>
 }
 
 @if (hasError) {
-<div class="serverNotAvailableDIV">
-    <h1>Server nicht erreichbar</h1>
-</div>
-}
-
-<div *ngIf="!hasError && results$ && (results$ | async) as res" class="results-container">
-    @if (res.results.length < 1) { <div class="noDataFoundDIV">
-        <h1>Keine Treffer gefunden</h1>
-</div>
-}
-
-
-@if (res.results.length > 0) {
-<h3>Suchergebnisse:</h3>
-
-<form [formGroup]="tracklistFilterForm" class="selectMediaTypeFORM">
-    <p-float-label variant="in">
-        <p-select [options]="tracklistMediaSelectionList" optionLabel="german"
-            formControlName="tracklistMediaTypeSelection" (onClick)="setFilteredResults()" id="mediaTypeSelection" />
-        <label for="mediaTypeSelection">Medientyp</label>
-    </p-float-label>
-</form>
-
-@if (sortedResults) {
-<div class="cardContainerWrapper">
-    <div class="cardContainer">
-        @for (resItem of sortedResults; track $index) {
-        <div class="multisearchCard" (click)="navigateToMediaPage(resItem.id, resItem.media_type)">
-            @if (resItem.media_type === 'tv') {
-            <p [pTooltip]="resItem.name">
-                {{
-                resItem.name.length > MAX_STRING_LENGTH
-                ? resItem.name.substring(0, MAX_STRING_LENGTH) + " ..."
-                : resItem.name
-                }}
-
-                @if (resItem.first_air_date) {
-                <span>
-                    ({{ resItem.first_air_date.substring(0, 4) }})
-                </span>
-                }
-            </p>
-            }
-
-            @if (resItem.media_type === 'movie') {
-            <p [pTooltip]="resItem.title">
-                {{
-                resItem.title.length > MAX_STRING_LENGTH
-                ? resItem.title.substring(0, MAX_STRING_LENGTH) + " ..."
-                : resItem.title
-                }}
-
-                @if (resItem.release_date) {
-                <span>({{ resItem.release_date.substring(0, 4) }})</span>
-                }
-            </p>
-            }
-
-
-            <div class="multisearchCardImg">
-                @if (resItem.poster_path) {
-                <img [src]="IMG_ROUTE + resItem.poster_path" [alt]="'Posterbild für ' + resItem.title" loading="lazy" />
-
-                } @else {
-                <p><i>Kein Bild vorhanden</i></p>
-                }
-            </div>
-            <p>{{ resItem.media_type === "tv" ? "Serie" : "Film" }}</p>
-        </div>
-        }
+    <div class="serverNotAvailableDIV">
+        <h1>Server nicht erreichbar</h1>
     </div>
-</div>
 }
 
-@if (visibleCountOnPage === 0) {
-<div class="noDataFoundDIV">
-    <h3>Auf dieser Seite wurden keine Serien/Filme gefunden.</h3>
-</div>
-<div class="noDataFoundDIV">Bitte eine andere Seite wählen.</div>
-}
-}
+<div 
+    *ngIf="!hasError && results$ && (results$ | async) as res" 
+    class="results-container"
+    >
+    @if (res.results.length < 1) { 
+        <div class="noDataFoundDIV">
+            <h1>Keine Treffer gefunden</h1>
+        </div>
+    }
+
+    @if (res.results.length > 0) {
+        <h3>Suchergebnisse:</h3>
+
+        <form [formGroup]="tracklistFilterForm" class="selectMediaTypeFORM">
+            <p-float-label variant="in">
+                <p-select 
+                    [options]="tracklistMediaSelectionList" 
+                    optionLabel="german"
+                    formControlName="tracklistMediaTypeSelection" 
+                    (onClick)="setFilteredResults()" id="mediaTypeSelection" 
+                    />
+                <label for="mediaTypeSelection">Medientyp</label>
+            </p-float-label>
+        </form>
+
+        @if (sortedResults) {
+            <div class="cardContainerWrapper">
+                <div class="cardContainer">
+                    @for (resItem of sortedResults; track $index) {
+                        <div class="multisearchCard" (click)="navigateToMediaPage(resItem.id, resItem.media_type)">
+                            @if (resItem.media_type === 'tv') {
+                                <p [pTooltip]="resItem.name">
+                                    {{
+                                        resItem.name.length > MAX_STRING_LENGTH
+                                        ? resItem.name.substring(0, MAX_STRING_LENGTH) + " ..."
+                                        : resItem.name
+                                    }}
+
+                                    @if (resItem.first_air_date) {
+                                        <span>
+                                            ({{ resItem.first_air_date.substring(0, 4) }})
+                                        </span>
+                                    }
+                                </p>
+                            }
+
+                            @if (resItem.media_type === 'movie') {
+                                <p [pTooltip]="resItem.title">
+                                    {{
+                                        resItem.title.length > MAX_STRING_LENGTH
+                                        ? resItem.title.substring(0, MAX_STRING_LENGTH) + " ..."
+                                        : resItem.title
+                                    }}
+
+                                    @if (resItem.release_date) {
+                                        <span>({{ resItem.release_date.substring(0, 4) }})</span>
+                                    }
+                                </p>
+                            }
+
+
+                            <div class="multisearchCardImg">
+                                @if (resItem.poster_path) {
+                                    <img [src]="IMG_ROUTE + resItem.poster_path" [alt]="'Posterbild für ' + resItem.title" loading="lazy" />
+                                } 
+                                @else {
+                                    <p><i>Kein Bild vorhanden</i></p>
+                                }
+                            </div>
+                            <p>{{ resItem.media_type === "tv" ? "Serie" : "Film" }}</p>
+                        </div>
+                    }
+                </div>
+            </div>
+        }
+
+        @if (visibleCountOnPage === 0) {
+            <div class="noDataFoundDIV">
+                <h3>Auf dieser Seite wurden keine Serien/Filme gefunden.</h3>
+            </div>
+            <div class="noDataFoundDIV">Bitte eine andere Seite wählen.</div>
+        }
+    }
 </div>

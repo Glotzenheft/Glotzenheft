@@ -41,8 +41,14 @@ import { Observable } from 'rxjs';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import {
+    convertTracklistStatusIntoGerman,
+    TRACK_LIST_STATUS_LIST,
+} from '../../../../../app/shared/variables/tracklist';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/media-interfaces';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
@@ -113,14 +119,14 @@ export class UpdateTracklistFormComponent implements OnInit {
         private getTracklistUPDATEResponseSubjectUseCase: UC_GetTracklistUPDATEResponseSubject,
         private getTracklistDELETEResponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
         private triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
-        private triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject
-    ) { }
+        private triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject,
+    ) {}
 
     ngOnInit(): void {
         this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
-                    getMessageObject('success', 'Erfolgreich gespeichert.')
+                    getMessageObject('success', 'Erfolgreich gespeichert.'),
                 );
                 this.saveUpdatedTracklist.emit(true);
             },
@@ -135,8 +141,8 @@ export class UpdateTracklistFormComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Speichern',
-                        'Bitte probiere es erneut.'
-                    )
+                        'Bitte probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -144,7 +150,10 @@ export class UpdateTracklistFormComponent implements OnInit {
         this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
-                    getMessageObject('success', 'Trackliste erfolgreich gelöscht')
+                    getMessageObject(
+                        'success',
+                        'Trackliste erfolgreich gelöscht',
+                    ),
                 );
                 this.saveUpdatedTracklist.emit(true);
             },
@@ -159,8 +168,8 @@ export class UpdateTracklistFormComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Löschen',
-                        'Bitte probiere es erneut.'
-                    )
+                        'Bitte probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -169,7 +178,7 @@ export class UpdateTracklistFormComponent implements OnInit {
 
         // set local storage selected tracklist to this tracklist
         this.setSelectedTracklistInLocalStorageUseCase.execute(
-            this.inpSelectedTracklist().id
+            this.inpSelectedTracklist().id,
         );
     }
 
@@ -180,7 +189,7 @@ export class UpdateTracklistFormComponent implements OnInit {
             tracklist_status: [
                 {
                     name: convertTracklistStatusIntoGerman(
-                        this.inpSelectedTracklist().status
+                        this.inpSelectedTracklist().status,
                     ),
                     value: this.inpSelectedTracklist().status,
                 },
@@ -220,7 +229,7 @@ export class UpdateTracklistFormComponent implements OnInit {
 
         if (this.updateTracklistForm.get('tracklist_start_date')?.value) {
             formattedStartDate = new Date(
-                this.updateTracklistForm.get('tracklist_start_date')?.value
+                this.updateTracklistForm.get('tracklist_start_date')?.value,
             )
                 .toISOString()
                 .split('T')[0];
@@ -228,7 +237,7 @@ export class UpdateTracklistFormComponent implements OnInit {
 
         if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
             formattedEndDate = new Date(
-                this.updateTracklistForm.get('tracklist_finish_date')?.value
+                this.updateTracklistForm.get('tracklist_finish_date')?.value,
             )
                 .toISOString()
                 .split('T')[0];
@@ -238,8 +247,10 @@ export class UpdateTracklistFormComponent implements OnInit {
             tracklist_id: this.selectedFullTracklist.id,
             tracklist_status:
                 this.updateTracklistForm.get('tracklist_status')?.value.value,
-            tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
-            tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
+            tracklist_name:
+                this.updateTracklistForm.get('tracklist_name')?.value,
+            tracklist_rating:
+                this.updateTracklistForm.get('tracklist_rating')?.value,
             tracklist_start_date: formattedStartDate,
             tracklist_finish_date: formattedEndDate,
         };
@@ -252,7 +263,9 @@ export class UpdateTracklistFormComponent implements OnInit {
 
         return (
             fieldControl! &&
-            (fieldControl!.dirty || fieldControl!.touched || this.isFormSubmitted)
+            (fieldControl!.dirty ||
+                fieldControl!.touched ||
+                this.isFormSubmitted)
         );
     };
 
@@ -264,7 +277,7 @@ export class UpdateTracklistFormComponent implements OnInit {
         this.isDeleteDialogVisible = false;
 
         this.triggerTracklistDELETESubjectUseCase.execute(
-            this.inpSelectedTracklist().id
+            this.inpSelectedTracklist().id,
         );
     };
 

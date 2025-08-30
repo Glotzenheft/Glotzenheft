@@ -15,12 +15,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_SecurityRepository, IT_SECURITY_REPOSITORY } from "../../interfaces/security.repository";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_SecurityRepository,
+    IT_SECURITY_REPOSITORY,
+} from '../../interfaces/security.repository';
 
 @Injectable()
 export class UC_GetInvalidChars {
-    constructor(@Inject(IT_SECURITY_REPOSITORY) private readonly securityRepository: I_SecurityRepository) { }
+    constructor(
+        @Inject(IT_SECURITY_REPOSITORY)
+        private readonly securityRepository: I_SecurityRepository,
+    ) {}
 
-    public observe = (): string[] => { return this.securityRepository.INVALID_CHARS }
+    public observe = (): string[] => {
+        return this.securityRepository.INVALID_CHARS;
+    };
 }

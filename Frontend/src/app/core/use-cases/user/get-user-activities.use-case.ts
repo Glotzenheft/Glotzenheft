@@ -15,16 +15,24 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_UserRepository, IT_USER_REPOSITORY } from "../../interfaces/user.repository";
-import { Observable } from "rxjs";
-import { UserActivitiesResponse } from "../../../shared/interfaces/user-interfaces";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_UserRepository,
+    IT_USER_REPOSITORY,
+} from '../../interfaces/user.repository';
+import { Observable } from 'rxjs';
+import { UserActivitiesResponse } from '../../../shared/interfaces/user-interfaces';
 
 @Injectable()
 export class UC_GetUserActivites {
-    constructor(@Inject(IT_USER_REPOSITORY) private readonly userRepository: I_UserRepository) { }
+    constructor(
+        @Inject(IT_USER_REPOSITORY)
+        private readonly userRepository: I_UserRepository,
+    ) {}
 
-    public execute = (responsePage: number): Observable<UserActivitiesResponse> | null => {
-        return this.userRepository.getUserActivities(responsePage)
-    }
+    public execute = (
+        responsePage: number,
+    ): Observable<UserActivitiesResponse> | null => {
+        return this.userRepository.getUserActivities(responsePage);
+    };
 }

@@ -30,7 +30,7 @@ export const ERR_OBJECT_INVALID_AUTHENTICATION: MessageObject = {
 export const getMessageObject = (
     severity: MessageStatusType,
     summary: string = '',
-    detail: string = ''
+    detail: string = '',
 ): MessageObject => {
     return {
         life: 7000,

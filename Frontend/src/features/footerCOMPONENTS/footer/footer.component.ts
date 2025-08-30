@@ -40,7 +40,7 @@ export class FooterComponent {
             };
         });
 
-    constructor(private router: Router) { }
+    constructor(private router: Router) {}
 
     navigateToRoute = (selectedRoute: string) => {
         this.router.navigateByUrl(selectedRoute);

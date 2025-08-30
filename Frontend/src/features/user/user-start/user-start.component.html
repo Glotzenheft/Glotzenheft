@@ -18,99 +18,116 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <router-outlet />
 
 @if (isLoading) {
-<div class="loadingWrapper">
-    <h1>Laden ...</h1>
-    <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-</div>
+    <div class="loadingWrapper">
+        <h1>Laden ...</h1>
+        <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+    </div>
 }
 
 @if (serverNotAvailablePage) {
-<div class="serverNotAvailableDIV">
-    <h1>Server nicht erreichbar</h1>
-</div>
+    <div class="serverNotAvailableDIV">
+        <h1>Server nicht erreichbar</h1>
+    </div>
 }
 
 @if (!isLoading && !serverNotAvailablePage) {
-@if (userRatings$) {
-<div class="diagrammDIV">
-    <h1>Meine Übersicht</h1>
+    @if (userRatings$) {
+        <div class="diagrammDIV">
+            <h1>Meine Übersicht</h1>
 
-    <div class="diagramSelection">
-        <p-select [options]="diagramSelection" optionLabel="name" (onChange)="handleDiagramSelectionChange($event)" />
-    </div>
+            <div class="diagramSelection">
+                <p-select 
+                    [options]="diagramSelection" 
+                    optionLabel="name" 
+                    (onChange)="handleDiagramSelectionChange($event)" 
+                    />
+            </div>
 
-    <div class="barChartDIVWrapper">
-        @if (selectedDiagramType.value === 0) {
-        <div class="barChartDIV">
-            <p-chart type="bar" [data]="ratingBarChart" [options]="diagramOptions" />
+            <div class="barChartDIVWrapper">
+                @if (selectedDiagramType.value === 0) {
+                    <div class="barChartDIV">
+                        <p-chart type="bar" [data]="ratingBarChart" [options]="diagramOptions" />
+                    </div>
+                }
+            </div>
+
+            @if (selectedDiagramType.value === 1) {
+                <div class="pieChartDIV">
+                    <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
+                </div>
+            } 
+            @else if (selectedDiagramType.value === 2) {
+            <div class="barChartDIVWrapper">
+                <div class="barChartDIV">
+                    <p-chart 
+                        type="bar" 
+                        [data]="barChartForMediaStatistic" 
+                        [options]="barChartMediaStatisticOptions" 
+                        />
+                </div>
+            </div>
+            }
+            @else if (selectedDiagramType.value === 3) {
+                <div class="barChartDIVWrapper">
+                    <div class="barChartDIV">
+                        <p-chart 
+                            type="bar" 
+                            [data]="barChartForYearlyMediaStatistic" 
+                            [options]="barChartYearlyStatisticOptions" 
+                            />
+                    </div>
+                </div>
+            } 
+            @else if (selectedDiagramType.value === 4) {
+                <div class="barChartDIVWrapper">
+                    <div class="barChartDIV">
+                        <p-chart 
+                            type="bar" 
+                            [data]="barChartForMostWatchedDaysMediaStatistic"
+                            [options]="barChartForMostWatchedDaysMediaStatisticOptions" 
+                            />
+                    </div>
+                </div>
+            } 
+            @else if (selectedDiagramType.value === 5) {
+                <div class="heatmap-container">
+                    <div class="heatmap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Jahr</th>
+                                    @for (month of months; track $index) {
+                                        <th>{{ month }}</th>
+                                    }
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @for (entry of heatmapData; track $index) {
+                                    <tr>
+                                        <td class="heatmap-Years">{{ entry[0] }}</td>
+
+                                        @for (hours of entry[1]; track $index) {
+                                            <td 
+                                                [style.background-color]="getHeatmapColor(hours, true)"
+                                                [style.color]="getHeatmapColor(hours, false)" 
+                                                [title]="hours.toFixed(1) + ' Stunden'"
+                                                >
+                                                {{ hours > 0 ? hours.toFixed(1) : "" }}
+                                            </td>
+                                        }
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            }
         </div>
-        }
-    </div>
-
-    @if (selectedDiagramType.value === 1) {
-    <div class="pieChartDIV">
-        <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
-    </div>
-
-    } @else if (selectedDiagramType.value === 2) {
-    <div class="barChartDIVWrapper">
-        <div class="barChartDIV">
-            <p-chart type="bar" [data]="barChartForMediaStatistic" [options]="barChartMediaStatisticOptions" />
-        </div>
-    </div>
-
-    } @else if (selectedDiagramType.value === 3) {
-    <div class="barChartDIVWrapper">
-        <div class="barChartDIV">
-            <p-chart type="bar" [data]="barChartForYearlyMediaStatistic" [options]="barChartYearlyStatisticOptions" />
-        </div>
-    </div>
-
-    } @else if (selectedDiagramType.value === 4) {
-    <div class="barChartDIVWrapper">
-        <div class="barChartDIV">
-            <p-chart type="bar" [data]="barChartForMostWatchedDaysMediaStatistic"
-                [options]="barChartForMostWatchedDaysMediaStatisticOptions" />
-        </div>
-    </div>
-
-    } @else if (selectedDiagramType.value === 5) {
-    <div class="heatmap-container">
-        <div class="heatmap">
-            <table>
-                <thead>
-                    <tr>
-                        <th>Jahr</th>
-                        @for (month of months; track $index) {
-                        <th>{{ month }}</th>
-                        }
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (entry of heatmapData; track $index) {
-                    <tr>
-                        <td class="heatmap-Years">{{ entry[0] }}</td>
-
-                        @for (hours of entry[1]; track $index) {
-                        <td [style.background-color]="getHeatmapColor(hours, true)"
-                            [style.color]="getHeatmapColor(hours, false)" [title]="hours.toFixed(1) + ' Stunden'">
-                            {{ hours > 0 ? hours.toFixed(1) : "" }}
-                        </td>
-                        }
-                    </tr>
-                    }
-                </tbody>
-            </table>
-        </div>
-    </div>
     }
-</div>
-}
 
-<div class="gapDIV"></div>
-
-<div class="activitiesPage">
-    <h2>Meine Aktivitäten</h2>
-    <p-button label="zu meinen Aktivitäten" icon="pi pi-arrow-right" (onClick)="navigateToActivitiesPage()" />
-</div>
+    <div class="gapDIV"></div>
+    <div class="activitiesPage">
+        <h2>Meine Aktivitäten</h2>
+        <p-button label="zu meinen Aktivitäten" icon="pi pi-arrow-right" (onClick)="navigateToActivitiesPage()" />
+    </div>
 }

@@ -15,13 +15,23 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Inject, Injectable } from "@angular/core";
-import { I_ValidationRepository, IT_VALIDATION_REPOSITORY } from "../../interfaces/validation.repository";
-import { AbstractControl, ValidationErrors } from "@angular/forms";
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_ValidationRepository,
+    IT_VALIDATION_REPOSITORY,
+} from '../../interfaces/validation.repository';
+import { AbstractControl, ValidationErrors } from '@angular/forms';
 
 @Injectable()
 export class UC_PasswordMatchValidationForResetPassword {
-    constructor(@Inject(IT_VALIDATION_REPOSITORY) private readonly validationRepository: I_ValidationRepository) { }
+    constructor(
+        @Inject(IT_VALIDATION_REPOSITORY)
+        private readonly validationRepository: I_ValidationRepository,
+    ) {}
 
-    public execute = (control: AbstractControl): ValidationErrors | null => { return this.validationRepository.passwordMatchValidatorForResetPassword(control) }
+    public execute = (control: AbstractControl): ValidationErrors | null => {
+        return this.validationRepository.passwordMatchValidatorForResetPassword(
+            control,
+        );
+    };
 }

@@ -15,4 +15,4 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export const TMDB_MAIN_ROUTE: string = "https://www.themoviedb.org/"
+export const TMDB_MAIN_ROUTE: string = 'https://www.themoviedb.org/';

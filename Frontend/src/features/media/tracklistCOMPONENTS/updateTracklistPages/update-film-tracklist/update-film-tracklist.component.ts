@@ -41,8 +41,14 @@ import { SelectModule } from 'primeng/select';
 import { Observable } from 'rxjs';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import { SeasonTracklist } from '../../../../../app/shared/interfaces/tracklist-interfaces';
-import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST } from '../../../../../app/shared/variables/tracklist';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../../app/shared/variables/message-vars';
+import {
+    convertTracklistStatusIntoGerman,
+    TRACK_LIST_STATUS_LIST,
+} from '../../../../../app/shared/variables/tracklist';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
 import { UpdateTracklistRequest } from '../../../../../app/shared/interfaces/media-interfaces';
 import { UC_GetTracklistUPDATEResponseSubject } from '../../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
@@ -69,7 +75,7 @@ import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-o
         UC_GetTracklistUPDATEResponseSubject,
         UC_TriggerTracklistDELETESubject,
         UC_TriggerTracklistUPDATESubject,
-        UC_LogoutOfAccount
+        UC_LogoutOfAccount,
     ],
     templateUrl: './update-film-tracklist.component.html',
     styleUrl: './update-film-tracklist.component.css',
@@ -108,8 +114,8 @@ export class UpdateFilmTracklistComponent implements OnInit {
         private getTracklistDELETEReponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
         private triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
         private triggerTracklistDELETEsubjectUseCase: UC_TriggerTracklistDELETESubject,
-        private logoutOfAccountUseCase: UC_LogoutOfAccount
-    ) { }
+        private logoutOfAccountUseCase: UC_LogoutOfAccount,
+    ) {}
 
     ngOnInit(): void {
         this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
@@ -132,8 +138,8 @@ export class UpdateFilmTracklistComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Speichern',
-                        'Bitte probiere es erneut.'
-                    )
+                        'Bitte probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -141,12 +147,17 @@ export class UpdateFilmTracklistComponent implements OnInit {
         this.updateTracklistForm = this.formBuilder.group({
             tracklist_status: [
                 {
-                    name: convertTracklistStatusIntoGerman(this.inpTracklist().status),
+                    name: convertTracklistStatusIntoGerman(
+                        this.inpTracklist().status,
+                    ),
                     value: this.inpTracklist().status,
                 },
                 Validators.required,
             ],
-            tracklist_name: [this.inpTracklist().tracklistName, Validators.required],
+            tracklist_name: [
+                this.inpTracklist().tracklistName,
+                Validators.required,
+            ],
             tracklist_rating: [this.inpTracklist().rating],
             tracklist_start_date: [
                 this.inpTracklist().startDate !== null
@@ -164,7 +175,10 @@ export class UpdateFilmTracklistComponent implements OnInit {
         this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
-                    getMessageObject('success', 'Trackliste erfolgreich gelöscht')
+                    getMessageObject(
+                        'success',
+                        'Trackliste erfolgreich gelöscht',
+                    ),
                 );
                 this.refreshFilmPage.emit(true);
             },
@@ -179,8 +193,8 @@ export class UpdateFilmTracklistComponent implements OnInit {
                     getMessageObject(
                         'error',
                         'Fehler beim Löschen',
-                        'Bitte probiere es erneut.'
-                    )
+                        'Bitte probiere es erneut.',
+                    ),
                 );
             },
         });
@@ -198,7 +212,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
 
         if (this.updateTracklistForm.get('tracklist_start_date')?.value) {
             formattedStartDate = new Date(
-                this.updateTracklistForm.get('tracklist_start_date')?.value
+                this.updateTracklistForm.get('tracklist_start_date')?.value,
             )
                 .toISOString()
                 .split('T')[0];
@@ -206,7 +220,7 @@ export class UpdateFilmTracklistComponent implements OnInit {
 
         if (this.updateTracklistForm.get('tracklist_finish_date')?.value) {
             formattedEndDate = new Date(
-                this.updateTracklistForm.get('tracklist_finish_date')?.value
+                this.updateTracklistForm.get('tracklist_finish_date')?.value,
             )
                 .toISOString()
                 .split('T')[0];
@@ -216,8 +230,10 @@ export class UpdateFilmTracklistComponent implements OnInit {
             tracklist_id: this.inpTracklist().id,
             tracklist_status:
                 this.updateTracklistForm.get('tracklist_status')?.value.value,
-            tracklist_name: this.updateTracklistForm.get('tracklist_name')?.value,
-            tracklist_rating: this.updateTracklistForm.get('tracklist_rating')?.value,
+            tracklist_name:
+                this.updateTracklistForm.get('tracklist_name')?.value,
+            tracklist_rating:
+                this.updateTracklistForm.get('tracklist_rating')?.value,
             tracklist_start_date: formattedStartDate,
             tracklist_finish_date: formattedEndDate,
         };
@@ -241,7 +257,9 @@ export class UpdateFilmTracklistComponent implements OnInit {
     };
 
     public deleteTracklist = () => {
-        this.triggerTracklistDELETEsubjectUseCase.execute(this.inpTracklist().id);
+        this.triggerTracklistDELETEsubjectUseCase.execute(
+            this.inpTracklist().id,
+        );
     };
 
     public setDeleteDialogVisibility = (status: boolean) => {

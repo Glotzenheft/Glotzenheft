@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <p-tabs [value]="currentTab" (valueChange)="onChangeTab($event)">
         <p-tablist>
             @for (tab of inpTabList(); track $index) {
-            <p-tab [value]="tab">{{tab}}</p-tab>
+                <p-tab [value]="tab">{{tab}}</p-tab>
             }
         </p-tablist>
     </p-tabs>

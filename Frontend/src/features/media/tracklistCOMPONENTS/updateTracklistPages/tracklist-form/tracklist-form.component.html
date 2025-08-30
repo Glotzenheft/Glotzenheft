@@ -16,7 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <ng-container>
-    <app-create-new-tracklist [mediaID]="mediaID()" [inputSeason]="inputTVSeason()"
-        (cancelTracklistForm)="cancelTracklistForm()" (saveUpdatedTracklist)="saveNewUpdatedTracklist()"
-        [inpTVName]="inpTVName()" />
+    <app-create-new-tracklist 
+        [mediaID]="mediaID()" [inputSeason]="inputTVSeason()"
+        (cancelTracklistForm)="cancelTracklistForm()" 
+        (saveUpdatedTracklist)="saveNewUpdatedTracklist()"
+        [inpTVName]="inpTVName()" 
+        />
 </ng-container>
