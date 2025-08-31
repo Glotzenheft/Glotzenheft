@@ -1,54 +1,71 @@
-/*
-This file is part of Glotzenheft.
-
-Glotzenheft is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Glotzenheft is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
-import { Injectable } from '@angular/core';
-import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import { HttpClient, HttpHeaders } from '@angular/common/http';
+import { EMPTY, Observable } from 'rxjs';
 import { Backup } from '../models/backup.model';
 import { ROUTE_BACKUPS, ROUTE_BACKUPS_DOWNLOAD, ROUTE_BACKUPS_IMPORT } from '../../shared/variables/api-routes';
+import { isPlatformBrowser } from '@angular/common';
+import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 
 @Injectable({
   providedIn: 'root'
 })
 export class BackupService {
 
-  constructor(private http: HttpClient) { }
+  constructor(
+    private http: HttpClient,
+    @Inject(PLATFORM_ID) private platformId: Object,
+  ) { }
+
+  private getHeader = (): HttpHeaders | null => {
+    let userToken: string = '';
+
+    if (isPlatformBrowser(this.platformId)) {
+        userToken =
+            localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN) ?? '';
+    }
+
+    if (!userToken.trim()) {
+        return null;
+    }
+
+    return new HttpHeaders({
+        Authorization: `Bearer ${userToken}`,
+    });
+  };
 
   getBackups(): Observable<Backup[]> {
-    return this.http.get<Backup[]>(ROUTE_BACKUPS);
+    const headers = this.getHeader();
+    if (!headers) return EMPTY;
+    return this.http.get<Backup[]>(ROUTE_BACKUPS, { headers: headers });
   }
 
   createBackup(): Observable<void> {
-    return this.http.post<void>(ROUTE_BACKUPS, {});
+    const headers = this.getHeader();
+    if (!headers) return EMPTY;
+    return this.http.post<void>(ROUTE_BACKUPS, {}, { headers: headers });
   }
 
   uploadBackup(file: File): Observable<any> {
+    const headers = this.getHeader();
+    if (!headers) return EMPTY;
+
     const formData = new FormData();
     formData.append('backupFile', file, file.name);
 
     return this.http.post(ROUTE_BACKUPS_IMPORT, formData, {
+      headers: headers,
       reportProgress: true,
       observe: 'events'
     });
   }
 
   downloadBackup(backupId: number): Observable<Blob> {
+    const headers = this.getHeader();
+    if (!headers) return EMPTY;
+
     const url = `${ROUTE_BACKUPS_DOWNLOAD}${backupId}/download`;
     return this.http.get(url, {
+      headers: headers,
       responseType: 'blob'
     });
   }
