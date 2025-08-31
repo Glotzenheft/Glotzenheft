@@ -160,12 +160,11 @@ readonly class TVSeriesSeasonService
             $isEpisodeChanged = !$episode instanceof Episode;
             if ($isEpisodeChanged)
             {
-                $episode = new Episode();
-                $season->addEpisode($episode);
-                $episode
+                $episode = (new Episode())
                     ->setSeason($season)
                     ->setTmdbEpisodeID($episodeData->getId())
                     ->setEpisodeNumber($episodeData->getEpisodeNumber());
+                $season->addEpisode($episode);
             }
 
             $this->setPropertyIfChanged(

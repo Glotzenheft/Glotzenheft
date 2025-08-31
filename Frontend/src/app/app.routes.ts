@@ -1,3 +1,4 @@
+<?php
 /*
 This file is part of Glotzenheft.
 
@@ -82,26 +83,35 @@ export const routes: Routes = [
         component: AboutComponent,
     },
     {
-        // 7
+        // 8
         path: 'privacy-policy',
         component: PrivacyPolicyComponent,
     },
     {
-        // 8
+        // 9
         path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
         component: MultiSearchComponent,
         canActivate: [authGuard],
     },
     {
-        // 9
+        // 10
         path: ROUTES_LIST[12].fullUrl,
         component: AllUserTracklistsComponent,
         canActivate: [authGuard],
     },
     {
-        // 10
+        // 11
         path: ROUTES_LIST[15].fullUrl,
         component: AgbComponent,
+    },
+    {
+        // 12
+        path: 'settings/backup',
+        loadComponent: () =>
+            import('../features/backup/pages/backup-page/backup-page.component').then(
+                (c) => c.BackupPageComponent
+            ),
+        canActivate: [authGuard],
     },
     {
         // 19

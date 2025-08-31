@@ -88,6 +88,9 @@ class Tracklist
     #[Groups(['tracklist_details'])]
     private ?bool $isRewatching = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $backupHash = null;
+
     public function __construct()
     {
         $this->tracklistSeasons = new ArrayCollection();
@@ -218,6 +221,18 @@ class Tracklist
     public function setIsRewatching(bool $isRewatching): static
     {
         $this->isRewatching = $isRewatching;
+
+        return $this;
+    }
+
+    public function getBackupHash(): ?string
+    {
+        return $this->backupHash;
+    }
+
+    public function setBackupHash(?string $backupHash): static
+    {
+        $this->backupHash = $backupHash;
 
         return $this;
     }

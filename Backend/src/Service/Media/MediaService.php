@@ -41,10 +41,11 @@ readonly class MediaService
 
     public function __construct(
         private EntityManagerInterface $entityManager,
-        private TVSeriesSeasonService $seasonService,
-        private TVApi $tvApi,
-        private MoviesApi $moviesApi,
-    ){}
+        private TVSeriesSeasonService  $seasonService,
+        private TVApi                  $tvApi,
+        private MoviesApi              $moviesApi
+    ) {
+    }
 
     /**
      * @param MediaIdDto $params

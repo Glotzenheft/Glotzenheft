@@ -1,0 +1,68 @@
+<div class="container">
+  <h1>Backup & Restore</h1>
+  <p>Here you can create backups of your watch history or restore it from a file.</p>
+
+  <div class="actions-container">
+    <!-- Export -->
+    <div class="action-card">
+      <h2>Create Backup</h2>
+      <p>Create a new backup of your entire watch history.</p>
+      <button (click)="createBackup()" class="btn btn-primary">Create New Backup</button>
+    </div>
+
+    <!-- Import -->
+    <div class="action-card">
+      <h2>Restore from Backup</h2>
+      <p>Upload a backup file to restore your history.</p>
+      <div class="upload-form">
+        <input type="file" (change)="onFileSelected($event)" accept=".json">
+        <button (click)="uploadBackup()" [disabled]="!selectedFile" class="btn btn-secondary">Upload & Restore</button>
+      </div>
+      <div *ngIf="selectedFile && uploadProgress > 0" class="progress-bar">
+        <div class="progress" [style.width.%]="uploadProgress"></div>
+      </div>
+      <p *ngIf="selectedFile">{{ selectedFile.name }}</p>
+    </div>
+  </div>
+
+  <h2>Available Backups</h2>
+  <div *ngIf="isPolling" class="polling-indicator">
+    <p>A backup is currently being processed. The list will update automatically...</p>
+  </div>
+
+  <table class="backup-table">
+    <thead>
+      <tr>
+        <th>Type</th>
+        <th>Status</th>
+        <th>Created At</th>
+        <th>Completed At</th>
+        <th>Items</th>
+        <th>Actions</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let backup of backups">
+        <td>{{ backup.type | titlecase }}</td>
+        <td>
+          <span class="status" [ngClass]="'status-' + backup.status">{{ backup.status | titlecase }}</span>
+        </td>
+        <td>{{ backup.createdAt | date:'medium' }}</td>
+        <td>{{ backup.completedAt ? (backup.completedAt | date:'medium') : 'N/A' }}</td>
+        <td>{{ backup.itemCount ?? 'N/A' }}</td>
+        <td>
+          <button
+            *ngIf="backup.type === 'export' && backup.status === 'completed'"
+            (click)="downloadBackup(backup.id)"
+            class="btn btn-sm">
+            Download
+          </button>
+          <span *ngIf="backup.status === 'pending' || backup.status === 'processing'">Processing...</span>
+        </td>
+      </tr>
+      <tr *ngIf="backups.length === 0">
+        <td colspan="6">No backups found.</td>
+      </tr>
+    </tbody>
+  </table>
+</div>

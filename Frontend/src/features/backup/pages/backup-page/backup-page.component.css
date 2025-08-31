@@ -1,0 +1,114 @@
+.container {
+  padding: 2rem;
+  max-width: 1200px;
+  margin: auto;
+}
+
+h1, h2 {
+  color: #333;
+}
+
+.actions-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 2rem;
+  margin: 2rem 0;
+}
+
+.action-card {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 1.5rem;
+  background-color: #f9f9f9;
+}
+
+.upload-form {
+  display: flex;
+  gap: 1rem;
+  align-items: center;
+}
+
+.btn {
+  padding: 0.5rem 1rem;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  color: white;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  color: white;
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    background-color: #28a745;
+    color: white;
+}
+
+.btn:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.progress-bar {
+    width: 100%;
+    background-color: #e9ecef;
+    border-radius: .25rem;
+    margin-top: 1rem;
+    height: 10px;
+}
+
+.progress {
+    height: 10px;
+    background-color: #007bff;
+    border-radius: .25rem;
+    transition: width 0.1s ease-in-out;
+}
+
+.polling-indicator {
+    padding: 1rem;
+    background-color: #eef;
+    border: 1px solid #cce;
+    border-radius: 4px;
+    margin-bottom: 1rem;
+}
+
+.backup-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 1rem;
+}
+
+.backup-table th, .backup-table td {
+  border: 1px solid #ddd;
+  padding: 0.75rem;
+  text-align: left;
+}
+
+.backup-table thead {
+  background-color: #f2f2f2;
+}
+
+.status {
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
+
+.status-completed { background-color: #28a745; }
+.status-pending { background-color: #ffc107; color: #212529;}
+.status-processing { background-color: #17a2b8; }
+.status-failed { background-color: #dc3545; }
