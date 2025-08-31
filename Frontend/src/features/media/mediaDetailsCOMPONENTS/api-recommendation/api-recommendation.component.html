@@ -20,7 +20,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 } 
 @else {
     @if (recommendations && recommendations.recommendations) {
-        <ul class="cardContainer">
+        <ul class="recommendationCardContainer">
             @for (rec of recommendations.recommendations; track $index) {
                 <li class="recCard" (click)="onClickRecommendation(rec.id, rec.media_type === 'movie')" [pTooltip]="rec.name">
                     <img [alt]="'Poster zu ' + rec.name" [src]="POSTER_PATH + rec.poster_path">
