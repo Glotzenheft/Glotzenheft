@@ -43,8 +43,6 @@ use Symfony\Component\RateLimiter\LimiterInterface;
 
 class ImportService
 {
-    private const BATCH_SIZE = 20;
-
     public function __construct(
         private readonly EntityManagerInterface    $entityManager,
         private readonly TracklistRepository       $tracklistRepository,
@@ -64,11 +62,9 @@ class ImportService
     public function processImport(array $backupData, User $user): array
     {
         $stats = ['imported' => 0, 'updated' => 0, 'skipped' => 0, 'failed' => 0];
-        $i = 0;
 
         foreach ($backupData['tracklists'] ?? [] as $item)
         {
-            $this->entityManager->beginTransaction();
             try
             {
                 $this->tmdbApiLimiter->consume()->wait();
@@ -78,11 +74,9 @@ class ImportService
                 if (null === $media)
                 {
                     $stats['failed']++;
-                    $this->entityManager->rollback();
                     continue;
                 }
 
-                // Find or create the main tracklist entry
                 $tracklist = $this->findOrCreateTracklist($item, $user, $media);
                 if ($tracklist->getId() !== null) {
                     $stats['updated']++;
@@ -93,22 +87,13 @@ class ImportService
                 $this->updateTracklistData($tracklist, $item);
                 $this->entityManager->persist($tracklist);
 
-                // If it's a show, process seasons and episodes
                 if ($media->getType() === MediaType::SHOW)
                 {
                     $this->importSeasonsAndEpisodes($tracklist, $item['seasons'] ?? []);
                 }
-
-                if ((++$i % self::BATCH_SIZE) === 0) {
-                    $this->entityManager->commit();
-                    $this->entityManager->flush();
-                } else {
-                    $this->entityManager->commit();
-                }
             }
             catch (Exception $e)
             {
-                $this->entityManager->rollback();
                 $this->logger->error('Failed to import tracklist item.', ['item' => $item, 'exception' => $e->getMessage()]);
                 $stats['failed']++;
             }
@@ -128,7 +113,6 @@ class ImportService
             }
         }
 
-        // Fallback to media and user for existing tracklists that were not imported
         $tracklist = $this->tracklistRepository->findOneBy(['media' => $media, 'user' => $user]);
         if ($tracklist) {
             return $tracklist;
@@ -160,37 +144,11 @@ class ImportService
     private function importSeasonsAndEpisodes(Tracklist $tracklist, array $seasonsData): void
     {
         foreach ($seasonsData as $seasonData) {
-            // Find or create TracklistSeason
-            $seasonHash = $seasonData['hash'] ?? null;
-            $tracklistSeason = $this->tracklistSeasonRepository->findOneBy(['backupHash' => $seasonHash]);
+            $tracklistSeason = $this->findOrCreateTracklistSeason($tracklist, $seasonData);
+            $this->entityManager->persist($tracklistSeason);
 
-            if (!$tracklistSeason) {
-                $seasonNumber = $seasonData['seasonNumber'] ?? -1;
-                $season = $tracklist->getMedia()?->getSeasons()->filter(fn(Season $s) => $s->getSeasonNumber() === $seasonNumber)->first();
-                if (!$season) continue;
-
-                $tracklistSeason = (new TracklistSeason())
-                    ->setTracklist($tracklist)
-                    ->setSeason($season)
-                    ->setBackupHash($seasonHash);
-                $this->entityManager->persist($tracklistSeason);
-            }
-
-            // Process episodes for this season
             foreach ($seasonData['episodes'] ?? [] as $episodeData) {
-                $episodeHash = $episodeData['hash'] ?? null;
-                $tracklistEpisode = $this->tracklistEpisodeRepository->findOneBy(['backupHash' => $episodeHash]);
-
-                if (!$tracklistEpisode) {
-                    $episodeNumber = $episodeData['episodeNumber'] ?? -1;
-                    $episode = $tracklistSeason->getSeason()?->getEpisodes()->filter(fn(Episode $e) => $e->getEpisodeNumber() === $episodeNumber)->first();
-                    if (!$episode) continue;
-
-                    $tracklistEpisode = (new TracklistEpisode())
-                        ->setTracklistSeason($tracklistSeason)
-                        ->setEpisode($episode)
-                        ->setBackupHash($episodeHash);
-                }
+                $tracklistEpisode = $this->findOrCreateTracklistEpisode($tracklistSeason, $episodeData);
 
                 if (!empty($episodeData['watchDate'])) {
                     $tracklistEpisode->setWatchDate(new DateTime($episodeData['watchDate']));
@@ -200,5 +158,57 @@ class ImportService
                 $this->entityManager->persist($tracklistEpisode);
             }
         }
+    }
+
+    private function findOrCreateTracklistSeason(Tracklist $tracklist, array $seasonData): TracklistSeason
+    {
+        $seasonHash = $seasonData['hash'] ?? null;
+        if ($seasonHash) {
+            $tracklistSeason = $this->tracklistSeasonRepository->findOneBy(['backupHash' => $seasonHash]);
+            if ($tracklistSeason) return $tracklistSeason;
+        }
+
+        $seasonNumber = $seasonData['seasonNumber'] ?? -1;
+        foreach ($tracklist->getTracklistSeasons() as $existingSeason) {
+            if ($existingSeason->getSeason()?->getSeasonNumber() === $seasonNumber) {
+                return $existingSeason;
+            }
+        }
+
+        $season = $tracklist->getMedia()?->getSeasons()->filter(fn(Season $s) => $s->getSeasonNumber() === $seasonNumber)->first();
+        if (!$season) {
+            throw new Exception("Could not find Season {$seasonNumber} for media.");
+        }
+
+        return (new TracklistSeason())
+            ->setTracklist($tracklist)
+            ->setSeason($season)
+            ->setBackupHash($seasonHash);
+    }
+
+    private function findOrCreateTracklistEpisode(TracklistSeason $tracklistSeason, array $episodeData): TracklistEpisode
+    {
+        $episodeHash = $episodeData['hash'] ?? null;
+        if ($episodeHash) {
+            $tracklistEpisode = $this->tracklistEpisodeRepository->findOneBy(['backupHash' => $episodeHash]);
+            if ($tracklistEpisode) return $tracklistEpisode;
+        }
+
+        $episodeNumber = $episodeData['episodeNumber'] ?? -1;
+        foreach ($tracklistSeason->getTracklistEpisodes() as $existingEpisode) {
+            if ($existingEpisode->getEpisode()?->getEpisodeNumber() === $episodeNumber) {
+                return $existingEpisode;
+            }
+        }
+
+        $episode = $tracklistSeason->getSeason()?->getEpisodes()->filter(fn(Episode $e) => $e->getEpisodeNumber() === $episodeNumber)->first();
+        if (!$episode) {
+            throw new Exception("Could not find Episode {$episodeNumber} for season.");
+        }
+
+        return (new TracklistEpisode())
+            ->setTracklistSeason($tracklistSeason)
+            ->setEpisode($episode)
+            ->setBackupHash($episodeHash);
     }
 }

@@ -73,22 +73,12 @@ class BackupController extends AbstractController
     #[IsAuthenticated]
     #[Route('/api/backups/import', name: 'app_api_backups_import', methods: ['POST'])]
     public function importBackup(
-        Request $request,
+        #[MapRequestPayload] ImportBackupDto $dto,
         User $user,
         MessageBusInterface $bus,
         EntityManagerInterface $entityManager
     ): JsonResponse
     {
-        $dto = new ImportBackupDto($request->files->get('backupFile'));
-
-        // The validation would normally be handled by the framework with DTOs,
-        // but for file uploads, we often handle it manually or with a form.
-        // For simplicity, we'll keep the direct check.
-        if (null === $dto->backupFile)
-        {
-            return $this->json(['error' => 'No file uploaded.'], Response::HTTP_BAD_REQUEST);
-        }
-
         $filename = uniqid('import_', true) . '.json';
         $dto->backupFile->move($this->backupDirectory, $filename);
 

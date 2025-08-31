@@ -66,7 +66,7 @@ class BackupService
                 $entryData['seasons'] = $this->buildSeasonsData($tracklist->getTracklistSeasons()->toArray());
             }
 
-            // The hash for the tracklist itself is based on its direct properties AND the nested data.
+            // The hash for the tracklist must be calculated AFTER seasons are added.
             $hash = $this->hashService->generateForData($entryData);
             $entryData['hash'] = $tracklist->getBackupHash() ?? $hash;
 
@@ -99,6 +99,7 @@ class BackupService
                 'episodes' => $this->buildEpisodesData($tracklistSeason->getTracklistEpisodes()->toArray()),
             ];
 
+            // The hash for the season must be calculated AFTER episodes are added.
             $hash = $this->hashService->generateForData($seasonEntry);
             $seasonEntry['hash'] = $tracklistSeason->getBackupHash() ?? $hash;
 
