@@ -111,3 +111,8 @@ export const ROUTE_GET_TV_RECOMMENDATIONS: string =
     API_ROUTE + 'tv/recommendations?tmdb_series_id=';
 export const ROUTE_GET_MOVIE_RECOMMENDATIONS: string =
     API_ROUTE + 'movie/recommendations?tmdb_movie_id=';
+
+// api routes for backups --------------------------
+export const ROUTE_BACKUPS: string = API_ROUTE + 'backups';
+export const ROUTE_BACKUPS_IMPORT: string = API_ROUTE + 'backups/import';
+export const ROUTE_BACKUPS_DOWNLOAD: string = API_ROUTE + 'backups/'; // Needs to be appended with backupId/download
