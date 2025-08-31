@@ -44,5 +44,5 @@ services:
     # please note that last definitions always *replace* previous ones
 
     App\Service\Backup\ImportService:
-        bind:
+        arguments:
             $tmdbApiLimiter: '@rate_limiter.tmdb_api'
