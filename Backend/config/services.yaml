@@ -42,7 +42,6 @@ services:
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones
-
     App\Service\Backup\ImportService:
         arguments:
-            $tmdbApiLimiter: '@rate_limiter.tmdb_api'
+            $container: '@service_container'

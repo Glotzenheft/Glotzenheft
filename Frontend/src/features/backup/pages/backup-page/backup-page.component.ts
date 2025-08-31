@@ -1,27 +1,10 @@
-/*
-This file is part of Glotzenheft.
-
-Glotzenheft is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Glotzenheft is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 import { Component, OnDestroy, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { BackupService } from '../../../../core/services/backup.service';
-import { Backup } from '../../../../core/models/backup.model';
+import { BackupService } from '../../../../app/core/services/backup.service';
+import { Backup } from '../../../../app/core/models/backup.model';
 import { Subject, Subscription, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
-import { HttpEventType } from '@angular/common/http';
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 
 @Component({
   selector: 'app-backup-page',
@@ -46,9 +29,9 @@ export class BackupPageComponent implements OnInit, OnDestroy {
   }
 
   loadBackups(): void {
-    this.backupService.getBackups().pipe(takeUntil(this.destroy$)).subscribe(backups => {
+    this.backupService.getBackups().pipe(takeUntil(this.destroy$)).subscribe((backups: Backup[]) => {
       this.backups = backups;
-      const shouldPoll = backups.some(b => b.status === 'pending' || b.status === 'processing');
+      const shouldPoll = backups.some((b: Backup) => b.status === 'pending' || b.status === 'processing');
       if (shouldPoll && !this.isPolling) {
         this.startPolling();
       } else if (!shouldPoll && this.isPolling) {
@@ -62,9 +45,9 @@ export class BackupPageComponent implements OnInit, OnDestroy {
     this.pollingSubscription = timer(0, 5000).pipe( // Poll every 5 seconds
       switchMap(() => this.backupService.getBackups()),
       takeUntil(this.destroy$)
-    ).subscribe(backups => {
+    ).subscribe((backups: Backup[]) => {
       this.backups = backups;
-      if (!backups.some(b => b.status === 'pending' || b.status === 'processing')) {
+      if (!backups.some((b: Backup) => b.status === 'pending' || b.status === 'processing')) {
         this.stopPolling();
       }
     });
@@ -97,7 +80,7 @@ export class BackupPageComponent implements OnInit, OnDestroy {
       return;
     }
 
-    this.backupService.uploadBackup(this.selectedFile).pipe(takeUntil(this.destroy$)).subscribe(event => {
+    this.backupService.uploadBackup(this.selectedFile).pipe(takeUntil(this.destroy$)).subscribe((event: HttpEvent<any>) => {
       if (event.type === HttpEventType.UploadProgress && event.total) {
         this.uploadProgress = Math.round(100 * (event.loaded / event.total));
       } else if (event.type === HttpEventType.Response) {
@@ -109,8 +92,8 @@ export class BackupPageComponent implements OnInit, OnDestroy {
   }
 
   downloadBackup(backupId: number): void {
-    this.backupService.downloadBackup(backupId).pipe(takeUntil(this.destroy$)).subscribe(blob => {
-        const backup = this.backups.find(b => b.id === backupId);
+    this.backupService.downloadBackup(backupId).pipe(takeUntil(this.destroy$)).subscribe((blob: Blob) => {
+        const backup = this.backups.find((b: Backup) => b.id === backupId);
         const url = window.URL.createObjectURL(blob);
         const a = document.createElement('a');
         a.href = url;

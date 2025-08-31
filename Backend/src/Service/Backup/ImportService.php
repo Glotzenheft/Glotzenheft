@@ -38,19 +38,23 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 use Symfony\Component\RateLimiter\LimiterInterface;
 
 class ImportService
 {
+    private LimiterInterface $tmdbApiLimiter;
+
     public function __construct(
         private readonly EntityManagerInterface    $entityManager,
         private readonly TracklistRepository       $tracklistRepository,
         private readonly TracklistSeasonRepository $tracklistSeasonRepository,
         private readonly TracklistEpisodeRepository $tracklistEpisodeRepository,
         private readonly MediaService              $mediaService,
-        private readonly LimiterInterface          $tmdbApiLimiter,
-        private readonly LoggerInterface           $logger
+        private readonly LoggerInterface           $logger,
+        ContainerInterface                         $container
     ) {
+        $this->tmdbApiLimiter = $container->get('rate_limiter.tmdb_api');
     }
 
     /**
