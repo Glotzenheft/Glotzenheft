@@ -38,7 +38,6 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\HttpKernel\Attribute\RateLimiter;
 use Symfony\Component\RateLimiter\LimiterInterface;
 
 class ImportService
@@ -49,7 +48,6 @@ class ImportService
         private readonly TracklistSeasonRepository $tracklistSeasonRepository,
         private readonly TracklistEpisodeRepository $tracklistEpisodeRepository,
         private readonly MediaService              $mediaService,
-        #[RateLimiter('tmdb_api')]
         private readonly LimiterInterface          $tmdbApiLimiter,
         private readonly LoggerInterface           $logger
     ) {
