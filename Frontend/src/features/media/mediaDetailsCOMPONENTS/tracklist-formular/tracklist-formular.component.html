@@ -16,105 +16,105 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if (tracklistForm) {
-    <div>
+    <div class="createMovieTracklistWrapper">
         <h1>{{ inpIsUpdating() ? "Trackliste aktualisieren" : "Neue Trackliste anlegen" }}</h1>
 
-        <div>
-            <form (ngSubmit)="submitTracklist()" [formGroup]="tracklistForm">
-                <div>
-                    <p-float-label variant="in">
-                        <input type="text" pInputText formControlName="trackListName" id="inpName">
-                        <label for="inpName">Name der Trackliste (Pflichtfeld)</label>
-                    </p-float-label>
-                    @if (hasErrorField('trackListName') && tracklistForm.get("trackListName")?.invalid) {
-                        <p-message severity="error" size="small">
-                            Der Name für die Tracklist ist Pflicht.
-                        </p-message>
-                    }
-                </div>
+        <div class="createMovieWindow">
+            <div class="createNewTracklist">
+                <form (ngSubmit)="submitTracklist()" [formGroup]="tracklistForm">
+                    <div>
+                        <p-float-label variant="in">
+                            <input type="text" pInputText formControlName="trackListName" id="inpName">
+                            <label for="inpName">Name der Trackliste (Pflichtfeld)</label>
+                        </p-float-label>
+                        @if (hasErrorField('trackListName') && tracklistForm.get("trackListName")?.invalid) {
+                            <p-message severity="error" size="small">
+                                Der Name für die Tracklist ist Pflicht.
+                            </p-message>
+                        }
+                    </div>
 
-                <div>
-                    <p-float-label variant="in">
-                        <p-select 
-                            id="inpStatus"
-                            formControlName="status"
-                            optionLabel="name"
-                            placeholder="Status auswählen ..."
-                            [options]="tracklistSelectionList" 
-                            [checkmark]="true"
+                    <div>
+                        <p-float-label variant="in">
+                            <p-select 
+                                id="inpStatus"
+                                formControlName="status"
+                                optionLabel="name"
+                                placeholder="Status auswählen ..."
+                                [options]="tracklistSelectionList" 
+                                [checkmark]="true"
+                                />
+                            <label for="inpStatus">Status der Trackliste (Pflichtfeld)</label>
+                        </p-float-label>
+                        @if (hasErrorField("status") && tracklistForm.get("status")?.invalid) {
+                            <p-message severity="error" size="small">
+                                Der Status ist Pflicht.
+                            </p-message>
+                        }
+                    </div>
+
+                    <div>
+                        <p-float-label variant="in">
+                            <p-date-picker 
+                                formControlName="finishDate"
+                                dateFormat="dd.mm.yy"
+                                inputId="inpEnd"
+                                [showIcon]="true"
+                                [showOnFocus]="false"
+                                [minDate]="tracklistForm.get('startDate')?.value"
+                                [showButtonBar]="true"
                             />
-                        <label for="inpStatus">Status der Trackliste (Pflichtfeld)</label>
-                    </p-float-label>
-                    @if (hasErrorField("status") && tracklistForm.get("status")?.invalid) {
-                        <p-message severity="error" size="small">
-                            Der Status ist Pflicht.
-                        </p-message>
-                    }
-                </div>
+                            <label for="inpEnd">Enddatum (optional)</label>
+                        </p-float-label>
+                    </div>
 
-                <div>
-                    <p-float-label variant="in">
-                        <p-date-picker 
-                            formControlName="finishDate"
-                            dateFormat="dd.mm.yy"
-                            inputId="inpEnd"
-                            [showIcon]="true"
-                            [showOnFocus]="false"
-                            [minDate]="tracklistForm.get('startDate')?.value"
-                            [showButtonBar]="true"
+                    <div>
+                        <p-float-label variant="in">
+                            <p-date-picker 
+                                formControlName="startDate"
+                                dateFormat="dd.mm.yy"
+                                inputId="inpStart"
+                                [showIcon]="true"
+                                [showOnFocus]="false"
+                                [maxDate]="tracklistForm.get('finishDate')?.value"
+                                [showButtonBar]="true"
+                            />
+                            <label for="inpStart">Startdatum (optional)</label>
+                        </p-float-label>
+                    </div>
+
+                    <div class="rewatching-checkbox">
+                        <p-checkbox 
+                            formControlName="isRewatching"
+                            inputId="inpRewatching"
+                            [binary]="true"
                         />
-                        <label for="inpEnd">Enddatum (optional)</label>
-                    </p-float-label>
-                </div>
+                        <label for="inpRewatching">Erneut glotzen?</label>
+                    </div>
 
-                <div>
-                    <p-float-label variant="in">
-                        <p-date-picker 
-                            formControlName="startDate"
-                            dateFormat="dd.mm.yy"
-                            inputId="inpStart"
-                            [showIcon]="true"
-                            [showOnFocus]="false"
-                            [maxDate]="tracklistForm.get('finishDate')?.value"
-                            [showButtonBar]="true"
+                    <div class="ratingDIV">
+                        <p>Bewertung:</p>
+                        <p-rating [stars]="10" formControlName="rating" />
+                        <p class="ratingP">{{ tracklistForm.get("rating")?.value && tracklistForm.get("rating")?.value + " / 10" }}</p>
+                        
+                    </div>
+
+
+                    <div class="tracklistActions">
+                        <p-button 
+                            type="submit"
+                            icon="pi pi-save"
+                            [label]="inpIsUpdating() ? 'Speichern' : 'Anlegen'"
                         />
-                        <label for="inpStart">Startdatum (optional)</label>
-                    </p-float-label>
-                </div>
-
-                <div>
-                    <p-checkbox 
-                        formControlName="isRewatching"
-                        inputId="inpRewatching"
-                        [binary]="true"
-                    />
-                    <label for="inpRewatching">Erneut glotzen?</label>
-                </div>
-
-                <div>
-                    <p>Bewertung:</p>
-                    <p-rating [stars]="10" formControlName="rating" />
-
-                    @if (tracklistForm.get("rating")?.value) {
-                        <p>{{ tracklistForm.get("rating")?.value }}</p>
-                    }
-                </div>
-
-
-                <div>
-                    <p-button 
-                        type="submit"
-                        icon="pi pi-save"
-                        [label]="inpIsUpdating() ? 'Speichern' : 'Anlegen'"
-                    />
-                    <p-button 
-                        label="Abbrechen"
-                        icon="pi p-times"
-                        severity="secondary"
-                        (onClick)="onCancelTracklist()"
-                    />
-                </div>
-            </form>
+                        <p-button 
+                            label="Abbrechen"
+                            icon="pi p-times"
+                            severity="secondary"
+                            (onClick)="onCancelTracklist()"
+                        />
+                    </div>
+                </form>
+            </div>
         </div>
     </div>
 }
