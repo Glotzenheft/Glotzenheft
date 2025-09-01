@@ -106,6 +106,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             icon="pi pi-save"
                             [label]="inpIsUpdating() ? 'Speichern' : 'Anlegen'"
                         />
+
+                        @if (inpIsUpdating()) {
+                            <p-button 
+                                severity="danger"
+                                icon="pi pi-trash"
+                                label="Löschen"
+                                (onClick)="deleteTracklist()"
+                            />
+                        }
+
                         <p-button 
                             label="Abbrechen"
                             icon="pi p-times"

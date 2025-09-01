@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
+import { Component, Input, input, InputSignal, OnInit, output, OutputEmitterRef } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { Checkbox } from 'primeng/checkbox';
@@ -27,7 +27,7 @@ import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST, TracklistStatusType } from '../../../../app/shared/variables/tracklist';
 import { Message } from "primeng/message";
-import { I_TracklistFormOutput } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { I_TracklistFormOutput, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
 
 @Component({
   selector: 'app-tracklist-formular',
@@ -59,24 +59,25 @@ export class TracklistFormularComponent implements OnInit {
     }));
 
     // input variables
-    public inpTracklistTitle: InputSignal<string> = input.required<string>();
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
     public inpIsUpdating: InputSignal<boolean> = input.required<boolean>();
+    public inpTracklist: InputSignal<Tracklist> = input.required<Tracklist>();
 
     // output variables
     public outCancelTracklist: OutputEmitterRef<boolean> = output<boolean>();
     public outSubmitTracklist: OutputEmitterRef<I_TracklistFormOutput> = output<I_TracklistFormOutput>();
+    public outDeleteTracklist: OutputEmitterRef<number> = output<number>();
 
     constructor(private readonly formBuilder: FormBuilder) {}
 
     ngOnInit(): void {
         this.tracklistForm = this.formBuilder.group({
-            trackListName: [ this.inpTracklistTitle(), Validators.required ],
-            status: ['', Validators.required],
-            startDate: [''],
-            finishDate: [''],
-            rating: [null],
-            isRewatching: [false],
+            trackListName: [ this.inpTracklist().tracklistName ?? "", Validators.required ],
+            status: [{name: convertTracklistStatusIntoGerman(this.inpTracklist().status), value: this.inpTracklist().status}, Validators.required],
+            startDate: this.inpTracklist().startDate ? new Date(this.inpTracklist().startDate!) : null,
+            finishDate: this.inpTracklist().finishDate ? new Date(this.inpTracklist().finishDate!) : null,
+            rating: this.inpTracklist().rating ?? null,
+            isRewatching: this.inpTracklist().isRewatching ?? false,
         });
     }
 
@@ -112,6 +113,11 @@ export class TracklistFormularComponent implements OnInit {
 
     public onCancelTracklist = () => {
         this.outCancelTracklist.emit(true);
+        this.isTracklistSubmitted = false;
+    }
+
+    public deleteTracklist = () => {
+        this.outDeleteTracklist.emit(this.inpTracklist().id);
         this.isTracklistSubmitted = false;
     }
 

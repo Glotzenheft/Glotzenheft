@@ -227,18 +227,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         currentSeason &&
         (seasonData$ | async) as seasonData
         ">
-        <!-- <app-tracklist-form 
-            [isNewTracklistForm]="true" 
-            [isNewTracklistOfTypeTV]="true" 
-            [inputTVSeason]="currentSeason"
-            [mediaID]="seasonData.media.id" 
-            (cancelTracklistFormSubmission)="cancelTracklistForm()"
-            (saveNewTracklist)="refreshPage()" [inpTVName]="seasonData.media.name" 
-            /> -->
         <app-tracklist-formular 
             [inpIsMovie]="false" 
             [inpIsUpdating]="false" 
-            [inpTracklistTitle]="seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber + ' #' + getTracklistNumberOfSeason(currentSeason.tracklistsForSeason.length)" 
+            [inpTracklist]="getDefaultTracklist(seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber + ' #' + getTracklistNumberOfSeason(currentSeason.tracklistsForSeason.length))"
             (outSubmitTracklist)="createNewTracklist($event, seasonData.media.id, currentSeason.id)"
             (outCancelTracklist)="cancelTracklistForm()"
         />
@@ -249,11 +241,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         tracklistSelectionForm.get('selectedTracklist')?.value &&
         (seasonData$ | async) as seasonData
         ">
-        <app-update-tracklist-form 
+        <!-- <app-update-tracklist-form 
             [inpSelectedTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value" 
             (cancelTracklistEditing)="cancelTracklistForm()" 
             (saveUpdatedTracklist)="refreshPage()" 
-            />
+            /> -->
+        <app-tracklist-formular 
+            [inpIsMovie]="false" 
+            [inpIsUpdating]="true" 
+            [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
+            (outCancelTracklist)="cancelTracklistForm()"
+            (outSubmitTracklist)="updateTracklist($event, tracklistSelectionForm.get('selectedTracklist')?.value)"
+            (outDeleteTracklist)="deleteTracklist($event)"
+        />
     </ng-container>
 
     @if (
