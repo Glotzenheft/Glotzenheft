@@ -55,6 +55,9 @@ class TracklistSeason
     #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?Season $season = null;
 
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $backupHash = null;
+
     public function __construct()
     {
         $this->tracklistEpisodes = new ArrayCollection();
@@ -115,6 +118,18 @@ class TracklistSeason
     public function setSeason(?Season $season): static
     {
         $this->season = $season;
+
+        return $this;
+    }
+
+    public function getBackupHash(): ?string
+    {
+        return $this->backupHash;
+    }
+
+    public function setBackupHash(?string $backupHash): static
+    {
+        $this->backupHash = $backupHash;
 
         return $this;
     }
