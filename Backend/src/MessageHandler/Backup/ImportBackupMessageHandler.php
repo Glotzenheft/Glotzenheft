@@ -1,0 +1,95 @@
+<?php
+
+declare(strict_types=1);
+
+namespace App\MessageHandler\Backup;
+
+use App\Entity\Backup;
+use App\Enum\BackupStatus;
+use App\Message\Backup\ImportBackupMessage;
+use App\Repository\BackupRepository;
+use DateTime;
+use Doctrine\ORM\EntityManagerInterface;
+use PHPUnit\Exception;
+use Psr\Log\LoggerInterface;
+use RuntimeException;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\Messenger\Attribute\AsMessageHandler;
+
+#[AsMessageHandler]
+readonly class ImportBackupMessageHandler
+{
+    public function __construct(
+        private EntityManagerInterface $entityManager,
+        private ImportService          $importService,
+        private BackupRepository       $backupRepository,
+        private LoggerInterface        $logger,
+        #[Autowire('%env(resolve:BACKUP_DIR)%')]
+        private string                 $backupDirectory
+    ){}
+
+    public function __invoke(ImportBackupMessage $message): void
+    {
+        $backup = $this->backupRepository->find($message->getBackupId());
+        if (!$backup instanceof Backup)
+        {
+            $this->logger->error(
+                message: 'Backup entity not found for import.',
+                context: [
+                    'backupId' => $message->getBackupId()
+                ]
+            );
+            return;
+        }
+
+        $backup->setStatus(BackupStatus::PROCESSING);
+        $this->entityManager->flush();
+
+        try
+        {
+            $filepath = $this->backupDirectory . '/' . $backup->getFilename();
+            if (!file_exists($filepath))
+            {
+                throw new RuntimeException('Backup file not found: ' . $filepath);
+            }
+
+            $jsonContent = file_get_contents($filepath);
+            $data = json_decode($jsonContent, true);
+
+            if (json_last_error() !== JSON_ERROR_NONE)
+            {
+                throw new RuntimeException('Failed to decode backup JSON: ' . json_last_error_msg());
+            }
+
+            $user = $backup->getUser();
+            if (null === $user)
+            {
+                throw new RuntimeException('User not found for backup entity.');
+            }
+
+            $stats = $this->importService->processImport($data, $user);
+
+            $backup->setStatus(BackupStatus::COMPLETED);
+            $backup->setCompletedAt(new DateTime());
+
+            $this->logger->info(
+                message: 'Backup import completed.',
+                context: [
+                    'stats' => $stats
+                ]
+            );
+        }
+        catch (Exception $exception)
+        {
+            $this->logger->error(
+                message: 'Backup import failed.',
+                context: [
+                    'exception' => $exception
+                ]
+            );
+            $backup->setStatus(BackupStatus::FAILED);
+        }
+
+        $this->entityManager->flush();
+    }
+}
