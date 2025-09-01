@@ -225,8 +225,9 @@ export class SeasonPageComponent implements OnInit {
         });
 
         this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
-            next: () => {
+            next: (res: Tracklist) => {
                 this.messageService.add(getMessageObject("success", "Tracklist erfolgreich gespeichert"));
+                this.setSelectedTracklistInLocalStorageUseCase.execute(res.id);
                 this.refreshPage();
             },
             error: (err) => {

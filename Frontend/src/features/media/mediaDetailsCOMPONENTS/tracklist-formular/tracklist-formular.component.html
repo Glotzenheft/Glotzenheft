@@ -112,7 +112,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 severity="danger"
                                 icon="pi pi-trash"
                                 label="Löschen"
-                                (onClick)="deleteTracklist()"
+                                (onClick)="isDeleteDialogVisible = true"
                             />
                         }
 
@@ -127,4 +127,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         </div>
     </div>
+}
+
+@if (isDeleteDialogVisible) {
+    <app-delete-dialog 
+        [inpHeading]="'Tracklist löschen'"
+        [inpText]="'Willst du diese Tracklist wirklich löschen?'"
+        [inpIsButtonEnabled]="true"
+        (outCancelDeletion)="isDeleteDialogVisible = false"
+        (outDeleteMedia)="deleteTracklist()"
+    />
 }

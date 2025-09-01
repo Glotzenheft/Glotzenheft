@@ -28,6 +28,7 @@ import { SelectModule } from 'primeng/select';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST, TracklistStatusType } from '../../../../app/shared/variables/tracklist';
 import { Message } from "primeng/message";
 import { I_TracklistFormOutput, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { DeleteDialogComponent } from "../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component";
 
 @Component({
   selector: 'app-tracklist-formular',
@@ -41,7 +42,8 @@ import { I_TracklistFormOutput, Tracklist } from '../../../../app/shared/interfa
     SelectModule,
     RatingModule,
     Checkbox,
-    Message
+    Message,
+    DeleteDialogComponent
 ],
   templateUrl: './tracklist-formular.component.html',
   styleUrl: './tracklist-formular.component.css',
@@ -57,6 +59,7 @@ export class TracklistFormularComponent implements OnInit {
             name: convertTracklistStatusIntoGerman(selection),
             value: selection
     }));
+    public isDeleteDialogVisible: boolean = false;
 
     // input variables
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
