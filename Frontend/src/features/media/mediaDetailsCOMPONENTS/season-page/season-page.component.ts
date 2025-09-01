@@ -180,7 +180,6 @@ export class SeasonPageComponent implements OnInit {
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
             this.tvSeriesID = params['id'];
-            console.log('changed id', this.tvSeriesID);
             this.loadData(this.tvSeriesID);
         });
     }
@@ -255,6 +254,10 @@ export class SeasonPageComponent implements OnInit {
             },
         });
     };
+
+    public getTracklistNumberOfSeason = (tracklistNumber: number): number => {
+        return tracklistNumber + 1;
+    }
 
     public openTracklistForm = (season: TVSeasonWithTracklist) => {
         this.currentSeason = season;

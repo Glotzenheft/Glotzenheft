@@ -227,15 +227,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         currentSeason &&
         (seasonData$ | async) as seasonData
         ">
-        <app-tracklist-form 
+        <!-- <app-tracklist-form 
             [isNewTracklistForm]="true" 
             [isNewTracklistOfTypeTV]="true" 
             [inputTVSeason]="currentSeason"
             [mediaID]="seasonData.media.id" 
             (cancelTracklistFormSubmission)="cancelTracklistForm()"
             (saveNewTracklist)="refreshPage()" [inpTVName]="seasonData.media.name" 
-            />
-        <app-tracklist-formular [inpIsMovie]="false" [inpIsUpdating]="false" [inpTracklistTitle]="seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber" />
+            /> -->
+        <app-tracklist-formular [inpIsMovie]="false" [inpIsUpdating]="false" [inpTracklistTitle]="seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber + ' #' + getTracklistNumberOfSeason(currentSeason.tracklistsForSeason.length)" />
     </ng-container>
 
     <ng-container *ngIf="
