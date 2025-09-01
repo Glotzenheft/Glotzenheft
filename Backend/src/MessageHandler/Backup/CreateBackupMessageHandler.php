@@ -29,7 +29,6 @@ readonly class CreateBackupMessageHandler
         private UserRepository         $userRepository,
         private BackupService          $backupService,
         private HashService            $hashService,
-        private BackupRepository       $backupRepository,
         private Filesystem             $filesystem,
         private LoggerInterface        $logger,
         #[Autowire('%env(resolve:BACKUP_DIR)%')]
