@@ -39,7 +39,6 @@ import {
 } from '@angular/forms';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { EpisodeListComponent } from '../../episodesCOMPONENTS/episode-list/episode-list.component';
-import { TracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/tracklist-form/tracklist-form.component';
 import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
@@ -50,13 +49,15 @@ import {
     SeasonWithEpisodes,
 } from '../../../../app/shared/interfaces/media-interfaces';
 import {
+    I_TracklistFormOutput,
     SeasonTracklist,
     SeasonTracklistType,
+    Tracklist,
     TVSeasonWithTracklist,
     TVWithTracklist,
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
-import { ERR_OBJECT_INVALID_AUTHENTICATION } from '../../../../app/shared/variables/message-vars';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_GetSeasonForTV } from '../../../../app/core/use-cases/media/get-season-for-tv.use-case';
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
@@ -71,6 +72,10 @@ import { ApiRecommendationComponent } from '../api-recommendation/api-recommenda
 import { TooltipModule } from 'primeng/tooltip';
 import { MediaMetadataComponent } from '../media-metadata/media-metadata.component';
 import { TracklistFormularComponent } from "../tracklist-formular/tracklist-formular.component";
+import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
+import { UC_GetTracklistCREATESEASONResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-create-season-response-subject.use-case';
+import { UC_TriggerTracklistCREATESEASONSubject } from '../../../../app/core/use-cases/media/trigger-tracklist-create-season-subject.use-case';
+import { UC_SetSelectedTracklistInLocalStorage } from '../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
 
 @Component({
     selector: 'app-season-page',
@@ -92,7 +97,6 @@ import { TracklistFormularComponent } from "../tracklist-formular/tracklist-form
     SelectModule,
     MenuModule,
     CreateTracklistEpisodeFormComponent,
-    TracklistFormComponent,
     UpdateTracklistFormComponent,
     ProgressSpinnerModule,
     MediaTabsComponent,
@@ -109,6 +113,10 @@ import { TracklistFormularComponent } from "../tracklist-formular/tracklist-form
         UC_GetSelectedTracklistInLocalStorage,
         UC_JoinTVWithTracklists,
         UC_LogoutOfAccount,
+        UC_NavigateToSpecificPage,
+        UC_SetSelectedTracklistInLocalStorage,
+        UC_TriggerTracklistCREATESEASONSubject,
+        UC_GetTracklistCREATESEASONResponseSubject
     ],
 })
 export class SeasonPageComponent implements OnInit {
@@ -169,18 +177,39 @@ export class SeasonPageComponent implements OnInit {
         private route: ActivatedRoute,
         private formBuilder: FormBuilder,
         private messageService: MessageService,
-        private router: Router,
         private getSeasonForTVUseCase: UC_GetSeasonForTV,
         private validateMediaURLUseCase: UC_ValidateMediaURL,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
         private joinTVWithTracklistsUseCase: UC_JoinTVWithTracklists,
         private getSelectedTracklistsInLocalStorageUseCase: UC_GetSelectedTracklistInLocalStorage,
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+        private readonly getTracklistCREATESEASONResponseSubjectUseCase: UC_GetTracklistCREATESEASONResponseSubject,
+        private readonly triggerTracklistCREATESEASONSubjectUseCase: UC_TriggerTracklistCREATESEASONSubject,
+        private readonly setSelectedTracklistInLocalStorageUseCase: UC_SetSelectedTracklistInLocalStorage
     ) {}
 
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
             this.tvSeriesID = params['id'];
             this.loadData(this.tvSeriesID);
+        });
+
+        this.getTracklistCREATESEASONResponseSubjectUseCase.execute().subscribe({
+            next: (response: Tracklist) => {
+                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich angelegt"));
+                this.setSelectedTracklistInLocalStorageUseCase.execute(response.id);
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    // status 401 = user is not logged in anymore -> navigate to login page
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+
+                this.messageService.add(getMessageObject("error", "Fehler beim Anlegen der Tracklist", "Bitte lade die Seite neu und probiere es erneut."));
+            }
         });
     }
 
@@ -244,7 +273,7 @@ export class SeasonPageComponent implements OnInit {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                 } else if (err.status === 0) {
                     this.serverNotAvailablePage = true;
                 }
@@ -327,6 +356,10 @@ export class SeasonPageComponent implements OnInit {
         this.isEditingButtonVisible = false;
     };
 
+    public setVisibility = (page: number) => {
+        this.isTracklistFormVisible = page;
+    };
+
     public setCurrentEpisode = (
         episode: SeasonEpisode,
         isEpisodeForEditing: boolean,
@@ -345,17 +378,10 @@ export class SeasonPageComponent implements OnInit {
         this.setVisibility(0);
         this.loadData(this.tvSeriesID);
     };
-    public cancelTracklistForm = () => {
-        this.isTracklistFormVisible = 0;
-    };
-
-    public setVisibility = (page: number) => {
-        this.isTracklistFormVisible = page;
-    };
-
+    
     public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {
         this.currentTracklistSelection = tracklist;
-        this.isTracklistFormVisible = 3;
+        this.setVisibility(3);
     };
 
     public onChangeTab = (newTab: string) => {
@@ -364,5 +390,25 @@ export class SeasonPageComponent implements OnInit {
 
     public getRecommendations = (recs: I_APIRecommendationResponse) => {
         this.apiRecommendations = recs;
+    };
+
+    // functions for creating tracklist --------------------------
+    public createNewTracklist = (event: I_TracklistFormOutput, mediaId: number, seasonId: number) => {
+        this.triggerTracklistCREATESEASONSubjectUseCase.execute({
+            tracklist_name: event.tracklistName,
+            media_id: mediaId,
+            season_id: seasonId,
+            tracklist_start_date: event.startDate,
+            tracklist_finish_date: event.finishDate,
+            tracklist_status: event.status,
+            tracklist_rating: event.rating,
+            is_rewatching: event.isRewatching,
+            media_type: 'tv'
+        });
+        this.refreshPage();
+    };
+
+    public cancelTracklistForm = () => {
+        this.setVisibility(0);
     };
 }

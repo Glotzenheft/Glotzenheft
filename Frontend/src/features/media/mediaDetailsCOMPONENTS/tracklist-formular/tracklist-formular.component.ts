@@ -99,12 +99,8 @@ export class TracklistFormularComponent implements OnInit {
             formattedEndDate = new Date(formEndDate).toISOString().split("T")[0];
         }
 
-        if (!formattedStartDate.trim() || !formattedEndDate.trim()) {
-            return;
-        }
-
         this.outSubmitTracklist.emit({
-            status: this.tracklistForm?.get("status")?.value as TracklistStatusType,
+            status: this.tracklistForm?.get("status")?.value.value as TracklistStatusType,
             startDate: formattedStartDate,
             finishDate: formattedEndDate,
             rating: this.tracklistForm?.get("rating")?.value,

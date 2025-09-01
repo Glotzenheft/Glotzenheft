@@ -235,7 +235,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             (cancelTracklistFormSubmission)="cancelTracklistForm()"
             (saveNewTracklist)="refreshPage()" [inpTVName]="seasonData.media.name" 
             /> -->
-        <app-tracklist-formular [inpIsMovie]="false" [inpIsUpdating]="false" [inpTracklistTitle]="seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber + ' #' + getTracklistNumberOfSeason(currentSeason.tracklistsForSeason.length)" />
+        <app-tracklist-formular 
+            [inpIsMovie]="false" 
+            [inpIsUpdating]="false" 
+            [inpTracklistTitle]="seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber + ' #' + getTracklistNumberOfSeason(currentSeason.tracklistsForSeason.length)" 
+            (outSubmitTracklist)="createNewTracklist($event, seasonData.media.id, currentSeason.id)"
+            (outCancelTracklist)="cancelTracklistForm()"
+        />
     </ng-container>
 
     <ng-container *ngIf="
