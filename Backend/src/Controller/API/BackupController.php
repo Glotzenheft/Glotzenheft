@@ -29,6 +29,7 @@ use App\Message\ImportBackupMessage;
 use App\Model\Request\Backup\ImportBackupDto;
 use App\Repository\BackupRepository;
 use App\Security\IsAuthenticated;
+use App\Security\UserValueResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
@@ -50,7 +51,7 @@ class BackupController extends AbstractController
     #[IsAuthenticated]
     #[Route('/api/backups', name: 'app_api_backups_list', methods: ['GET'])]
     public function listBackups(
-        User $user,
+        #[MapRequestPayload(resolver: UserValueResolver::class)] User $user,
         BackupRepository $backupRepository,
         SerializerInterface $serializer
     ): Response
@@ -62,7 +63,7 @@ class BackupController extends AbstractController
     #[IsAuthenticated]
     #[Route('/api/backups', name: 'app_api_backups_create', methods: ['POST'])]
     public function createBackup(
-        User $user,
+        #[MapRequestPayload(resolver: UserValueResolver::class)] User $user,
         MessageBusInterface $bus
     ): JsonResponse
     {
@@ -74,7 +75,7 @@ class BackupController extends AbstractController
     #[Route('/api/backups/import', name: 'app_api_backups_import', methods: ['POST'])]
     public function importBackup(
         #[MapRequestPayload] ImportBackupDto $dto,
-        User $user,
+        #[MapRequestPayload(resolver: UserValueResolver::class)] User $user,
         MessageBusInterface $bus,
         EntityManagerInterface $entityManager
     ): JsonResponse
@@ -100,7 +101,7 @@ class BackupController extends AbstractController
     #[Route('/api/backups/{id}/download', name: 'app_api_backups_download', methods: ['GET'])]
     public function downloadBackup(
         Backup $backup,
-        User $user
+        #[MapRequestPayload(resolver: UserValueResolver::class)] User $user
     ): Response
     {
         if ($backup->getUser() !== $user)
