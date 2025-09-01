@@ -33,13 +33,16 @@ use App\Security\UserValueResolver;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\File\UploadedFile;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\HttpKernel\Attribute\MapUploadedFile;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\SerializerInterface;
+use Symfony\Component\Validator\Constraints as Assert;
 
 class BackupController extends AbstractController
 {
@@ -74,14 +77,24 @@ class BackupController extends AbstractController
     #[IsAuthenticated]
     #[Route('/api/backups/import', name: 'app_api_backups_import', methods: ['POST'])]
     public function importBackup(
-        #[MapRequestPayload] ImportBackupDto $dto,
+        #[MapUploadedFile(
+            constraints: [
+                new Assert\NotBlank(message: 'No file uploaded.'),
+                new Assert\File(
+                    maxSize: '10M',
+                    mimeTypes: ['application/json', 'text/plain'],
+                    mimeTypesMessage: 'Please upload a valid JSON file.'
+                )
+            ],
+            name: 'backupFile'
+        )] UploadedFile $backupFile,
         #[MapRequestPayload(resolver: UserValueResolver::class)] User $user,
         MessageBusInterface $bus,
         EntityManagerInterface $entityManager
     ): JsonResponse
     {
         $filename = uniqid('import_', true) . '.json';
-        $dto->backupFile->move($this->backupDirectory, $filename);
+        $backupFile->move($this->backupDirectory, $filename);
 
         $backup = (new Backup())
             ->setUser($user)

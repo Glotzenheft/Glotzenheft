@@ -21,11 +21,13 @@ declare(strict_types=1);
 namespace App\Model\Request\Backup;
 
 use Symfony\Component\HttpFoundation\File\UploadedFile;
+use Symfony\Component\HttpKernel\Attribute\MapUploadedFile;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class ImportBackupDto
+readonly class ImportBackupDto
 {
     public function __construct(
+        #[MapUploadedFile]
         #[Assert\NotBlank(message: 'No file uploaded.')]
         #[Assert\File(
             maxSize: '10M',
@@ -33,6 +35,5 @@ class ImportBackupDto
             mimeTypesMessage: 'Please upload a valid JSON file.'
         )]
         public ?UploadedFile $backupFile = null
-    ) {
-    }
+    ){}
 }

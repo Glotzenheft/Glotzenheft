@@ -63,6 +63,7 @@ class CreateBackupMessageHandler
         // Create and persist the initial "processing" state
         $backup = (new Backup())
             ->setUser($user)
+            ->setFilename('')
             ->setType(BackupType::EXPORT)
             ->setStatus(BackupStatus::PROCESSING);
 

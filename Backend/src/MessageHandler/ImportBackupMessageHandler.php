@@ -32,14 +32,14 @@ use RuntimeException;
 use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 
 #[AsMessageHandler]
-class ImportBackupMessageHandler
+readonly class ImportBackupMessageHandler
 {
     public function __construct(
-        private readonly EntityManagerInterface $entityManager,
-        private readonly ImportService          $importService,
-        private readonly BackupRepository       $backupRepository,
-        private readonly LoggerInterface        $logger,
-        private readonly string                 $backupDirectory
+        private EntityManagerInterface $entityManager,
+        private ImportService          $importService,
+        private BackupRepository       $backupRepository,
+        private LoggerInterface        $logger,
+        private string                 $backupDirectory
     ) {
     }
 

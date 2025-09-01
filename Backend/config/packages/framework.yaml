@@ -8,12 +8,6 @@ framework:
     #esi: true
     #fragments: true
 
-    rate_limiter:
-        tmdb_api:
-            policy: 'token_bucket'
-            limit: 30
-            rate: { interval: '10 seconds' }
-
 when@test:
     framework:
         test: true

@@ -38,27 +38,28 @@ use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
-use Symfony\Component\DependencyInjection\ContainerInterface;
-use Symfony\Component\RateLimiter\LimiterInterface;
+#use Symfony\Component\RateLimiter\LimiterInterface;
+#use Symfony\Component\RateLimiter\RateLimiterFactory;
 
-class ImportService
+readonly class ImportService
 {
-    private LimiterInterface $tmdbApiLimiter;
+    #private LimiterInterface $tmdbApiLimiter;
 
     public function __construct(
-        private readonly EntityManagerInterface    $entityManager,
-        private readonly TracklistRepository       $tracklistRepository,
-        private readonly TracklistSeasonRepository $tracklistSeasonRepository,
-        private readonly TracklistEpisodeRepository $tracklistEpisodeRepository,
-        private readonly MediaService              $mediaService,
-        private readonly LoggerInterface           $logger,
-        ContainerInterface                         $container
-    ) {
-        $this->tmdbApiLimiter = $container->get('rate_limiter.tmdb_api');
+        private EntityManagerInterface     $entityManager,
+        private TracklistRepository        $tracklistRepository,
+        private TracklistSeasonRepository  $tracklistSeasonRepository,
+        private TracklistEpisodeRepository $tracklistEpisodeRepository,
+        private MediaService               $mediaService,
+        private LoggerInterface            $logger,
+        #RateLimiterFactory $rateLimiterFactory
+    )
+    {
+        #$this->tmdbApiLimiter = $rateLimiterFactory->create('tmdb_api');
     }
 
     /**
-     * @param array{tracklists?: array<mixed>} $backupData
+     * @param array{tracklists?: array} $backupData
      * @return array{imported: int, updated: int, skipped: int, failed: int}
      */
     public function processImport(array $backupData, User $user): array
@@ -69,7 +70,7 @@ class ImportService
         {
             try
             {
-                $this->tmdbApiLimiter->consume()->wait();
+                #$this->tmdbApiLimiter->consume()->wait();
                 $mediaDto = new MediaIdDto($item['tmdbId'] ?? 0, $item['mediaType'] ?? '');
                 $media = $this->mediaService->findOrCreateMedia($mediaDto);
 
