@@ -61,7 +61,7 @@ class BackupService
                 'finishDate' => $tracklist->getFinishDate()?->format('Y-m-d'),
             ];
 
-            if ($media->getType() === MediaType::SHOW)
+            if ($media->getType() === MediaType::TV)
             {
                 $entryData['seasons'] = $this->buildSeasonsData($tracklist->getTracklistSeasons()->toArray());
             }

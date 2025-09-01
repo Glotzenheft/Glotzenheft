@@ -60,6 +60,7 @@ class CreateBackupMessageHandler
             return;
         }
 
+        // Create and persist the initial "processing" state
         $backup = (new Backup())
             ->setUser($user)
             ->setType(BackupType::EXPORT)
@@ -93,10 +94,11 @@ class CreateBackupMessageHandler
         }
         catch (Exception $e)
         {
-            $this->logger->error('Backup creation failed.', ['exception' => $e]);
+            $this->logger->error('Backup creation failed.', ['exception' => $e->getMessage()]);
             $backup->setStatus(BackupStatus::FAILED);
         }
 
+        // Persist the final state of the backup entity
         $this->entityManager->flush();
     }
 }

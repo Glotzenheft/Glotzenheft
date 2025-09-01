@@ -89,7 +89,7 @@ class ImportService
                 $this->updateTracklistData($tracklist, $item);
                 $this->entityManager->persist($tracklist);
 
-                if ($media->getType() === MediaType::SHOW)
+                if ($media->getType() === MediaType::TV)
                 {
                     $this->importSeasonsAndEpisodes($tracklist, $item['seasons'] ?? []);
                 }

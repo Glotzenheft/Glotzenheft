@@ -53,7 +53,7 @@ class Backup
     #[Groups(['backup_details'])]
     private ?BackupStatus $status = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['backup_details'])]
     private ?string $filename = null;
 
