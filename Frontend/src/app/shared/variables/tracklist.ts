@@ -34,27 +34,27 @@ export const TRACK_LIST_STATUS_LIST_AS_OBJECT: {
     german: string;
     value: string;
 }[] = [
-        {
-            german: 'Am glotzen',
-            value: 'watching',
-        },
-        {
-            german: 'Abgeschlossen',
-            value: 'completed',
-        },
-        {
-            german: 'Abgebrochen',
-            value: 'dropped',
-        },
-        {
-            german: 'Pausiert',
-            value: 'pausing',
-        },
-        {
-            german: 'Geplant',
-            value: 'plan to watch',
-        },
-    ];
+    {
+        german: 'Am glotzen',
+        value: 'watching',
+    },
+    {
+        german: 'Abgeschlossen',
+        value: 'completed',
+    },
+    {
+        german: 'Abgebrochen',
+        value: 'dropped',
+    },
+    {
+        german: 'Pausiert',
+        value: 'pausing',
+    },
+    {
+        german: 'Geplant',
+        value: 'plan to watch',
+    },
+];
 
 export const convertTracklistStatusIntoGerman = (status: string): string => {
     switch (status) {

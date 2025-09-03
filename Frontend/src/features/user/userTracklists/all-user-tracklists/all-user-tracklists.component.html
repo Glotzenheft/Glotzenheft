@@ -65,15 +65,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ng-container 
         *ngIf="
             visibility === 0 &&
-            sortedUserTracklists &&
-            (userTracklists$ | async) as userTracklists
+            sortedUserTracklists
             "
         >
         @if (sortedUserTracklists.length > 0) {
             <div class="userTracklistsWrapper">
                 <!-- user tracklists list -->
                 @for (tracklist of sortedUserTracklists; track $index) {
-                    <p-panel ,
+                    <p-panel
                         [header]=" tracklist.tracklistName + ' [' + convertStatus(tracklist.status) + ']' "
                         [toggleable]=" true" 
                         [collapsed]="true"
@@ -120,10 +119,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 <div class="ratingDIV">
                                     <p>Bewertung:</p>
                                     <p-rating [stars]="10" [disabled]="true" [(ngModel)]="tracklist.rating" />
+                                    <p class="ratingP">{{ tracklist.rating ? tracklist.rating + ' / 10' : "" }}</p>
                                 </div>
-                                @if (tracklist.rating) {
-                                    <p>{{ tracklist.rating }} / 10</p>
-                                }
+                                
 
                                 <!-- tracklist actions -------------------------------------------------------------------------------------------- -->
                                 <p-button 
@@ -152,7 +150,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </div>
         }
 
-        @if (userTracklists.length < 1) { 
+        @if (sortedUserTracklists.length < 1) { 
             <div class="loadingWrapper">
                 <h1>Keine Tracklisten gefunden.</h1>
             </div>
@@ -163,20 +161,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <!-- page for updating a tracklist for a film -------------------------------------------------------- -->
     @if (currentTracklist) {
         @if (currentTracklist.media.type === 'movie' && visibility === 1) {
-            <app-update-film-tracklist 
-                [inpTracklist]="currentTracklist" 
-                (cancelTracklistForm)="refreshPage(true)"
-                (refreshFilmPage)="refreshPage(false)" 
-                />
+            <app-tracklist-formular 
+                [inpIsMovie]="true"
+                [inpIsUpdating]="true"
+                [inpTracklist]="currentTracklist"
+                (outCancelTracklist)="cancelTracklist()"
+                (outSubmitTracklist)="updateTracklist($event)"
+                (outDeleteTracklist)="deleteTracklist($event)"
+            />
         }
 
         @if (currentTracklist.media.type === 'tv' && visibility === 2) {
             <!-- page for updating a tracklist for a tv ------------------------------------------------------------- -->
-            <app-update-tracklist-form 
-                [inpSelectedTracklist]="currentTracklist" 
-                (cancelTracklistEditing)="refreshPage(true)"
-                (saveUpdatedTracklist)="refreshPage(false)" 
-                />
+            <app-tracklist-formular 
+                [inpIsMovie]="false"
+                [inpIsUpdating]="true"
+                [inpTracklist]="currentTracklist"
+                (outCancelTracklist)="cancelTracklist()"
+                (outSubmitTracklist)="updateTracklist($event)"
+                (outDeleteTracklist)="deleteTracklist($event)"
+            />
         }
     }
 }

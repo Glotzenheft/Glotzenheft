@@ -30,7 +30,7 @@ export class UC_GetAllUserTracklists {
         private readonly mediaRepository: I_MediaRepository,
     ) {}
 
-    public execute = (): Observable<Tracklist[]> | null => {
+    public execute = (): Observable<Tracklist[] | null> => {
         return this.mediaRepository.getAllUserTracklists();
     };
 }

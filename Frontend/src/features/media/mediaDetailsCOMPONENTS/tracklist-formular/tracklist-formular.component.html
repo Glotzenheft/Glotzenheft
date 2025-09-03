@@ -1,0 +1,140 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+@if (tracklistForm) {
+    <div class="createMovieTracklistWrapper">
+        <h1>{{ inpIsUpdating() ? "Trackliste aktualisieren" : "Neue Trackliste anlegen" }}</h1>
+
+        <div class="createMovieWindow">
+            <div class="createNewTracklist">
+                <form (ngSubmit)="submitTracklist()" [formGroup]="tracklistForm">
+                    <div>
+                        <p-float-label variant="in">
+                            <input type="text" pInputText formControlName="trackListName" id="inpName">
+                            <label for="inpName">Name der Trackliste (Pflichtfeld)</label>
+                        </p-float-label>
+                        @if (hasErrorField('trackListName') && tracklistForm.get("trackListName")?.invalid) {
+                            <p-message severity="error" size="small">
+                                Der Name für die Tracklist ist Pflicht.
+                            </p-message>
+                        }
+                    </div>
+
+                    <div>
+                        <p-float-label variant="in">
+                            <p-select 
+                                id="inpStatus"
+                                formControlName="status"
+                                optionLabel="name"
+                                placeholder="Status auswählen ..."
+                                [options]="tracklistSelectionList" 
+                                [checkmark]="true"
+                                />
+                            <label for="inpStatus">Status der Trackliste (Pflichtfeld)</label>
+                        </p-float-label>
+                        @if (hasErrorField("status") && tracklistForm.get("status")?.invalid) {
+                            <p-message severity="error" size="small">
+                                Der Status ist Pflicht.
+                            </p-message>
+                        }
+                    </div>
+
+                    <div>
+                        <p-float-label variant="in">
+                            <p-date-picker 
+                                formControlName="finishDate"
+                                dateFormat="dd.mm.yy"
+                                inputId="inpEnd"
+                                [showIcon]="true"
+                                [showOnFocus]="false"
+                                [minDate]="tracklistForm.get('startDate')?.value"
+                                [showButtonBar]="true"
+                            />
+                            <label for="inpEnd">Enddatum (optional)</label>
+                        </p-float-label>
+                    </div>
+
+                    <div>
+                        <p-float-label variant="in">
+                            <p-date-picker 
+                                formControlName="startDate"
+                                dateFormat="dd.mm.yy"
+                                inputId="inpStart"
+                                [showIcon]="true"
+                                [showOnFocus]="false"
+                                [maxDate]="tracklistForm.get('finishDate')?.value"
+                                [showButtonBar]="true"
+                            />
+                            <label for="inpStart">Startdatum (optional)</label>
+                        </p-float-label>
+                    </div>
+
+                    <div class="rewatching-checkbox">
+                        <p-checkbox 
+                            formControlName="isRewatching"
+                            inputId="inpRewatching"
+                            [binary]="true"
+                        />
+                        <label for="inpRewatching">Erneut glotzen?</label>
+                    </div>
+
+                    <div class="ratingDIV">
+                        <p>Bewertung:</p>
+                        <p-rating [stars]="10" formControlName="rating" />
+                        <p class="ratingP">{{ tracklistForm.get("rating")?.value && tracklistForm.get("rating")?.value + " / 10" }}</p>
+                        
+                    </div>
+
+
+                    <div class="tracklistActions">
+                        <p-button 
+                            type="submit"
+                            icon="pi pi-save"
+                            [label]="inpIsUpdating() ? 'Speichern' : 'Anlegen'"
+                        />
+
+                        @if (inpIsUpdating()) {
+                            <p-button 
+                                severity="danger"
+                                icon="pi pi-trash"
+                                label="Löschen"
+                                (onClick)="isDeleteDialogVisible = true"
+                            />
+                        }
+
+                        <p-button 
+                            label="Abbrechen"
+                            icon="pi p-times"
+                            severity="secondary"
+                            (onClick)="onCancelTracklist()"
+                        />
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+}
+
+@if (isDeleteDialogVisible) {
+    <app-delete-dialog 
+        [inpHeading]="'Tracklist löschen'"
+        [inpText]="'Willst du diese Tracklist wirklich löschen?'"
+        [inpIsButtonEnabled]="true"
+        (outCancelDeletion)="isDeleteDialogVisible = false"
+        (outDeleteMedia)="deleteTracklist()"
+    />
+}

@@ -69,7 +69,6 @@ export interface TracklistSeason {
 }
 
 export interface Tracklist {
-    asObservable(): import('rxjs').Observable<any> | null;
     id: number;
     rating: null | number;
     status: TracklistStatusType;
@@ -84,6 +83,9 @@ export interface Tracklist {
     tracklistSeasons: TracklistSeason[];
     isRewatching: boolean;
 }
+
+export interface I_TracklistFormOutput
+    extends Omit<Tracklist, 'tracklistSeasons' | 'media'> {}
 
 export interface SeasonTracklistEpisode {
     id: number;

@@ -202,9 +202,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .ratingDIV {
         display: flex;
-        justify-content: space-between;
+        justify-content: flex-start;
         align-items: center;
-        width: 20rem;
+        width: 100%;
+    }
+
+    .ratingDIV p {
+        width: 8rem;
+    }
+
+    .ratingP {
+        text-align: center;
     }
 
     .mediaButton {
