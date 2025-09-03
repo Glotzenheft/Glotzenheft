@@ -218,7 +218,6 @@ export class AllUserTracklistsComponent implements OnInit {
                     });
 
                 this.allTracklists = res;
-                console.log("sorted tracklists", this.sortedUserTracklists)
             },
             error: (err) => {
                 if (err.status === 401) {
