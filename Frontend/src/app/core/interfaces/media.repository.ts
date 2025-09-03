@@ -73,7 +73,7 @@ export interface I_MediaRepository {
     triggerTracklistDELETESubject: (tracklistID: number) => void;
     getTracklistDELETEResponseSubject: () => Observable<any>;
     deleteTracklist: (tracklistID: number) => Observable<any>;
-    getAllUserTracklists: () => Observable<Tracklist[]> | null;
+    getAllUserTracklists: () => Observable<Tracklist[] | null>;
     getRecommendations: (
         tmdbId: number,
         title: string,

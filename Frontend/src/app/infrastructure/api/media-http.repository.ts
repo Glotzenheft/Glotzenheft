@@ -382,11 +382,11 @@ export class R_MediaHttp implements I_MediaRepository {
 
     // other functions --------------------------------------------------------------------------------
 
-    public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
+    public getAllUserTracklists = (): Observable<Tracklist[] | null> => {
         const header = this.getHeader();
 
         if (!header) {
-            return null;
+            return of(null);
         }
 
         return this.http

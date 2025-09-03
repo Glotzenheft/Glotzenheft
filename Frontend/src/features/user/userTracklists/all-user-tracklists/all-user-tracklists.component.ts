@@ -71,7 +71,6 @@ import { TracklistFormularComponent } from "../../../media/mediaDetailsCOMPONENT
     providers: [UC_GetAllUserTracklists],
 })
 export class AllUserTracklistsComponent implements OnInit {
-    public userTracklists$: Observable<Tracklist[]> | null = null;
     public allTracklists: Tracklist[] | null = null;
     public sortedUserTracklists: Tracklist[] | null = null;
 
@@ -112,7 +111,7 @@ export class AllUserTracklistsComponent implements OnInit {
     constructor(
         private router: Router,
         private formBuilder: FormBuilder,
-        private getAllUserTracklists: UC_GetAllUserTracklists,
+        private getAllUserTracklistsUseCase: UC_GetAllUserTracklists,
     ) {}
 
     ngOnInit(): void {
@@ -127,14 +126,15 @@ export class AllUserTracklistsComponent implements OnInit {
     public loadTracklists = () => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.userTracklists$ = this.getAllUserTracklists.execute();
 
-        if (!this.userTracklists$) {
-            return;
-        }
 
-        this.userTracklists$.subscribe({
-            next: (res: Tracklist[]) => {
+        this.getAllUserTracklistsUseCase.execute().subscribe({
+            next: (res: Tracklist[] | null) => {
+                if (!res) {
+                    return;
+                }
+
+                console.log("hallo hier")
                 this.isLoading = false;
                 this.sortedUserTracklists = res
                     .filter((tracklist: Tracklist) => {
