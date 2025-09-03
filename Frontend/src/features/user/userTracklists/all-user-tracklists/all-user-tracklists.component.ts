@@ -33,8 +33,6 @@ import {
 } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
-import { UpdateFilmTracklistComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-film-tracklist/update-film-tracklist.component';
-import { UpdateTracklistFormComponent } from '../../../media/tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
@@ -47,27 +45,27 @@ import {
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/get-all-user-tracklists.use-case';
+import { TracklistFormularComponent } from "../../../media/mediaDetailsCOMPONENTS/tracklist-formular/tracklist-formular.component";
 
 @Component({
     selector: 'app-all-user-tracklists',
     imports: [
-        CommonModule,
-        CardModule,
-        DateFormattingPipe,
-        DialogModule,
-        TableModule,
-        AccordionModule,
-        PanelModule,
-        RatingModule,
-        FormsModule,
-        ButtonModule,
-        UpdateFilmTracklistComponent,
-        UpdateTracklistFormComponent,
-        ProgressSpinnerModule,
-        SelectModule,
-        ReactiveFormsModule,
-        FloatLabelModule,
-    ],
+    CommonModule,
+    CardModule,
+    DateFormattingPipe,
+    DialogModule,
+    TableModule,
+    AccordionModule,
+    PanelModule,
+    RatingModule,
+    FormsModule,
+    ButtonModule,
+    ProgressSpinnerModule,
+    SelectModule,
+    ReactiveFormsModule,
+    FloatLabelModule,
+    TracklistFormularComponent
+],
     templateUrl: './all-user-tracklists.component.html',
     styleUrl: './all-user-tracklists.component.css',
     providers: [UC_GetAllUserTracklists],
@@ -162,6 +160,7 @@ export class AllUserTracklistsComponent implements OnInit {
                     });
 
                 this.allTracklists = res;
+                console.log("sorted tracklists", this.sortedUserTracklists)
             },
             error: (err) => {
                 if (err.status === 401) {
