@@ -141,11 +141,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
     <ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
-        <app-create-movie-tracklist 
-            [mediaID]="filmData.media.id" 
-            [mediaName]="filmData.media.name"
-            (cancelTracklistCreation)="setVisibilityStatus(0)" (saveNewTracklist)="refreshPage()" 
-            />
+        <app-tracklist-formular 
+            [inpIsMovie]="true" 
+            [inpIsUpdating]="false" 
+            [inpTracklist]="getDefaultTracklist(filmData.media.name + ' #' + getTracklistNumber(filmData.tracklists.length))"
+            (outSubmitTracklist)="createNewTracklist($event, filmData.media.id)" 
+            (outCancelTracklist)="cancelTracklist()"
+        />
     </ng-container>
 
 
@@ -154,10 +156,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         selectedTracklist &&
         (filmData$ | async) as filmData
         ">
-        <app-update-film-tracklist 
-            [inpTracklist]="selectedTracklist" 
-            (cancelTracklistForm)="setVisibilityStatus(0)"
-            (refreshFilmPage)="refreshPage()" 
-            />
+        <app-tracklist-formular 
+            [inpIsMovie]="true"
+            [inpIsUpdating]="true"
+            [inpTracklist]="selectedTracklist"
+            (outCancelTracklist)="cancelTracklist()"
+            (outSubmitTracklist)="updateTracklist($event, selectedTracklist)"
+            (outDeleteTracklist)="deleteTracklist($event)"
+        />
     </ng-container>
 }

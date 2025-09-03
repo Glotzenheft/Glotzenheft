@@ -27,7 +27,7 @@ import { RatingModule } from 'primeng/rating';
 import { SelectModule } from 'primeng/select';
 import { convertTracklistStatusIntoGerman, TRACK_LIST_STATUS_LIST, TracklistStatusType } from '../../../../app/shared/variables/tracklist';
 import { Message } from "primeng/message";
-import { I_TracklistFormOutput, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { I_TracklistFormOutput, SeasonTracklist, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { DeleteDialogComponent } from "../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component";
 
 @Component({
@@ -64,7 +64,7 @@ export class TracklistFormularComponent implements OnInit {
     // input variables
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
     public inpIsUpdating: InputSignal<boolean> = input.required<boolean>();
-    public inpTracklist: InputSignal<Tracklist> = input.required<Tracklist>();
+    public inpTracklist: InputSignal<SeasonTracklist> = input.required<SeasonTracklist>();
 
     // output variables
     public outCancelTracklist: OutputEmitterRef<boolean> = output<boolean>();

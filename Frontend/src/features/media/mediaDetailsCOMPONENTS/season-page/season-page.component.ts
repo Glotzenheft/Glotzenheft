@@ -39,7 +39,6 @@ import {
 } from '@angular/forms';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { EpisodeListComponent } from '../../episodesCOMPONENTS/episode-list/episode-list.component';
-import { UpdateTracklistFormComponent } from '../../tracklistCOMPONENTS/updateTracklistPages/update-tracklist-form/update-tracklist-form.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -101,7 +100,6 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
     SelectModule,
     MenuModule,
     CreateTracklistEpisodeFormComponent,
-    UpdateTracklistFormComponent,
     ProgressSpinnerModule,
     MediaTabsComponent,
     TooltipModule,
