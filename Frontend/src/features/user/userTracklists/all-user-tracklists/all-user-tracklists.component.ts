@@ -36,7 +36,10 @@ import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-forma
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { I_TracklistFormOutput, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    I_TracklistFormOutput,
+    Tracklist,
+} from '../../../../app/shared/interfaces/tracklist-interfaces';
 import {
     convertTracklistStatusIntoGerman,
     TRACK_LIST_STATUS_LIST_AS_OBJECT,
@@ -45,35 +48,38 @@ import {
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/get-all-user-tracklists.use-case';
-import { TracklistFormularComponent } from "../../../media/mediaDetailsCOMPONENTS/tracklist-formular/tracklist-formular.component";
+import { TracklistFormularComponent } from '../../../media/mediaDetailsCOMPONENTS/tracklist-formular/tracklist-formular.component';
 import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
 import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import { MessageService } from 'primeng/api';
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../app/shared/variables/message-vars';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-all-user-tracklists',
     imports: [
-    CommonModule,
-    CardModule,
-    DateFormattingPipe,
-    DialogModule,
-    TableModule,
-    AccordionModule,
-    PanelModule,
-    RatingModule,
-    FormsModule,
-    ButtonModule,
-    ProgressSpinnerModule,
-    SelectModule,
-    ReactiveFormsModule,
-    FloatLabelModule,
-    TracklistFormularComponent
-],
+        CommonModule,
+        CardModule,
+        DateFormattingPipe,
+        DialogModule,
+        TableModule,
+        AccordionModule,
+        PanelModule,
+        RatingModule,
+        FormsModule,
+        ButtonModule,
+        ProgressSpinnerModule,
+        SelectModule,
+        ReactiveFormsModule,
+        FloatLabelModule,
+        TracklistFormularComponent,
+    ],
     templateUrl: './all-user-tracklists.component.html',
     styleUrl: './all-user-tracklists.component.css',
     providers: [
@@ -83,7 +89,7 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
         UC_TriggerTracklistDELETESubject,
         UC_TriggerTracklistUPDATESubject,
         UC_NavigateToSpecificPage,
-        UC_LogoutOfAccount
+        UC_LogoutOfAccount,
     ],
 })
 export class AllUserTracklistsComponent implements OnInit {
@@ -133,7 +139,7 @@ export class AllUserTracklistsComponent implements OnInit {
         private readonly triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject,
         private readonly messageService: MessageService,
         private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
-        private readonly logoutOfAccountUseCase: UC_LogoutOfAccount
+        private readonly logoutOfAccountUseCase: UC_LogoutOfAccount,
     ) {}
 
     ngOnInit(): void {
@@ -144,26 +150,12 @@ export class AllUserTracklistsComponent implements OnInit {
 
         this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: () => {
-                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich aktualisiert"));
-                this.refreshPage(false);
-            
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                                    // status 401 = user is not logged in anymore -> navigate to login page
-                                    this.logoutOfAccountUseCase.execute();
-                                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                                    return;
-                                }
-                
-                                this.messageService.add(getMessageObject("error", "Fehler beim Aktualisieren der Tracklist"));
-            }
-        });
-
-        this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
-            next: () => {
-                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich gelöscht"));
+                this.messageService.add(
+                    getMessageObject(
+                        'success',
+                        'Tracklist erfolgreich aktualisiert',
+                    ),
+                );
                 this.refreshPage(false);
             },
             error: (err) => {
@@ -171,13 +163,50 @@ export class AllUserTracklistsComponent implements OnInit {
                     // status 401 = user is not logged in anymore -> navigate to login page
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 }
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Löschen der Tracklist"));
-            }
-        })
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Aktualisieren der Tracklist',
+                    ),
+                );
+            },
+        });
+
+        this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
+            next: () => {
+                this.messageService.add(
+                    getMessageObject(
+                        'success',
+                        'Tracklist erfolgreich gelöscht',
+                    ),
+                );
+                this.refreshPage(false);
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    // status 401 = user is not logged in anymore -> navigate to login page
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    void this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
+                    return;
+                }
+
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Löschen der Tracklist',
+                    ),
+                );
+            },
+        });
 
         this.loadTracklists();
     }
@@ -185,7 +214,6 @@ export class AllUserTracklistsComponent implements OnInit {
     public loadTracklists = () => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-
 
         this.getAllUserTracklistsUseCase.execute().subscribe({
             next: (res: Tracklist[] | null) => {
@@ -221,7 +249,9 @@ export class AllUserTracklistsComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.navigateToSpecificPageUseCase.execute(`/${ROUTES_LIST[1].fullUrl}`);
+                    this.navigateToSpecificPageUseCase.execute(
+                        `/${ROUTES_LIST[1].fullUrl}`,
+                    );
                 } else if (err.status === 0) {
                     this.serverNotAvailablePage = true;
                 }
@@ -326,7 +356,7 @@ export class AllUserTracklistsComponent implements OnInit {
 
     public cancelTracklist = () => {
         this.visibility = 0;
-    }
+    };
 
     public updateTracklist = (event: I_TracklistFormOutput) => {
         this.triggerTracklistUPDATESubjectUseCase.execute({
@@ -336,9 +366,11 @@ export class AllUserTracklistsComponent implements OnInit {
             tracklist_finish_date: event.finishDate,
             is_rewatching: event.isRewatching,
             tracklist_name: event.tracklistName,
-            tracklist_rating: event.rating
+            tracklist_rating: event.rating,
         });
-    }
+    };
 
-    public deleteTracklist = (event: number) => {this.triggerTracklistDELETESubjectUseCase.execute(event);}
+    public deleteTracklist = (event: number) => {
+        this.triggerTracklistDELETESubjectUseCase.execute(event);
+    };
 }

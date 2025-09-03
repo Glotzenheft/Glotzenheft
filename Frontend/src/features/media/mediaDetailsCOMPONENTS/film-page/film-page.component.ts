@@ -38,10 +38,17 @@ import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { Film } from '../../../../app/shared/interfaces/media-interfaces';
-import { I_TracklistFormOutput, SeasonTracklist, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import {
+    I_TracklistFormOutput,
+    SeasonTracklist,
+    Tracklist,
+} from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
 import { MEDIA_ID_NOT_EXISTS } from '../../../../app/shared/variables/navigation-vars';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
@@ -61,7 +68,7 @@ import { MediaMetadataComponent } from '../media-metadata/media-metadata.compone
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
 import { UC_TriggerTracklistCREATEMOVIESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-create-movie-subject.use-case';
-import { TracklistFormularComponent } from "../tracklist-formular/tracklist-formular.component";
+import { TracklistFormularComponent } from '../tracklist-formular/tracklist-formular.component';
 import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
 import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
@@ -70,25 +77,25 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
 @Component({
     selector: 'app-film-page',
     imports: [
-    CommonModule,
-    PanelModule,
-    CardModule,
-    DialogModule,
-    RatingModule,
-    FormsModule,
-    ButtonModule,
-    DateFormattingPipe,
-    FloatLabelModule,
-    InputTextModule,
-    MessageModule,
-    ReactiveFormsModule,
-    ProgressSpinnerModule,
-    MediaTabsComponent,
-    RecommendationsComponent,
-    // ApiRecommendationComponent,
-    MediaMetadataComponent,
-    TracklistFormularComponent
-],
+        CommonModule,
+        PanelModule,
+        CardModule,
+        DialogModule,
+        RatingModule,
+        FormsModule,
+        ButtonModule,
+        DateFormattingPipe,
+        FloatLabelModule,
+        InputTextModule,
+        MessageModule,
+        ReactiveFormsModule,
+        ProgressSpinnerModule,
+        MediaTabsComponent,
+        RecommendationsComponent,
+        // ApiRecommendationComponent,
+        MediaMetadataComponent,
+        TracklistFormularComponent,
+    ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
     providers: [
@@ -102,7 +109,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
         UC_GetTracklistUPDATEResponseSubject,
         UC_GetTracklistDELETEResponseSubject,
         UC_TriggerTracklistDELETESubject,
-        UC_TriggerTracklistUPDATESubject
+        UC_TriggerTracklistUPDATESubject,
     ],
 })
 export class FilmPageComponent implements OnInit, OnDestroy {
@@ -147,7 +154,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         private readonly getTracklistUPDATEResponseSubjectUseCase: UC_GetTracklistUPDATEResponseSubject,
         private readonly getTracklistDELETEReponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
         private readonly triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
-        private readonly triggerTracklistDELETEsubjectUseCase: UC_TriggerTracklistDELETESubject
+        private readonly triggerTracklistDELETEsubjectUseCase: UC_TriggerTracklistDELETESubject,
     ) {}
 
     ngOnInit(): void {
@@ -158,7 +165,12 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
         this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
             next: () => {
-                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich angelegt"));
+                this.messageService.add(
+                    getMessageObject(
+                        'success',
+                        'Tracklist erfolgreich angelegt',
+                    ),
+                );
                 this.refreshPage();
             },
             error: (err) => {
@@ -166,46 +178,77 @@ export class FilmPageComponent implements OnInit, OnDestroy {
                     // status 401 = user is not logged in anymore -> navigate to login page
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    void this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 }
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Anlegen der Tracklist"));
-            }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Anlegen der Tracklist',
+                    ),
+                );
+            },
         });
 
         this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: () => {
-                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich gespeichert"));
+                this.messageService.add(
+                    getMessageObject(
+                        'success',
+                        'Tracklist erfolgreich gespeichert',
+                    ),
+                );
                 this.refreshPage();
             },
             error: (err) => {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 }
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Speichern der Tracklist"));
-            }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Speichern der Tracklist',
+                    ),
+                );
+            },
         });
 
         this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
             next: () => {
-                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich gelöscht"));
+                this.messageService.add(
+                    getMessageObject(
+                        'success',
+                        'Tracklist erfolgreich gelöscht',
+                    ),
+                );
                 this.refreshPage();
             },
             error: (err) => {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 }
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Löschen der Tracklist"));
-            }
+                this.messageService.add(
+                    getMessageObject(
+                        'error',
+                        'Fehler beim Löschen der Tracklist',
+                    ),
+                );
+            },
         });
     }
 
@@ -260,7 +303,9 @@ export class FilmPageComponent implements OnInit, OnDestroy {
                 if (err.status === 401) {
                     this.logoutOfAccountUseCase.execute();
                     this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    this.navigateToSpecificPageUseCase.execute(
+                        ROUTES_LIST[10].fullUrl,
+                    );
                     return;
                 } else if (err.status === 0) {
                     this.serverNotAvailablePage = true;
@@ -310,27 +355,32 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.apiRecommendations = recs;
     };
 
-    public getTracklistNumber = (tracklistNumber: number): number => {return tracklistNumber + 1;}
+    public getTracklistNumber = (tracklistNumber: number): number => {
+        return tracklistNumber + 1;
+    };
 
     public getDefaultTracklist = (tracklistName: string): Tracklist => {
         return {
-    id: 0,
-    rating: null,
-    status: 'watching',
-    startDate: null,
-    finishDate: null,
-    tracklistName: tracklistName,
-    media: {
-        id: 0,
-        type: '',
-        posterPath: ''
-    },
-    tracklistSeasons: [],
-    isRewatching: false
-}
-    }
+            id: 0,
+            rating: null,
+            status: 'watching',
+            startDate: null,
+            finishDate: null,
+            tracklistName: tracklistName,
+            media: {
+                id: 0,
+                type: '',
+                posterPath: '',
+            },
+            tracklistSeasons: [],
+            isRewatching: false,
+        };
+    };
 
-    public createNewTracklist = (event: I_TracklistFormOutput, mediaId: number) => {
+    public createNewTracklist = (
+        event: I_TracklistFormOutput,
+        mediaId: number,
+    ) => {
         this.triggerTracklistCREATEMOVIESubjectUseCase.execute({
             tracklist_name: event.tracklistName,
             media_id: mediaId,
@@ -339,11 +389,14 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             tracklist_status: event.status,
             tracklist_rating: event.rating,
             is_rewatching: event.isRewatching,
-            media_type: 'movie'
+            media_type: 'movie',
         });
-    }
+    };
 
-    public updateTracklist = (event: I_TracklistFormOutput, selectedTracklist: SeasonTracklist) => {
+    public updateTracklist = (
+        event: I_TracklistFormOutput,
+        selectedTracklist: SeasonTracklist,
+    ) => {
         this.triggerTracklistUPDATESubjectUseCase.execute({
             tracklist_id: selectedTracklist.id,
             tracklist_status: event.status,
@@ -351,15 +404,15 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             is_rewatching: event.isRewatching,
             tracklist_finish_date: event.finishDate,
             tracklist_start_date: event.startDate,
-            tracklist_rating: event.rating
+            tracklist_rating: event.rating,
         });
-    }
+    };
 
     public deleteTracklist = (tracklistId: number) => {
         this.triggerTracklistDELETEsubjectUseCase.execute(tracklistId);
-    }
+    };
 
     public cancelTracklist = () => {
         this.setVisibilityStatus(0);
-    }
+    };
 }

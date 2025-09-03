@@ -84,7 +84,8 @@ export interface Tracklist {
     isRewatching: boolean;
 }
 
-export interface I_TracklistFormOutput extends Omit<Tracklist, "tracklistSeasons" | "media" > {}
+export interface I_TracklistFormOutput
+    extends Omit<Tracklist, 'tracklistSeasons' | 'media'> {}
 
 export interface SeasonTracklistEpisode {
     id: number;

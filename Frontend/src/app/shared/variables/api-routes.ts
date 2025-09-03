@@ -67,7 +67,8 @@ export const ROUTE_DELETE_USER_ACCOUNT: string = API_ROUTE + 'user';
 
 export const ROUTE_UPDATE_TRACKLIST: string = API_ROUTE + 'tracklist';
 
-export const ROUTE_GET_TRACKLIST: string = API_ROUTE + 'tracklist?tracklist_id=';
+export const ROUTE_GET_TRACKLIST: string =
+    API_ROUTE + 'tracklist?tracklist_id=';
 
 export const ROUTE_DELETE_TRACKLIST: string =
     API_ROUTE + 'tracklist?tracklist_id=';
