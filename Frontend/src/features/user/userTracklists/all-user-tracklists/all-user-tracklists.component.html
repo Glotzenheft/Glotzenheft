@@ -161,29 +161,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <!-- page for updating a tracklist for a film -------------------------------------------------------- -->
     @if (currentTracklist) {
         @if (currentTracklist.media.type === 'movie' && visibility === 1) {
-            <!-- <app-update-film-tracklist 
-                [inpTracklist]="currentTracklist" 
-                (cancelTracklistForm)="refreshPage(true)"
-                (refreshFilmPage)="refreshPage(false)" 
-                /> -->
             <app-tracklist-formular 
                 [inpIsMovie]="true"
                 [inpIsUpdating]="true"
                 [inpTracklist]="currentTracklist"
+                (outCancelTracklist)="cancelTracklist()"
+                (outSubmitTracklist)="updateTracklist($event)"
+                (outDeleteTracklist)="deleteTracklist($event)"
             />
         }
 
         @if (currentTracklist.media.type === 'tv' && visibility === 2) {
             <!-- page for updating a tracklist for a tv ------------------------------------------------------------- -->
-            <!-- <app-update-tracklist-form 
-                [inpSelectedTracklist]="currentTracklist" 
-                (cancelTracklistEditing)="refreshPage(true)"
-                (saveUpdatedTracklist)="refreshPage(false)" 
-                /> -->
             <app-tracklist-formular 
                 [inpIsMovie]="false"
                 [inpIsUpdating]="true"
                 [inpTracklist]="currentTracklist"
+                (outCancelTracklist)="cancelTracklist()"
+                (outSubmitTracklist)="updateTracklist($event)"
+                (outDeleteTracklist)="deleteTracklist($event)"
             />
         }
     }

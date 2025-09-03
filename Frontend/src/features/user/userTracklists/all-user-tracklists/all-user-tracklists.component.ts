@@ -36,7 +36,7 @@ import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-forma
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import { Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { I_TracklistFormOutput, Tracklist } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import {
     convertTracklistStatusIntoGerman,
     TRACK_LIST_STATUS_LIST_AS_OBJECT,
@@ -46,6 +46,14 @@ import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/get-all-user-tracklists.use-case';
 import { TracklistFormularComponent } from "../../../media/mediaDetailsCOMPONENTS/tracklist-formular/tracklist-formular.component";
+import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
+import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
+import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
+import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import { MessageService } from 'primeng/api';
+import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
+import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
+import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
 @Component({
     selector: 'app-all-user-tracklists',
@@ -68,7 +76,15 @@ import { TracklistFormularComponent } from "../../../media/mediaDetailsCOMPONENT
 ],
     templateUrl: './all-user-tracklists.component.html',
     styleUrl: './all-user-tracklists.component.css',
-    providers: [UC_GetAllUserTracklists],
+    providers: [
+        UC_GetAllUserTracklists,
+        UC_GetTracklistDELETEResponseSubject,
+        UC_GetTracklistUPDATEResponseSubject,
+        UC_TriggerTracklistDELETESubject,
+        UC_TriggerTracklistUPDATESubject,
+        UC_NavigateToSpecificPage,
+        UC_LogoutOfAccount
+    ],
 })
 export class AllUserTracklistsComponent implements OnInit {
     public allTracklists: Tracklist[] | null = null;
@@ -109,9 +125,15 @@ export class AllUserTracklistsComponent implements OnInit {
     public convertStatus = convertTracklistStatusIntoGerman;
 
     constructor(
-        private router: Router,
         private formBuilder: FormBuilder,
         private getAllUserTracklistsUseCase: UC_GetAllUserTracklists,
+        private readonly getTracklistUPDATEResponseSubjectUseCase: UC_GetTracklistUPDATEResponseSubject,
+        private readonly getTracklistDELETEResponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
+        private readonly triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
+        private readonly triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject,
+        private readonly messageService: MessageService,
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+        private readonly logoutOfAccountUseCase: UC_LogoutOfAccount
     ) {}
 
     ngOnInit(): void {
@@ -119,6 +141,43 @@ export class AllUserTracklistsComponent implements OnInit {
             statusFilter: this.tracklistStatusFilterList[0],
             mediaFilter: this.tracklistMediaTypeFilterList[0],
         });
+
+        this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
+            next: () => {
+                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich aktualisiert"));
+                this.refreshPage(false);
+            
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                                    // status 401 = user is not logged in anymore -> navigate to login page
+                                    this.logoutOfAccountUseCase.execute();
+                                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                                    return;
+                                }
+                
+                                this.messageService.add(getMessageObject("error", "Fehler beim Aktualisieren der Tracklist"));
+            }
+        });
+
+        this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
+            next: () => {
+                this.messageService.add(getMessageObject("success", "Tracklist erfolgreich gelöscht"));
+                this.refreshPage(false);
+            },
+            error: (err) => {
+                if (err.status === 401) {
+                    // status 401 = user is not logged in anymore -> navigate to login page
+                    this.logoutOfAccountUseCase.execute();
+                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                    return;
+                }
+
+                this.messageService.add(getMessageObject("error", "Fehler beim Löschen der Tracklist"));
+            }
+        })
 
         this.loadTracklists();
     }
@@ -134,7 +193,6 @@ export class AllUserTracklistsComponent implements OnInit {
                     return;
                 }
 
-                console.log("hallo hier")
                 this.isLoading = false;
                 this.sortedUserTracklists = res
                     .filter((tracklist: Tracklist) => {
@@ -164,7 +222,7 @@ export class AllUserTracklistsComponent implements OnInit {
             },
             error: (err) => {
                 if (err.status === 401) {
-                    this.router.navigateByUrl(`/${ROUTES_LIST[1].fullUrl}`);
+                    this.navigateToSpecificPageUseCase.execute(`/${ROUTES_LIST[1].fullUrl}`);
                 } else if (err.status === 0) {
                     this.serverNotAvailablePage = true;
                 }
@@ -180,7 +238,7 @@ export class AllUserTracklistsComponent implements OnInit {
                 ? `${ROUTES_LIST[5].fullUrl}/${mediaID}`
                 : `${ROUTES_LIST[6].fullUrl}/${mediaID}`;
 
-        this.router.navigateByUrl(url);
+        this.navigateToSpecificPageUseCase.execute(url);
     };
 
     /**
@@ -266,4 +324,22 @@ export class AllUserTracklistsComponent implements OnInit {
                 );
             });
     };
+
+    public cancelTracklist = () => {
+        this.visibility = 0;
+    }
+
+    public updateTracklist = (event: I_TracklistFormOutput) => {
+        this.triggerTracklistUPDATESubjectUseCase.execute({
+            tracklist_id: event.id,
+            tracklist_status: event.status,
+            tracklist_start_date: event.startDate,
+            tracklist_finish_date: event.finishDate,
+            is_rewatching: event.isRewatching,
+            tracklist_name: event.tracklistName,
+            tracklist_rating: event.rating
+        });
+    }
+
+    public deleteTracklist = (event: number) => {this.triggerTracklistDELETESubjectUseCase.execute(event);}
 }

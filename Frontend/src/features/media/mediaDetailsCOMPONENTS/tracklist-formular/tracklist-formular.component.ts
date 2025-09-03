@@ -104,6 +104,7 @@ export class TracklistFormularComponent implements OnInit {
         }
 
         this.outSubmitTracklist.emit({
+            id: this.inpTracklist().id,
             status: this.tracklistForm?.get("status")?.value.value as TracklistStatusType,
             startDate: formattedStartDate,
             finishDate: formattedEndDate,
