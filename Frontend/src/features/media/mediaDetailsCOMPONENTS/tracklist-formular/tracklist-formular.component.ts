@@ -17,7 +17,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
     Component,
-    Input,
     input,
     InputSignal,
     OnInit,
@@ -47,7 +46,6 @@ import { Message } from 'primeng/message';
 import {
     I_TracklistFormOutput,
     SeasonTracklist,
-    Tracklist,
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { DeleteDialogComponent } from '../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 
@@ -134,15 +132,20 @@ export class TracklistFormularComponent implements OnInit {
         const formEndDate: string | undefined =
             this.tracklistForm?.get('finishDate')?.value;
 
+        const formatDateLocal = (dateInput: string | Date): string => {
+            const date = new Date(dateInput);
+            const year = date.getFullYear();
+            const month = (date.getMonth() + 1).toString().padStart(2, '0');
+            const day = date.getDate().toString().padStart(2, '0');
+
+            return `${year}-${month}-${day}`;
+        };
+
         if (formStartDate) {
-            formattedStartDate = new Date(formStartDate)
-                .toISOString()
-                .split('T')[0];
+            formattedStartDate = formatDateLocal(formStartDate);
         }
         if (formEndDate) {
-            formattedEndDate = new Date(formEndDate)
-                .toISOString()
-                .split('T')[0];
+            formattedEndDate = formatDateLocal(formEndDate);
         }
 
         this.outSubmitTracklist.emit({
