@@ -17,18 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { TracklistFormComponent } from './tracklist-form.component';
+import { TracklistFormularComponent } from './tracklist-formular.component';
 
-describe('TracklistFormComponent', () => {
-    let component: TracklistFormComponent;
-    let fixture: ComponentFixture<TracklistFormComponent>;
+describe('TracklistFormularComponent', () => {
+    let component: TracklistFormularComponent;
+    let fixture: ComponentFixture<TracklistFormularComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [TracklistFormComponent],
+            imports: [TracklistFormularComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(TracklistFormComponent);
+        fixture = TestBed.createComponent(TracklistFormularComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

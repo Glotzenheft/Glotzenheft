@@ -15,30 +15,52 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Inject, Injectable, PLATFORM_ID} from '@angular/core';
-import {catchError, EMPTY, exhaustMap, Observable,of, shareReplay, Subject, throttleTime, throwError,} from 'rxjs';
-import {HttpClient, HttpErrorResponse, HttpHeaders,} from '@angular/common/http';
-import {isPlatformBrowser} from '@angular/common';
-import {Film, MediaIDResponse, Season, UpdateTracklistRequest,} from '../../shared/interfaces/media-interfaces';
+import { Inject, Injectable, PLATFORM_ID } from '@angular/core';
+import {
+    catchError,
+    EMPTY,
+    exhaustMap,
+    Observable,
+    of,
+    shareReplay,
+    Subject,
+    throttleTime,
+    throwError,
+} from 'rxjs';
+import {
+    HttpClient,
+    HttpErrorResponse,
+    HttpHeaders,
+} from '@angular/common/http';
+import { isPlatformBrowser } from '@angular/common';
+import {
+    Film,
+    MediaIDResponse,
+    Season,
+    UpdateTracklistRequest,
+} from '../../shared/interfaces/media-interfaces';
 import {
     CreateMovieTracklistData,
     CreateSeasonTracklistData,
-    Tracklist
-,} from '../../shared/interfaces/tracklist-interfaces';
-import {REQUEST_THROTTLE_TIME} from '../../shared/variables/message-vars';
-import {KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN} from '../../shared/variables/local-storage-keys';
+    Tracklist,
+} from '../../shared/interfaces/tracklist-interfaces';
+import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
+import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 import {
-   ROUTE_CHECK_USER_AUTH, ROUTE_CREATE_NEW_TRACKLIST,
+    ROUTE_CHECK_USER_AUTH,
+    ROUTE_CREATE_NEW_TRACKLIST,
     ROUTE_DELETE_TRACKLIST,
     ROUTE_GET_ALL_USER_TRACKLISTS,
-   ROUTE_GET_MOVIE_RECOMMENDATIONS,
-    ROUTE_GET_TV_RECOMMENDATIONS, ROUTE_MEDIA_DETAILS_SEARCH,
+    ROUTE_GET_MOVIE_RECOMMENDATIONS,
+    ROUTE_GET_TV_RECOMMENDATIONS,
+    ROUTE_MEDIA_DETAILS_SEARCH,
     ROUTE_MEDIA_ID_FOR_MEDIA,
     ROUTE_MOVIE_DETAILS_SEARCH,
     ROUTE_MULTI_SEARCH,
-    ROUTE_UPDATE_TRACKLIST
-,} from '../../shared/variables/api-routes';
-import {I_MediaRepository} from '../../core/interfaces/media.repository';import {
+    ROUTE_UPDATE_TRACKLIST,
+} from '../../shared/variables/api-routes';
+import { I_MediaRepository } from '../../core/interfaces/media.repository';
+import {
     I_APIRecommendationResponse,
     I_HighestRecommendations,
     I_Recommendation,
@@ -286,12 +308,16 @@ export class R_MediaHttp implements I_MediaRepository {
             return EMPTY;
         }
 
-        return this.http.post<Tracklist>(ROUTE_CREATE_NEW_TRACKLIST, data, { headers: header }).pipe(
-            shareReplay(1),
-            catchError((error: HttpErrorResponse) => {
-                return throwError(() => error);
-            }),
-        );
+        return this.http
+            .post<Tracklist>(ROUTE_CREATE_NEW_TRACKLIST, data, {
+                headers: header,
+            })
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => error);
+                }),
+            );
     };
 
     // functions for creating a new movie tracklist --------------------------------------------
@@ -315,12 +341,14 @@ export class R_MediaHttp implements I_MediaRepository {
             return EMPTY;
         }
 
-        return this.http.post<any>(ROUTE_CREATE_NEW_TRACKLIST, data, { headers: header }).pipe(
-            shareReplay(1),
-            catchError((error: HttpErrorResponse) => {
-                return throwError(() => error);
-            }),
-        );
+        return this.http
+            .post<any>(ROUTE_CREATE_NEW_TRACKLIST, data, { headers: header })
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => error);
+                }),
+            );
     };
 
     // update tracklist functions -----------------------------------------------------------------------------------
@@ -345,12 +373,16 @@ export class R_MediaHttp implements I_MediaRepository {
             return EMPTY;
         }
 
-        return this.http.patch<Tracklist>(ROUTE_UPDATE_TRACKLIST, tracklistData, { headers: header }).pipe(
-            shareReplay(1),
-            catchError((error: HttpErrorResponse) => {
-                return throwError(() => error);
-            }),
-        );
+        return this.http
+            .patch<Tracklist>(ROUTE_UPDATE_TRACKLIST, tracklistData, {
+                headers: header,
+            })
+            .pipe(
+                shareReplay(1),
+                catchError((error: HttpErrorResponse) => {
+                    return throwError(() => error);
+                }),
+            );
     };
 
     // functions for deleting tracklists ----------------------------------------------------------------
@@ -382,11 +414,11 @@ export class R_MediaHttp implements I_MediaRepository {
 
     // other functions --------------------------------------------------------------------------------
 
-    public getAllUserTracklists = (): Observable<Tracklist[]> | null => {
+    public getAllUserTracklists = (): Observable<Tracklist[] | null> => {
         const header = this.getHeader();
 
         if (!header) {
-            return null;
+            return of(null);
         }
 
         return this.http
