@@ -50,21 +50,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 
 .container {
-    padding: 2rem;
-    max-width: 1200px;
+    max-width: 80rem;
     margin: auto;
     color: var(--text-color);
 }
 
 h1, h2 {
     color: var(--heading-color);
-    border-bottom: 1px solid var(--border-color);
-    padding-bottom: 0.5rem;
-    margin-bottom: 1rem;
+    padding: 0;
+    margin-top: 0;
 }
 
 p {
-    color: var(--text-color-muted);
+    color: white;
 }
 
 /* --- Aktionen & Karten --- */
@@ -79,10 +77,14 @@ p {
 .action-card {
     border: 1px solid var(--border-color);
     border-radius: 8px;
-    padding: 1.5rem;
     background-color: var(--card-background-color);
     box-shadow: var(--card-shadow);
     transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+
+    padding-left: var(--padding--left-right);
+    padding-right: var(--padding--left-right);
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
 }
 
 .action-card:hover {
@@ -151,16 +153,23 @@ p {
 
 /* --- Status-Anzeigen --- */
 
+
+td {
+    height: 100%;
+}
+
 .status {
-    padding: .2em .6em .3em;
-    font-size: 75%;
     font-weight: 700;
     line-height: 1;
     color: #fff;
-    text-align: center;
     white-space: nowrap;
     vertical-align: baseline;
     border-radius: .25rem;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
 }
 
 .status-completed { background-color: var(--success-color); }

@@ -16,38 +16,103 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <div class="container">
-    <h1>Datenbackup</h1>
+    <h1>Meine Backups verwalten</h1>
     <p>Erstelle hier ein Backup deiner Tracklisten!</p>
-    <p>Du kannst die Backup Datei hier herunterladen und falls nötig wieder einspielen.</p>
+    <p>Du kannst die Backup Datei hier herunterladen und, falls nötig, wieder einspielen.</p>
 
     <div class="actions-container">
         <!-- Export -->
         <div class="action-card">
             <h2>Backup erstellen</h2>
-            <button (click)="createBackup()" class="btn btn-primary">Neues Backup erstellen</button>
+            <p-button 
+                label="neues Backup erstellen" 
+                severity="primary"  
+                (onClick)="createBackup()"
+            />
         </div>
 
         <!-- Import -->
         <div class="action-card">
             <h2>Daten mit dem Backup wiederherstellen</h2>
-            <div class="upload-form">
+            <p-fileupload 
+                mode="advanced"
+                [multiple]="false"
+                [chooseLabel]="'Datei auswählen'"
+                [uploadLabel]="'Hochladen'"
+                [cancelLabel]="'Abbrechen'"
+                [customUpload]="true"
+                (uploadHandler)="uploadBackup($event)"
+            >
+                <ng-template #empty>Dateien hier hinziehen</ng-template>
+            </p-fileupload>
+
+
+
+
+
+            <!-- <div class="upload-form">
                 <input type="file" (change)="onFileSelected($event)" accept=".json">
                 <button (click)="uploadBackup()" [disabled]="!selectedFile" class="btn btn-secondary">Hochladen & Wiederherstellen
                 </button>
             </div>
             <div *ngIf="selectedFile && uploadProgress > 0" class="progress-bar">
                 <div class="progress" [style.width.%]="uploadProgress"></div>
-            </div>
+            </div> -->
             <p *ngIf="selectedFile">{{ selectedFile.name }}</p>
+            Hll
         </div>
     </div>
 
-    <h2>Deine Backups</h2>
+    <h2>Meine Backups</h2>
     <div *ngIf="isPolling" class="polling-indicator">
         <p>Ein Backup wird gerade erstellt/importiert. Die Liste wird automatisch aktualisiert...</p>
     </div>
 
-    <table class="backup-table">
+    <p-table [value]="backups" stripedRows [loading]="isTableLoading" >
+        <ng-template #header>
+            <tr>
+                <th>Type</th>
+                <th>Status</th>
+                <th>Erstellt am</th>
+                <th>Fertigstellungszeit</th>
+                <th>Tracklisten</th>
+                <th>Aktionen</th>
+            </tr>
+        </ng-template>
+        <ng-template #body let-backup>
+            <tr>
+                <td>{{backup.type | titlecase}}</td>
+                <td [ngClass]="'status-' + backup.status">
+                    <span class="status">
+                        {{backup.status | titlecase}}
+                    </span>
+                </td>
+                <td>{{backup.createdAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\''}}</td>
+                <td>{{backup.completedAt ? (backup.completedAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'') : "N/A" }}</td>
+                <td>{{backup.tracklistCount ?? "N/A"}}</td>
+                <td>
+                    @if (backup.type === "export" && backup.status === "completed") {
+                        <p-button 
+                            severity="secondary"
+                            (onClick)="downloadBackup(backup.id)"
+                            label="Download"
+                            icon="pi pi-download"
+                        />
+                    }
+                    
+                    @if (backup.status === "pending" || backup.status === "processing") {
+                        Processing ...
+                    }
+                </td>
+            </tr>        
+        </ng-template>
+    </p-table>
+
+
+
+
+
+    <!-- <table class="backup-table">
         <thead>
         <tr>
             <th>Type</th>
@@ -81,5 +146,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <td colspan="6">Du hast noch keine Backups erstellt.</td>
         </tr>
         </tbody>
-    </table>
+    </table> -->
 </div>
