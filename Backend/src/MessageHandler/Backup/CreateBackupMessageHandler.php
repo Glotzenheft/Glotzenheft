@@ -25,8 +25,9 @@ use App\Entity\User;
 use App\Enum\BackupStatus;
 use App\Enum\BackupType;
 use App\Message\Backup\CreateBackupMessage;
-use App\Repository\BackupRepository;
 use App\Repository\UserRepository;
+use App\Service\Backup\CreateBackupService;
+use App\Service\Backup\HashService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
@@ -41,14 +42,14 @@ readonly class CreateBackupMessageHandler
 {
 
     public function __construct(
+        #[Autowire('%env(resolve:BACKUP_DIR)%')]
+        private string                 $backupDirectory,
         private EntityManagerInterface $entityManager,
         private UserRepository         $userRepository,
-        private BackupService          $backupService,
+        private CreateBackupService    $backupService,
         private HashService            $hashService,
         private Filesystem             $filesystem,
         private LoggerInterface        $logger,
-        #[Autowire('%env(resolve:BACKUP_DIR)%')]
-        private string                 $backupDirectory
     ){}
 
     public function __invoke(CreateBackupMessage $message): void

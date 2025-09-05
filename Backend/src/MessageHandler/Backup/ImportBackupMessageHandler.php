@@ -21,12 +21,13 @@ declare(strict_types=1);
 namespace App\MessageHandler\Backup;
 
 use App\Entity\Backup;
+use App\Entity\User;
 use App\Enum\BackupStatus;
 use App\Message\Backup\ImportBackupMessage;
 use App\Repository\BackupRepository;
+use App\Service\Backup\ImportBackupService;
 use DateTime;
 use Doctrine\ORM\EntityManagerInterface;
-use PHPUnit\Exception;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -36,12 +37,12 @@ use Symfony\Component\Messenger\Attribute\AsMessageHandler;
 readonly class ImportBackupMessageHandler
 {
     public function __construct(
+        #[Autowire('%env(resolve:BACKUP_DIR)%')]
+        private string                 $backupDirectory,
         private EntityManagerInterface $entityManager,
-        private ImportService          $importService,
+        private ImportBackupService    $importService,
         private BackupRepository       $backupRepository,
         private LoggerInterface        $logger,
-        #[Autowire('%env(resolve:BACKUP_DIR)%')]
-        private string                 $backupDirectory
     ){}
 
     public function __invoke(ImportBackupMessage $message): void
@@ -78,24 +79,22 @@ readonly class ImportBackupMessageHandler
             }
 
             $user = $backup->getUser();
-            if (null === $user)
+            if (!$user instanceof User)
             {
                 throw new RuntimeException('User not found for backup entity.');
             }
 
-            $stats = $this->importService->processImport($data, $user);
-
-            $backup->setStatus(BackupStatus::COMPLETED);
-            $backup->setCompletedAt(new DateTime());
-
-            $this->logger->info(
-                message: 'Backup import completed.',
-                context: [
-                    'stats' => $stats
-                ]
-            );
+            if ($this->importService->processImport($data, $user))
+            {
+                $backup->setStatus(BackupStatus::COMPLETED);
+                $backup->setCompletedAt(new DateTime());
+            }
+            else
+            {
+                $backup->setStatus(BackupStatus::FAILED);
+            }
         }
-        catch (Exception $exception)
+        catch (RuntimeException $exception)
         {
             $this->logger->error(
                 message: 'Backup import failed.',
