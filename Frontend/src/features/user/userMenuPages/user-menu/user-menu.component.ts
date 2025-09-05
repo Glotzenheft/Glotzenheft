@@ -35,7 +35,12 @@ import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/naviga
     imports: [MenuModule, ButtonModule, TooltipModule],
     templateUrl: './user-menu.component.html',
     styleUrl: './user-menu.component.css',
-    providers: [UC_IsSearchBarVisible, UC_VisibleUserName, UC_LogoutOfAccount, UC_NavigateToSpecificPage],
+    providers: [
+        UC_IsSearchBarVisible,
+        UC_VisibleUserName,
+        UC_LogoutOfAccount,
+        UC_NavigateToSpecificPage,
+    ],
 })
 export class UserMenuComponent implements OnInit {
     public userMenuList: UserMenuList[] = [
@@ -46,21 +51,27 @@ export class UserMenuComponent implements OnInit {
                     label: 'Passwort ändern',
                     icon: 'pi pi-user-edit',
                     command: () => {
-                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[9].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[9].fullUrl,
+                        );
                     },
                 },
                 {
                     label: 'Account löschen',
                     icon: 'pi pi-trash',
                     command: () => {
-                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[13].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[13].fullUrl,
+                        );
                     },
                 },
                 {
                     label: 'Datenbackup',
                     icon: 'pi pi-database',
                     command: () => {
-                        void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[16].fullUrl);
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[16].fullUrl,
+                        );
                     },
                 },
                 {
@@ -74,7 +85,9 @@ export class UserMenuComponent implements OnInit {
                                 'Erfolgreich ausgeloggt',
                             ),
                         );
-                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
                     },
                 },
             ],
@@ -89,14 +102,18 @@ export class UserMenuComponent implements OnInit {
                     label: 'Einloggen',
                     icon: 'pi pi-sign-in',
                     command: () => {
-                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
                     },
                 },
                 {
                     label: 'Registrieren',
                     icon: 'pi pi-user-plus',
                     command: () => {
-                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[11].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[11].fullUrl,
+                        );
                     },
                 },
             ],
@@ -111,7 +128,7 @@ export class UserMenuComponent implements OnInit {
         private isSearchBarVisibleUseCase: UC_IsSearchBarVisible,
         private visibleUserNameUseCase: UC_VisibleUserName,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
-        public navigateToSpecificPageUseCase: UC_NavigateToSpecificPage
+        public navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
     ) {}
 
     ngOnInit(): void {

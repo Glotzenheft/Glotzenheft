@@ -180,7 +180,6 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     private deleteSubscription: Subscription | null = null;
     private seasonDataSubscription: Subscription | null = null;
 
-
     constructor(
         private readonly route: ActivatedRoute,
         private readonly formBuilder: FormBuilder,
@@ -206,19 +205,58 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             this.loadData(this.tvSeriesID);
         });
 
-        this.createSubscription = this.getTracklistCREATESEASONResponseSubjectUseCase
+        this.createSubscription =
+            this.getTracklistCREATESEASONResponseSubjectUseCase
+                .execute()
+                .subscribe({
+                    next: (response: Tracklist) => {
+                        this.messageService.add(
+                            getMessageObject(
+                                'success',
+                                'Tracklist erfolgreich angelegt',
+                            ),
+                        );
+                        this.setSelectedTracklistInLocalStorageUseCase.execute(
+                            response.id,
+                        );
+                    },
+                    error: (err) => {
+                        if (err.status === 401) {
+                            // status 401 = user is not logged in anymore -> navigate to login page
+                            this.logoutOfAccountUseCase.execute();
+                            this.messageService.add(
+                                ERR_OBJECT_INVALID_AUTHENTICATION,
+                            );
+                            void this.navigateToSpecificPageUseCase.execute(
+                                ROUTES_LIST[10].fullUrl,
+                            );
+                            return;
+                        }
+
+                        this.messageService.add(
+                            getMessageObject(
+                                'error',
+                                'Fehler beim Anlegen der Tracklist',
+                                'Bitte lade die Seite neu und probiere es erneut.',
+                            ),
+                        );
+                    },
+                });
+
+        this.updateSubscription = this.getTracklistUPDATEResponseSubjectUseCase
             .execute()
             .subscribe({
-                next: (response: Tracklist) => {
+                next: (res: Tracklist) => {
                     this.messageService.add(
                         getMessageObject(
                             'success',
-                            'Tracklist erfolgreich angelegt',
+                            'Tracklist erfolgreich gespeichert',
                         ),
                     );
                     this.setSelectedTracklistInLocalStorageUseCase.execute(
-                        response.id,
+                        res.id,
                     );
+                    this.refreshPage();
                 },
                 error: (err) => {
                     if (err.status === 401) {
@@ -236,75 +274,47 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                     this.messageService.add(
                         getMessageObject(
                             'error',
-                            'Fehler beim Anlegen der Tracklist',
+                            'Fehler beim Speichern der Tracklist',
                             'Bitte lade die Seite neu und probiere es erneut.',
                         ),
                     );
                 },
             });
 
-        this.updateSubscription = this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
-            next: (res: Tracklist) => {
-                this.messageService.add(
-                    getMessageObject(
-                        'success',
-                        'Tracklist erfolgreich gespeichert',
-                    ),
-                );
-                this.setSelectedTracklistInLocalStorageUseCase.execute(res.id);
-                this.refreshPage();
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(
-                        ROUTES_LIST[10].fullUrl,
+        this.deleteSubscription = this.getTracklistDELETEResponseSubjectUseCase
+            .execute()
+            .subscribe({
+                next: () => {
+                    this.messageService.add(
+                        getMessageObject(
+                            'success',
+                            'Tracklist erfolgreich gelöscht',
+                        ),
                     );
-                    return;
-                }
+                    this.refreshPage();
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // status 401 = user is not logged in anymore -> navigate to login page
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        'Fehler beim Speichern der Tracklist',
-                        'Bitte lade die Seite neu und probiere es erneut.',
-                    ),
-                );
-            },
-        });
-
-        this.deleteSubscription = this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
-            next: () => {
-                this.messageService.add(
-                    getMessageObject(
-                        'success',
-                        'Tracklist erfolgreich gelöscht',
-                    ),
-                );
-                this.refreshPage();
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(
-                        ROUTES_LIST[10].fullUrl,
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Löschen der Tracklist',
+                            'Bitte lade die Seite neu und probiere es erneut.',
+                        ),
                     );
-                    return;
-                }
-
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        'Fehler beim Löschen der Tracklist',
-                        'Bitte lade die Seite neu und probiere es erneut.',
-                    ),
-                );
-            },
-        });
+                },
+            });
     }
 
     ngOnDestroy(): void {
@@ -546,7 +556,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             tracklist_finish_date: event.finishDate,
             is_rewatching: event.isRewatching,
         });
-    }
+    };
 
     public deleteTracklist = (tracklistId: number) => {
         this.triggerTracklistDELETESubjectUseCase.execute(tracklistId);

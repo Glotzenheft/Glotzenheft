@@ -48,15 +48,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 }
 
-
 .container {
     max-width: 80rem;
     margin: auto;
     color: var(--text-color);
 }
 
-h1, h2 {
-    color: var(--heading-color);
+h1,
+h2 {
+    color: white;
     padding: 0;
     margin-top: 0;
 }
@@ -79,12 +79,20 @@ p {
     border-radius: 8px;
     background-color: var(--card-background-color);
     box-shadow: var(--card-shadow);
-    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+    transition:
+        transform 0.2s ease-in-out,
+        box-shadow 0.2s ease-in-out;
 
     padding-left: var(--padding--left-right);
     padding-right: var(--padding--left-right);
     padding-top: var(--padding--top-bottom);
     padding-bottom: var(--padding--top-bottom);
+}
+
+.action-card h1, .action-card h2 {
+    color: var(--heading-color);
+    padding: 0;
+    margin-top: 0;
 }
 
 .action-card:hover {
@@ -140,7 +148,8 @@ p {
     background-color: var(--card-background-color);
 }
 
-.backup-table th, .backup-table td {
+.backup-table th,
+.backup-table td {
     border: 1px solid var(--border-color);
     padding: 0.75rem;
     text-align: left;
@@ -152,7 +161,6 @@ p {
 }
 
 /* --- Status-Anzeigen --- */
-
 
 td {
     height: 100%;
@@ -174,10 +182,19 @@ td {
     border-radius: 0.3rem;
 }
 
-.status-completed { background-color: var(--success-color); }
-.status-pending { background-color: #ffc107; color: #212529; } /* Gelb braucht dunklen Text */
-.status-processing { background-color: #17a2b8; }
-.status-failed { background-color: #dc3545; }
+.status-completed {
+    background-color: var(--success-color);
+}
+.status-pending {
+    background-color: #ffc107;
+    color: #212529;
+} /* Gelb braucht dunklen Text */
+.status-processing {
+    background-color: #17a2b8;
+}
+.status-failed {
+    background-color: #dc3545;
+}
 
 /* --- Sonstiges --- */
 
@@ -189,4 +206,3 @@ td {
     margin-bottom: 1rem;
     color: var(--text-color);
 }
-

@@ -113,11 +113,8 @@ export const ROUTE_GET_TV_RECOMMENDATIONS: string =
 export const ROUTE_GET_MOVIE_RECOMMENDATIONS: string =
     API_ROUTE + 'movie/recommendations?tmdb_movie_id=';
 
-export const ROUTE_BACKUP: string
-    = API_ROUTE + 'backup';
+export const ROUTE_BACKUP: string = API_ROUTE + 'backup';
 
-export const ROUTE_BACKUP_IMPORT: string
-    = API_ROUTE + 'backup/import';
+export const ROUTE_BACKUP_IMPORT: string = API_ROUTE + 'backup/import';
 
-export const ROUTE_BACKUP_DOWNLOAD: string
-    = API_ROUTE + 'backup/download';
+export const ROUTE_BACKUP_DOWNLOAD: string = API_ROUTE + 'backup/download';

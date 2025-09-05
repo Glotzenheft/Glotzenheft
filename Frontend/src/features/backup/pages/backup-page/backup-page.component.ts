@@ -20,7 +20,7 @@ import { CommonModule } from '@angular/common';
 import { Subject, Subscription, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 import { HttpEvent, HttpEventType } from '@angular/common/http';
-import { I_Backup} from "../../../../app/shared/interfaces/backup-interfaces";
+import { I_Backup } from '../../../../app/shared/interfaces/backup-interfaces';
 import { UC_GetBackups } from '../../../../app/core/use-cases/backup/get-backups.use-case';
 import { UC_CreateBackup } from '../../../../app/core/use-cases/backup/create-backup.use-case';
 import { UC_UploadBackup } from '../../../../app/core/use-cases/backup/upload-backup.use-case';
@@ -31,15 +31,23 @@ import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
-import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
+import {
+    ERR_OBJECT_INVALID_AUTHENTICATION,
+    getMessageObject,
+} from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
 import { ProgressSpinner } from 'primeng/progressspinner';
-
 
 @Component({
     selector: 'app-backup-page',
     standalone: true,
-    imports: [CommonModule, ButtonModule, TableModule, FileUpload, ProgressSpinner],
+    imports: [
+        CommonModule,
+        ButtonModule,
+        TableModule,
+        FileUpload,
+        ProgressSpinner,
+    ],
     templateUrl: './backup-page.component.html',
     styleUrls: ['./backup-page.component.css'],
     providers: [
@@ -48,8 +56,8 @@ import { ProgressSpinner } from 'primeng/progressspinner';
         UC_GetBackups,
         UC_UploadBackup,
         UC_LogoutOfAccount,
-        UC_NavigateToSpecificPage
-    ]
+        UC_NavigateToSpecificPage,
+    ],
 })
 export class BackupPageComponent implements OnInit, OnDestroy {
     public backups: I_Backup[] = [];
@@ -68,15 +76,13 @@ export class BackupPageComponent implements OnInit, OnDestroy {
         private readonly downloadBackupUseCase: UC_DownloadBackup,
         private readonly messageService: MessageService,
         private readonly logoutOfAccountUseCase: UC_LogoutOfAccount,
-        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage
-
-    ) { }
+        private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
+    ) {}
 
     ngOnInit(): void {
         this.loadBackups();
     }
 
-    
     ngOnDestroy(): void {
         this.destroy$.next();
         this.destroy$.complete();
@@ -86,80 +92,115 @@ export class BackupPageComponent implements OnInit, OnDestroy {
     public loadBackups = () => {
         this.isTableLoading = true;
 
-        this.getBackupsUseCase.execute()
+        this.getBackupsUseCase
+            .execute()
             .pipe(takeUntil(this.destroy$))
             .subscribe({
                 next: (backups: I_Backup[]) => {
-                this.backups = backups;
+                    this.backups = backups;
 
-                const shouldPoll = backups.some((b: I_Backup) => b.status === 'pending' || b.status === 'processing');
+                    const shouldPoll = backups.some(
+                        (b: I_Backup) =>
+                            b.status === 'pending' || b.status === 'processing',
+                    );
 
-                if (shouldPoll && !this.isPolling) {
-                    this.startPolling();
-                } else if (!shouldPoll && this.isPolling) {
-                    this.stopPolling();
-                }
+                    if (shouldPoll && !this.isPolling) {
+                        this.startPolling();
+                    } else if (!shouldPoll && this.isPolling) {
+                        this.stopPolling();
+                    }
 
-                this.isTableLoading = false;
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
+                    this.isTableLoading = false;
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // status 401 = user is not logged in anymore -> navigate to login page
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Abrufen der Backups"));
-            }
-    });
-    }
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Abrufen der Backups',
+                        ),
+                    );
+                },
+            });
+    };
 
     public startPolling = () => {
-  if (this.isPolling) return; // verhindert Doppelstarts
-  this.isPolling = true;
+        if (this.isPolling) return; // verhindert Doppelstarts
+        this.isPolling = true;
 
-  this.pollingSubscription = timer(0, 10000)
-    .pipe(
-      switchMap(() => this.getBackupsUseCase.execute()),
-      takeUntil(this.destroy$)
-    )
-    .subscribe((backups: I_Backup[]) => {
-      this.backups = backups;
+        this.pollingSubscription = timer(0, 10000)
+            .pipe(
+                switchMap(() => this.getBackupsUseCase.execute()),
+                takeUntil(this.destroy$),
+            )
+            .subscribe((backups: I_Backup[]) => {
+                this.backups = backups;
 
-      // Stoppe Polling, wenn keine Pending/Processing mehr
-      if (!backups.some(b => b.status === 'pending' || b.status === 'processing')) {
-        this.stopPolling();
-      }
-    });
-}
+                // Stoppe Polling, wenn keine Pending/Processing mehr
+                if (
+                    !backups.some(
+                        (b) =>
+                            b.status === 'pending' || b.status === 'processing',
+                    )
+                ) {
+                    this.stopPolling();
+                }
+            });
+    };
 
-public stopPolling = () => {
-  this.pollingSubscription?.unsubscribe();
-  this.pollingSubscription = null;
-  this.isPolling = false;
-}
+    public stopPolling = () => {
+        this.pollingSubscription?.unsubscribe();
+        this.pollingSubscription = null;
+        this.isPolling = false;
+    };
 
     public createBackup = () => {
-        this.createBackupUseCase.execute().pipe(takeUntil(this.destroy$)).subscribe({
-            next: () => {
-                this.messageService.add(getMessageObject("success", "Backup erfolgreich erstellt"));
-            this.loadBackups(); // refresh list immediately
-        },
-        error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
+        this.createBackupUseCase
+            .execute()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe({
+                next: () => {
+                    this.messageService.add(
+                        getMessageObject(
+                            'success',
+                            'Backup erfolgreich erstellt',
+                        ),
+                    );
+                    this.loadBackups(); // refresh list immediately
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        // status 401 = user is not logged in anymore -> navigate to login page
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Erstellen des Backups"));
-            }
-        });
-    }
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Erstellen des Backups',
+                        ),
+                    );
+                },
+            });
+    };
 
     public onFileSelected = (event: Event) => {
         const input = event.target as HTMLInputElement;
@@ -167,67 +208,90 @@ public stopPolling = () => {
             this.selectedFile = input.files[0];
             this.uploadProgress = 0;
         }
-    }
+    };
 
     public uploadBackup = (event: FileUploadHandlerEvent, uploader: any) => {
-  const file = event.files?.[0];
-  if (!file || file.type !== "application/json") {
-    this.messageService.add(getMessageObject("error", "Keine JSON-Datei ausgewählt"));
-    return;
-  }
+        const file = event.files?.[0];
+        if (!file || file.type !== 'application/json') {
+            this.messageService.add(
+                getMessageObject('error', 'Keine JSON-Datei ausgewählt'),
+            );
+            return;
+        }
 
-  this.isTableLoading = true;
+        this.isTableLoading = true;
 
-  this.uploadBackupUseCase.execute(file)
-    .pipe(takeUntil(this.destroy$))
-    .subscribe({
-      next: (ev: HttpEvent<any>) => {
-        // Nur auf Response reagieren
-        if (ev.type === HttpEventType.Response) {
-          this.selectedFile = null;
-          this.uploadProgress = 0;
-          uploader.clear();
-          this.isTableLoading = false;
-          this.messageService.add(getMessageObject("success", "Backup erfolgreich hochgeladen"));
-
-          // Tabelle nur einmal laden, Polling-Start nicht erneut triggern
-          this.getBackupsUseCase.execute()
+        this.uploadBackupUseCase
+            .execute(file)
             .pipe(takeUntil(this.destroy$))
-            .subscribe(backups => this.backups = backups);
-        }
+            .subscribe({
+                next: (ev: HttpEvent<any>) => {
+                    // Nur auf Response reagieren
+                    if (ev.type === HttpEventType.Response) {
+                        this.selectedFile = null;
+                        this.uploadProgress = 0;
+                        uploader.clear();
+                        this.isTableLoading = false;
+                        this.messageService.add(
+                            getMessageObject(
+                                'success',
+                                'Backup erfolgreich hochgeladen',
+                            ),
+                        );
 
-        // UploadProgress aktualisieren
-        if (ev.type === HttpEventType.UploadProgress && ev.total) {
-          this.uploadProgress = Math.round(100 * (ev.loaded / ev.total));
-        }
-      },
-      error: (err) => {
-        this.isTableLoading = false;
-        uploader.clear();
+                        // Tabelle nur einmal laden, Polling-Start nicht erneut triggern
+                        this.getBackupsUseCase
+                            .execute()
+                            .pipe(takeUntil(this.destroy$))
+                            .subscribe((backups) => (this.backups = backups));
+                    }
 
-        if (err.status === 401) {
-          this.logoutOfAccountUseCase.execute();
-          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-          void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-          return;
-        }
+                    // UploadProgress aktualisieren
+                    if (ev.type === HttpEventType.UploadProgress && ev.total) {
+                        this.uploadProgress = Math.round(
+                            100 * (ev.loaded / ev.total),
+                        );
+                    }
+                },
+                error: (err) => {
+                    this.isTableLoading = false;
+                    uploader.clear();
 
-        this.messageService.add(getMessageObject("error", "Fehler beim Hochladen des Backups"));
-      }
-    });
-}
+                    if (err.status === 401) {
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        void this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Hochladen des Backups',
+                        ),
+                    );
+                },
+            });
+    };
 
     public downloadBackup = (backupId: number) => {
-        this.downloadBackupUseCase.execute(backupId).pipe(takeUntil(this.destroy$)).subscribe((blob: Blob) => {
-            const backup = this.backups.find((b: I_Backup) => b.id === backupId);
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = backup?.filename ?? 'backup.json';
-            a.click();
-            window.URL.revokeObjectURL(url);
-        });
-    }
-
+        this.downloadBackupUseCase
+            .execute(backupId)
+            .pipe(takeUntil(this.destroy$))
+            .subscribe((blob: Blob) => {
+                const backup = this.backups.find(
+                    (b: I_Backup) => b.id === backupId,
+                );
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = backup?.filename ?? 'backup.json';
+                a.click();
+                window.URL.revokeObjectURL(url);
+            });
+    };
 }

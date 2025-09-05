@@ -166,93 +166,106 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             this.loadData(this.movieID);
         });
 
-        this.createSubscription = this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
-            next: () => {
-                this.messageService.add(
-                    getMessageObject(
-                        'success',
-                        'Tracklist erfolgreich angelegt',
-                    ),
-                );
-                this.refreshPage();
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(
-                        ROUTES_LIST[10].fullUrl,
+        this.createSubscription =
+            this.getTracklistCREATEMOVIESubjectResponseUseCase
+                .execute()
+                .subscribe({
+                    next: () => {
+                        this.messageService.add(
+                            getMessageObject(
+                                'success',
+                                'Tracklist erfolgreich angelegt',
+                            ),
+                        );
+                        this.refreshPage();
+                    },
+                    error: (err) => {
+                        if (err.status === 401) {
+                            // status 401 = user is not logged in anymore -> navigate to login page
+                            this.logoutOfAccountUseCase.execute();
+                            this.messageService.add(
+                                ERR_OBJECT_INVALID_AUTHENTICATION,
+                            );
+                            void this.navigateToSpecificPageUseCase.execute(
+                                ROUTES_LIST[10].fullUrl,
+                            );
+                            return;
+                        }
+
+                        this.messageService.add(
+                            getMessageObject(
+                                'error',
+                                'Fehler beim Anlegen der Tracklist',
+                            ),
+                        );
+                    },
+                });
+
+        this.updateSubscription = this.getTracklistUPDATEResponseSubjectUseCase
+            .execute()
+            .subscribe({
+                next: () => {
+                    this.messageService.add(
+                        getMessageObject(
+                            'success',
+                            'Tracklist erfolgreich gespeichert',
+                        ),
                     );
-                    return;
-                }
+                    this.refreshPage();
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        'Fehler beim Anlegen der Tracklist',
-                    ),
-                );
-            },
-        });
-
-        this.updateSubscription = this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
-            next: () => {
-                this.messageService.add(
-                    getMessageObject(
-                        'success',
-                        'Tracklist erfolgreich gespeichert',
-                    ),
-                );
-                this.refreshPage();
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(
-                        ROUTES_LIST[10].fullUrl,
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Speichern der Tracklist',
+                        ),
                     );
-                    return;
-                }
+                },
+            });
 
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        'Fehler beim Speichern der Tracklist',
-                    ),
-                );
-            },
-        });
-
-        this.deleteSubscription = this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
-            next: () => {
-                this.messageService.add(
-                    getMessageObject(
-                        'success',
-                        'Tracklist erfolgreich gelöscht',
-                    ),
-                );
-                this.refreshPage();
-            },
-            error: (err) => {
-                if (err.status === 401) {
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    this.navigateToSpecificPageUseCase.execute(
-                        ROUTES_LIST[10].fullUrl,
+        this.deleteSubscription = this.getTracklistDELETEReponseSubjectUseCase
+            .execute()
+            .subscribe({
+                next: () => {
+                    this.messageService.add(
+                        getMessageObject(
+                            'success',
+                            'Tracklist erfolgreich gelöscht',
+                        ),
                     );
-                    return;
-                }
+                    this.refreshPage();
+                },
+                error: (err) => {
+                    if (err.status === 401) {
+                        this.logoutOfAccountUseCase.execute();
+                        this.messageService.add(
+                            ERR_OBJECT_INVALID_AUTHENTICATION,
+                        );
+                        this.navigateToSpecificPageUseCase.execute(
+                            ROUTES_LIST[10].fullUrl,
+                        );
+                        return;
+                    }
 
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        'Fehler beim Löschen der Tracklist',
-                    ),
-                );
-            },
-        });
+                    this.messageService.add(
+                        getMessageObject(
+                            'error',
+                            'Fehler beim Löschen der Tracklist',
+                        ),
+                    );
+                },
+            });
     }
 
     ngOnDestroy(): void {

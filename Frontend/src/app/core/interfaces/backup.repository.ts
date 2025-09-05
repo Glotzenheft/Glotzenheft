@@ -15,16 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from "rxjs";
-import { I_Backup } from "../../shared/interfaces/backup-interfaces";
-import { InjectionToken } from "@angular/core";
+import { Observable } from 'rxjs';
+import { I_Backup } from '../../shared/interfaces/backup-interfaces';
+import { InjectionToken } from '@angular/core';
 
 export interface I_BackupRepository {
-    getBackups: () => Observable<I_Backup[]>,
+    getBackups: () => Observable<I_Backup[]>;
     createBackup: () => Observable<void>;
-    uploadBackup: (file: File) => Observable<any>,
-    downloadBackup: (backupId: number) => Observable<Blob>
+    uploadBackup: (file: File) => Observable<any>;
+    downloadBackup: (backupId: number) => Observable<Blob>;
 }
 
 // IT = Injection Token
-export const IT_BACKUP_REPOSITORY = new InjectionToken<I_BackupRepository>("I_BackupRepository");
+export const IT_BACKUP_REPOSITORY = new InjectionToken<I_BackupRepository>(
+    'I_BackupRepository',
+);

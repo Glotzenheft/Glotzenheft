@@ -27,6 +27,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <p-button 
                 label="neues Backup erstellen" 
                 severity="primary"  
+                [disabled]="isTableLoading"
                 (onClick)="createBackup()"
             />
         </div>
@@ -92,7 +93,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <td>
                         @if (backup.type === "export" && backup.status === "completed") {
                             <p-button 
-                                severity="secondary"
+                                severity="contrast"
                                 (onClick)="downloadBackup(backup.id)"
                                 label="Download"
                                 icon="pi pi-download"

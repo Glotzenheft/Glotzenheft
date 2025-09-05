@@ -51,6 +51,6 @@ export const provideAppConfig = (): Provider[] => {
         { provide: IT_TRACKLIST_REPOSITORY, useClass: R_TracklistHttp },
         { provide: IT_USER_REPOSITORY, useClass: R_UserHTTP },
         { provide: IT_VALIDATION_REPOSITORY, useClass: R_Validation },
-        {provide: IT_BACKUP_REPOSITORY, useClass: R_BackupHttp}
+        { provide: IT_BACKUP_REPOSITORY, useClass: R_BackupHttp },
     ];
 };
