@@ -27,24 +27,19 @@ import { UC_UploadBackup } from '../../../../app/core/use-cases/backup/upload-ba
 import { UC_DownloadBackup } from '../../../../app/core/use-cases/backup/download-backup.use-case';
 import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
-import { FileSelectEvent, FileUpload, FileUploadEvent, FileUploadHandlerEvent } from 'primeng/fileupload';
+import { FileUpload, FileUploadHandlerEvent } from 'primeng/fileupload';
 import { MessageService } from 'primeng/api';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { ERR_OBJECT_INVALID_AUTHENTICATION, getMessageObject } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
-
-
-interface I_UploadEvent {
-    originalEvent: Event,
-    files: File
-}
+import { ProgressSpinner } from 'primeng/progressspinner';
 
 
 @Component({
     selector: 'app-backup-page',
     standalone: true,
-    imports: [CommonModule, ButtonModule, TableModule, FileUpload],
+    imports: [CommonModule, ButtonModule, TableModule, FileUpload, ProgressSpinner],
     templateUrl: './backup-page.component.html',
     styleUrls: ['./backup-page.component.css'],
     providers: [
@@ -81,7 +76,14 @@ export class BackupPageComponent implements OnInit, OnDestroy {
         this.loadBackups();
     }
 
-    loadBackups(): void {
+    
+    ngOnDestroy(): void {
+        this.destroy$.next();
+        this.destroy$.complete();
+        this.stopPolling();
+    }
+
+    public loadBackups = () => {
         this.isTableLoading = true;
 
         this.getBackupsUseCase.execute()
@@ -114,34 +116,36 @@ export class BackupPageComponent implements OnInit, OnDestroy {
     });
     }
 
-    startPolling(): void {
-        this.isPolling = true;
-        this.pollingSubscription = timer(0, 5000).pipe( // Poll every 5 seconds
-            switchMap(() => this.getBackupsUseCase.execute()),
-            takeUntil(this.destroy$)
-        ).subscribe((backups: I_Backup[]) => {
-            this.backups = backups;
-            if (!backups.some((b: I_Backup) => b.status === 'pending' || b.status === 'processing')) {
-                this.stopPolling();
-            }
-        });
-    }
+    public startPolling = () => {
+  if (this.isPolling) return; // verhindert Doppelstarts
+  this.isPolling = true;
 
-    stopPolling(): void {
-        if (this.pollingSubscription) {
-            this.pollingSubscription.unsubscribe();
-            this.pollingSubscription = null;
-        }
-        this.isPolling = false;
-    }
+  this.pollingSubscription = timer(0, 10000)
+    .pipe(
+      switchMap(() => this.getBackupsUseCase.execute()),
+      takeUntil(this.destroy$)
+    )
+    .subscribe((backups: I_Backup[]) => {
+      this.backups = backups;
 
-    createBackup(): void {
-        
+      // Stoppe Polling, wenn keine Pending/Processing mehr
+      if (!backups.some(b => b.status === 'pending' || b.status === 'processing')) {
+        this.stopPolling();
+      }
+    });
+}
 
+public stopPolling = () => {
+  this.pollingSubscription?.unsubscribe();
+  this.pollingSubscription = null;
+  this.isPolling = false;
+}
+
+    public createBackup = () => {
         this.createBackupUseCase.execute().pipe(takeUntil(this.destroy$)).subscribe({
             next: () => {
+                this.messageService.add(getMessageObject("success", "Backup erfolgreich erstellt"));
             this.loadBackups(); // refresh list immediately
-            this.messageService.add(getMessageObject("success", "Backup erfolgreich erstellt"));
         },
         error: (err) => {
                 if (err.status === 401) {
@@ -157,7 +161,7 @@ export class BackupPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    onFileSelected(event: Event): void {
+    public onFileSelected = (event: Event) => {
         const input = event.target as HTMLInputElement;
         if (input.files && input.files.length > 0) {
             this.selectedFile = input.files[0];
@@ -165,43 +169,56 @@ export class BackupPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    bla = (event: FileSelectEvent) => {
-        console.log("bla")
-        console.log("event", event.files)
-    }
+    public uploadBackup = (event: FileUploadHandlerEvent, uploader: any) => {
+  const file = event.files?.[0];
+  if (!file || file.type !== "application/json") {
+    this.messageService.add(getMessageObject("error", "Keine JSON-Datei ausgewählt"));
+    return;
+  }
 
-    uploadBackup(event: FileUploadHandlerEvent): void {
-        if (!event.files || event.files.length < 1) {
-            return;
+  this.isTableLoading = true;
+
+  this.uploadBackupUseCase.execute(file)
+    .pipe(takeUntil(this.destroy$))
+    .subscribe({
+      next: (ev: HttpEvent<any>) => {
+        // Nur auf Response reagieren
+        if (ev.type === HttpEventType.Response) {
+          this.selectedFile = null;
+          this.uploadProgress = 0;
+          uploader.clear();
+          this.isTableLoading = false;
+          this.messageService.add(getMessageObject("success", "Backup erfolgreich hochgeladen"));
+
+          // Tabelle nur einmal laden, Polling-Start nicht erneut triggern
+          this.getBackupsUseCase.execute()
+            .pipe(takeUntil(this.destroy$))
+            .subscribe(backups => this.backups = backups);
         }
 
-        this.uploadBackupUseCase.execute(event.files[0]).pipe(takeUntil(this.destroy$)).subscribe(
-            {
-                next: (event: HttpEvent<any>) => {
-            if (event.type === HttpEventType.UploadProgress && event.total) {
-                this.uploadProgress = Math.round(100 * (event.loaded / event.total));
-            } else if (event.type === HttpEventType.Response) {
-                this.selectedFile = null;
-                this.uploadProgress = 0;
-                this.loadBackups(); // refresh list
-            }
-        },
-        error: (err) => {
-                if (err.status === 401) {
-                    // status 401 = user is not logged in anymore -> navigate to login page
-                    this.logoutOfAccountUseCase.execute();
-                    this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
-                    void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
-                    return;
-                }
+        // UploadProgress aktualisieren
+        if (ev.type === HttpEventType.UploadProgress && ev.total) {
+          this.uploadProgress = Math.round(100 * (ev.loaded / ev.total));
+        }
+      },
+      error: (err) => {
+        this.isTableLoading = false;
+        uploader.clear();
 
-                this.messageService.add(getMessageObject("error", "Fehler beim Abrufen der Backups"));
-            }
-            }
-        );
-    }
+        if (err.status === 401) {
+          this.logoutOfAccountUseCase.execute();
+          this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+          void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
+          return;
+        }
 
-    downloadBackup(backupId: number): void {
+        this.messageService.add(getMessageObject("error", "Fehler beim Hochladen des Backups"));
+      }
+    });
+}
+
+
+    public downloadBackup = (backupId: number) => {
         this.downloadBackupUseCase.execute(backupId).pipe(takeUntil(this.destroy$)).subscribe((blob: Blob) => {
             const backup = this.backups.find((b: I_Backup) => b.id === backupId);
             const url = window.URL.createObjectURL(blob);
@@ -213,9 +230,4 @@ export class BackupPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    ngOnDestroy(): void {
-        this.destroy$.next();
-        this.destroy$.complete();
-        this.stopPolling();
-    }
 }

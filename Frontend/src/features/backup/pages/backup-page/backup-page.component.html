@@ -34,117 +34,84 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <!-- Import -->
         <div class="action-card">
             <h2>Daten mit dem Backup wiederherstellen</h2>
-            <p-fileupload 
-                mode="advanced"
-                [multiple]="false"
-                [chooseLabel]="'Datei auswählen'"
-                [uploadLabel]="'Hochladen'"
-                [cancelLabel]="'Abbrechen'"
-                [customUpload]="true"
-                (uploadHandler)="uploadBackup($event)"
-            >
-                <ng-template #empty>Dateien hier hinziehen</ng-template>
-            </p-fileupload>
-
-
-
-
-
-            <!-- <div class="upload-form">
-                <input type="file" (change)="onFileSelected($event)" accept=".json">
-                <button (click)="uploadBackup()" [disabled]="!selectedFile" class="btn btn-secondary">Hochladen & Wiederherstellen
-                </button>
-            </div>
-            <div *ngIf="selectedFile && uploadProgress > 0" class="progress-bar">
-                <div class="progress" [style.width.%]="uploadProgress"></div>
-            </div> -->
-            <p *ngIf="selectedFile">{{ selectedFile.name }}</p>
-            Hll
+            
+            @if (!isTableLoading) {
+                <p-fileupload 
+                    [style]="{backgroundColor: 'transparent', border: 'none'}"
+                    #uploader
+                    class="fileUpload"
+                    mode="advanced"
+                    [multiple]="false"
+                    [chooseLabel]="'Datei auswählen'"
+                    [uploadLabel]="'Hochladen'"
+                    [cancelLabel]="'Abbrechen'"
+                    [customUpload]="true"
+                    (uploadHandler)="uploadBackup($event, uploader)"
+                >
+                    <ng-template #empty>Datei hier hinziehen</ng-template>
+                </p-fileupload>
+            } 
+            @else {
+                <p-progress-spinner />
+            }
+            
         </div>
     </div>
 
     <h2>Meine Backups</h2>
-    <div *ngIf="isPolling" class="polling-indicator">
-        <p>Ein Backup wird gerade erstellt/importiert. Die Liste wird automatisch aktualisiert...</p>
-    </div>
 
-    <p-table [value]="backups" stripedRows [loading]="isTableLoading" >
-        <ng-template #header>
-            <tr>
-                <th>Type</th>
-                <th>Status</th>
-                <th>Erstellt am</th>
-                <th>Fertigstellungszeit</th>
-                <th>Tracklisten</th>
-                <th>Aktionen</th>
-            </tr>
-        </ng-template>
-        <ng-template #body let-backup>
-            <tr>
-                <td>{{backup.type | titlecase}}</td>
-                <td [ngClass]="'status-' + backup.status">
-                    <span class="status">
-                        {{backup.status | titlecase}}
-                    </span>
-                </td>
-                <td>{{backup.createdAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\''}}</td>
-                <td>{{backup.completedAt ? (backup.completedAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'') : "N/A" }}</td>
-                <td>{{backup.tracklistCount ?? "N/A"}}</td>
-                <td>
-                    @if (backup.type === "export" && backup.status === "completed") {
-                        <p-button 
-                            severity="secondary"
-                            (onClick)="downloadBackup(backup.id)"
-                            label="Download"
-                            icon="pi pi-download"
-                        />
-                    }
-                    
-                    @if (backup.status === "pending" || backup.status === "processing") {
-                        Processing ...
-                    }
-                </td>
-            </tr>        
-        </ng-template>
-    </p-table>
+    @if (isPolling) {
+        <div class="polling-indicator">
+            <p>Ein Backup wird gerade erstellt/importiert. Die Liste wird automatisch aktualisiert...</p>
+        </div>
+    }
 
+    @if (backups.length > 0) {
+        <p-table [value]="backups" stripedRows [loading]="isTableLoading" >
+            <ng-template #header>
+                <tr>
+                    <th>Type</th>
+                    <th>Status</th>
+                    <th>Erstellt am</th>
+                    <th>Fertigstellungszeit</th>
+                    <th>Tracklisten</th>
+                    <th>Aktionen</th>
+                </tr>
+            </ng-template>
+            <ng-template #body let-backup>
+                <tr>
+                    <td>{{backup.type | titlecase}}</td>
+                    <td [ngClass]="'status-' + backup.status + ' border'">
+                        <span class="status">
+                            {{backup.status | titlecase}}
+                        </span>
+                    </td>
+                    <td>{{backup.createdAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\''}}</td>
+                    <td>{{backup.completedAt ? (backup.completedAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'') : "N/A" }}</td>
+                    <td>{{backup.tracklistCount ?? "N/A"}}</td>
+                    <td>
+                        @if (backup.type === "export" && backup.status === "completed") {
+                            <p-button 
+                                severity="secondary"
+                                (onClick)="downloadBackup(backup.id)"
+                                label="Download"
+                                icon="pi pi-download"
+                            />
+                        } 
+                        @else if (backup.type !== "export" && backup.status === "completed") {
+                            Abgeschlossen
+                        }
+                        
+                        @if (backup.status === "pending" || backup.status === "processing") {
+                            Processing ...
+                        }
 
-
-
-
-    <!-- <table class="backup-table">
-        <thead>
-        <tr>
-            <th>Type</th>
-            <th>Status</th>
-            <th>Erstellt am</th>
-            <th>Fertigstellungszeit</th>
-            <th>Tracklisten</th>
-            <th>Aktionen</th>
-        </tr>
-        </thead>
-        <tbody>
-        <tr *ngFor="let backup of backups">
-            <td>{{ backup.type | titlecase }}</td>
-            <td>
-                <span class="status" [ngClass]="'status-' + backup.status">{{ backup.status | titlecase }}</span>
-            </td>
-            <td>{{ backup.createdAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'' }}</td>
-            <td>{{ backup.completedAt ? (backup.completedAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'') : 'N/A' }}</td>
-            <td>{{ backup.tracklistCount ?? 'N/A' }}</td>
-            <td>
-                <button
-                    *ngIf="backup.type === 'export' && backup.status === 'completed'"
-                    (click)="downloadBackup(backup.id)"
-                    class="btn btn-sm">
-                    Download
-                </button>
-                <span *ngIf="backup.status === 'pending' || backup.status === 'processing'">Processing...</span>
-            </td>
-        </tr>
-        <tr *ngIf="backups.length === 0">
-            <td colspan="6">Du hast noch keine Backups erstellt.</td>
-        </tr>
-        </tbody>
-    </table> -->
+                    </td>
+                </tr>  
+            </ng-template>
+        </p-table>
+    } 
+    @else {
+        <span><i>Keine Backups vorhanden</i></span>
+    }
 </div>

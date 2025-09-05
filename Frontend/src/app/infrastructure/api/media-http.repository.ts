@@ -63,7 +63,6 @@ import { I_MediaRepository } from '../../core/interfaces/media.repository';
 import {
     I_APIRecommendationResponse,
     I_HighestRecommendations,
-    I_Recommendation,
     I_Recommendations,
 } from '../../shared/interfaces/recommendation-interfaces';
 
