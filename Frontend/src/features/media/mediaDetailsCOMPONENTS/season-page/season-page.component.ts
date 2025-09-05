@@ -15,9 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, OnInit } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params, Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
+import { map, Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
@@ -128,7 +128,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
         UC_TriggerTracklistDELETESubject,
     ],
 })
-export class SeasonPageComponent implements OnInit {
+export class SeasonPageComponent implements OnInit, OnDestroy {
     public tvSeriesID: string | null = null;
     public seasonData$: Observable<Season> | null = null;
     public numberOfEpisodes$: Observable<number> | null = null;
@@ -139,19 +139,15 @@ export class SeasonPageComponent implements OnInit {
     public currentTab: string = TABLIST[0];
     public tabList: string[] = TABLIST;
     public apiRecommendations: I_APIRecommendationResponse | null = null;
-
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
     public isInvalidID: boolean = false;
-
     public visibleSeason: SeasonWithEpisodes | null = null;
     public selectedSeason: TVSeasonWithTracklist | null = null;
     public tracklistsOfSeason: SeasonTracklist[] = [];
-
     public trackListForm!: FormGroup;
     public isTracklistSubmitted: boolean = false;
     public tracklistSelectionForm!: FormGroup;
-
     public currentTracklistSelection: SeasonTracklistType | null = null;
 
     // dialog and visibility variables --------------------------
@@ -164,7 +160,7 @@ export class SeasonPageComponent implements OnInit {
     public currentEpisode: SeasonEpisode | null = null;
 
     public isEditingButtonVisible: boolean = true;
-
+    public isLoading: boolean = false;
     public EMPTY_TRACKLIST: SeasonTracklist = {
         id: -1,
         media: {
@@ -179,8 +175,11 @@ export class SeasonPageComponent implements OnInit {
         tracklistSeasons: [],
         isRewatching: false,
     };
+    private createSubscription: Subscription | null = null;
+    private updateSubscription: Subscription | null = null;
+    private deleteSubscription: Subscription | null = null;
+    private seasonDataSubscription: Subscription | null = null;
 
-    public isLoading: boolean = false;
 
     constructor(
         private readonly route: ActivatedRoute,
@@ -207,7 +206,7 @@ export class SeasonPageComponent implements OnInit {
             this.loadData(this.tvSeriesID);
         });
 
-        this.getTracklistCREATESEASONResponseSubjectUseCase
+        this.createSubscription = this.getTracklistCREATESEASONResponseSubjectUseCase
             .execute()
             .subscribe({
                 next: (response: Tracklist) => {
@@ -244,7 +243,7 @@ export class SeasonPageComponent implements OnInit {
                 },
             });
 
-        this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
+        this.updateSubscription = this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: (res: Tracklist) => {
                 this.messageService.add(
                     getMessageObject(
@@ -276,7 +275,7 @@ export class SeasonPageComponent implements OnInit {
             },
         });
 
-        this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
+        this.deleteSubscription = this.getTracklistDELETEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject(
@@ -306,6 +305,13 @@ export class SeasonPageComponent implements OnInit {
                 );
             },
         });
+    }
+
+    ngOnDestroy(): void {
+        this.createSubscription?.unsubscribe();
+        this.updateSubscription?.unsubscribe();
+        this.deleteSubscription?.unsubscribe();
+        this.seasonDataSubscription?.unsubscribe();
     }
 
     // functions -----------------------------------------------------
@@ -345,7 +351,7 @@ export class SeasonPageComponent implements OnInit {
             return;
         }
 
-        this.seasonData$.subscribe({
+        this.seasonDataSubscription = this.seasonData$.subscribe({
             next: (res: Season) => {
                 this.trackListForm = this.formBuilder.group({
                     trackListName: [res.media.name, Validators.required],
@@ -540,11 +546,10 @@ export class SeasonPageComponent implements OnInit {
             tracklist_finish_date: event.finishDate,
             is_rewatching: event.isRewatching,
         });
-    };
+    }
 
     public deleteTracklist = (tracklistId: number) => {
         this.triggerTracklistDELETESubjectUseCase.execute(tracklistId);
-        this.refreshPage();
     };
 
     public cancelTracklistForm = () => {

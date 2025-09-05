@@ -138,6 +138,9 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public recommendations: I_Recommendations | null = null;
     public apiRecommendations: I_APIRecommendationResponse | null = null;
     private subscription: Subscription | null = null;
+    private createSubscription: Subscription | null = null;
+    private updateSubscription: Subscription | null = null;
+    private deleteSubscription: Subscription | null = null;
 
     constructor(
         public readonly shortenStringUseCase: UC_ShortenString,
@@ -163,7 +166,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             this.loadData(this.movieID);
         });
 
-        this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
+        this.createSubscription = this.getTracklistCREATEMOVIESubjectResponseUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject(
@@ -193,7 +196,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             },
         });
 
-        this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
+        this.updateSubscription = this.getTracklistUPDATEResponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject(
@@ -222,7 +225,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             },
         });
 
-        this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
+        this.deleteSubscription = this.getTracklistDELETEReponseSubjectUseCase.execute().subscribe({
             next: () => {
                 this.messageService.add(
                     getMessageObject(
@@ -253,9 +256,10 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.subscription) {
-            this.subscription.unsubscribe();
-        }
+        this.subscription?.unsubscribe();
+        this.createSubscription?.unsubscribe();
+        this.updateSubscription?.unsubscribe();
+        this.deleteSubscription?.unsubscribe();
     }
 
     public loadData = (movieID: string | null) => {
