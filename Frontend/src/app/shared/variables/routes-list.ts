@@ -132,10 +132,10 @@ export const ROUTES_LIST: RoutesListItem[] = [
     },
     {
         // 16
-        description: 'Datenbackup',
-        fullUrl: 'settings/backup',
+        description: 'Meine Backups',
+        fullUrl: 'user/backup',
         shortUrl: 'backup',
-        showInLinkList: false,
+        showInLinkList: true,
     },
 ];
 

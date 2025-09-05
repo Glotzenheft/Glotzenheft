@@ -15,13 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface I_Backup {
-    id: number;
-    type: 'import' | 'export';
-    status: 'pending' | 'processing' | 'completed' | 'failed';
-    filename: string;
-    tracklistCount: number | null;
-    completedAt: string | null; // ISO date string
-    createdAt: string; // ISO date string
-    updatedAt: string; // ISO date string
+import { Observable } from 'rxjs';
+import { I_Backup } from '../../shared/interfaces/backup-interfaces';
+import { InjectionToken } from '@angular/core';
+
+export interface I_BackupRepository {
+    getBackups: () => Observable<I_Backup[]>;
+    createBackup: () => Observable<void>;
+    uploadBackup: (file: File) => Observable<any>;
+    downloadBackup: (backupId: number) => Observable<Blob>;
 }
+
+// IT = Injection Token
+export const IT_BACKUP_REPOSITORY = new InjectionToken<I_BackupRepository>(
+    'I_BackupRepository',
+);

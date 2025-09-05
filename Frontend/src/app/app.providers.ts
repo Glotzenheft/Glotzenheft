@@ -36,6 +36,8 @@ import { IT_USER_REPOSITORY } from './core/interfaces/user.repository';
 import { R_UserHTTP } from './infrastructure/api/user-http.repository';
 import { IT_VALIDATION_REPOSITORY } from './core/interfaces/validation.repository';
 import { R_Validation } from './infrastructure/non-api/validation-service.repository';
+import { IT_BACKUP_REPOSITORY } from './core/interfaces/backup.repository';
+import { R_BackupHttp } from './infrastructure/api/backup.service';
 
 export const provideAppConfig = (): Provider[] => {
     return [
@@ -49,5 +51,6 @@ export const provideAppConfig = (): Provider[] => {
         { provide: IT_TRACKLIST_REPOSITORY, useClass: R_TracklistHttp },
         { provide: IT_USER_REPOSITORY, useClass: R_UserHTTP },
         { provide: IT_VALIDATION_REPOSITORY, useClass: R_Validation },
+        { provide: IT_BACKUP_REPOSITORY, useClass: R_BackupHttp },
     ];
 };

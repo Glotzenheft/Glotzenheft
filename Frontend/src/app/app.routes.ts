@@ -105,15 +105,15 @@ export const routes: Routes = [
     },
     {
         // 12
-        path: 'settings/backup',
+        path: ROUTES_LIST[16].fullUrl,
         loadComponent: () =>
-            import('../features/backup/pages/backup-page/backup-page.component').then(
-                (c) => c.BackupPageComponent
-            ),
+            import(
+                '../features/backup/pages/backup-page/backup-page.component'
+            ).then((c) => c.BackupPageComponent),
         canActivate: [authGuard],
     },
     {
-        // 19
+        // rest
         path: '**',
         redirectTo: '/',
         pathMatch: 'full',

@@ -15,13 +15,21 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface I_Backup {
-    id: number;
-    type: 'import' | 'export';
-    status: 'pending' | 'processing' | 'completed' | 'failed';
-    filename: string;
-    tracklistCount: number | null;
-    completedAt: string | null; // ISO date string
-    createdAt: string; // ISO date string
-    updatedAt: string; // ISO date string
+import { Inject, Injectable } from '@angular/core';
+import {
+    I_BackupRepository,
+    IT_BACKUP_REPOSITORY,
+} from '../../interfaces/backup.repository';
+import { Observable } from 'rxjs';
+
+@Injectable()
+export class UC_DownloadBackup {
+    constructor(
+        @Inject(IT_BACKUP_REPOSITORY)
+        private readonly backupRepository: I_BackupRepository,
+    ) {}
+
+    public execute = (backupId: number): Observable<Blob> => {
+        return this.backupRepository.downloadBackup(backupId);
+    };
 }
