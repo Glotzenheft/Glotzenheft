@@ -56,6 +56,13 @@ export class UserMenuComponent implements OnInit {
                     },
                 },
                 {
+                    label: 'Datenbackup',
+                    icon: 'pi pi-database',
+                    command: () => {
+                        void this.router.navigateByUrl(ROUTES_LIST[16].fullUrl);
+                    },
+                },
+                {
                     label: 'Ausloggen',
                     icon: 'pi pi-sign-out',
                     command: () => {

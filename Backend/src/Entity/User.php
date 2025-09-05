@@ -79,9 +79,16 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     private ?DateTimeInterface $lastLogin = null;
 
+    /**
+     * @var Collection<int, Backup>
+     */
+    #[ORM\OneToMany(targetEntity: Backup::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $backups;
+
     public function __construct()
     {
         $this->tracklists = new ArrayCollection();
+        $this->backups = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -223,6 +230,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function setLastLogin(?DateTimeInterface $lastLogin): static
     {
         $this->lastLogin = $lastLogin;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Backup>
+     */
+    public function getBackups(): Collection
+    {
+        return $this->backups;
+    }
+
+    public function addBackup(Backup $backup): static
+    {
+        if (!$this->backups->contains($backup)) {
+            $this->backups->add($backup);
+            $backup->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBackup(Backup $backup): static
+    {
+        if ($this->backups->removeElement($backup)) {
+            // set the owning side to null (unless already changed)
+            if ($backup->getUser() === $this) {
+                $backup->setUser(null);
+            }
+        }
 
         return $this;
     }

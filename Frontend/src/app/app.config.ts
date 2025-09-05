@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { ApplicationConfig, provideZoneChangeDetection } from '@angular/core';
+import { ApplicationConfig, LOCALE_ID, provideZoneChangeDetection } from "@angular/core";
 import { provideRouter } from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
@@ -30,6 +30,10 @@ import { provideHttpClient } from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ChartModule } from 'primeng/chart';
 import { provideAppConfig } from './app.providers';
+import localeDe from '@angular/common/locales/de';
+import { registerLocaleData } from "@angular/common";
+
+registerLocaleData(localeDe);
 
 export const appConfig: ApplicationConfig = {
     providers: [
@@ -90,5 +94,6 @@ export const appConfig: ApplicationConfig = {
         MessageService,
         ChartModule,
         ...provideAppConfig(),
+        { provide: LOCALE_ID, useValue: 'de-DE' },
     ],
 };

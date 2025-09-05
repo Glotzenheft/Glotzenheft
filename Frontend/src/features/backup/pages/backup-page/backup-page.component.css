@@ -1,0 +1,180 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+:host {
+    --text-color: #212529;
+    --text-color-muted: #6c757d;
+    --heading-color: #1a202c;
+    --card-background-color: #ffffff;
+    --border-color: #dee2e6;
+    --primary-color: #007bff;
+    --primary-color-text: #ffffff;
+    --secondary-color: #6c757d;
+    --secondary-color-text: #ffffff;
+    --success-color: #28a745;
+    --success-color-text: #ffffff;
+    --table-header-background: #f8f9fa;
+    --link-color: #007bff;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.05);
+}
+
+@media (prefers-color-scheme: dark) {
+    :host {
+        --text-color: #e2e8f0;
+        --text-color-muted: #a0aec0;
+        --heading-color: #ffffff;
+        --card-background-color: #2d3748;
+        --border-color: #4a5568;
+        --primary-color: #3182ce;
+        --secondary-color: #718096;
+        --success-color: #38a169;
+        --table-header-background: #2d3748;
+        --link-color: #63b3ed;
+        --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+    }
+}
+
+
+.container {
+    padding: 2rem;
+    max-width: 1200px;
+    margin: auto;
+    color: var(--text-color);
+}
+
+h1, h2 {
+    color: var(--heading-color);
+    border-bottom: 1px solid var(--border-color);
+    padding-bottom: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+p {
+    color: var(--text-color-muted);
+}
+
+/* --- Aktionen & Karten --- */
+
+.actions-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+    margin: 2rem 0;
+}
+
+.action-card {
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1.5rem;
+    background-color: var(--card-background-color);
+    box-shadow: var(--card-shadow);
+    transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+}
+
+.action-card:hover {
+    transform: translateY(-5px);
+}
+
+.upload-form {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+}
+
+/* --- Buttons & Formulare --- */
+
+.btn {
+    padding: 0.5rem 1rem;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: background-color 0.2s ease;
+}
+
+.btn-primary {
+    background-color: var(--primary-color);
+    color: var(--primary-color-text);
+}
+
+.btn-secondary {
+    background-color: var(--secondary-color);
+    color: var(--secondary-color-text);
+}
+
+.btn-sm {
+    padding: 0.25rem 0.5rem;
+    font-size: 0.875rem;
+    background-color: var(--success-color);
+    color: var(--success-color-text);
+}
+
+.btn:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.6;
+}
+
+/* --- Tabelle --- */
+
+.backup-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 1rem;
+    background-color: var(--card-background-color);
+}
+
+.backup-table th, .backup-table td {
+    border: 1px solid var(--border-color);
+    padding: 0.75rem;
+    text-align: left;
+}
+
+.backup-table thead {
+    background-color: var(--table-header-background);
+    color: var(--heading-color);
+}
+
+/* --- Status-Anzeigen --- */
+
+.status {
+    padding: .2em .6em .3em;
+    font-size: 75%;
+    font-weight: 700;
+    line-height: 1;
+    color: #fff;
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: .25rem;
+}
+
+.status-completed { background-color: var(--success-color); }
+.status-pending { background-color: #ffc107; color: #212529; } /* Gelb braucht dunklen Text */
+.status-processing { background-color: #17a2b8; }
+.status-failed { background-color: #dc3545; }
+
+/* --- Sonstiges --- */
+
+.polling-indicator {
+    padding: 1rem;
+    background-color: rgba(0, 123, 255, 0.1);
+    border: 1px solid var(--primary-color);
+    border-radius: 4px;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
