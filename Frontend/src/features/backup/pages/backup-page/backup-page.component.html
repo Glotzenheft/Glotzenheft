@@ -1,0 +1,68 @@
+<div class="container">
+    <h1>Datenbackup</h1>
+    <p>Erstelle hier ein Backup deiner Tracklisten!</p>
+    <p>Du kannst die Backup Datei hier herunterladen und falls nötig wieder einspielen.</p>
+
+    <div class="actions-container">
+        <!-- Export -->
+        <div class="action-card">
+            <h2>Backup erstellen</h2>
+            <button (click)="createBackup()" class="btn btn-primary">Neues Backup erstellen</button>
+        </div>
+
+        <!-- Import -->
+        <div class="action-card">
+            <h2>Daten mit dem Backup wiederherstellen</h2>
+            <div class="upload-form">
+                <input type="file" (change)="onFileSelected($event)" accept=".json">
+                <button (click)="uploadBackup()" [disabled]="!selectedFile" class="btn btn-secondary">Hochladen & Wiederherstellen
+                </button>
+            </div>
+            <div *ngIf="selectedFile && uploadProgress > 0" class="progress-bar">
+                <div class="progress" [style.width.%]="uploadProgress"></div>
+            </div>
+            <p *ngIf="selectedFile">{{ selectedFile.name }}</p>
+        </div>
+    </div>
+
+    <h2>Deine Backups</h2>
+    <div *ngIf="isPolling" class="polling-indicator">
+        <p>Ein Backup wird gerade erstellt/importiert. Die Liste wird automatisch aktualisiert...</p>
+    </div>
+
+    <table class="backup-table">
+        <thead>
+        <tr>
+            <th>Type</th>
+            <th>Status</th>
+            <th>Erstellt am</th>
+            <th>Fertigstellungszeit</th>
+            <th>Tracklisten</th>
+            <th>Aktionen</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr *ngFor="let backup of backups">
+            <td>{{ backup.type | titlecase }}</td>
+            <td>
+                <span class="status" [ngClass]="'status-' + backup.status">{{ backup.status | titlecase }}</span>
+            </td>
+            <td>{{ backup.createdAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'' }}</td>
+            <td>{{ backup.completedAt ? (backup.completedAt | date:'EE, dd.MM.yyyy, HH:mm \'Uhr\'') : 'N/A' }}</td>
+            <td>{{ backup.tracklistCount ?? 'N/A' }}</td>
+            <td>
+                <button
+                    *ngIf="backup.type === 'export' && backup.status === 'completed'"
+                    (click)="downloadBackup(backup.id)"
+                    class="btn btn-sm">
+                    Download
+                </button>
+                <span *ngIf="backup.status === 'pending' || backup.status === 'processing'">Processing...</span>
+            </td>
+        </tr>
+        <tr *ngIf="backups.length === 0">
+            <td colspan="6">Du hast noch keine Backups erstellt.</td>
+        </tr>
+        </tbody>
+    </table>
+</div>
