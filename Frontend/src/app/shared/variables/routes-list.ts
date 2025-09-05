@@ -131,6 +131,13 @@ export const ROUTES_LIST: RoutesListItem[] = [
         shortUrl: 'terms-of-use',
         showInLinkList: true,
     },
+    {
+        // 16
+        description: 'Datenbackup',
+        fullUrl: 'settings/backup',
+        shortUrl: 'backup',
+        showInLinkList: false,
+    },
 ];
 
 export const getVisibleRoutes = (): VisibleRoute[] => {
