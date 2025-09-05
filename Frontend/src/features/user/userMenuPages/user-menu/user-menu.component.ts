@@ -28,13 +28,14 @@ import { getMessageObject } from '../../../../app/shared/variables/message-vars'
 import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-is-search-bar-visible.use-case';
 import { UC_VisibleUserName } from '../../../../app/core/use-cases/user/get-visible-user-name.use-case';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 
 @Component({
     selector: 'app-user-menu',
     imports: [MenuModule, ButtonModule, TooltipModule],
     templateUrl: './user-menu.component.html',
     styleUrl: './user-menu.component.css',
-    providers: [UC_IsSearchBarVisible, UC_VisibleUserName, UC_LogoutOfAccount],
+    providers: [UC_IsSearchBarVisible, UC_VisibleUserName, UC_LogoutOfAccount, UC_NavigateToSpecificPage],
 })
 export class UserMenuComponent implements OnInit {
     public userMenuList: UserMenuList[] = [
@@ -45,21 +46,21 @@ export class UserMenuComponent implements OnInit {
                     label: 'Passwort ändern',
                     icon: 'pi pi-user-edit',
                     command: () => {
-                        this.router.navigateByUrl(ROUTES_LIST[9].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[9].fullUrl);
                     },
                 },
                 {
                     label: 'Account löschen',
                     icon: 'pi pi-trash',
                     command: () => {
-                        this.router.navigateByUrl(ROUTES_LIST[13].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[13].fullUrl);
                     },
                 },
                 {
                     label: 'Datenbackup',
                     icon: 'pi pi-database',
                     command: () => {
-                        void this.router.navigateByUrl(ROUTES_LIST[16].fullUrl);
+                        void this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[16].fullUrl);
                     },
                 },
                 {
@@ -73,7 +74,7 @@ export class UserMenuComponent implements OnInit {
                                 'Erfolgreich ausgeloggt',
                             ),
                         );
-                        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                     },
                 },
             ],
@@ -88,14 +89,14 @@ export class UserMenuComponent implements OnInit {
                     label: 'Einloggen',
                     icon: 'pi pi-sign-in',
                     command: () => {
-                        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[10].fullUrl);
                     },
                 },
                 {
                     label: 'Registrieren',
                     icon: 'pi pi-user-plus',
                     command: () => {
-                        this.router.navigateByUrl(ROUTES_LIST[11].fullUrl);
+                        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[11].fullUrl);
                     },
                 },
             ],
@@ -106,11 +107,11 @@ export class UserMenuComponent implements OnInit {
     public isUserMenuVisible: boolean = false;
 
     constructor(
-        private router: Router,
         private messageService: MessageService,
         private isSearchBarVisibleUseCase: UC_IsSearchBarVisible,
         private visibleUserNameUseCase: UC_VisibleUserName,
         private logoutOfAccountUseCase: UC_LogoutOfAccount,
+        public navigateToSpecificPageUseCase: UC_NavigateToSpecificPage
     ) {}
 
     ngOnInit(): void {
