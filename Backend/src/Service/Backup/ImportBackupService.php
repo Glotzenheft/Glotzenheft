@@ -163,13 +163,13 @@ class ImportBackupService
             }
         }
 
-        $startDate = DateTime::createFromFormat('Y-m-d', $tracklistData['startDate']);
+        $startDate = DateTime::createFromFormat('Y-m-d', $tracklistData['startDate'] ?? '');
         if (!$startDate instanceof DateTime)
         {
             $startDate = null;
         }
 
-        $finishDate = DateTime::createFromFormat('Y-m-d', $tracklistData['finishDate']);
+        $finishDate = DateTime::createFromFormat('Y-m-d', $tracklistData['finishDate'] ?? '');
         if (!$finishDate instanceof DateTime)
         {
             $finishDate = null;
