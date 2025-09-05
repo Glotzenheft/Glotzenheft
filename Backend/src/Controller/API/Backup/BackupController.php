@@ -24,6 +24,8 @@ use App\Entity\Backup;
 use App\Entity\User;
 use App\Enum\BackupStatus;
 use App\Enum\BackupType;
+use App\Message\Backup\CreateBackupMessage;
+use App\Message\Backup\ImportBackupMessage;
 use App\Model\Request\Backup\BackupIdDto;
 use App\Repository\BackupRepository;
 use App\Security\IsAuthenticated;
@@ -36,6 +38,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapUploadedFile;
+use Symfony\Component\Messenger\Exception\ExceptionInterface;
 use Symfony\Component\Messenger\MessageBusInterface;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Validator\Constraints as Assert;
@@ -47,6 +50,11 @@ class BackupController extends AbstractController
         private readonly string $backupDirectory,
     ){}
 
+    /**
+     * @param User $user
+     * @param BackupRepository $backupRepository
+     * @return JsonResponse
+     */
     #[IsAuthenticated]
     #[Route(
         path: '/api/backup',
@@ -71,6 +79,12 @@ class BackupController extends AbstractController
         );
     }
 
+    /**
+     * @param User $user
+     * @param MessageBusInterface $messageBus
+     * @return JsonResponse
+     * @throws ExceptionInterface
+     */
     #[IsAuthenticated]
     #[Route(
         path: '/api/backup',
@@ -82,7 +96,8 @@ class BackupController extends AbstractController
         MessageBusInterface $messageBus,
     ): JsonResponse
     {
-        #$messageBus->dispatch();
+        $messageBus->dispatch(new CreateBackupMessage($user->getId()));
+
         return $this->json(
             data: [
                 'message' => 'Backup creation initiated.',
@@ -91,6 +106,14 @@ class BackupController extends AbstractController
         );
     }
 
+    /**
+     * @param UploadedFile $backupFile
+     * @param User $user
+     * @param MessageBusInterface $messageBus
+     * @param EntityManagerInterface $entityManager
+     * @return JsonResponse
+     * @throws ExceptionInterface
+     */
     #[IsAuthenticated]
     #[Route(
         path:'/api/backup/import',
@@ -134,7 +157,7 @@ class BackupController extends AbstractController
         $entityManager->persist($backup);
         $entityManager->flush();
 
-        #$messageBus->dispatch();
+        $messageBus->dispatch(new ImportBackupMessage($backup->getId()));
 
         return $this->json(
             data: [
@@ -144,6 +167,12 @@ class BackupController extends AbstractController
         );
     }
 
+    /**
+     * @param BackupIdDto $dto
+     * @param User $user
+     * @param BackupRepository $backupRepository
+     * @return BinaryFileResponse|JsonResponse
+     */
     #[IsAuthenticated]
     #[Route(
         path:'/api/backup/download',
