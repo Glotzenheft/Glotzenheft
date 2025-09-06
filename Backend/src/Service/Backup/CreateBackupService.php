@@ -82,7 +82,6 @@ readonly class CreateBackupService
 
             $tracklist->setBackupHash($hash);
             $this->entityManager->persist($tracklist);
-            $this->entityManager->flush();
 
             $backupData[] = $entryData;
         }

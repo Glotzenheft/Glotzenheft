@@ -140,8 +140,8 @@ class ImportBackupService
         {
             $tracklist = $this->tracklistRepository->findOneBy([
                 'backupHash' => $hash,
-                'user' => $user]
-            );
+                'user' => $user
+            ]);
             if ($tracklist instanceof Tracklist)
             {
                 return $tracklist;
@@ -211,18 +211,34 @@ class ImportBackupService
         array $seasonsData
     ): void
     {
+        $user = $tracklist->getUser();
+        if (!$user instanceof User)
+        {
+            $this->logger->error(
+                message: 'Error importing tracklist seasons and episodes... The user was not found!',
+            );
+            return;
+        }
         foreach ($seasonsData as $seasonData)
         {
             try
             {
-                $tracklistSeason = $this->findOrCreateTracklistSeason($tracklist, $seasonData);
+                $tracklistSeason = $this->findOrCreateTracklistSeason(
+                    tracklist: $tracklist,
+                    user: $user,
+                    seasonData: $seasonData
+                );
                 $this->entityManager->persist($tracklistSeason);
 
                 foreach ($seasonData['episodes'] as $episodeData)
                 {
                     try
                     {
-                        $tracklistEpisode = $this->findOrCreateTracklistEpisode($tracklistSeason, $episodeData);
+                        $tracklistEpisode = $this->findOrCreateTracklistEpisode(
+                            tracklistSeason: $tracklistSeason,
+                            user: $user,
+                            episodeData: $episodeData
+                        );
                         $this->populateTracklistEpisodeFromBackup(
                             episodeEntity: $tracklistEpisode,
                             episodeData: $episodeData
@@ -258,19 +274,24 @@ class ImportBackupService
 
     /**
      * @param Tracklist $tracklist
+     * @param User $user
      * @param array $seasonData
      * @return TracklistSeason
      * @throws Exception
      */
     private function findOrCreateTracklistSeason(
         Tracklist $tracklist,
+        User $user,
         array $seasonData
     ): TracklistSeason
     {
         $seasonHash = $seasonData['hash'] ?? null;
         if ($seasonHash)
         {
-            $tracklistSeason = $this->tracklistSeasonRepository->findOneBy(['backupHash' => $seasonHash]);
+            $tracklistSeason = $this->tracklistSeasonRepository->findOneByBackupHashAndUser(
+                backupHash: $seasonHash,
+                user:$user
+            );
             if ($tracklistSeason instanceof TracklistSeason) return $tracklistSeason;
         }
 
@@ -311,19 +332,24 @@ class ImportBackupService
 
     /**
      * @param TracklistSeason $tracklistSeason
+     * @param User $user
      * @param array $episodeData
      * @return TracklistEpisode
      * @throws Exception
      */
     private function findOrCreateTracklistEpisode(
         TracklistSeason $tracklistSeason,
+        User $user,
         array $episodeData
     ): TracklistEpisode
     {
         $episodeHash = $episodeData['hash'] ?? null;
         if ($episodeHash)
         {
-            $tracklistEpisode = $this->tracklistEpisodeRepository->findOneBy(['backupHash' => $episodeHash]);
+            $tracklistEpisode = $this->tracklistEpisodeRepository->findOneByBackupHashAndUser(
+                backupHash: $episodeHash,
+                user: $user
+            );
             if ($tracklistEpisode instanceof TracklistEpisode) return $tracklistEpisode;
         }
 

@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\TracklistEpisode;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,28 +35,16 @@ class TracklistEpisodeRepository extends ServiceEntityRepository
         parent::__construct($registry, TracklistEpisode::class);
     }
 
-    //    /**
-    //     * @return TracklistEpisode[] Returns an array of TracklistEpisode objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?TracklistEpisode
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    public function findOneByBackupHashAndUser(string $backupHash, User $user): ?TracklistEpisode
+    {
+        return $this->createQueryBuilder('te')
+            ->innerJoin('te.tracklistSeason', 'ts')
+            ->innerJoin('ts.tracklist', 't')
+            ->andWhere('te.backupHash = :hash')
+            ->andWhere('t.user = :user')
+            ->setParameter('hash', $backupHash)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

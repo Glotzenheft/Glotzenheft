@@ -26,8 +26,10 @@ use App\Enum\BackupStatus;
 use App\Message\Backup\ImportBackupMessage;
 use App\Repository\BackupRepository;
 use App\Service\Backup\ImportBackupService;
-use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
+use Exception;
 use Psr\Log\LoggerInterface;
 use RuntimeException;
 use Symfony\Component\DependencyInjection\Attribute\Autowire;
@@ -86,15 +88,21 @@ readonly class ImportBackupMessageHandler
 
             if ($this->importService->processImport($data, $user))
             {
-                $backup->setStatus(BackupStatus::COMPLETED);
-                $backup->setCompletedAt(new DateTime());
+                $now = new DateTimeImmutable(
+                    datetime: 'now',
+                    timezone: new DateTimeZone('Europe/Berlin')
+                );
+                $this->logger->info(message: 'Backup imported complete time:  ' . $now->format('Y-m-d H:i:s'));
+                $backup
+                    ->setStatus(BackupStatus::COMPLETED)
+                    ->setCompletedAt($now);
             }
             else
             {
                 $backup->setStatus(BackupStatus::FAILED);
             }
         }
-        catch (RuntimeException $exception)
+        catch (Exception $exception)
         {
             $this->logger->error(
                 message: 'Backup import failed.',
