@@ -25,6 +25,7 @@ use App\Repository\BackupRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Attribute\Context;
 use Symfony\Component\Serializer\Attribute\Groups;
 
 #[ORM\Entity(repositoryClass: BackupRepository::class)]
@@ -64,6 +65,7 @@ class Backup
 
     #[ORM\Column(type: Types::DATETIME_MUTABLE, nullable: true)]
     #[Groups(['backup_details'])]
+    #[Context(['datetime_format' => 'Y-m-d H:i:s'])]
     private ?DateTimeInterface $completedAt = null;
 
     public function getId(): ?int
