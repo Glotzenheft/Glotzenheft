@@ -174,10 +174,15 @@ export class BackupPageComponent implements OnInit, OnDestroy {
                     this.messageService.add(
                         getMessageObject(
                             'success',
-                            'Backup erfolgreich erstellt',
+                            'Backup-Erstellung gestartet',
                         ),
                     );
-                    this.loadBackups(); // refresh list immediately
+                    // Warte 5 Sekunden, bevor die Backups neu geladen werden
+                    timer(5000)
+                        .pipe(takeUntil(this.destroy$))
+                        .subscribe(() => {
+                            this.loadBackups();
+                        });
                 },
                 error: (err) => {
                     if (err.status === 401) {
@@ -239,11 +244,8 @@ export class BackupPageComponent implements OnInit, OnDestroy {
                             ),
                         );
 
-                        // Tabelle nur einmal laden, Polling-Start nicht erneut triggern
-                        this.getBackupsUseCase
-                            .execute()
-                            .pipe(takeUntil(this.destroy$))
-                            .subscribe((backups) => (this.backups = backups));
+                        // Lade die Backups neu, um das Polling zu starten
+                        this.loadBackups();
                     }
 
                     // UploadProgress aktualisieren
