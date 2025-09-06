@@ -28,7 +28,8 @@ use App\Message\Backup\CreateBackupMessage;
 use App\Repository\UserRepository;
 use App\Service\Backup\CreateBackupService;
 use App\Service\Backup\HashService;
-use DateTime;
+use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\EntityManagerInterface;
 use Exception;
 use Psr\Log\LoggerInterface;
@@ -71,7 +72,6 @@ readonly class CreateBackupMessageHandler
             ->setStatus(BackupStatus::PROCESSING);
 
         $this->entityManager->persist($backup);
-        $this->entityManager->flush();
 
         try
         {
@@ -93,9 +93,12 @@ readonly class CreateBackupMessageHandler
                 ->setFilename($filename)
                 ->setTracklistCount($backupData['count'])
                 ->setContentHash($contentHash)
-                ->setCompletedAt(new DateTime());
+                ->setCompletedAt(new DateTimeImmutable(
+                    datetime: 'now',
+                    timezone: new DateTimeZone('Europe/Berlin')));
 
             $this->logger->info(message: 'Backup import completed.');
+            $this->entityManager->flush();
         }
         catch (Exception $e)
         {
@@ -106,8 +109,7 @@ readonly class CreateBackupMessageHandler
                 ]
             );
             $backup->setStatus(BackupStatus::FAILED);
+            $this->entityManager->flush();
         }
-
-        $this->entityManager->flush();
     }
 }
