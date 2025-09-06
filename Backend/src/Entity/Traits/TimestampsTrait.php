@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Entity\Traits;
 
 use DateTimeImmutable;
+use DateTimeZone;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Serializer\Annotation\Groups;
 use Symfony\Component\Serializer\Attribute\Context;
@@ -53,7 +54,7 @@ trait TimestampsTrait
     {
         if ($this->createdAt === null)
         {
-            $this->createdAt = new DateTimeImmutable();
+            $this->createdAt = $this->getCurrentTime();
         }
     }
 
@@ -72,6 +73,14 @@ trait TimestampsTrait
     #[ORM\PreUpdate]
     public function setUpdatedAtValue(): void
     {
-        $this->updatedAt = new DateTimeImmutable();
+        $this->updatedAt = $this->getCurrentTime();
+    }
+
+    /**
+     * Erstellt ein DateTimeImmutable-Objekt mit der korrekten Zeitzone.
+     */
+    private function getCurrentTime(): DateTimeImmutable
+    {
+        return new DateTimeImmutable('now', new DateTimeZone('Europe/Berlin'));
     }
 }
