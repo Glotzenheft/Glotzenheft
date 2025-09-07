@@ -137,11 +137,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                         }
 
                                                         @if (season.airDate) {
-                                                            <p>Ausstrahlung: {{ season.airDate | dateFormatting }}</p>
+                                                            <p>Erstausstrahlung: {{ season.airDate | dateFormatting }}</p>
                                                         } 
                                                         @else {
-                                                            <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
+                                                            <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
                                                         }
+                                                        <p>ID: {{season.id}}</p>
                                                     </div>
                                                 </div>
                                             </div>
