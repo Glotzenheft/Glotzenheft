@@ -219,6 +219,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                         this.setSelectedTracklistInLocalStorageUseCase.execute(
                             response.id,
                         );
+                        this.refreshPage();
                     },
                     error: (err) => {
                         if (err.status === 401) {
@@ -540,7 +541,6 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             is_rewatching: event.isRewatching,
             media_type: 'tv',
         });
-        this.refreshPage();
     };
 
     public updateTracklist = (

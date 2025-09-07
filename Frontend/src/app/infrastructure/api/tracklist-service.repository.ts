@@ -82,7 +82,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
                     tracklistsForSeason: tracklistWithSeason,
                     episodes: season.episodes,
                 };
-            }),
+            }).sort((seasonA: TVSeasonWithTracklist, seasonB: TVSeasonWithTracklist) => seasonA.seasonNumber - seasonB.seasonNumber),
             type: data.media.type,
             posterPath: data.media.posterPath,
             backdropPath: data.media.backdropPath,
