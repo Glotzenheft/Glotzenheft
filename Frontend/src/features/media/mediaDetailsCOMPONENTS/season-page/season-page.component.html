@@ -82,13 +82,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
                         }
 
-                        <a [href]="TMDB_ROUTE + seasonData.media.tmdbID" class="linkA">> Link zur The Movie Database</a>
+                        <a [href]="TMDB_ROUTE + seasonData.media.tmdbID"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="linkA"
+                        >
+                            <i class="pi pi-link p-mr-3"></i>
+                            TMDB
+                        </a>
 
                         @if (seasonData.media.firstAirDate) {
-                            <p>Ausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
+                            <p>Erstausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
                         } 
                         @else {
-                            <p><i>kein Ausstrahlungsdatum vorhanden</i></p>
+                            <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
                         }
                     </div>
                 </div>
@@ -240,7 +247,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <ng-container *ngIf="
         isTracklistFormVisible === 2 &&
         tracklistSelectionForm.get('selectedTracklist')?.value &&
-        (seasonData$ | async) as seasonData
+        (seasonData$ | async)
         ">
         <app-tracklist-formular 
             [inpIsMovie]="false" 
