@@ -42,8 +42,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 />
         </div>
         <div class="button">
-            <p-button 
-                icon="pi-sign-in" 
+            <p-button
                 class="buttonShadow" 
                 label="Einloggen"
                 pTooltip="Hier klicken, um sich in einen bestehenden Account einzuloggen. Beim Klicken wird man auf die Login-Seite geleitet."
@@ -55,11 +54,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     } 
     @else {
         <div class="button">
-            <p-button 
-                icon="pi-sign-in" 
+            <p-button
                 class="buttonShadow" 
                 label="zu meiner Startseite"
-                pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden." tooltipPosition="right"
+                pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden."
+                tooltipPosition="right"
                 icon="pi pi-sign-in" 
                 (onClick)="navigateToStartPage()" 
                 />
@@ -70,12 +69,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         @if (highestMedia) {
             <app-recommendation-card [inpRecommendationsList]="highestMedia.recommendations" [inpTitle]="'Gerade beliebt'" />
         }
-    } 
-    @else {
-        <div class="loadingWrapper">
-            <h1>Laden ...</h1>
-            <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
-        </div>
     }
 </div>
 
