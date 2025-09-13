@@ -38,9 +38,7 @@ import { CommonModule } from '@angular/common';
     ],
     templateUrl: './start-main.component.html',
     styleUrl: './start-main.component.css',
-    providers: [
-        UC_NavigateToSpecificPage
-    ],
+    providers: [UC_NavigateToSpecificPage],
 })
 export class StartMainComponent {
     public areLoginButtonsVisible: boolean = !isUserLoggedIn();
@@ -50,7 +48,6 @@ export class StartMainComponent {
     constructor(
         private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
     ) {}
-
 
     public navigateToLogin = () => {
         this.navigateToSpecificPageUseCase.execute('/login');

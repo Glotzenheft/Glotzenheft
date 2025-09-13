@@ -152,7 +152,8 @@ export const getVisibleRoutes = (): VisibleRoute[] => {
 export const getVisibleRoutesForUser = (): VisibleRoute[] => {
     return ROUTES_LIST.filter((route: RoutesListItem) => {
         return (
-            route.fullUrl.startsWith('user') && route.showInLinkList &&
+            route.fullUrl.startsWith('user') &&
+            route.showInLinkList &&
             !route.fullUrl.includes('delete')
         );
     }).map((route: RoutesListItem) => ({
