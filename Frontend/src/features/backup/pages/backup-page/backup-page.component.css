@@ -89,7 +89,8 @@ p {
     padding-bottom: var(--padding--top-bottom);
 }
 
-.action-card h1, .action-card h2 {
+.action-card h1,
+.action-card h2 {
     color: var(--heading-color);
     padding: 0;
     margin-top: 0;

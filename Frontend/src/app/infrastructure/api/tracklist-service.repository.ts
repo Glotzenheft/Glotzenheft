@@ -58,31 +58,38 @@ export class R_TracklistHttp implements I_TracklistRepository {
             description: data.media.description,
             firstAirDate: data.media.firstAirDate,
             tmdbGenres: data.media.tmdbGenres,
-            seasons: data.media.seasons.map((season: SeasonWithEpisodes) => {
-                // get all tracklists for the season
-                const tracklistWithSeason: SeasonTracklist[] = [];
+            seasons: data.media.seasons
+                .map((season: SeasonWithEpisodes) => {
+                    // get all tracklists for the season
+                    const tracklistWithSeason: SeasonTracklist[] = [];
 
-                for (const tracklist of data.tracklists) {
-                    for (const trackSeason of tracklist.tracklistSeasons) {
-                        if (trackSeason.season.id === season.id) {
-                            tracklistWithSeason.push(tracklist);
+                    for (const tracklist of data.tracklists) {
+                        for (const trackSeason of tracklist.tracklistSeasons) {
+                            if (trackSeason.season.id === season.id) {
+                                tracklistWithSeason.push(tracklist);
+                            }
                         }
                     }
-                }
 
-                return {
-                    id: season.id,
-                    tmdbSeasonID: season.tmdbSeasonID,
-                    seasonNumber: season.seasonNumber,
-                    name: season.name,
-                    overview: season.overview,
-                    airDate: season.airDate,
-                    episodeCount: season.episodeCount,
-                    posterPath: season.posterPath,
-                    tracklistsForSeason: tracklistWithSeason,
-                    episodes: season.episodes,
-                };
-            }).sort((seasonA: TVSeasonWithTracklist, seasonB: TVSeasonWithTracklist) => seasonA.seasonNumber - seasonB.seasonNumber),
+                    return {
+                        id: season.id,
+                        tmdbSeasonID: season.tmdbSeasonID,
+                        seasonNumber: season.seasonNumber,
+                        name: season.name,
+                        overview: season.overview,
+                        airDate: season.airDate,
+                        episodeCount: season.episodeCount,
+                        posterPath: season.posterPath,
+                        tracklistsForSeason: tracklistWithSeason,
+                        episodes: season.episodes,
+                    };
+                })
+                .sort(
+                    (
+                        seasonA: TVSeasonWithTracklist,
+                        seasonB: TVSeasonWithTracklist,
+                    ) => seasonA.seasonNumber - seasonB.seasonNumber,
+                ),
             type: data.media.type,
             posterPath: data.media.posterPath,
             backdropPath: data.media.backdropPath,

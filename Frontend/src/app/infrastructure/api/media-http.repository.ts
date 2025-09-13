@@ -432,35 +432,6 @@ export class R_MediaHttp implements I_MediaRepository {
             );
     };
 
-    public getRecommendations = (
-        tmdb_id: number,
-        title: string,
-        isMovie: boolean,
-        posterPath: string,
-    ): Observable<I_Recommendations> => {
-        const token = this.getUserToken();
-
-        if (!token) return EMPTY;
-
-        return this.http
-            .post<I_Recommendations>(
-                `http://localhost:80/${isMovie ? 'movie' : 'tv'}-recommendation`,
-                {
-                    tmdbid: tmdb_id,
-                    title,
-                    backendIP: ROUTE_CHECK_USER_AUTH,
-                    token,
-                    posterPath,
-                },
-            )
-            .pipe(
-                shareReplay(1),
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(() => error);
-                }),
-            );
-    };
-
     public getAPIRecommendations = (
         tmdbId: number,
         isMovie: boolean,
@@ -474,23 +445,4 @@ export class R_MediaHttp implements I_MediaRepository {
             { headers },
         );
     };
-
-    public getHighestRecommendations =
-        (): Observable<I_HighestRecommendations> => {
-            const token = this.getUserToken();
-
-            if (!token) return EMPTY;
-
-            return this.http
-                .post<I_HighestRecommendations>(
-                    'http://127.0.0.1:80/highest-media',
-                    { backendIP: ROUTE_CHECK_USER_AUTH, token },
-                )
-                .pipe(
-                    shareReplay(1),
-                    catchError((error: HttpErrorResponse) => {
-                        return throwError(() => error);
-                    }),
-                );
-        };
 }
