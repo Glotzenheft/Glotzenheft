@@ -79,7 +79,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         description: 'Meine Übersicht',
         fullUrl: 'user',
         shortUrl: 'user',
-        showInLinkList: false,
+        showInLinkList: true,
     },
     {
         // 9
@@ -107,7 +107,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         description: 'Alle Tracklisten',
         fullUrl: 'user/tracklists',
         shortUrl: 'tracklists',
-        showInLinkList: false,
+        showInLinkList: true,
     },
     {
         // 13
@@ -121,7 +121,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         description: 'Aktivitäten',
         fullUrl: 'user/activities',
         shortUrl: 'activities',
-        showInLinkList: false,
+        showInLinkList: true,
     },
     {
         // 15
@@ -135,7 +135,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         description: 'Meine Backups',
         fullUrl: 'user/backup',
         shortUrl: 'backup',
-        showInLinkList: true,
+        showInLinkList: false,
     },
 ];
 
@@ -152,7 +152,7 @@ export const getVisibleRoutes = (): VisibleRoute[] => {
 export const getVisibleRoutesForUser = (): VisibleRoute[] => {
     return ROUTES_LIST.filter((route: RoutesListItem) => {
         return (
-            route.fullUrl.startsWith('user') &&
+            route.fullUrl.startsWith('user') && route.showInLinkList &&
             !route.fullUrl.includes('delete')
         );
     }).map((route: RoutesListItem) => ({

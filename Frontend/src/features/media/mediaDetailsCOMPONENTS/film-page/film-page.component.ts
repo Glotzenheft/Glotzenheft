@@ -62,8 +62,6 @@ import {
     I_APIRecommendationResponse,
     I_Recommendations,
 } from '../../../../app/shared/interfaces/recommendation-interfaces';
-import { RecommendationsComponent } from '../recommendations/recommendations.component';
-// import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
 import { MediaMetadataComponent } from '../media-metadata/media-metadata.component';
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
@@ -73,6 +71,7 @@ import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-c
 import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
 
 @Component({
     selector: 'app-film-page',
@@ -91,8 +90,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
         ReactiveFormsModule,
         ProgressSpinnerModule,
         MediaTabsComponent,
-        RecommendationsComponent,
-        // ApiRecommendationComponent,
+        ApiRecommendationComponent,
         MediaMetadataComponent,
         TracklistFormularComponent,
     ],

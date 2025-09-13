@@ -74,17 +74,10 @@ export interface I_MediaRepository {
     getTracklistDELETEResponseSubject: () => Observable<any>;
     deleteTracklist: (tracklistID: number) => Observable<any>;
     getAllUserTracklists: () => Observable<Tracklist[] | null>;
-    getRecommendations: (
-        tmdbId: number,
-        title: string,
-        isMovie: boolean,
-        posterPath: string,
-    ) => Observable<I_Recommendations>;
     getAPIRecommendations: (
         tmdbId: number,
         isMovie: boolean,
     ) => Observable<I_APIRecommendationResponse | null>;
-    getHighestRecommendations: () => Observable<I_HighestRecommendations>;
 }
 
 // IT = Injection Token

@@ -114,34 +114,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <div class="backButtonDIV">
                 <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
             </div>
+            <div class="newWatchlistButton">
+                @for (tracklist of filmData.tracklists; track $index) {
+                    <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
+                        <p>Status: {{ convertStatus(tracklist.status) }}</p>
+                        <p-button 
+                            label="Tracklist bearbeiten" 
+                            icon="pi pi-pencil"
+                            (onClick)="setSelectedTracklist(tracklist)" 
+                            />
+                    </p-panel>
+                }
+            </div>
         } @else if (currentTab === tabsList[1]) {
-            <app-recommendations 
-                [inpMovieId]="filmData.media.tmdbID" 
-                [inpMovieTitle]="filmData.media.name"
-                [inpRecommendations]="recommendations" 
-                [inpIsMovie]="true" 
-                [inpMediaPosterPath]="filmData.media.posterPath"
-                (outGetMovieRecommendations)="getRecommendations($event)" 
-                />
-            <!-- <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
-                [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" /> -->
+            <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
+                [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" />
         } 
         @else {
             <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
         }
 
-        <div class="newWatchlistButton">
-            @for (tracklist of filmData.tracklists; track $index) {
-                <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
-                    <p>Status: {{ convertStatus(tracklist.status) }}</p>
-                    <p-button 
-                        label="Tracklist bearbeiten" 
-                        icon="pi pi-pencil"
-                        (onClick)="setSelectedTracklist(tracklist)" 
-                        />
-                </p-panel>
-            }
-        </div>
+        
     </div>
 </div>
 
