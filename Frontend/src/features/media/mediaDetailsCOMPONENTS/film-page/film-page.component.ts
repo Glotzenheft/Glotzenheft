@@ -33,7 +33,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -62,8 +62,6 @@ import {
     I_APIRecommendationResponse,
     I_Recommendations,
 } from '../../../../app/shared/interfaces/recommendation-interfaces';
-import { RecommendationsComponent } from '../recommendations/recommendations.component';
-// import { ApiRecommendationComponent } from "../api-recommendation/api-recommendation.component";
 import { MediaMetadataComponent } from '../media-metadata/media-metadata.component';
 import { UC_NavigateToSpecificPage } from '../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { UC_getTracklistCREATEMOVIESubjectResponse } from '../../../../app/core/use-cases/media/get-tracklist-create-movie-subject-response.use-case';
@@ -73,6 +71,7 @@ import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-c
 import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
 
 @Component({
     selector: 'app-film-page',
@@ -91,8 +90,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
         ReactiveFormsModule,
         ProgressSpinnerModule,
         MediaTabsComponent,
-        RecommendationsComponent,
-        // ApiRecommendationComponent,
+        ApiRecommendationComponent,
         MediaMetadataComponent,
         TracklistFormularComponent,
     ],
@@ -131,10 +129,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public convertStatus = convertTracklistStatusIntoGerman;
 
     // variable for controlling the toggle status of the tracklist panels
-    public activePanel: number | null = null;
-
     public isLoading: boolean = false;
-    public areRecommendationsLoading: boolean = false;
     public recommendations: I_Recommendations | null = null;
     public apiRecommendations: I_APIRecommendationResponse | null = null;
     private subscription: Subscription | null = null;
@@ -143,7 +138,6 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     private deleteSubscription: Subscription | null = null;
 
     constructor(
-        public readonly shortenStringUseCase: UC_ShortenString,
         private readonly messageService: MessageService,
         private readonly formBuilder: FormBuilder,
         private readonly location: Location,
@@ -334,17 +328,6 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         });
     };
 
-    public hasErrorField = (field: string) => {
-        const fieldControl = this.trackListForm.get(field);
-
-        return (
-            fieldControl! &&
-            (fieldControl!.dirty ||
-                fieldControl!.touched ||
-                this.isTracklistSubmitted)
-        );
-    };
-
     // dialog
     public setVisibilityStatus = (status: number) => {
         this.visibilityStatus = status;
@@ -363,11 +346,6 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public onChangeTab = (newTab: string) => {
         this.currentTab = newTab;
     };
-
-    public getRecommendations = (recs: I_Recommendations) => {
-        this.recommendations = recs;
-    };
-
     public setAPIRecommendations = (recs: I_APIRecommendationResponse) => {
         this.apiRecommendations = recs;
     };
