@@ -21,7 +21,6 @@ import { ButtonModule } from 'primeng/button';
 import { IconFieldModule } from 'primeng/iconfield';
 import { InputIcon } from 'primeng/inputicon';
 import { InputTextModule } from 'primeng/inputtext';
-import { CommonModule } from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { isUserLoggedIn } from '../../../../guards/auth.guard';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
@@ -76,7 +75,7 @@ export class SearchBarComponent implements OnInit {
 
         if (this.router.url !== `/${ROUTES_LIST[4].fullUrl}`) {
             // checking if user is already on multi search route
-            this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
+            void this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
         }
     };
 
@@ -85,6 +84,6 @@ export class SearchBarComponent implements OnInit {
     };
 
     public navigateToMultiSearch = () => {
-        this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
+        void this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
     };
 }
