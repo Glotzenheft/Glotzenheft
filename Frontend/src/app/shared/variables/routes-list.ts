@@ -84,7 +84,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
     },
     {
         // 8
-        description: 'Meine Übersicht',
+        description: 'Dashboard',
         fullUrl: 'user',
         shortUrl: 'user',
         showInLinkList: false,
