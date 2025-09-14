@@ -24,6 +24,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'imprint',
         shortUrl: 'imprint',
         showInLinkList: true,
+        showInSidebar: false,
     },
     {
         // 1
@@ -31,6 +32,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'about',
         shortUrl: 'about',
         showInLinkList: true,
+        showInSidebar: false,
     },
     {
         // 2
@@ -38,6 +40,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'privacy-policy',
         shortUrl: 'privacy-policy',
         showInLinkList: true,
+        showInSidebar: false,
     },
     {
         // 3
@@ -45,6 +48,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'media/BLOCKED',
         shortUrl: 'season/:id',
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 4
@@ -52,6 +56,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'media/multi-search',
         shortUrl: 'multi-search',
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 5
@@ -59,6 +64,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'media/movie', // /:id
         shortUrl: 'movie', // /:id,
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 6
@@ -66,6 +72,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'media/tv', // /:id,
         shortUrl: 'tv', // /:id
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 7
@@ -73,6 +80,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'media', // /:id
         shortUrl: '', // /:id
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 8
@@ -80,6 +88,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'user',
         shortUrl: 'user',
         showInLinkList: false,
+        showInSidebar: true,
     },
     {
         // 9
@@ -87,6 +96,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'reset-password',
         shortUrl: 'reset-password',
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 10
@@ -94,6 +104,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'login',
         shortUrl: 'login',
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 11
@@ -101,6 +112,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'register',
         shortUrl: 'register',
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 12
@@ -108,6 +120,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'user/tracklists',
         shortUrl: 'tracklists',
         showInLinkList: false,
+        showInSidebar: true,
     },
     {
         // 13
@@ -115,6 +128,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'user/delete-user',
         shortUrl: 'delete-user',
         showInLinkList: false,
+        showInSidebar: false,
     },
     {
         // 14
@@ -122,6 +136,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'user/activities',
         shortUrl: 'activities',
         showInLinkList: false,
+        showInSidebar: true,
     },
     {
         // 15
@@ -129,13 +144,15 @@ export const ROUTES_LIST: RoutesListItem[] = [
         fullUrl: 'terms-of-use',
         shortUrl: 'terms-of-use',
         showInLinkList: true,
+        showInSidebar: false,
     },
     {
         // 16
         description: 'Meine Backups',
         fullUrl: 'user/backup',
         shortUrl: 'backup',
-        showInLinkList: true,
+        showInLinkList: false,
+        showInSidebar: false,
     },
 ];
 
@@ -152,8 +169,9 @@ export const getVisibleRoutes = (): VisibleRoute[] => {
 export const getVisibleRoutesForUser = (): VisibleRoute[] => {
     return ROUTES_LIST.filter((route: RoutesListItem) => {
         return (
-            route.fullUrl.startsWith('user') &&
-            !route.fullUrl.includes('delete')
+            route.fullUrl.startsWith('user')
+            && route.showInSidebar
+            && !route.fullUrl.includes('delete')
         );
     }).map((route: RoutesListItem) => ({
         description: route.description,
