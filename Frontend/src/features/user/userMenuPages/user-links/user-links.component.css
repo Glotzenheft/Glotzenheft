@@ -15,16 +15,32 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-.userLinks {
-    padding-left: var(--padding--left-right);
-    padding-right: var(--padding--left-right);
-    padding-top: var(--padding--top-bottom);
-    padding-bottom: var(--padding--top-bottom);
-    height: 10rem;
+/* Hauptcontainer des Menüs */
+::ng-deep .userMenuContainer .p-menu {
+    border: none !important;
 }
 
-.userLinks ul {
-    display: flex;
-    flex-direction: column;
-    justify-content: space-evenly;
+::ng-deep .userMenuContainer .p-menuitem-text {
+    color: #e5e7eb;
+}
+
+::ng-deep .active-sidebar-menu {
+    background-color: var(--content-background-color) !important;
+    outline: #ffffff solid 1px;
+    z-index: 100;
+    border-radius: 8px;
+    text-decoration: none !important;
+}
+
+/*Fokus in der Sidebar deaktivieren, um eigene Farbe hinzuzufügen.*/
+:host {
+    --p-menu-item-focus-background: transparent;
+    --p-menu-item-focus-color: inherit;
+    --p-menu-item-focus-text-decoration: none;
+    --p-menu-item-icon-focus-color: white !important;
+    --p-menu-item-icon-color: white !important;
+    --p-menu-item-gap: 10% !important;
+    --p-menu-item-padding: 6% !important;
+    --p-menu-submenu-label-color: red;
+    --p-menu-background: transparent !important;
 }

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     "
                     >
                     <div (click)="openDialog(episode)">
-                        <p [pTooltip]="episode.name">E{{ episode.episodeNumber }}: {{ shortenStringUseCase.execute(episode.name) }}</p>
+                        <p [pTooltip]="episode.name">E{{ episode.episodeNumber | number: '2.0-0'}}: {{ shortenStringUseCase.execute(episode.name) }}</p>
                     </div>
 
                     @if (!checkEpisodeInCurrentTracklist(episode.id)) {
@@ -56,7 +56,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             @for ( episode of episodeList(); track $index) {
                 <div class="episodeDIV">
                     <div (click)="openDialog(episode)">
-                        <p [pTooltip]="episode.name">E{{ episode.episodeNumber }}: {{ shortenStringUseCase.execute(episode.name) }}</p>
+                        <p [pTooltip]="episode.name">E{{ episode.episodeNumber | number: '2.0-0'}}: {{ shortenStringUseCase.execute(episode.name) }}</p>
                     </div>
                 </div>
             }
@@ -66,15 +66,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @if (isEpisodeDialogVisible && currentEpisodeForDialog) {
     <p-dialog 
-        [(visible)]="isEpisodeDialogVisible" 
-        [header]="currentEpisodeForDialog.name" 
+        [(visible)]="isEpisodeDialogVisible"
+        [header]="'E' + (currentEpisodeForDialog.episodeNumber | number:'2.0-0') + ': ' + currentEpisodeForDialog.name"
         [modal]="true"
-        [draggable]="false" 
+        [draggable]="true"
         [style]="{ width: '80%', height: 'auto' }"
+        [maximizable]="true"
         >
         <div class="episodeDialogDIV">
             <div class="episodePosterDIV">
-                
                 @if (currentEpisodeForDialog.stillPath) {
                     <img 
                         [src]="posterPath + currentEpisodeForDialog.stillPath"
@@ -88,7 +88,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 }
             </div>
             <p>{{ currentEpisodeForDialog.overview }}</p>
-            <p>Ausstrahlung: {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
+            <p><strong>Erstausstrahlung am:</strong> {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
+            <p><strong>Laufzeit:</strong> {{ currentEpisodeForDialog.runtime}} Minuten</p>
         </div>
     </p-dialog>
 }
