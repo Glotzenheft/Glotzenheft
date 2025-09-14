@@ -22,7 +22,6 @@ import {
     InputSignal,
     Output,
 } from '@angular/core';
-import { CommonModule } from '@angular/common';
 import { DialogModule } from 'primeng/dialog';
 import { FormGroup } from '@angular/forms';
 import { ButtonModule } from 'primeng/button';
@@ -36,10 +35,11 @@ import {
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
+import {DecimalPipe} from "@angular/common";
 
 @Component({
     selector: 'app-episode-list',
-    imports: [DialogModule, DateFormattingPipe, ButtonModule, TooltipModule],
+    imports: [DialogModule, DateFormattingPipe, ButtonModule, TooltipModule, DecimalPipe],
     providers: [UC_ShortenString],
     templateUrl: './episode-list.component.html',
     styleUrl: './episode-list.component.css',
@@ -50,8 +50,8 @@ export class EpisodeListComponent {
         input.required<SeasonEpisode[]>();
     public inpSelectedTracklist: InputSignal<SeasonTracklist | null> =
         input.required<SeasonTracklist | null>();
-    public tracklistSelectionForm: InputSignal<FormGroup<any> | null> =
-        input.required<FormGroup<any> | null>();
+    public tracklistSelectionForm: InputSignal<FormGroup | null> =
+        input.required<FormGroup | null>();
     public selectedSeason: InputSignal<TVSeasonWithTracklist | null> =
         input.required<TVSeasonWithTracklist | null>();
     public tracklistsOfSeason: InputSignal<SeasonTracklist[]> =
@@ -83,10 +83,7 @@ export class EpisodeListComponent {
                 },
             );
 
-        if (episodesOfTracklist.includes(episodeID)) {
-            return true;
-        }
-        return false;
+        return episodesOfTracklist.includes(episodeID);
     };
 
     public selectEpisode = (
