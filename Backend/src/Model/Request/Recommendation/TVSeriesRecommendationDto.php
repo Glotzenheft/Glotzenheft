@@ -28,7 +28,7 @@ readonly class TVSeriesRecommendationDto
     public function __construct(
         #[SerializedName('tmdb_series_id')]
         #[Assert\NotBlank(
-            message: 'Tmdb series id parameter "tmdb_series_id" is required.'
+            message: 'Query parameter "tmdb_series_id" is required.'
         )]
         public ?int $tmdbSeriesId = null,
         public ?string $language = 'de-DE',

@@ -30,12 +30,12 @@ readonly class CreateTracklistDto
 {
     public function __construct(
         #[SerializedName('tracklist_name')]
-        #[Assert\NotBlank(message: 'Parameter "tracklist_name" is required.')]
+        #[Assert\NotBlank(message: 'Field "tracklist_name" is required.')]
         #[Assert\Length(min: 1, max: 255)]
         public ?string $tracklistName = null,
 
         #[SerializedName('tracklist_status')]
-        #[Assert\NotBlank(message: 'Parameter "tracklist_status" is required.')]
+        #[Assert\NotBlank(message: 'Field "tracklist_status" is required.')]
         #[Assert\Type(
             type: TracklistStatus::class,
             message: 'Invalid tracklist status.'
@@ -47,12 +47,12 @@ readonly class CreateTracklistDto
         public bool $isRewatching = false,
 
         #[SerializedName('media_id')]
-        #[Assert\NotBlank(message: 'Parameter "media_id" is required.')]
+        #[Assert\NotBlank(message: 'Field "media_id" is required.')]
         #[Assert\Type('integer')]
         public ?int $mediaId = null,
 
         #[SerializedName('media_type')]
-        #[Assert\NotBlank(message: 'Parameter "media_type" is required.')]
+        #[Assert\NotBlank(message: 'Field "media_type" is required.')]
         #[Assert\Choice(
             choices: ['movie', 'tv'],
             message: 'Media type must be either "movie" or "tv".'
@@ -61,7 +61,7 @@ readonly class CreateTracklistDto
 
         #[SerializedName('tracklist_rating')]
         #[Assert\Range(
-            notInRangeMessage: 'Rating must be between 1 and 10.',
+            notInRangeMessage: 'The rating must be between 1 and 10.',
             min: 1,
             max: 10
         )]
@@ -69,11 +69,11 @@ readonly class CreateTracklistDto
         public ?int $rating = null,
 
         #[SerializedName('tracklist_start_date')]
-        #[Assert\Date(message: 'Start date must be a valid date in Y-m-d format.')]
+        #[Assert\Date(message: 'The start date must be a valid date in Y-m-d format.')]
         public ?string $startDate = null,
 
         #[SerializedName('tracklist_finish_date')]
-        #[Assert\Date(message: 'Finish date must be a valid date in Y-m-d format.')]
+        #[Assert\Date(message: 'The finish date must be a valid date in Y-m-d format.')]
         public ?string $finishDate = null,
 
         #[SerializedName('season_id')]
@@ -87,7 +87,7 @@ readonly class CreateTracklistDto
         {
             $context
                 ->buildViolation(
-                    'The query parameter "season_id" is required when the media type is "tv".'
+                    'The "season_id" field is required when the media type is "tv".'
                 )
                 ->atPath('seasonId')
                 ->addViolation();

@@ -28,7 +28,7 @@ readonly class BackupIdDto
     public function __construct(
         #[SerializedName('backup_id')]
         #[Assert\NotBlank(
-            message: 'Parameter "backup_id" is required.'
+            message: 'Query parameter "backup_id" is required.'
         )]
         public ?int $backupId = null,
     ){}
