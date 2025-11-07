@@ -36,10 +36,11 @@ import {
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import {DecimalPipe} from "@angular/common";
+import {DateTimeFormattingPipe} from "../../../../pipes/datetime-formatting/datetime-formatting.pipe";
 
 @Component({
     selector: 'app-episode-list',
-    imports: [DialogModule, DateFormattingPipe, ButtonModule, TooltipModule, DecimalPipe],
+    imports: [DialogModule, DateFormattingPipe, ButtonModule, TooltipModule, DecimalPipe, DateTimeFormattingPipe],
     providers: [UC_ShortenString],
     templateUrl: './episode-list.component.html',
     styleUrl: './episode-list.component.css',

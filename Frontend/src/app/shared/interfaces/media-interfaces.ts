@@ -51,6 +51,8 @@ export interface SeasonEpisode {
     runtime: number;
     airDate: string;
     stillPath: string;
+    createdAt: string;
+    updatedAt: string | null;
 }
 
 export interface SeasonWithEpisodes {

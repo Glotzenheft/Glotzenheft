@@ -90,6 +90,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <p>{{ currentEpisodeForDialog.overview }}</p>
             <p><strong>Erstausstrahlung am:</strong> {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
             <p><strong>Laufzeit:</strong> {{ currentEpisodeForDialog.runtime}} Minuten</p>
+            <p><strong>ID:</strong> {{ currentEpisodeForDialog.id}}</p>
+            <p><strong>Erstellt:</strong> {{ currentEpisodeForDialog.createdAt | dateTimeFormatting }} </p>
+            @if (currentEpisodeForDialog.updatedAt) {
+                <p><strong>Aktualisiert:</strong> {{ currentEpisodeForDialog.updatedAt | dateTimeFormatting }} </p>
+            } @else {
+                <p><strong>Aktualisiert:</strong> - </p>
+            }
+            
         </div>
     </p-dialog>
 }

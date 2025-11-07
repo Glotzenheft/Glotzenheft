@@ -55,7 +55,7 @@ import { UC_GetShowToast } from './core/use-cases/auth/get-show-toast.use-case';
     providers: [MessageService, UC_GetShowToast, UC_GetSearchTerm],
 })
 export class AppComponent implements OnInit, OnDestroy {
-    public isSidebarOpen: boolean = window.innerWidth <= 850 ? false : true; // sidebar should be open by default
+    public isSidebarOpen: boolean = window.innerWidth > 850; // sidebar should be open by default
     public isMultiSearchResponseVisible: boolean = false;
     public userQuery: string = '';
     public toastSubscription!: Subscription;

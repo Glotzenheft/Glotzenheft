@@ -20,10 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: var(--border--radius);
 
-        padding-left: calc(0.5 * var(--padding--left-right));
-        padding-right: calc(0.5 * var(--padding--left-right));
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) calc(0.5 * var(--padding--left-right));
+        margin-top: calc(1rem + var(--padding--top-bottom));
 
         box-shadow: var(--box--shadow-button);
 
@@ -108,10 +106,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: var(--border--radius);
 
-        padding-left: calc(0.5 * var(--padding--left-right));
-        padding-right: calc(0.5 * var(--padding--left-right));
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) calc(0.5 * var(--padding--left-right));
+        margin-top: calc(1rem + var(--padding--top-bottom));
 
         box-shadow: var(--box--shadow-button);
         width: 100%;
@@ -199,10 +195,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         background-color: rgba(255, 255, 255, 0.8);
         border-radius: var(--border--radius);
 
-        padding-left: calc(0.5 * var(--padding--left-right));
-        padding-right: calc(0.5 * var(--padding--left-right));
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) calc(0.5 * var(--padding--left-right));
+        margin-top: calc(1rem + var(--padding--top-bottom));
 
         box-shadow: var(--box--shadow-button);
         width: 100%;

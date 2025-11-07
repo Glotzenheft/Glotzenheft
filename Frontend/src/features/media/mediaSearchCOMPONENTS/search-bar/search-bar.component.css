@@ -17,7 +17,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @media (max-width: 950px) {
     .searchBar {
-        height: 5rem;
+        margin-top: 1rem;
+        margin-bottom: 0;
         width: 100%;
     }
 
@@ -36,7 +37,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @media (min-width: 950px) {
     .searchBar {
-        height: 5rem;
+        margin-top: 1rem;
+        margin-bottom: 0;
         width: 100%;
         display: flex;
         justify-content: space-evenly;
