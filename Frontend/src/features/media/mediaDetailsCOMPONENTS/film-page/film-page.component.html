@@ -93,6 +93,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 TMDB
                             </a>
 
+                            @if (filmData.media.imdbID) {
+                                <br>
+                                <a [href]="'https://www.imdb.com/de/title/' + filmData.media.imdbID"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                   class="linkA"
+                                >
+                                    <i class="pi pi-link p-mr-3"></i>
+                                    IMDB
+                                </a>
+                            }
+
                     @if (filmData.media.firstAirDate) {
                         <p>Erstausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
                     } 
@@ -112,7 +124,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         @if (currentTab === tabsList[0]) {
             <div class="backButtonDIV">
-                <p-button label="Neue Watchlist erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+                <p-button label="Neue Trackliste erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
             </div>
             <div class="newWatchlistButton">
                 @for (tracklist of filmData.tracklists; track $index) {
@@ -144,7 +156,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <app-tracklist-formular 
             [inpIsMovie]="true" 
             [inpIsUpdating]="false" 
-            [inpTracklist]="getDefaultTracklist(filmData.media.name + ' #' + getTracklistNumber(filmData.tracklists.length))"
+            [inpTracklist]="getDefaultTracklist(filmData.media.name)"
             (outSubmitTracklist)="createNewTracklist($event, filmData.media.id)" 
             (outCancelTracklist)="cancelTracklist()"
         />
