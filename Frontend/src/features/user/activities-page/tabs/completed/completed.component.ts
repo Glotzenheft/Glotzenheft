@@ -1,4 +1,4 @@
-<!--
+/*
 This file is part of Glotzenheft.
 
 Glotzenheft is free software: you can redistribute it and/or modify
@@ -13,7 +13,16 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+*/
 
-<app-activity-tabs></app-activity-tabs>
-<router-outlet></router-outlet>
+import { Component } from '@angular/core';
+import { CommonModule } from '@angular/common';
+
+@Component({
+    selector: 'app-completed',
+    standalone: true,
+    imports: [CommonModule],
+    templateUrl: './completed.component.html',
+    styleUrls: ['./completed.component.css'],
+})
+export class CompletedComponent {}

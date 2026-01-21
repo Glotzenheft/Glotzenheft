@@ -164,10 +164,7 @@ p {
         width: 100%;
         height: 100%;
         background-color: black;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
     }
 
     .closedSidebar {
@@ -483,10 +480,7 @@ p {
         width: 100%;
         height: 100%;
         background-color: black;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
     }
 
     .closedSidebar {
@@ -759,13 +753,10 @@ p {
     .sidebar {
         background-color: black;
         height: 100%;
-        width: 25%;
+        width: 18rem;
         left: 0;
         color: white;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
 
         display: flex;
         flex-direction: column;
@@ -1031,13 +1022,10 @@ p {
     .sidebar {
         background-color: black;
         height: 100%;
-        width: 20%;
+        width: 18rem;
         left: 0;
         color: white;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
 
         display: flex;
         flex-direction: column;
@@ -1319,13 +1307,10 @@ p {
     .sidebar {
         background-color: black;
         height: 100%;
-        width: 20%;
+        width: 18rem;
         left: 0;
         color: white;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
 
         display: flex;
         flex-direction: column;

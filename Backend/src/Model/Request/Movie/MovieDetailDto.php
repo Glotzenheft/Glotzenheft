@@ -31,13 +31,13 @@ readonly class MovieDetailDto implements MediaDetailDtoInterface
     public function __construct(
         #[SerializedName('media_id')]
         #[Assert\Range(
-            minMessage: 'Parameter "media_id" must be at least 1.',
+            minMessage: 'Query parameter "media_id" must be at least 1.',
             min: 1
         )]
         public ?int $mediaId = null,
         #[SerializedName('tmdb_id')]
         #[Assert\Range(
-            minMessage: 'Parameter "tmdb_id" must be at least 1.',
+            minMessage: 'Query parameter "tmdb_id" must be at least 1.',
             min: 1
         )]
         public ?int $tmdbId = null,

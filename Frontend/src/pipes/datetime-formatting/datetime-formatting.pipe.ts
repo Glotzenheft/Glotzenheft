@@ -1,4 +1,4 @@
-<!--
+/*
 This file is part of Glotzenheft.
 
 Glotzenheft is free software: you can redistribute it and/or modify
@@ -13,7 +13,21 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
--->
+*/
 
-<app-activity-tabs></app-activity-tabs>
-<router-outlet></router-outlet>
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+    name: 'dateTimeFormatting',
+})
+export class DateTimeFormattingPipe implements PipeTransform {
+    transform(date: string): string {
+        return new Date(date).toLocaleString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+    }
+}

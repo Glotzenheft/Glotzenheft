@@ -28,7 +28,7 @@ readonly class MovieRecommendationDto
     public function __construct(
         #[SerializedName('tmdb_movie_id')]
         #[Assert\NotBlank(
-            message: 'Tmdb movie id parameter "tmdb_movie_id" is required.'
+            message: 'Query parameter "tmdb_movie_id" is required.'
         )]
         public ?int $tmdbMovieId = null,
         public ?string $language = 'de-DE',

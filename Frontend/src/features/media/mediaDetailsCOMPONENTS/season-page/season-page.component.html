@@ -91,6 +91,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             TMDB
                         </a>
 
+                        @if (seasonData.media.imdbID) {
+                            <br>
+                            <a [href]="'https://www.imdb.com/de/title/' + seasonData.media.imdbID"
+                               target="_blank"
+                               rel="noopener noreferrer"
+                               class="linkA"
+                            >
+                                <i class="pi pi-link p-mr-3"></i>
+                                IMDB
+                            </a>
+                        }
+
                         @if (seasonData.media.firstAirDate) {
                             <p>Erstausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
                         } 
@@ -242,7 +254,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <app-tracklist-formular 
             [inpIsMovie]="false" 
             [inpIsUpdating]="false" 
-            [inpTracklist]="getDefaultTracklist(seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber + ' #' + getTracklistNumberOfSeason(currentSeason.tracklistsForSeason.length))"
+            [inpTracklist]="getDefaultTracklist(seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber)"
             (outSubmitTracklist)="createNewTracklist($event, seasonData.media.id, currentSeason.id)"
             (outCancelTracklist)="cancelTracklistForm()"
         />

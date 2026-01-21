@@ -85,8 +85,8 @@ export const ROUTES_LIST: RoutesListItem[] = [
     {
         // 8
         description: 'Dashboard',
-        fullUrl: 'user',
-        shortUrl: 'user',
+        fullUrl: 'user/dashboard',
+        shortUrl: 'dashboard',
         showInLinkList: false,
         showInSidebar: true,
     },
@@ -116,7 +116,7 @@ export const ROUTES_LIST: RoutesListItem[] = [
     },
     {
         // 12
-        description: 'Alle Tracklisten',
+        description: 'Tracklisten',
         fullUrl: 'user/tracklists',
         shortUrl: 'tracklists',
         showInLinkList: false,
@@ -153,6 +153,14 @@ export const ROUTES_LIST: RoutesListItem[] = [
         shortUrl: 'backup',
         showInLinkList: false,
         showInSidebar: false,
+    },
+    {
+        // 17
+        description: 'Analyse',
+        fullUrl: 'user/analytics',
+        shortUrl: 'analytics',
+        showInLinkList: false,
+        showInSidebar: true,
     },
 ];
 

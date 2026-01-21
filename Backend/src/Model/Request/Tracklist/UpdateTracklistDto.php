@@ -28,7 +28,7 @@ readonly class UpdateTracklistDto
 {
     public function __construct(
         #[SerializedName('tracklist_id')]
-        #[Assert\NotBlank(message: 'Parameter "tracklist_id" is required.')]
+        #[Assert\NotBlank(message: 'Field "tracklist_id" is required.')]
         #[Assert\Type('integer')]
         public ?int $tracklistId = null,
 
@@ -53,7 +53,7 @@ readonly class UpdateTracklistDto
 
         #[SerializedName('tracklist_rating')]
         #[Assert\Range(
-            notInRangeMessage: 'Rating must be between 1 and 10 or null.',
+            notInRangeMessage: 'The rating must be between 1 and 10 or null.',
             min: 1,
             max: 10
         )]
@@ -61,12 +61,12 @@ readonly class UpdateTracklistDto
         public ?int $rating = null,
 
         #[SerializedName('tracklist_start_date')]
-        #[Assert\Date(message: 'Start date must be a valid date in Y-m-d format or null.')]
+        #[Assert\Date(message: 'The start date must be a valid date in Y-m-d format or null.')]
         public ?string $startDate = null,
 
         #[SerializedName('tracklist_finish_date')]
         #[Assert\Date(
-            message: 'Finish date must be a valid date in Y-m-d format or null.'
+            message: 'The finish date must be a valid date in Y-m-d format or null.'
         )]
         public ?string $finishDate = null
     ) {}
