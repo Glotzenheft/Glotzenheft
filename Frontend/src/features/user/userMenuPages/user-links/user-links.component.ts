@@ -78,8 +78,8 @@ export class UserLinksComponent implements OnInit, OnDestroy {
 
             // Prüft, ob der Link des Menüpunkts zur aktuellen URL passt
             const isActive = this.router.isActive(fullUrl, {
-                paths: 'exact',
-                queryParams: 'exact',
+                paths: 'subset',
+                queryParams: 'ignored',
                 fragment: 'ignored',
                 matrixParams: 'ignored',
             });
@@ -102,14 +102,16 @@ export class UserLinksComponent implements OnInit, OnDestroy {
      */
     private getIconForRoute = (url: string): string => {
         switch (url) {
-            case 'user':
-                return 'pi pi-chart-pie';
+            case 'user/dashboard':
+                return 'pi pi-chart-line';
             case 'user/tracklists':
                 return 'pi pi-list';
             case 'user/activities':
                 return 'pi pi-arrow-right-arrow-left';
             case 'user/backup':
                 return 'pi pi-database';
+            case 'user/analytics':
+                return 'pi pi-chart-pie';
             default:
                 return 'pi pi-link'; // Fallback-Icon
         }

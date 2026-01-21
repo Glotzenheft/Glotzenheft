@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { Route, RouterModule, Routes } from '@angular/router';
+import { RouterModule, Routes } from '@angular/router';
 import { UserStartComponent } from './user-start/user-start.component';
 import { UserLayoutComponent } from './user-layout/user-layout.component';
 import { ActivitiesPageComponent } from './activities-page/activities-page.component';
@@ -30,12 +30,44 @@ const userModuleRoutes: Routes = [
         component: UserLayoutComponent,
         children: [
             {
+                path: ROUTES_LIST[8].shortUrl,
+                component: UserStartComponent,
+            },
+            {
                 path: ROUTES_LIST[13].shortUrl,
                 component: DeleteUserAccountPageComponent,
             },
             {
                 path: ROUTES_LIST[14].shortUrl,
                 component: ActivitiesPageComponent,
+                children: [
+                    {
+                        path: '',
+                        redirectTo: 'watched',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: 'watched',
+                        loadComponent: () =>
+                            import(
+                                './activities-page/tabs/watched/watched.component'
+                                ).then((c) => c.WatchedComponent),
+                    },
+                    {
+                        path: 'completed',
+                        loadComponent: () =>
+                            import(
+                                './activities-page/tabs/completed/completed.component'
+                                ).then((c) => c.CompletedComponent),
+                    },
+                    {
+                        path: 'started',
+                        loadComponent: () =>
+                            import(
+                                './activities-page/tabs/started/started.component'
+                                ).then((c) => c.StartedComponent),
+                    }
+                ]
             },
             {
                 path: '',
@@ -47,6 +79,10 @@ const userModuleRoutes: Routes = [
 
 @NgModule({
     declarations: [],
-    imports: [CommonModule, RouterModule.forChild(userModuleRoutes)],
+    imports: [
+        CommonModule,
+        RouterModule.forChild(userModuleRoutes),
+        ActivitiesPageComponent
+    ],
 })
 export class UserModule {}
