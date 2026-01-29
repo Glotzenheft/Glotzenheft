@@ -17,18 +17,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { StartMainComponent } from './start-main.component';
+import { WelcomeComponent } from './welcome.component';
 
-describe('StartMainComponent', () => {
-    let component: StartMainComponent;
-    let fixture: ComponentFixture<StartMainComponent>;
+describe('WelcomeComponent', () => {
+    let component: WelcomeComponent;
+    let fixture: ComponentFixture<WelcomeComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            imports: [StartMainComponent],
+            imports: [WelcomeComponent],
         }).compileComponents();
 
-        fixture = TestBed.createComponent(StartMainComponent);
+        fixture = TestBed.createComponent(WelcomeComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

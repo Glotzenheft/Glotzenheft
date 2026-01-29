@@ -56,20 +56,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div class="button">
             <p-button
                 class="buttonShadow" 
-                label="zu meiner Startseite"
+                label="zum Dashboard"
                 pTooltip="Hier klicken, um zu meiner eigenen Startseite weitergeleitet zu werden."
                 tooltipPosition="right"
                 icon="pi pi-sign-in" 
-                (onClick)="navigateToStartPage()" 
+                (onClick)="navigateToDashboard()"
                 />
         </div>
     }
 
 </div>
-
-
-@if (isServerNotAvailable) {
-    <div class="serverNotAvailableDIV">
-        <p>Empfehlungen können nicht geladen werden.</p>
-    </div>
-}
