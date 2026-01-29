@@ -23,6 +23,7 @@ import { UserLayoutComponent } from './user-layout/user-layout.component';
 import { ActivitiesPageComponent } from './activities-page/activities-page.component';
 import { DeleteUserAccountPageComponent } from './delete-user-account-page/delete-user-account-page.component';
 import { ROUTES_LIST } from '../../app/shared/variables/routes-list';
+import { TMDB_SIDEBAR_PATHS } from "../../app/core/constants/paths.constants";
 
 const userModuleRoutes: Routes = [
     {
@@ -30,7 +31,7 @@ const userModuleRoutes: Routes = [
         component: UserLayoutComponent,
         children: [
             {
-                path: ROUTES_LIST[8].shortUrl,
+                path: TMDB_SIDEBAR_PATHS.dashboard,
                 component: UserStartComponent,
             },
             {
@@ -38,7 +39,7 @@ const userModuleRoutes: Routes = [
                 component: DeleteUserAccountPageComponent,
             },
             {
-                path: ROUTES_LIST[14].shortUrl,
+                path: TMDB_SIDEBAR_PATHS.activities,
                 component: ActivitiesPageComponent,
                 children: [
                     {
