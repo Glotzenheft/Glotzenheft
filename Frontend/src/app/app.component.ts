@@ -64,9 +64,7 @@ export class AppComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.getSearchTermUseCase.observe().subscribe((searchTerm: string) => {
-            this.isMultiSearchResponseVisible = !searchTerm.trim()
-                ? false
-                : true;
+            this.isMultiSearchResponseVisible = !!searchTerm.trim();
         });
 
         this.toastSubscription = this.getShowToastUseCase
