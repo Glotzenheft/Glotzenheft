@@ -17,10 +17,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { StartMainComponent } from './start-main/start-main.component';
+import { WelcomeComponent } from '../../app/features/welcome/welcome.component';
 
 @NgModule({
     declarations: [],
-    imports: [CommonModule, StartMainComponent],
+    imports: [CommonModule, WelcomeComponent],
 })
 export class StartModule {}
