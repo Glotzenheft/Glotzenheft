@@ -18,16 +18,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { CanActivateFn } from '@angular/router';
 import { inject } from '@angular/core';
 import { Router } from '@angular/router';
-import { ROUTES_LIST } from '../app/shared/variables/routes-list';
 import { UC_TriggerToast } from '../app/core/use-cases/auth/trigger-toast.use-case';
+import { AUTHENTICATION_URLS, TMDB_SIDEBAR_URLS} from "../app/core/constants/urls.constants";
 
 export const authGuard: CanActivateFn = (route, state) => {
     const router = inject(Router);
     const triggerToastUseCase = inject(UC_TriggerToast);
 
-    if (state.url === '/login' || state.url === '/register') {
+    if (state.url.includes(AUTHENTICATION_URLS.logIn) || state.url.includes(AUTHENTICATION_URLS.register)) {
         if (isUserLoggedIn()) {
-            router.navigateByUrl(ROUTES_LIST[8].fullUrl);
+            void router.navigateByUrl(TMDB_SIDEBAR_URLS.dashboard);
             return false;
         }
         return true;
@@ -37,7 +37,7 @@ export const authGuard: CanActivateFn = (route, state) => {
             return true;
         }
         triggerToastUseCase.execute();
-        return router.createUrlTree([`/${ROUTES_LIST[10].fullUrl}`]);
+        return router.createUrlTree([`/${AUTHENTICATION_URLS.logIn}`]);
     }
 };
 
