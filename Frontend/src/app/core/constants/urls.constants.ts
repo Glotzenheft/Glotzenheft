@@ -22,6 +22,7 @@ import {
     LEGAL_PATHS,
     AUTHENTICATION_PATHS,
     BACKUP_PATHS,
+    MEDIA_PATHS,
 } from "./paths.constants";
 
 export const ROOT_URLS = {
@@ -69,3 +70,9 @@ export const SIDEBAR_GUEST_OPTION_URLS = {
     logIn: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.logIn}`,
     register: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.register}`,
 } as const;
+
+export const MEDIA_URLS = {
+    baseUrl: `${MEDIA_PATHS.base}`,
+    movieUrl: `${MEDIA_PATHS.base}/${MEDIA_PATHS.movie}`,
+    tvUrl: `${MEDIA_PATHS.base}/${MEDIA_PATHS.tv}`,
+}
