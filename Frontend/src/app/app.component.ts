@@ -26,13 +26,11 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Subscription } from 'rxjs';
 import { ToastModule } from 'primeng/toast';
 import { MessageService } from 'primeng/api';
-import { FooterComponent } from '../features/footerCOMPONENTS/footer/footer.component';
 import { SearchBarComponent } from '../features/media/mediaSearchCOMPONENTS/search-bar/search-bar.component';
-import { UserLinksComponent } from '../features/user/userMenuPages/user-links/user-links.component';
-import { UserMenuComponent } from '../features/user/userMenuPages/user-menu/user-menu.component';
 import { getMessageObject } from './shared/variables/message-vars';
 import { UC_GetSearchTerm } from './core/use-cases/search/get-search-term.use-case';
 import { UC_GetShowToast } from './core/use-cases/auth/get-show-toast.use-case';
+import { SidebarComponent} from "./core/layout/sidebar/sidebar.component";
 
 @Component({
     selector: 'app-root',
@@ -41,14 +39,12 @@ import { UC_GetShowToast } from './core/use-cases/auth/get-show-toast.use-case';
         InputTextModule,
         InputIconModule,
         IconFieldModule,
-        FooterComponent,
         ButtonModule,
         TooltipModule,
         CommonModule,
         SearchBarComponent,
         ToastModule,
-        UserLinksComponent,
-        UserMenuComponent,
+        SidebarComponent
     ],
     templateUrl: './app.component.html',
     styleUrl: './app.component.css',
