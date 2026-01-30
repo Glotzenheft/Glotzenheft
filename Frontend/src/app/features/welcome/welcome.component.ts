@@ -22,9 +22,12 @@ import { InputIconModule } from 'primeng/inputicon';
 import { TooltipModule } from 'primeng/tooltip';
 import { ButtonModule } from 'primeng/button';
 import { isUserLoggedIn } from '../../../guards/auth.guard';
-import { ROUTES_LIST } from '../../../app/shared/variables/routes-list';
-import { UC_NavigateToSpecificPage } from '../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
+import { UC_NavigateToSpecificPage } from '../../core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { CommonModule } from '@angular/common';
+import {
+    AUTHENTICATION_URLS,
+    TMDB_SIDEBAR_URLS,
+} from "../../core/constants/urls.constants";
 
 @Component({
     selector: 'app-start-main',
@@ -36,28 +39,27 @@ import { CommonModule } from '@angular/common';
         ButtonModule,
         CommonModule,
     ],
-    templateUrl: './start-main.component.html',
-    styleUrl: './start-main.component.css',
+    templateUrl: './welcome.component.html',
+    styleUrl: './welcome.component.css',
     providers: [UC_NavigateToSpecificPage],
 })
-export class StartMainComponent {
+export class WelcomeComponent {
     public areLoginButtonsVisible: boolean = !isUserLoggedIn();
     public isLoading: boolean = false;
-    public isServerNotAvailable: boolean = false;
 
     constructor(
         private readonly navigateToSpecificPageUseCase: UC_NavigateToSpecificPage,
     ) {}
 
     public navigateToLogin = () => {
-        this.navigateToSpecificPageUseCase.execute('/login');
+        this.navigateToSpecificPageUseCase.execute(AUTHENTICATION_URLS.logIn);
     };
 
-    public navigateToStartPage = () => {
-        this.navigateToSpecificPageUseCase.execute(ROUTES_LIST[8].fullUrl);
+    public navigateToDashboard = () => {
+        this.navigateToSpecificPageUseCase.execute(TMDB_SIDEBAR_URLS.dashboard);
     };
 
     public navigateToRegister = () => {
-        this.navigateToSpecificPageUseCase.execute('/register');
+        this.navigateToSpecificPageUseCase.execute(AUTHENTICATION_URLS.register);
     };
 }

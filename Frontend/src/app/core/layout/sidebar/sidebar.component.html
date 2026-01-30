@@ -1,0 +1,74 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="sidebar-container" [class.sidebar--closed]="!isSidebarOpen">
+    @if (isSidebarOpen) {
+        <div class="sidebar">
+            <div class="appHeading">
+                <div class="sidebarToggleDIV">
+                    <div (click)="setSidebarOpen(false)">
+                        <span class="pi pi-times" pTooltip="Klicken zum Schließen des Menüs" tooltipPosition="right"></span>
+                    </div>
+
+                    <p-menu #optionsMenu [model]="optionsPopupItems" [popup]="true" class="options-menu-overlay"/>
+                    <div (click)="optionsMenu.toggle($event)" class="menuDIV" pTooltip="Optionen" tooltipPosition="right">
+                        <span class="pi pi-user"></span>
+                    </div>
+                </div>
+
+                <h1><a href="/">Glotzenheft</a></h1>
+            </div>
+
+            <div class="sidebar-main-menu">
+                <p-menu [model]="mainMenuItems"></p-menu>
+            </div>
+
+            <div class="footer">
+                <h1>Weiteres</h1>
+                <div class="footerContent">
+                    <p-menu #footerMenu [model]="footerMenuItems" [popup]="true" class="footer-menu-overlay"/>
+                    <div (click)="footerMenu.toggle($event)" class="toggleDIV">
+                        <span class="pi pi-ellipsis-v"></span>
+                        <p>Über diese Webseite</p>
+                    </div>
+                </div>
+
+                <small>This product uses the TMDB API but is not endorsed or certified by TMDB.</small>
+                <small>&copy; M. Seide, H. Tran, H. Keller</small>
+            </div>
+        </div>
+    } @else {
+        <div class="closedSidebar">
+            <div class="closedSidebarToggleDIV">
+                <div (click)="setSidebarOpen(true)">
+                    <span class="pi pi-bars" pTooltip="Klicken zum Öffnen des Menüs" tooltipPosition="right"></span>
+                </div>
+
+                <div class="closedSidebarOptions">
+                    <p-menu #optionsMenu [model]="optionsPopupItems" [popup]="true" class="options-menu-overlay"/>
+                    <div (click)="optionsMenu.toggle($event)" class="menuDIV" pTooltip="Optionen" tooltipPosition="right">
+                        <span class="pi pi-user"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="sidebar-main-menu">
+                <p-menu [model]="collapsedMainMenuItems"></p-menu>
+            </div>
+        </div>
+    }
+</div>

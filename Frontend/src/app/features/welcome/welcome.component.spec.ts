@@ -15,12 +15,25 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { WelcomeComponent } from '../../app/features/welcome/welcome.component';
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-@NgModule({
-    declarations: [],
-    imports: [CommonModule, WelcomeComponent],
-})
-export class StartModule {}
+import { WelcomeComponent } from './welcome.component';
+
+describe('WelcomeComponent', () => {
+    let component: WelcomeComponent;
+    let fixture: ComponentFixture<WelcomeComponent>;
+
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            imports: [WelcomeComponent],
+        }).compileComponents();
+
+        fixture = TestBed.createComponent(WelcomeComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
+
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
+});

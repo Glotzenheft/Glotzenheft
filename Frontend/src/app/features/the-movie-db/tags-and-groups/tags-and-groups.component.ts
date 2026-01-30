@@ -15,12 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { WelcomeComponent } from '../../app/features/welcome/welcome.component';
+import { Component } from '@angular/core';
 
-@NgModule({
-    declarations: [],
-    imports: [CommonModule, WelcomeComponent],
+@Component({
+  selector: 'app-tags-and-groups',
+  imports: [],
+  templateUrl: './tags-and-groups.component.html',
+  styleUrl: './tags-and-groups.component.css'
 })
-export class StartModule {}
+export class TagsAndGroupsComponent {
+
+}

@@ -15,12 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { WelcomeComponent } from '../../app/features/welcome/welcome.component';
+import { AppAction } from "../constants/actions.constants";
 
-@NgModule({
-    declarations: [],
-    imports: [CommonModule, WelcomeComponent],
-})
-export class StartModule {}
+export interface SidebarMenuItem {
+    label: string;
+    icon: string;
+    routerLink?: string;
+    action?: AppAction;
+}

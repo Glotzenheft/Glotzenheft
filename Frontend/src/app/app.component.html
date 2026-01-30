@@ -16,32 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <div class="appwrapper">
-    @if(isSidebarOpen) {
-    <div class="sidebar">
-        <div class="appHeading">
-            <div class="sidebarToggleDIV">
-                <div (click)="toggleSidebar(false)">
-                    <span class="pi pi-times" pTooltip="Klicken zum Schließen des Menüs" tooltipPosition="right"></span>
-                </div>
-                <app-user-menu />
-            </div>
-
-            <h1><a href="/">Glotzenheft</a></h1>
-        </div>
-        <app-user-links />
-        <app-footer (sideBarOpenEvent)="toggleSidebar(false)" />
-    </div>
-    }
-    @else {
-    <div class="closedSidebar">
-        <div class="closedSidebarToggleDIV">
-            <div (click)="toggleSidebar(true)">
-                <span class="pi pi-bars" pTooltip="Klicken zum Öffnen des Menüs" tooltipPosition="right"></span>
-            </div>
-        </div>
-        <app-user-menu />
-    </div>
-    }
+    <app-sidebar/>
 
     <div class="content">
         <app-search-bar (emitSearchQuery)="setUserQuery($event)" />

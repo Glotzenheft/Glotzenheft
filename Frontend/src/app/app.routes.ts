@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Routes } from '@angular/router';
-import { StartMainComponent } from '../features/start/start-main/start-main.component';
+import { WelcomeComponent } from './features/welcome/welcome.component';
 import { LoginComponent } from '../features/start/login/login.component';
 import { RegisterComponent } from '../features/start/register/register.component';
 import { authGuard } from '../guards/auth.guard';
@@ -28,43 +28,48 @@ import { MultiSearchComponent } from '../features/media/mediaSearchCOMPONENTS/se
 import { AllUserTracklistsComponent } from '../features/user/userTracklists/all-user-tracklists/all-user-tracklists.component';
 import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
 import { ROUTES_LIST } from './shared/variables/routes-list';
+import {
+    AUTHENTICATION_URLS,
+    LEGAL_URLS,
+    ROOT_URLS,
+    SIDEBAR_OPTION_URLS, MEDIA_URLS,
+} from "./core/constants/urls.constants";
+import { TMDB_SIDEBAR_PATHS } from "./core/constants/paths.constants";
 
 export const routes: Routes = [
     {
         // 0
-        path: '',
-        component: StartMainComponent,
+        path: ROOT_URLS.home,
+        component: WelcomeComponent,
     },
     {
         // 1
-        path: 'login',
+        path: AUTHENTICATION_URLS.logIn,
         component: LoginComponent,
         canActivate: [authGuard],
     },
     {
         // 2
-        path: 'register',
+        path: AUTHENTICATION_URLS.register,
         component: RegisterComponent,
         canActivate: [authGuard],
     },
     {
         // 3
-        path: 'reset-password',
+        path: AUTHENTICATION_URLS.resetPassword,
         component: ResetPasswordComponent,
         canActivate: [authGuard],
     },
     {
         // 4
-        path: 'user',
-        loadChildren: () =>
-            import('../features/user/user.module').then(
-                (module) => module.UserModule,
-            ),
+        path: TMDB_SIDEBAR_PATHS.base,
+        loadChildren: () => import('../app/features/the-movie-db/tmdb.routes')
+            .then(m => m.TMDB_ROUTES),
         canActivate: [authGuard],
     },
     {
         // 5
-        path: 'media',
+        path: MEDIA_URLS.baseUrl,
         loadChildren: () =>
             import('../features/media/media.module').then(
                 (module) => module.MediaModule,
@@ -73,17 +78,17 @@ export const routes: Routes = [
     },
     {
         // 6
-        path: 'imprint',
+        path: LEGAL_URLS.imprint,
         component: ImpressumComponent,
     },
     {
         // 7
-        path: 'about',
+        path: LEGAL_URLS.about,
         component: AboutComponent,
     },
     {
         // 8
-        path: 'privacy-policy',
+        path: LEGAL_URLS.privacy,
         component: PrivacyPolicyComponent,
     },
     {
@@ -100,16 +105,24 @@ export const routes: Routes = [
     },
     {
         // 11
-        path: ROUTES_LIST[15].fullUrl,
+        path: LEGAL_URLS.terms,
         component: AgbComponent,
     },
     {
         // 12
-        path: ROUTES_LIST[16].fullUrl,
+        path: SIDEBAR_OPTION_URLS.dataBackup,
         loadComponent: () =>
             import(
                 '../features/backup/pages/backup-page/backup-page.component'
             ).then((c) => c.BackupPageComponent),
+        canActivate: [authGuard],
+    },
+    {
+        path: AUTHENTICATION_URLS.deleteAccount,
+        loadComponent: () =>
+            import(
+                '../features/user/delete-user-account-page/delete-user-account-page.component'
+            ).then((c) => c.DeleteUserAccountPageComponent),
         canActivate: [authGuard],
     },
     {

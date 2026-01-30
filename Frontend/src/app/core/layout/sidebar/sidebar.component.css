@@ -1,0 +1,320 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+/* Hauptcontainer des Menüs */
+::ng-deep .sidebar-main-menu {
+    flex: auto;
+}
+::ng-deep .sidebar-main-menu .p-menu {
+    border: none !important;
+}
+
+::ng-deep .sidebar-main-menu .p-menuitem-text {
+    color: #e5e7eb;
+}
+
+::ng-deep .active-sidebar-menu {
+    background-color: var(--content-background-color) !important;
+    outline: #ffffff solid 1px;
+    z-index: 100;
+    border-radius: 8px;
+    text-decoration: none !important;
+}
+
+/*Sidebar Popup Menü*/
+::ng-deep .p-menu-overlay,
+::ng-deep .p-menu-overlay .p-menu {
+    background-color: rgba(0, 0, 0, 0.975) !important;
+    border: 1px solid rgba(255, 255, 255, 0.6) !important;
+}
+
+::ng-deep .p-menu-overlay .p-menuitem-text {
+    color: #e5e7eb !important;
+}
+
+/* Labels der Menüitems bei zugeklappter Sidebar deaktivieren*/
+::ng-deep .icon-only-menu-item .p-menuitem-text {
+    display: none !important;
+}
+
+::ng-deep .icon-only-menu-item .p-menu-item-link {
+    padding: 10% !important;
+}
+
+::ng-deep .options-menu-overlay .p-menu {
+    min-width: 13rem !important;
+}
+
+::ng-deep .footer-menu-overlay .p-menu {
+    min-width: 15rem !important;
+}
+
+.closedSidebarToggleDIV {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.closedSidebarOptions {
+    display: flex;
+    justify-content: center;
+}
+
+:host {
+    display: block;
+    height: 100%;
+    --p-menu-item-focus-background: transparent;
+    --p-menu-item-focus-color: inherit;
+    --p-menu-item-focus-text-decoration: none;
+    --p-menu-item-icon-focus-color: white !important;
+    --p-menu-item-icon-color: white !important;
+    --p-menu-item-gap: 15% !important;
+    --p-menu-item-padding: 6% !important;
+    --p-menu-submenu-label-color: red;
+    --p-menu-background: transparent !important;
+}
+
+.sidebar-container {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.menuDIV {
+    width: 3rem;
+    height: 3rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: transparent;
+    border-radius: var(--border--radius);
+    transition-duration: var(--transition--duration);
+}
+
+.menuDIV:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.footer {
+    width: 100%;
+    height: 15rem;
+    padding-top: var(--padding--top-bottom);
+    padding-bottom: var(--padding--top-bottom);
+    margin-top: 1rem;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    border-top: 0.1rem solid white;
+}
+
+.footer h1 {
+    font-size: medium;
+}
+
+.footerContent {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: start;
+    height: 100%;
+}
+
+.toggleDIV {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    transition-duration: var(--transition--duration);
+    border-radius: var(--border--radius);
+    padding-left: calc(0.2 * var(--padding--left-right));
+    padding-right: calc(0.2 * var(--padding--left-right));
+}
+
+.toggleDIV:hover {
+    cursor: pointer;
+    background-color: rgba(255, 255, 255, 0.3);
+}
+
+.sidebar--closed ::ng-deep .sidebar-main-menu .p-menuitem-text {
+    display: none;
+}
+
+
+@media (max-width: 850px) {
+    .sidebar--closed .sidebar-main-menu,
+    .sidebar--closed .sidebar-legal-menu,
+    .sidebar--closed .sidebar-closed-user-menu {
+        display: none;
+    }
+
+    .sidebar--closed .footer {
+        display: none;
+    }
+
+    .appHeading {
+        width: 100%;
+        padding: 0;
+        display: flex;
+        justify-content: space-between;
+        align-items: start;
+    }
+
+    .appHeading h1:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .appHeading h1 a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .closedSidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        height: 5rem;
+    }
+
+    .sidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: flex-start;
+        width: 100%;
+        height: 3rem;
+    }
+
+    .sidebarToggleDIV div,
+    .closedSidebarToggleDIV div {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        transition-duration: var(--transition--duration);
+    }
+
+    .sidebarToggleDIV div:hover,
+    .closedSidebarToggleDIV div:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 850px) and (max-width: 940px) {
+    .appHeading {
+        width: 100%;
+        font-size: 1.2rem;
+    }
+
+    .appHeading h1:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .appHeading h1 a {
+        text-decoration: none;
+        color: white;
+    }
+
+    .closedSidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 5rem;
+    }
+
+    .sidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 3rem;
+    }
+
+    .sidebarToggleDIV div,
+    .closedSidebarToggleDIV div {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        transition-duration: var(--transition--duration);
+    }
+
+    .sidebarToggleDIV div:hover,
+    .closedSidebarToggleDIV div:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
+}
+
+@media (min-width: 940px) {
+    .appHeading {
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: start;
+        align-items: center;
+    }
+
+    .closedSidebarToggleDIV {
+        width: 100%;
+        height: 5rem;
+    }
+
+    .sidebarToggleDIV {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        width: 100%;
+        height: 3rem;
+    }
+
+    .sidebarToggleDIV div,
+    .closedSidebarToggleDIV div {
+        width: 2rem;
+        height: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        border-radius: var(--border--radius);
+        transition-duration: var(--transition--duration);
+    }
+
+    .sidebarToggleDIV div:hover,
+    .closedSidebarToggleDIV div:hover {
+        background-color: rgba(255, 255, 255, 0.3);
+        cursor: pointer;
+    }
+
+    .appHeading h1:hover {
+        text-decoration: underline;
+        cursor: pointer;
+    }
+
+    .appHeading h1 a {
+        text-decoration: none;
+        color: white;
+    }
+}

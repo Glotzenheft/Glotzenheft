@@ -15,12 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { WelcomeComponent } from '../../app/features/welcome/welcome.component';
+import { Component } from '@angular/core';
 
-@NgModule({
-    declarations: [],
-    imports: [CommonModule, WelcomeComponent],
+@Component({
+  selector: 'app-custom-media',
+  imports: [],
+  templateUrl: './custom-media.component.html',
+  styleUrl: './custom-media.component.css'
 })
-export class StartModule {}
+export class CustomMediaComponent {
+
+}

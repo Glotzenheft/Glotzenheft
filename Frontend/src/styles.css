@@ -171,10 +171,7 @@ p {
         height: 4rem;
         width: 100%;
         background-color: black;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
         box-shadow: var(--box--shadow);
 
         display: flex;
@@ -487,10 +484,7 @@ p {
         height: 4rem;
         width: 100%;
         background-color: black;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
         box-shadow: var(--box--shadow);
 
         display: flex;
@@ -501,10 +495,7 @@ p {
     .content {
         width: 100%;
         height: 100%;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: var(--padding--top-bottom);
-        padding-bottom: var(--padding--top-bottom);
+        padding: var(--padding--top-bottom) var(--padding--left-right);
         overflow-x: hidden;
         overflow-y: auto;
     }
@@ -554,10 +545,7 @@ p {
     .register {
         width: 100%;
         height: 90%;
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-        padding-top: 0.5rem;
-        padding-bottom: 0.5rem;
+        padding: 0.5rem var(--padding--left-right);
         background-color: rgba(255, 255, 255, 0.8);
         box-shadow: 0.4rem 0.4rem 0.4rem rgba(0, 0, 0, 0.5);
         border-radius: 0.6rem;
@@ -753,7 +741,7 @@ p {
     .sidebar {
         background-color: black;
         height: 100%;
-        width: 18rem;
+        width: 16rem;
         left: 0;
         color: white;
         padding: var(--padding--top-bottom) var(--padding--left-right);
@@ -1022,7 +1010,7 @@ p {
     .sidebar {
         background-color: black;
         height: 100%;
-        width: 18rem;
+        width: 16rem;
         left: 0;
         color: white;
         padding: var(--padding--top-bottom) var(--padding--left-right);
@@ -1307,7 +1295,7 @@ p {
     .sidebar {
         background-color: black;
         height: 100%;
-        width: 18rem;
+        width: 16rem;
         left: 0;
         color: white;
         padding: var(--padding--top-bottom) var(--padding--left-right);

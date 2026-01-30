@@ -15,12 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { WelcomeComponent } from '../../app/features/welcome/welcome.component';
+export const APP_ACTIONS = {
+    logout: 'logout',
+} as const;
 
-@NgModule({
-    declarations: [],
-    imports: [CommonModule, WelcomeComponent],
-})
-export class StartModule {}
+export type AppAction = typeof APP_ACTIONS[keyof typeof APP_ACTIONS];
