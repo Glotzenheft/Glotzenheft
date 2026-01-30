@@ -16,11 +16,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 /* Hauptcontainer des Menüs */
-::ng-deep .sidebar-menu-wrapper .p-menu {
+::ng-deep .sidebar-main-menu {
+    flex: auto;
+}
+::ng-deep .sidebar-main-menu .p-menu {
     border: none !important;
 }
 
-::ng-deep .sidebar-menu-wrapper .p-menuitem-text {
+::ng-deep .sidebar-main-menu .p-menuitem-text {
     color: #e5e7eb;
 }
 
