@@ -29,7 +29,6 @@ import { AllUserTracklistsComponent } from '../features/user/userTracklists/all-
 import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
 import { ROUTES_LIST } from './shared/variables/routes-list';
 import {
-    TMDB_SIDEBAR_URLS,
     AUTHENTICATION_URLS,
     LEGAL_URLS,
     ROOT_URLS,
@@ -64,10 +63,8 @@ export const routes: Routes = [
     {
         // 4
         path: TMDB_SIDEBAR_PATHS.base,
-        loadChildren: () =>
-            import('../features/user/user.module').then(
-                (module) => module.UserModule,
-            ),
+        loadChildren: () => import('../app/features/the-movie-db/tmdb.routes')
+            .then(m => m.TMDB_ROUTES),
         canActivate: [authGuard],
     },
     {
