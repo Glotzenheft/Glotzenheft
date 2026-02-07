@@ -33,13 +33,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @if (!isLoading && !serverNotAvailablePage) {
     @if (userRatings$) {
         <div class="diagrammDIV">
-            <h1>Dashboard</h1>
+            <h1>Analyse</h1>
 
             <div class="diagramSelection">
-                <p-select 
-                    [options]="diagramSelection" 
-                    optionLabel="name" 
-                    (onChange)="handleDiagramSelectionChange($event)" 
+                <p-select
+                    [options]="diagramSelection"
+                    optionLabel="name"
+                    (onChange)="handleDiagramSelectionChange($event)"
                     />
             </div>
 
@@ -55,14 +55,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <div class="pieChartDIV">
                     <p-chart type="pie" [data]="pieChartData" [options]="pieChartOptions" />
                 </div>
-            } 
+            }
             @else if (selectedDiagramType.value === 2) {
             <div class="barChartDIVWrapper">
                 <div class="barChartDIV">
-                    <p-chart 
-                        type="bar" 
-                        [data]="barChartForMediaStatistic" 
-                        [options]="barChartMediaStatisticOptions" 
+                    <p-chart
+                        type="bar"
+                        [data]="barChartForMediaStatistic"
+                        [options]="barChartMediaStatisticOptions"
                         />
                 </div>
             </div>
@@ -70,25 +70,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             @else if (selectedDiagramType.value === 3) {
                 <div class="barChartDIVWrapper">
                     <div class="barChartDIV">
-                        <p-chart 
-                            type="bar" 
-                            [data]="barChartForYearlyMediaStatistic" 
-                            [options]="barChartYearlyStatisticOptions" 
+                        <p-chart
+                            type="bar"
+                            [data]="barChartForYearlyMediaStatistic"
+                            [options]="barChartYearlyStatisticOptions"
                             />
                     </div>
                 </div>
-            } 
+            }
             @else if (selectedDiagramType.value === 4) {
                 <div class="barChartDIVWrapper">
                     <div class="barChartDIV">
-                        <p-chart 
-                            type="bar" 
+                        <p-chart
+                            type="bar"
                             [data]="barChartForMostWatchedDaysMediaStatistic"
-                            [options]="barChartForMostWatchedDaysMediaStatisticOptions" 
+                            [options]="barChartForMostWatchedDaysMediaStatisticOptions"
                             />
                     </div>
                 </div>
-            } 
+            }
             @else if (selectedDiagramType.value === 5) {
                 <div class="heatmap-container">
                     <div class="heatmap">
@@ -107,9 +107,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                         <td class="heatmap-Years">{{ entry[0] }}</td>
 
                                         @for (hours of entry[1]; track $index) {
-                                            <td 
+                                            <td
                                                 [style.background-color]="getHeatmapColor(hours, true)"
-                                                [style.color]="getHeatmapColor(hours, false)" 
+                                                [style.color]="getHeatmapColor(hours, false)"
                                                 [title]="hours.toFixed(1) + ' Stunden'"
                                                 >
                                                 {{ hours > 0 ? hours.toFixed(1) : "" }}
