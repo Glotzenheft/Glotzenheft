@@ -26,13 +26,13 @@ export const TMDB_ROUTES: Routes = [
                 path: TMDB_SIDEBAR_PATHS.dashboard,
                 loadComponent: () => import('./dashboard/dashboard.component')
                     .then(m => m.DashboardComponent),
-                title: 'Dashboard | Glotzenheft'
+                title: 'Dashboard'
             },
             {
                 path: TMDB_SIDEBAR_PATHS.analytics,
                 loadComponent: () => import('../../../features/user/user-start/user-start.component')
                     .then(m => m.UserStartComponent),
-                title: 'Analyse | Glotzenheft'
+                title: 'Analyse'
             },
             {
                 path: TMDB_SIDEBAR_PATHS.activities,
@@ -48,19 +48,19 @@ export const TMDB_ROUTES: Routes = [
                         path: 'watched',
                         loadComponent: () => import('../../../features/user/activities-page/tabs/watched/watched.component')
                             .then(m => m.WatchedComponent),
-                        title: 'Geschaute Episoden/Filme | Glotzenheft',
+                        title: 'Geschaute Episoden/Filme',
                     },
                     {
                         path: 'completed',
                         loadComponent: () => import('../../../features/user/activities-page/tabs/completed/completed.component')
                             .then(m => m.CompletedComponent),
-                        title: 'Abgeschlossene Tracklisten | Glotzenheft',
+                        title: 'Abgeschlossene Tracklisten',
                     },
                     {
                         path: 'started',
                         loadComponent: () => import('../../../features/user/activities-page/tabs/started/started.component')
                             .then(m => m.StartedComponent),
-                        title: 'Gestartete Tracklisten | Glotzenheft',
+                        title: 'Gestartete Tracklisten',
                     }
                 ],
             },
@@ -68,25 +68,25 @@ export const TMDB_ROUTES: Routes = [
                 path: TMDB_SIDEBAR_PATHS.tracklists,
                 loadComponent: () => import('../../../features/user/userTracklists/all-user-tracklists/all-user-tracklists.component')
                     .then(m => m.AllUserTracklistsComponent),
-                data: { title: 'Tracklisten | Glotzenheft' }
+                title: 'Tracklisten'
             },
             {
                 path: TMDB_SIDEBAR_PATHS.tagsAndGroups,
                 loadComponent: () => import('./tags-and-groups/tags-and-groups.component')
                     .then(m => m.TagsAndGroupsComponent),
-                data: { title: 'Glotzentags und Glotzengruppen | Glotzenheft' }
+                title: 'Glotzentags und Glotzengruppen'
             },
             {
                 path: TMDB_SIDEBAR_PATHS.calendar,
                 loadComponent: () => import('./calendar/calendar.component')
                     .then(m => m.CalendarComponent),
-                data: { title: 'Glotzkalender | Glotzenheft' }
+                title: 'Glotzkalender'
             },
             {
                 path: TMDB_SIDEBAR_PATHS.customMedia,
                 loadComponent: () => import('./custom-media/custom-media.component')
                     .then(m => m.CustomMediaComponent),
-                data: { title: 'Eigene Medien | Glotzenheft' }
+                title: 'Eigene Medien'
 
             }
         ]

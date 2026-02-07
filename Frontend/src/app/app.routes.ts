@@ -24,10 +24,7 @@ import { ResetPasswordComponent } from '../features/start/reset-password/reset-p
 import { ImpressumComponent } from '../features/footerCOMPONENTS/impressum/impressum.component';
 import { AboutComponent } from '../features/footerCOMPONENTS/about/about.component';
 import { PrivacyPolicyComponent } from '../features/footerCOMPONENTS/privacy-policy/privacy-policy.component';
-import { MultiSearchComponent } from '../features/media/mediaSearchCOMPONENTS/search/multi-search.component';
-import { AllUserTracklistsComponent } from '../features/user/userTracklists/all-user-tracklists/all-user-tracklists.component';
 import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
-import { ROUTES_LIST } from './shared/variables/routes-list';
 import {
     AUTHENTICATION_URLS,
     LEGAL_URLS,
@@ -47,18 +44,21 @@ export const routes: Routes = [
         path: AUTHENTICATION_URLS.logIn,
         component: LoginComponent,
         canActivate: [authGuard],
+        title: 'Einloggen',
     },
     {
         // 2
         path: AUTHENTICATION_URLS.register,
         component: RegisterComponent,
         canActivate: [authGuard],
+        title: 'Registrieren',
     },
     {
         // 3
         path: AUTHENTICATION_URLS.resetPassword,
         component: ResetPasswordComponent,
         canActivate: [authGuard],
+        title: 'Passwort ändern',
     },
     {
         // 4
@@ -80,50 +80,45 @@ export const routes: Routes = [
         // 6
         path: LEGAL_URLS.imprint,
         component: ImpressumComponent,
+        title: 'Impressum',
     },
     {
         // 7
         path: LEGAL_URLS.about,
         component: AboutComponent,
+        title: 'Über uns',
     },
     {
         // 8
         path: LEGAL_URLS.privacy,
         component: PrivacyPolicyComponent,
+        title: 'Datenschutzerklärung',
     },
     {
         // 9
-        path: ROUTES_LIST[4].fullUrl, // Route für die Multi-Suche
-        component: MultiSearchComponent,
-        canActivate: [authGuard],
+        path: LEGAL_URLS.terms,
+        component: AgbComponent,
+        title: 'Nutzungsbedingungen',
     },
     {
         // 10
-        path: ROUTES_LIST[12].fullUrl,
-        component: AllUserTracklistsComponent,
-        canActivate: [authGuard],
-    },
-    {
-        // 11
-        path: LEGAL_URLS.terms,
-        component: AgbComponent,
-    },
-    {
-        // 12
         path: SIDEBAR_OPTION_URLS.dataBackup,
         loadComponent: () =>
             import(
                 '../features/backup/pages/backup-page/backup-page.component'
             ).then((c) => c.BackupPageComponent),
         canActivate: [authGuard],
+        title: 'Meine Backups',
     },
     {
+        // 11
         path: AUTHENTICATION_URLS.deleteAccount,
         loadComponent: () =>
             import(
                 '../features/user/delete-user-account-page/delete-user-account-page.component'
             ).then((c) => c.DeleteUserAccountPageComponent),
         canActivate: [authGuard],
+        title: 'Account löschen'
     },
     {
         // rest

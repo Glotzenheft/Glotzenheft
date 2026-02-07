@@ -25,10 +25,6 @@ import { ROUTES_LIST } from '../../app/shared/variables/routes-list';
 
 const mediaRoutes: Routes = [
     {
-        path: 'all', // overview over all media (= films + tv shows)
-        component: FilmPageComponent,
-    },
-    {
         path: ROUTES_LIST[5].shortUrl + '/:id',
         component: FilmPageComponent,
     },

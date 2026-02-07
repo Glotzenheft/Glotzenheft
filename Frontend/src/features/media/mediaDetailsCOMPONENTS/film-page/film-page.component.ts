@@ -24,6 +24,7 @@ import {
     ReactiveFormsModule,
     Validators,
 } from '@angular/forms';
+import { Title } from '@angular/platform-browser';
 import { ButtonModule } from 'primeng/button';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -138,6 +139,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     private deleteSubscription: Subscription | null = null;
 
     constructor(
+        private titleService: Title,
         private readonly messageService: MessageService,
         private readonly formBuilder: FormBuilder,
         private readonly location: Location,
@@ -296,6 +298,10 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
         this.subscription = this.filmData$.subscribe({
             next: (res: Film) => {
+                this.titleService.setTitle(
+                    `${res.media.name} - Glotzenheft`,
+                );
+
                 this.trackListForm = this.formBuilder.group({
                     trackListName: [res.media.name, Validators.required],
                 });
