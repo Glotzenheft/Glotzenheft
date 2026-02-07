@@ -20,7 +20,7 @@ import {
     LOCALE_ID,
     provideZoneChangeDetection,
 } from '@angular/core';
-import { provideRouter } from '@angular/router';
+import {provideRouter, TitleStrategy} from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
@@ -36,6 +36,7 @@ import { ChartModule } from 'primeng/chart';
 import { provideAppConfig } from './app.providers';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
+import { CustomTitleStrategy } from './core/strategies/CustomTitle/custom-title.strategy';
 
 registerLocaleData(localeDe);
 
@@ -43,6 +44,7 @@ export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
         provideRouter(routes),
+        { provide: TitleStrategy, useClass: CustomTitleStrategy },
         provideClientHydration(withEventReplay()),
         provideAnimationsAsync(),
         providePrimeNG({
