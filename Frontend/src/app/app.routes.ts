@@ -24,10 +24,7 @@ import { ResetPasswordComponent } from '../features/start/reset-password/reset-p
 import { ImpressumComponent } from '../features/footerCOMPONENTS/impressum/impressum.component';
 import { AboutComponent } from '../features/footerCOMPONENTS/about/about.component';
 import { PrivacyPolicyComponent } from '../features/footerCOMPONENTS/privacy-policy/privacy-policy.component';
-import { MultiSearchComponent } from '../features/media/mediaSearchCOMPONENTS/search/multi-search.component';
-import { AllUserTracklistsComponent } from '../features/user/userTracklists/all-user-tracklists/all-user-tracklists.component';
 import { AgbComponent } from '../features/footerCOMPONENTS/agb/agb.component';
-import { ROUTES_LIST } from './shared/variables/routes-list';
 import {
     AUTHENTICATION_URLS,
     LEGAL_URLS,
