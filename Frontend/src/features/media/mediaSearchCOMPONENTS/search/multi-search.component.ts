@@ -23,6 +23,7 @@ import {
     ReactiveFormsModule,
 } from '@angular/forms';
 import { AsyncPipe, CommonModule } from '@angular/common';
+import { Title } from '@angular/platform-browser';
 import { Observable, Subscription } from 'rxjs';
 import { DialogModule } from 'primeng/dialog';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -117,6 +118,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
     public isPrevPageButtonDisabled: boolean = true;
 
     constructor(
+        private titleService: Title,
         private messageService: MessageService,
         private formBuilder: FormBuilder,
         private getMultiSearchResultUseCase: UC_GetMultiSearchResults,
@@ -136,7 +138,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             .subscribe({
                 next: (searchTerm) => {
                     if (!searchTerm.trim()) {
-                        this.pageOptions = [{ label: '1', value: 1 }];
+                        this.titleService.setTitle(`Suche - Glotzenheft`);
+                        this.pageOptions = [{ label: '0', value: 0 }];
                         this.totalPages = 0;
                         this.showErrorDialog();
                         return;
@@ -148,6 +151,8 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                         // return if old search query is equal to the new search query, e.g. user hits button multiple times while query term remains the same
                         return;
                     }
+
+                    this.titleService.setTitle(`Suche: ${searchTerm} - Glotzenheft`);
 
                     // resetting page limit and current page
                     this.nextPagesLimit = null;

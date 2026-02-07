@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params, Router } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
+import { Title } from '@angular/platform-browser';
 import { map, Observable, Subscription } from 'rxjs';
 import { CommonModule } from '@angular/common';
 import { PanelModule } from 'primeng/panel';
@@ -181,6 +182,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     private seasonDataSubscription: Subscription | null = null;
 
     constructor(
+        private titleService: Title,
         private readonly route: ActivatedRoute,
         private readonly formBuilder: FormBuilder,
         private readonly messageService: MessageService,
@@ -364,6 +366,10 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
         this.seasonDataSubscription = this.seasonData$.subscribe({
             next: (res: Season) => {
+                this.titleService.setTitle(
+                    `${res.media.name} - Glotzenheft`,
+                );
+
                 this.trackListForm = this.formBuilder.group({
                     trackListName: [res.media.name, Validators.required],
                 });
