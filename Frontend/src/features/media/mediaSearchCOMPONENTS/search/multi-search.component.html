@@ -17,20 +17,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 <h1>Suche</h1>
 
-<div class="pagination">
-    <app-pagination 
-        [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
-        [inpIsRightButtonDisabled]="isNextPageButtonDisabled" 
-        [inpSelectOptions]="pageOptions"
-        [inpTotalPages]="totalPages" 
-        [inpCurrentPage]="currentPage" 
-        [inpTotalResults]="totalResults"
-        [inpTotalPagesText]="'Gesamtergebnisse'" 
-        (outOnClickLeftButton)="changeToPrevPage()"
-        (outOnClickRightButton)="changeToNextPage()" 
-        (outOnChangeSelection)="onPageSelect($event)" 
+@if (totalResults > 0) {
+    <div class="pagination">
+        <app-pagination
+            [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
+            [inpIsRightButtonDisabled]="isNextPageButtonDisabled"
+            [inpSelectOptions]="pageOptions"
+            [inpTotalPages]="totalPages"
+            [inpCurrentPage]="currentPage"
+            [inpTotalResults]="totalResults"
+            [inpTotalPagesText]="'Gesamtergebnisse'"
+            (outOnClickLeftButton)="changeToPrevPage()"
+            (outOnClickRightButton)="changeToNextPage()"
+            (outOnChangeSelection)="onPageSelect($event)"
         />
-</div>
+    </div>
+}
 
 @if (isLoading) {
     <div class="loadingWrapper">
@@ -45,11 +47,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 }
 
-<div 
-    *ngIf="!hasError && results$ && (results$ | async) as res" 
+<div
+    *ngIf="!hasError && results$ && (results$ | async) as res"
     class="results-container"
     >
-    @if (res.results.length < 1) { 
+    @if (res.results.length < 1) {
         <div class="noDataFoundDIV">
             <h1>Keine Treffer gefunden</h1>
         </div>
@@ -60,11 +62,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         <form [formGroup]="tracklistFilterForm" class="selectMediaTypeFORM">
             <p-float-label variant="in">
-                <p-select 
-                    [options]="tracklistMediaSelectionList" 
+                <p-select
+                    [options]="tracklistMediaSelectionList"
                     optionLabel="german"
-                    formControlName="tracklistMediaTypeSelection" 
-                    (onClick)="setFilteredResults()" id="mediaTypeSelection" 
+                    formControlName="tracklistMediaTypeSelection"
+                    (onClick)="setFilteredResults()" id="mediaTypeSelection"
                     />
                 <label for="mediaTypeSelection">Medientyp</label>
             </p-float-label>
@@ -109,7 +111,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <div class="multisearchCardImg">
                                 @if (resItem.poster_path) {
                                     <img [src]="IMG_ROUTE + resItem.poster_path" [alt]="'Posterbild für ' + resItem.title" loading="lazy" />
-                                } 
+                                }
                                 @else {
                                     <p><i>Kein Bild vorhanden</i></p>
                                 }
@@ -126,6 +128,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <h3>Auf dieser Seite wurden keine Serien/Filme gefunden.</h3>
             </div>
             <div class="noDataFoundDIV">Bitte eine andere Seite wählen.</div>
+        }
+
+        @if (totalResults > 10 && visibleCountOnPage > 10) {
+            <div class="pagination pagination-bottom">
+                <app-pagination
+                    [inpIsLeftButtonDisabled]="isPrevPageButtonDisabled"
+                    [inpIsRightButtonDisabled]="isNextPageButtonDisabled"
+                    [inpSelectOptions]="pageOptions"
+                    [inpTotalPages]="totalPages"
+                    [inpCurrentPage]="currentPage"
+                    [inpTotalResults]="totalResults"
+                    [inpTotalPagesText]="'Gesamtergebnisse'"
+                    (outOnClickLeftButton)="changeToPrevPage()"
+                    (outOnClickRightButton)="changeToNextPage()"
+                    (outOnChangeSelection)="onPageSelect($event)"
+                />
+            </div>
         }
     }
 </div>
