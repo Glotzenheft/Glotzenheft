@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace App\Enum;
 
 
-enum TracklistTagsType: string
+enum TracklistTagType: string
 {
     case FRANCHISE = 'franchise';
     case STUDIO = 'studio';
