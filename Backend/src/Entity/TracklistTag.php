@@ -22,6 +22,8 @@ namespace App\Entity;
 
 use App\Enum\TracklistTagType;
 use App\Repository\TracklistTagRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -48,15 +50,25 @@ class TracklistTag
     #[ORM\Column(length: 50, nullable: true)]
     private ?string $icon = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tracklistTags')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?Tracklist $tracklist = null;
+    /**
+     * @var Collection<int, Tracklist>
+     */
+    #[ORM\ManyToMany(
+        targetEntity: Tracklist::class,
+        mappedBy: 'tracklistTags'
+    )]
+    private Collection $tracklists;
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $slug = null;
 
     #[ORM\Column]
     private ?bool $isSpoiler = null;
+
+    public function __construct()
+    {
+        $this->tracklists = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -123,14 +135,29 @@ class TracklistTag
         return $this;
     }
 
-    public function getTracklist(): ?Tracklist
+    /**
+     * @return Collection<int, Tracklist>
+     */
+    public function getTracklists(): Collection
     {
-        return $this->tracklist;
+        return $this->tracklists;
     }
 
-    public function setTracklist(?Tracklist $tracklist): static
+    public function addTracklist(Tracklist $tracklist): static
     {
-        $this->tracklist = $tracklist;
+        if (!$this->tracklists->contains($tracklist)) {
+            $this->tracklists->add($tracklist);
+            $tracklist->addTracklistTag($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTracklist(Tracklist $tracklist): static
+    {
+        if ($this->tracklists->removeElement($tracklist)) {
+            $tracklist->removeTracklistTag($this);
+        }
 
         return $this;
     }

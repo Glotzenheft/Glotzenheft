@@ -94,10 +94,9 @@ class Tracklist
     /**
      * @var Collection<int, TracklistTag>
      */
-    #[ORM\OneToMany(
+    #[ORM\ManyToMany(
         targetEntity: TracklistTag::class,
-        mappedBy: 'tracklist',
-        orphanRemoval: true
+        inversedBy: 'tracklists'
     )]
     private Collection $tracklistTags;
 
@@ -260,7 +259,7 @@ class Tracklist
     {
         if (!$this->tracklistTags->contains($tracklistTag)) {
             $this->tracklistTags->add($tracklistTag);
-            $tracklistTag->setTracklist($this);
+            $tracklistTag->addTracklist($this);
         }
 
         return $this;
@@ -269,10 +268,7 @@ class Tracklist
     public function removeTracklistTag(TracklistTag $tracklistTag): static
     {
         if ($this->tracklistTags->removeElement($tracklistTag)) {
-            // set the owning side to null (unless already changed)
-            if ($tracklistTag->getTracklist() === $this) {
-                $tracklistTag->setTracklist(null);
-            }
+            $tracklistTag->removeTracklist($this);
         }
 
         return $this;
