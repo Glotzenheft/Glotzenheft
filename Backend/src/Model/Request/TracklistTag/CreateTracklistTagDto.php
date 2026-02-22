@@ -61,13 +61,8 @@ class CreateTracklistTagDto
         public ?string $icon = null,
 
         #[SerializedName('tracklist_id')]
-        #[Assert\NotBlank(message: 'Field "tracklist_id" is required.')]
         #[Assert\Type('integer')]
         public ?int $tracklistId = null,
-
-        #[SerializedName('slug')]
-        #[Assert\Length(min: 1, max: 255)]
-        public ?string $slug = null,
 
         #[SerializedName('is_spoiler')]
         #[Assert\Type('boolean')]
