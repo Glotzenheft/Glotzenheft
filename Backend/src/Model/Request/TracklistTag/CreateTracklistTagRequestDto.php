@@ -24,19 +24,16 @@ use App\Enum\TracklistTagType;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateTracklistTagDto
+class CreateTracklistTagRequestDto
 {
     public function __construct(
-        #[SerializedName('tracklist_tag_id')]
-        #[Assert\NotBlank(message: 'Field "tracklist_tag_id" is required.')]
-        #[Assert\Type('integer')]
-        public ?int $tracklistTagId = null,
-
         #[SerializedName('tag_name')]
+        #[Assert\NotBlank(message: 'Field "tag_name" is required.')]
         #[Assert\Length(min: 1, max: 255)]
         public ?string $tagName = null,
 
         #[SerializedName('tracklist_tag_type')]
+        #[Assert\NotBlank(message: 'Field "tracklist_tag_type" is required.')]
         #[Assert\Type(
             type: TracklistTagType::class,
             message: 'Invalid tracklist tag type.'
@@ -63,9 +60,9 @@ class UpdateTracklistTagDto
         )]
         public ?string $icon = null,
 
-        #[SerializedName('slug')]
-        #[Assert\Length(min: 1, max: 255)]
-        public ?string $slug = null,
+        #[SerializedName('tracklist_id')]
+        #[Assert\Type('integer')]
+        public ?int $tracklistId = null,
 
         #[SerializedName('is_spoiler')]
         #[Assert\Type('boolean')]
