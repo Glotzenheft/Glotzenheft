@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace App\Entity;
 
+use App\Entity\Traits\TimestampsTrait;
 use App\Enum\TracklistTagType;
 use App\Repository\TracklistTagRepository;
 use Doctrine\Common\Collections\ArrayCollection;
@@ -30,6 +31,8 @@ use Doctrine\ORM\Mapping as ORM;
 #[ORM\Entity(repositoryClass: TracklistTagRepository::class)]
 class TracklistTag
 {
+    use TimestampsTrait;
+
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column]
@@ -64,6 +67,10 @@ class TracklistTag
 
     #[ORM\Column]
     private ?bool $isSpoiler = null;
+
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $user = null;
 
     public function __construct()
     {
@@ -182,6 +189,18 @@ class TracklistTag
     public function setIsSpoiler(bool $isSpoiler): static
     {
         $this->isSpoiler = $isSpoiler;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }
