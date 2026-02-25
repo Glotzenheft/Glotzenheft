@@ -29,6 +29,7 @@ use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: TracklistTagRepository::class)]
+#[ORM\HasLifecycleCallbacks]
 class TracklistTag
 {
     use TimestampsTrait;
