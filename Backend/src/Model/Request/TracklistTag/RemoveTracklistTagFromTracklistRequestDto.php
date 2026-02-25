@@ -23,7 +23,7 @@ namespace App\Model\Request\TracklistTag;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class RemoveTracklistTagFromTracklistRequestDto
+readonly class RemoveTracklistTagFromTracklistRequestDto
 {
     public function __construct(
         #[SerializedName('tracklist_tag_id')]

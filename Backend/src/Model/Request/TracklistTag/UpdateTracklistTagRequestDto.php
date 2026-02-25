@@ -24,7 +24,7 @@ use App\Enum\TracklistTagType;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-class UpdateTracklistTagRequestDto
+readonly class UpdateTracklistTagRequestDto
 {
     public function __construct(
         #[SerializedName('tracklist_tag_id')]
