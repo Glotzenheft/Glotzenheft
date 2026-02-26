@@ -16,9 +16,12 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\TracklistTag;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -32,28 +35,21 @@ class TracklistTagRepository extends ServiceEntityRepository
         parent::__construct($registry, TracklistTag::class);
     }
 
-    //    /**
-    //     * @return TracklistTag[] Returns an array of TracklistTag objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
+    public function findTagWithTracklistsByIdAndUser(User $user, int $id): ?TracklistTag
+    {
+        return $this->createQueryBuilder('tag')
+            ->addSelect('tracklists')
+            ->leftJoin('tag.tracklists', 'tracklists')
 
-    //    public function findOneBySomeField($value): ?TracklistTag
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+            ->addSelect('partial media.{id, originalName, name, posterPath, type}')
+            ->leftJoin('tracklists.media', 'media')
+
+            ->andWhere('tag.id = :id')
+            ->andWhere('tag.user = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }
