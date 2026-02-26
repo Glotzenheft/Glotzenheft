@@ -20,18 +20,22 @@ declare(strict_types=1);
 
 namespace App\Controller\API\TracklistTag;
 
+use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\TracklistTag\CreateTracklistTagRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\TracklistTag\TracklistTagService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistTagController extends AbstractController
 {
+    use ConditionalResponseTrait;
+
     public function __construct(
         private readonly TracklistTagService $tracklistTagService
     ){}
@@ -117,12 +121,19 @@ class TracklistTagController extends AbstractController
     )]
     public function createTracklistTagEndpoint(
         #[MapRequestPayload] CreateTracklistTagRequestDto $dto,
-        User $user
+        User $user,
+        Request $request,
     ): JsonResponse
     {
-        return $this->json(
-            data: $this->tracklistTagService->createTracklistTag($user, $dto),
-            status: Response::HTTP_CREATED
+        $tagResponse = $this->tracklistTagService->createTracklistTag(
+            user:$user,
+            dto:$dto
+        );
+
+        return $this->createConditionalResponse(
+            request: $request,
+            data: $tagResponse,
+            successStatus: Response::HTTP_CREATED
         );
     }
 }
