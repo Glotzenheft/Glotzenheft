@@ -58,7 +58,7 @@ class TracklistTagController extends AbstractController
     #[IsAuthenticated]
     #[Route(
         path: '/api/tags',
-        name: 'get_tracklist_tags',
+        name: 'get_all_tracklist_tags',
         methods: ['GET'],
         stateless: true,
     )]
@@ -93,8 +93,25 @@ class TracklistTagController extends AbstractController
 
     #[IsAuthenticated]
     #[Route(
+        path: '/api/tags/tracklists',
+        name: 'get_all_tracklist_tags_with_tracklists',
+        methods: ['GET'],
+        stateless: true,
+    )]
+    public function getAllTracklistTagsWithTracklistsEndpoint(User $user): JsonResponse
+    {
+        $response = $this->tracklistTagService->getAllTracklistTagsWithTracklists($user);
+
+        return $this->json(
+            data: $response,
+            status: Response::HTTP_OK
+        );
+    }
+
+    #[IsAuthenticated]
+    #[Route(
         path:'/api/tags',
-        name: 'app_tracklist_tag',
+        name: 'create_tracklist_tag',
         methods: ['POST'],
         stateless: true,
     )]

@@ -102,6 +102,20 @@ readonly class TracklistTagService
 
     /**
      * @param User $user
+     * @return array
+     */
+    public function getAllTracklistTagsWithTracklists(User $user): array
+    {
+        $tags = $this->tracklistTagRepository->findAllTagsWithTracklistsByUser($user);
+
+        return array_map(
+            fn(TracklistTag $tag) => TracklistTagResponseDto::fromEntity($tag),
+            $tags
+        );
+    }
+
+    /**
+     * @param User $user
      * @param CreateTracklistTagRequestDto $dto
      * @return TracklistTagResponseDto
      */
