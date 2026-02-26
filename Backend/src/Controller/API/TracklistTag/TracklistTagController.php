@@ -75,9 +75,20 @@ class TracklistTagController extends AbstractController
         methods: ['GET'],
         stateless: true,
     )]
-    public function getTracklistTagWithTracklistsEndpoint(User $user, int $tagId): JsonResponse
+    public function getTracklistTagWithTracklistsEndpoint(
+        User $user,
+        int $tagId
+    ): JsonResponse
     {
-        return $this->json([]);
+        $response = $this->tracklistTagService->getTracklistTagWithTracklists(
+            user: $user,
+            id: $tagId
+        );
+
+        return $this->json(
+            data: $response,
+            status: Response::HTTP_OK
+        );
     }
 
     #[IsAuthenticated]

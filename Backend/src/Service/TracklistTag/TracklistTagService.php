@@ -77,9 +77,27 @@ readonly class TracklistTagService
         );
     }
 
-    public function getTracklistTagWithTracklists(User $user, int $id): array
+    /**
+     * @param User $user
+     * @param int $id
+     * @return TracklistTagResponseDto
+     */
+    public function getTracklistTagWithTracklists(
+        User $user,
+        int $id
+    ): TracklistTagResponseDto
     {
-        return [];
+        $tag = $this->tracklistTagRepository->findTagWithTracklistsByIdAndUser(
+            user:$user,
+            id: $id
+        );
+
+        if (!$tag instanceof TracklistTag)
+        {
+            throw new NotFoundHttpException(message: 'Tag not found or access denied.');
+        }
+
+        return TracklistTagResponseDto::fromEntity($tag);
     }
 
     /**
