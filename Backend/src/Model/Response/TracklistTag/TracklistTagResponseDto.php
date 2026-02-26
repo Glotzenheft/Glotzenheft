@@ -32,11 +32,18 @@ readonly class TracklistTagResponseDto
         public ?string $description,
         public ?string $icon,
         public ?string $slug,
-        public bool $isSpoiler
+        public bool $isSpoiler,
+        public array $tracklists
     ){}
 
     public static function fromEntity(TracklistTag $tag): self
     {
+        $tracklistDtos = [];
+        foreach ($tag->getTracklists() as $tracklist)
+        {
+            $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist);
+        }
+
         return new self(
             id: $tag->getId(),
             tagName: $tag->getTagName(),
@@ -45,7 +52,8 @@ readonly class TracklistTagResponseDto
             description: $tag->getDescription(),
             icon: $tag->getIcon(),
             slug: $tag->getSlug(),
-            isSpoiler: $tag->isSpoiler()
+            isSpoiler: $tag->isSpoiler(),
+            tracklists: $tracklistDtos,
         );
     }
 }
