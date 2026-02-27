@@ -46,7 +46,8 @@ trait ConditionalResponseTrait
         mixed $data,
         int $successStatus,
         array $context = []
-    ): JsonResponse {
+    ): JsonResponse
+    {
         $wantsMinimalByQuery = $request->query->get('return') === 'minimal';
         $preferHeader = $request->headers->get(
             key: 'Prefer',
@@ -54,7 +55,8 @@ trait ConditionalResponseTrait
         );
         $wantsMinimalByHeader = str_contains($preferHeader, 'return=minimal');
 
-        if ($wantsMinimalByQuery || $wantsMinimalByHeader) {
+        if ($wantsMinimalByQuery || $wantsMinimalByHeader)
+        {
             return $this->json(
                 data: null,
                 status: Response::HTTP_NO_CONTENT
