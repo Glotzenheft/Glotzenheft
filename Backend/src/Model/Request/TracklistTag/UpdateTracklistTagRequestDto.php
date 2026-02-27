@@ -27,11 +27,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class UpdateTracklistTagRequestDto
 {
     public function __construct(
-        #[SerializedName('tracklist_tag_id')]
-        #[Assert\NotBlank(message: 'Field "tracklist_tag_id" is required.')]
-        #[Assert\Type('integer')]
-        public ?int $tracklistTagId = null,
-
         #[SerializedName('tag_name')]
         #[Assert\Length(min: 1, max: 255)]
         public ?string $tagName = null,
@@ -62,10 +57,6 @@ readonly class UpdateTracklistTagRequestDto
             maxMessage: 'Your icon class name is too long.',
         )]
         public ?string $icon = null,
-
-        #[SerializedName('slug')]
-        #[Assert\Length(min: 1, max: 255)]
-        public ?string $slug = null,
 
         #[SerializedName('is_spoiler')]
         #[Assert\Type('boolean')]
