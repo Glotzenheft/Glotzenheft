@@ -23,6 +23,7 @@ namespace App\Controller\API\TracklistTag;
 use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\TracklistTag\CreateTracklistTagRequestDto;
+use App\Model\Request\TracklistTag\UpdateTracklistTagRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\TracklistTag\TracklistTagService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -134,6 +135,35 @@ class TracklistTagController extends AbstractController
             request: $request,
             data: $tagResponse,
             successStatus: Response::HTTP_CREATED
+        );
+    }
+
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tags/{tagId}',
+        name: 'update_tracklist_tag',
+        requirements: ['tagId' => '\d+'],
+        methods: ['PATCH'],
+        stateless: true,
+    )]
+    public function updateTracklistTagEndpoint(
+        int $tagId,
+        #[MapRequestPayload] UpdateTracklistTagRequestDto $dto,
+        User $user,
+        Request $request,
+    ): JsonResponse
+    {
+        $tagResponse = $this->tracklistTagService->updateTracklistTag(
+            id: $tagId,
+            user: $user,
+            dto: $dto,
+            requestData: $request->toArray()
+        );
+
+        return $this->createConditionalResponse(
+            request: $request,
+            data: $tagResponse,
+            successStatus: Response::HTTP_OK
         );
     }
 }

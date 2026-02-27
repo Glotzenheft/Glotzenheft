@@ -24,9 +24,11 @@ use App\Entity\Tracklist;
 use App\Entity\TracklistTag;
 use App\Entity\User;
 use App\Model\Request\TracklistTag\CreateTracklistTagRequestDto;
+use App\Model\Request\TracklistTag\UpdateTracklistTagRequestDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
 use App\Repository\TracklistRepository;
 use App\Repository\TracklistTagRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
@@ -164,6 +166,110 @@ readonly class TracklistTagService
         $this->entityManager->flush();
 
         return TracklistTagResponseDto::fromEntity($tracklistTag);
+    }
+
+    /**
+     * @param int $id
+     * @param User $user
+     * @param UpdateTracklistTagRequestDto $dto
+     * @param array $requestData
+     * @return TracklistTagResponseDto
+     */
+    public function updateTracklistTag(
+        int $id,
+        User $user,
+        UpdateTracklistTagRequestDto $dto,
+        array $requestData
+    ): TracklistTagResponseDto
+    {
+        $tag = $this->findAndValidateTracklistTag(
+            user: $user,
+            id: $id
+        );
+
+        $newTagName = (array_key_exists('tag_name', $requestData)
+            && $dto->tagName !== null
+            && trim($dto->tagName) !== ''
+        )
+            ? $dto->tagName
+            : $tag->getTagName();
+
+        $newType = (array_key_exists('tracklist_tag_type', $requestData)
+            && $dto->tracklistTagType !== null
+        )
+            ? $dto->tracklistTagType
+            : $tag->getTracklistTagType();
+
+        $newSlug = $this->slugify($newTagName);
+
+        $identityChanged = $newSlug !== $tag->getSlug() || $newType !== $tag->getTracklistTagType();
+
+        if ($identityChanged)
+        {
+            $existingTag = $this->tracklistTagRepository->findOneBy([
+                'slug' => $newSlug,
+                'user' => $user,
+                'tracklistTagType' => $newType
+            ]);
+
+            if ($existingTag instanceof TracklistTag)
+            {
+                throw new ConflictHttpException('A tag with this name already exists in this category.');
+            }
+
+            $tag->setTagName($newTagName)
+                ->setSlug($newSlug)
+                ->setTracklistTagType($newType);
+        }
+
+        if (array_key_exists('color', $requestData))
+        {
+            $tag->setColor($dto->color);
+        }
+
+        if (array_key_exists('icon', $requestData))
+        {
+            $tag->setIcon($dto->icon);
+        }
+
+        if (array_key_exists('description', $requestData))
+        {
+            $tag->setDescription($dto->description);
+        }
+
+        if (array_key_exists('is_spoiler', $requestData)
+            && $dto->isSpoiler !== null
+        )
+        {
+            $tag->setIsSpoiler($dto->isSpoiler);
+        }
+
+        $tag->setUpdatedAt(new DateTimeImmutable());
+        $this->entityManager->flush();
+        return TracklistTagResponseDto::fromEntity($tag);
+    }
+
+    /**
+     * @param User $user
+     * @param int $id
+     * @return TracklistTag
+     */
+    private function findAndValidateTracklistTag(
+        User $user,
+        int $id
+    ): TracklistTag
+    {
+        $tag = $this->tracklistTagRepository->findOneBy([
+            'id' => $id,
+            'user' => $user,
+        ]);
+
+        if (!$tag instanceof TracklistTag)
+        {
+            throw new NotFoundHttpException(message: 'Tag not found or access denied.');
+        }
+
+        return $tag;
     }
 
     /**
