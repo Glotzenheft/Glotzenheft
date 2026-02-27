@@ -28,3 +28,7 @@
 /config/public.pem
 /config/private.pem:Zone.Identifier
 /config/public.pem:Zone.Identifier
+
+###> phpstan/phpstan ###
+phpstan.neon
+###< phpstan/phpstan ###
