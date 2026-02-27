@@ -166,4 +166,28 @@ class TracklistTagController extends AbstractController
             successStatus: Response::HTTP_OK
         );
     }
+
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tags/{tagId}',
+        name: 'delete_tracklist_tag',
+        requirements: ['tagId' => '\d+'],
+        methods: ['DELETE'],
+        stateless: true,
+    )]
+    public function deleteTracklistTagEndpoint(
+        int $tagId,
+        User $user,
+    ): JsonResponse
+    {
+        $this->tracklistTagService->deleteTracklistTag(
+            id: $tagId,
+            user: $user
+        );
+
+        return $this->json(
+            data: null,
+            status: Response::HTTP_NO_CONTENT
+        );
+    }
 }

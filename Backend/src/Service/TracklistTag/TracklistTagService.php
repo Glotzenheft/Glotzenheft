@@ -249,6 +249,25 @@ readonly class TracklistTagService
     }
 
     /**
+     * @param int $id
+     * @param User $user
+     * @return void
+     */
+    public function deleteTracklistTag(
+        int $id,
+        User $user
+    ): void
+    {
+        $tag = $this->findAndValidateTracklistTag(
+            user: $user,
+            id: $id
+        );
+
+        $this->entityManager->remove($tag);
+        $this->entityManager->flush();
+    }
+
+    /**
      * @param User $user
      * @param int $id
      * @return TracklistTag
