@@ -23,12 +23,12 @@ namespace App\Model\Request\TracklistTag;
 use Symfony\Component\Serializer\Attribute\SerializedName;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class TracklistTagIdRequestDto
+readonly class TracklistTagIdsRequestDto
 {
     public function __construct(
-        #[SerializedName('tracklist_tag_id')]
-        #[Assert\NotBlank(message: 'Query parameter "tracklist_tag_id" is required.')]
-        #[Assert\Type('integer')]
-        public ?int $tracklistTagId = null
+        #[SerializedName('tracklist_tag_ids')]
+        #[Assert\NotBlank(message: 'Field "tracklist_tag_ids" is required.')]
+        #[Assert\All([new Assert\Type('integer')])]
+        public ?array $tracklistTagIdsArray = null
     ) {}
 }
