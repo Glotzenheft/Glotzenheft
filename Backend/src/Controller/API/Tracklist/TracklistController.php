@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Tracklist;
 
+use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\Tracklist\CreateTracklistDto;
 use App\Model\Request\Tracklist\TracklistIdDto;
@@ -36,6 +37,8 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistController extends AbstractController
 {
+    use ConditionalResponseTrait;
+
     public function __construct(
         private readonly TracklistService $tracklistService
     ){}
@@ -97,12 +100,12 @@ class TracklistController extends AbstractController
      * @return JsonResponse
      * @example POST /api/tracklist
      *          Header: Authorization: Bearer <JWT-TOKEN>
-     *          Required parameter in json body:
+     *          Required parameter in JSON body:
      *          - `tracklist_status` (string) - Status of the tracklist.
      *          - `tracklist_name` (string) - Name of the tracklist.
      *          - `media_id` (int) - ID of the associated media.
      *          - `media_type` (string) - Type of the media.
-     *          Optional parameter in json body:
+     *          Optional parameter in JSON body:
      *          - `tracklist_rating` (int) - Rating of the tracklist.
      *          - `tracklist_start_date` (date)
      *          - `tracklist_finish_date` (date)
@@ -144,9 +147,9 @@ class TracklistController extends AbstractController
      * @return JsonResponse
      * @example PATCH /api/tracklist
      *          Header: Authorization: Bearer <JWT-TOKEN>
-     *          Required parameter in json body:
+     *          Required parameter in JSON body:
      *          - `tracklist_id` (int) - The ID of the tracklist to update.
-     *          Optional parameter in json body:
+     *          Optional parameter in JSON body:
      *          - `tracklist_status` (string) - Status of the tracklist.
      *          - `tracklist_name` (string) - Name of the tracklist.
      *          - `tracklist_rating` (int) - Rating of the tracklist.
@@ -185,7 +188,7 @@ class TracklistController extends AbstractController
     }
 
     /**
-     * Delete a tracklist and its tracklist season and tracklist episodes if avaible.
+     * Delete a tracklist and its tracklist season and tracklist episodes if available.
      *
      * @param TracklistIdDto $dto
      * @param User $user
@@ -214,45 +217,6 @@ class TracklistController extends AbstractController
         return $this->json(
             data: null,
             status: Response::HTTP_NO_CONTENT
-        );
-    }
-
-    /**
-     * Erstellt eine HTTP-Antwort, die entweder das volle Datenobjekt (2xx)
-     * oder eine leere Antwort (204) zurückgibt, basierend auf den
-     * Client-Präferenzen im Query oder Header.
-     *
-     * @param Request $request
-     * @param mixed $data
-     * @param int $successStatus
-     * @param array $context
-     * @return JsonResponse
-     */
-    private function createConditionalResponse(
-        Request $request,
-        mixed $data,
-        int $successStatus,
-        array $context = []
-    ): JsonResponse
-    {
-        $wantsMinimalByQuery = $request->query->get('return') === 'minimal';
-        $preferHeader = $request->headers->get(
-            key: 'Prefer',
-            default: ''
-        );
-        $wantsMinimalByHeader = str_contains($preferHeader, 'return=minimal');
-        if ($wantsMinimalByQuery || $wantsMinimalByHeader)
-        {
-            return $this->json(
-                data: null,
-                status: Response::HTTP_NO_CONTENT
-            );
-        }
-
-        return $this->json(
-            data: $data,
-            status: $successStatus,
-            context: $context
         );
     }
 }

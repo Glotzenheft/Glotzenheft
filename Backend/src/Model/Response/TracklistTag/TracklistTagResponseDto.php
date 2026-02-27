@@ -1,0 +1,59 @@
+<?php
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+declare(strict_types=1);
+
+namespace App\Model\Response\TracklistTag;
+
+use App\Entity\TracklistTag;
+
+readonly class TracklistTagResponseDto
+{
+    public function __construct(
+        public int $id,
+        public string $tagName,
+        public string $tracklistTagType,
+        public ?string $color,
+        public ?string $description,
+        public ?string $icon,
+        public ?string $slug,
+        public bool $isSpoiler,
+        public array $tracklists
+    ){}
+
+    public static function fromEntity(TracklistTag $tag): self
+    {
+        $tracklistDtos = [];
+        foreach ($tag->getTracklists() as $tracklist)
+        {
+            $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist);
+        }
+
+        return new self(
+            id: $tag->getId(),
+            tagName: $tag->getTagName(),
+            tracklistTagType: $tag->getTracklistTagType()->value,
+            color: $tag->getColor(),
+            description: $tag->getDescription(),
+            icon: $tag->getIcon(),
+            slug: $tag->getSlug(),
+            isSpoiler: $tag->isSpoiler(),
+            tracklists: $tracklistDtos,
+        );
+    }
+}

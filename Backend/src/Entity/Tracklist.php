@@ -91,9 +91,19 @@ class Tracklist
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $backupHash = null;
 
+    /**
+     * @var Collection<int, TracklistTag>
+     */
+    #[ORM\ManyToMany(
+        targetEntity: TracklistTag::class,
+        inversedBy: 'tracklists'
+    )]
+    private Collection $tracklistTags;
+
     public function __construct()
     {
         $this->tracklistSeasons = new ArrayCollection();
+        $this->tracklistTags = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -233,6 +243,33 @@ class Tracklist
     public function setBackupHash(?string $backupHash): static
     {
         $this->backupHash = $backupHash;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TracklistTag>
+     */
+    public function getTracklistTags(): Collection
+    {
+        return $this->tracklistTags;
+    }
+
+    public function addTracklistTag(TracklistTag $tracklistTag): static
+    {
+        if (!$this->tracklistTags->contains($tracklistTag)) {
+            $this->tracklistTags->add($tracklistTag);
+            $tracklistTag->addTracklist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTracklistTag(TracklistTag $tracklistTag): static
+    {
+        if ($this->tracklistTags->removeElement($tracklistTag)) {
+            $tracklistTag->removeTracklist($this);
+        }
 
         return $this;
     }
