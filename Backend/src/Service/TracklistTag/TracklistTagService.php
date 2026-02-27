@@ -29,6 +29,7 @@ use App\Model\Response\TracklistTag\TracklistTagLightResponseDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
 use App\Repository\TracklistRepository;
 use App\Repository\TracklistTagRepository;
+use App\Service\Traits\EntityValidationTrait;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -37,6 +38,8 @@ use Symfony\Component\String\Slugger\SluggerInterface;
 
 readonly class TracklistTagService
 {
+    use EntityValidationTrait;
+
     public function __construct(
         private TracklistTagRepository $tracklistTagRepository,
         private SluggerInterface       $slugger,
@@ -183,7 +186,8 @@ readonly class TracklistTagService
     {
         $tag = $this->findAndValidateTracklistTag(
             user: $user,
-            id: $id
+            id: $id,
+            tracklistTagRepository: $this->tracklistTagRepository
         );
 
         $newTagName = (array_key_exists('tag_name', $requestData)
@@ -260,34 +264,12 @@ readonly class TracklistTagService
     {
         $tag = $this->findAndValidateTracklistTag(
             user: $user,
-            id: $id
+            id: $id,
+            tracklistTagRepository: $this->tracklistTagRepository
         );
 
         $this->entityManager->remove($tag);
         $this->entityManager->flush();
-    }
-
-    /**
-     * @param User $user
-     * @param int $id
-     * @return TracklistTag
-     */
-    private function findAndValidateTracklistTag(
-        User $user,
-        int $id
-    ): TracklistTag
-    {
-        $tag = $this->tracklistTagRepository->findOneBy([
-            'id' => $id,
-            'user' => $user,
-        ]);
-
-        if (!$tag instanceof TracklistTag)
-        {
-            throw new NotFoundHttpException(message: 'Tag not found or access denied.');
-        }
-
-        return $tag;
     }
 
     /**
