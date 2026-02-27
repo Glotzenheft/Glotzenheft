@@ -77,4 +77,35 @@ class TracklistTagRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param User $user
+     * @param int $id
+     * @return TracklistTag|null
+     */
+    public function findLightTagByIdAndUser(User $user, int $id): ?TracklistTag
+    {
+        return $this->createQueryBuilder('tag')
+            ->select('partial tag.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler}')
+            ->andWhere('tag.id = :id')
+            ->andWhere('tag.user = :user')
+            ->setParameter('id', $id)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findAllLightTagsByUser(User $user): array
+    {
+        return $this->createQueryBuilder('tag')
+            ->select('partial tag.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler}')
+            ->andWhere('tag.user = :user')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
 }

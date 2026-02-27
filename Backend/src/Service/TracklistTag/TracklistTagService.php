@@ -25,6 +25,7 @@ use App\Entity\TracklistTag;
 use App\Entity\User;
 use App\Model\Request\TracklistTag\CreateTracklistTagRequestDto;
 use App\Model\Request\TracklistTag\UpdateTracklistTagRequestDto;
+use App\Model\Response\TracklistTag\TracklistTagLightResponseDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
 use App\Repository\TracklistRepository;
 use App\Repository\TracklistTagRepository;
@@ -46,35 +47,33 @@ readonly class TracklistTagService
     /**
      * @param User $user
      * @param int $id
-     * @return TracklistTagResponseDto
+     * @return TracklistTagLightResponseDto
      */
-    public function getTracklistTag(User $user, int $id): TracklistTagResponseDto
+    public function getTracklistTag(User $user, int $id): TracklistTagLightResponseDto
     {
-        $tag = $this->tracklistTagRepository->findOneBy([
-            'id' => $id,
-            'user' => $user,
-        ]);
+        $tag = $this->tracklistTagRepository->findLightTagByIdAndUser(
+            user:$user,
+            id: $id
+        );
 
         if (!$tag instanceof TracklistTag)
         {
             throw new NotFoundHttpException(message: 'Tag not found or access denied.');
         }
 
-        return TracklistTagResponseDto::fromEntity($tag);
+        return TracklistTagLightResponseDto::fromEntity($tag);
     }
 
     /**
      * @param User $user
-     * @return TracklistTagResponseDto[]
+     * @return TracklistTagLightResponseDto[]
      */
     public function getAllTracklistTags(User $user): array
     {
-        $tags = $this->tracklistTagRepository->findBy([
-            'user' => $user,
-        ]);
+        $tags = $this->tracklistTagRepository->findAllLightTagsByUser(user: $user);
 
         return array_map(
-            fn(TracklistTag $tag) => TracklistTagResponseDto::fromEntity($tag),
+            fn(TracklistTag $tag) => TracklistTagLightResponseDto::fromEntity($tag),
             $tags
         );
     }
