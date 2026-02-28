@@ -30,12 +30,12 @@ readonly class TracklistResponseDto
         public int    $id,
         public string $tracklistName,
         public string $createdAt,
-        public string $updatedAt,
+        public ?string $updatedAt,
         public string $status,
-        public int    $rating,
+        public ?int    $rating,
         public bool   $isRewatching,
-        public string $startDate,
-        public string $finishDate,
+        public ?string $startDate,
+        public ?string $finishDate,
         /**
          * @var TracklistSeasonDetailDataDto[]
          */
