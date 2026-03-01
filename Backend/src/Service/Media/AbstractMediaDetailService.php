@@ -40,11 +40,14 @@ abstract class AbstractMediaDetailService
 
     /**
      * @param MediaDetailDtoInterface $dto
-     * @param int|null $userId
+     * @param User $user
      * @return array{media: Media, tracklists: array}|array{error: string, code: int}
      * @throws ApiException
      */
-    public function getDetails(MediaDetailDtoInterface $dto, ?int $userId): array
+    public function getDetails(
+        MediaDetailDtoInterface $dto,
+        User $user,
+    ): array
     {
         $media = $this->findMedia($dto);
         if (!$media instanceof Media)
@@ -70,19 +73,7 @@ abstract class AbstractMediaDetailService
             language: $dto->getLanguage()
         );
 
-        $tracklists = [];
-        if ($userId)
-        {
-            $user = $this->entityManager->getRepository(User::class)->find($userId);
-            if (!$user instanceof User)
-            {
-                return [
-                    'error' => 'User not found.',
-                    'code' => 404
-                ];
-            }
-            $tracklists = $this->tracklistRepository->findByUserAndMediaWithSeasonsAndEpisodes($user, $media);
-        }
+        $tracklists = $this->tracklistRepository->findByUserAndMediaWithSeasonsAndEpisodes($user, $media);
 
         return [
             'media' => $media,
