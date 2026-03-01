@@ -36,12 +36,23 @@ readonly class TracklistTagResponseDto
         public array $tracklists
     ){}
 
-    public static function fromEntity(TracklistTag $tag): self
+    /**
+     * @param TracklistTag $tag
+     * @param TracklistTracklistTagResponseDto[]|null $tracklistDtos
+     * @return self
+     */
+    public static function fromEntity(
+        TracklistTag $tag,
+        ?array $tracklistDtos = null,
+    ): self
     {
-        $tracklistDtos = [];
-        foreach ($tag->getTracklists() as $tracklist)
+        if ($tracklistDtos === null)
         {
-            $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist);
+            $tracklistDtos = [];
+            foreach ($tag->getTracklists() as $tracklist)
+            {
+                $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist);
+            }
         }
 
         return new self(
