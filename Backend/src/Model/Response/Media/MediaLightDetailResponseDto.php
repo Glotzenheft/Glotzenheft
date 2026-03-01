@@ -20,7 +20,30 @@ declare(strict_types=1);
 
 namespace App\Model\Response\Media;
 
+use App\Entity\Media;
+
 readonly class MediaLightDetailResponseDto
 {
+    public function __construct(
+        public int $id,
+        public string $createdAt,
+        public ?string $updatedAt,
+        public ?string $posterPath,
+        public string $type
+    ){}
 
+    /**
+     * @param Media $media
+     * @return self
+     */
+    public static function fromEntity(Media $media): self
+    {
+        return new self(
+            id: $media->getId(),
+            createdAt: $media->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $media->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            posterPath: $media->getPosterPath(),
+            type: $media->getType()->value,
+        );
+    }
 }

@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace App\Model\Response\Tracklist;
 
+use App\Entity\Tracklist;
 use App\Model\Response\Media\MediaLightDetailResponseDto;
 use App\Model\Response\Tracklist\TracklistSeason\TracklistSeasonDetailDataDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
@@ -27,26 +28,76 @@ use App\Model\Response\TracklistTag\TracklistTagResponseDto;
 readonly class TracklistResponseDto
 {
     public function __construct(
-        public int    $id,
-        public string $tracklistName,
-        public string $createdAt,
+        public int     $id,
+        public string  $tracklistName,
+        public string  $createdAt,
         public ?string $updatedAt,
-        public string $status,
+        public string  $status,
         public ?int    $rating,
-        public bool   $isRewatching,
+        public bool    $isRewatching,
         public ?string $startDate,
         public ?string $finishDate,
+        public MediaLightDetailResponseDto $media,
         /**
          * @var TracklistSeasonDetailDataDto[]
          */
-        public array  $tracklistSeasons,
+        public array   $tracklistSeasons,
         /**
          * @var TracklistTagResponseDto[]
          */
-        public array  $tags,
-        /**
-         * @var MediaLightDetailResponseDto[]
-         */
-        public array  $media,
+        public array   $tags,
     ){}
+
+    /**
+     * @param Tracklist $tracklist
+     * @param MediaLightDetailResponseDto|null $mediaDto
+     * @param TracklistTagResponseDto[]|null $tagDtos
+     * @param TracklistSeasonDetailDataDto[]|null $tracklistSeasonDtos
+     * @return self
+     */
+    public static function fromEntity(
+        Tracklist $tracklist,
+        ?MediaLightDetailResponseDto $mediaDto = null,
+        ?array $tagDtos = null,
+        ?array $tracklistSeasonDtos = null,
+    ): self
+    {
+        if ($mediaDto === null)
+        {
+            $mediaDto = MediaLightDetailResponseDto::fromEntity($tracklist->getMedia());
+        }
+
+        if ($tagDtos === null)
+        {
+            $tagDtos = [];
+            foreach ($tracklist->getTracklistTags() as $tag)
+            {
+                $tagDtos[] = TracklistTagResponseDto::fromEntity($tag);
+            }
+        }
+
+        if ($tracklistSeasonDtos === null)
+        {
+            $tracklistSeasonDtos = [];
+            foreach ($tracklist->getTracklistSeasons() as $season)
+            {
+                $tracklistSeasonDtos[] = TracklistSeasonDetailDataDto::fromEntity($season);
+            }
+        }
+
+        return new self(
+            id: $tracklist->getId(),
+            tracklistName: $tracklist->getTracklistName(),
+            createdAt: $tracklist->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $tracklist->getUpdatedAt()->format('Y-m-d H:i:s'),
+            status: $tracklist->getStatus()->value,
+            rating: $tracklist->getRating(),
+            isRewatching: $tracklist->isRewatching(),
+            startDate: $tracklist->getStartDate(),
+            finishDate: $tracklist->getFinishDate(),
+            media: $mediaDto,
+            tracklistSeasons: $tracklistSeasonDtos,
+            tags: $tagDtos,
+        );
+    }
 }

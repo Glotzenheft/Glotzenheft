@@ -20,7 +20,40 @@ declare(strict_types=1);
 
 namespace App\Model\Response\Media\Series\Season\Episode;
 
+use App\Entity\Episode;
+
 readonly class EpisodeDetailDataDto
 {
+    public function __construct(
+        public int $id,
+        public int $tmdbEpisodeId,
+        public string $createdAt,
+        public ?string $updatedAt,
+        public string $name,
+        public string $overview,
+        public int $episodeNumber,
+        public int $runtime,
+        public ?string $stillPath,
+        public ?string $airDate,
+    ){}
 
+    /**
+     * @param Episode $episode
+     * @return self
+     */
+    public static function fromEntity(Episode $episode): self
+    {
+        return new self(
+            id: $episode->getId(),
+            tmdbEpisodeId: $episode->getTmdbEpisodeId(),
+            createdAt: $episode->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $episode->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            name: $episode->getName(),
+            overview: $episode->getOverview(),
+            episodeNumber: $episode->getEpisodeNumber(),
+            runtime: $episode->getRuntime(),
+            stillPath: $episode->getStillPath(),
+            airDate: $episode->getAirDate(),
+        );
+    }
 }

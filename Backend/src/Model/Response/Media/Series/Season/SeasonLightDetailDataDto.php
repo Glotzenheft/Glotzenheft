@@ -20,7 +20,28 @@ declare(strict_types=1);
 
 namespace App\Model\Response\Media\Series\Season;
 
+use App\Entity\Season;
+
 readonly class SeasonLightDetailDataDto
 {
+    public function __construct(
+        public int $id,
+        public string $createdAt,
+        public ?string $updatedAt,
+        public int $seasonNumber,
+    ){}
 
+    /**
+     * @param Season $season
+     * @return self
+     */
+    public static function fromEntity(Season $season): self
+    {
+        return new self(
+            id: $season->getId(),
+            createdAt: $season->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $season->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            seasonNumber: $season->getSeasonNumber(),
+        );
+    }
 }

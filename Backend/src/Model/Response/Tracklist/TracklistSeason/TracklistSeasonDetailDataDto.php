@@ -20,7 +20,57 @@ declare(strict_types=1);
 
 namespace App\Model\Response\Tracklist\TracklistSeason;
 
-class TracklistSeasonDetailDataDto
-{
+use App\Entity\TracklistSeason;
+use App\Model\Response\Media\Series\Season\SeasonLightDetailDataDto;
+use App\Model\Response\Tracklist\TracklistSeason\TracklistEpisode\TracklistEpisodeDetailDataDto;
+use Symfony\Component\Serializer\Attribute\SerializedName;
 
+readonly class TracklistSeasonDetailDataDto
+{
+    public function __construct(
+        public int $id,
+        public string $createdAt,
+        public ?string $updatedAt,
+        #[SerializedName('season')]
+        public SeasonLightDetailDataDto $seasonDto,
+        /**
+         * @var TracklistEpisodeDetailDataDto[]
+         */
+        public array $tracklistEpisodesDtos,
+    ){}
+
+    /**
+     * @param TracklistSeason $tracklistSeason
+     * @param SeasonLightDetailDataDto|null $seasonDto
+     * @param TracklistEpisodeDetailDataDto[]|null $tracklistEpisodeDtos
+     * @return self
+     */
+    public static function fromEntity(
+        TracklistSeason $tracklistSeason,
+        ?SeasonLightDetailDataDto $seasonDto = null,
+        ?array $tracklistEpisodeDtos = null,
+    ): self
+    {
+        if ($seasonDto === null)
+        {
+            $seasonDto = SeasonLightDetailDataDto::fromEntity($tracklistSeason->getSeason());
+        }
+
+        if ( $tracklistEpisodeDtos === null)
+        {
+            $tracklistEpisodeDtos = [];
+            foreach ($tracklistSeason->getTracklistEpisodes() as $tracklistEpisode)
+            {
+                $tracklistEpisodeDtos[] = TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
+            }
+        }
+
+        return new self(
+            id: $tracklistSeason->getId(),
+            createdAt: $tracklistSeason->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $tracklistSeason->getUpdatedAt()->format('Y-m-d H:i:s'),
+            seasonDto: $seasonDto,
+            tracklistEpisodesDtos: $tracklistEpisodeDtos,
+        );
+    }
 }
