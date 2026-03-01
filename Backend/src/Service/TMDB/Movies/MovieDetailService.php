@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Service\TMDB\Movies;
 
 use App\Entity\Media;
+use App\Entity\User;
 use App\Enum\MediaType;
 use App\Model\Request\Movie\MovieDetailDto;
 use App\Service\Media\AbstractMediaDetailService;
@@ -30,18 +31,18 @@ class MovieDetailService extends AbstractMediaDetailService
 {
     /**
      * @param MovieDetailDto $dto
-     * @param int|null $userId
+     * @param User $user
      * @return array{media: Media, tracklists: array}|array{error: string, code: int}
      * @throws ApiException
      */
     public function getMovieDetails(
         MovieDetailDto $dto,
-        ?int $userId
+        User $user
     ): array
     {
         return $this->getDetails(
             dto: $dto,
-            userId: $userId
+            user: $user
         );
     }
 

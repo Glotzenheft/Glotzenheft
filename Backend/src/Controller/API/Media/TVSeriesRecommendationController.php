@@ -31,23 +31,27 @@ use Symfony\Component\Routing\Attribute\Route;
 
 class TVSeriesRecommendationController extends AbstractController
 {
-
     public function __construct(
         private readonly TMDBTVSeriesRecommendationService $recommendationService,
     ){}
 
     /**
-     * @param TVSeriesRecommendationDto $params
+     * @param TVSeriesRecommendationDto $dto
      * @return JsonResponse
      * @throws ApiException
      */
     #[IsAuthenticated]
-    #[Route('/api/tv/recommendations', name: 'get_tv_series_recommendations', methods: ['GET'])]
+    #[Route(
+        path: '/api/tv/recommendations',
+        name: 'get_tv_series_recommendations',
+        methods: ['GET'],
+        stateless: true,
+    )]
     public function tvSeriesRecommendationsEndpoint(
-        #[MapQueryString] TVSeriesRecommendationDto $params
+        #[MapQueryString] TVSeriesRecommendationDto $dto
     ): JsonResponse
     {
-        $response = $this->recommendationService->getTVSeriesRecommendations($params);
+        $response = $this->recommendationService->getTVSeriesRecommendations($dto);
 
         $data = [
             'page' => $response->getPage(),

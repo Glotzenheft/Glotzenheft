@@ -20,13 +20,13 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Media;
 
+use App\Entity\User;
 use App\Model\Request\TV\TVSeriesDetailDto;
 use App\Security\IsAuthenticated;
 use App\Service\TMDB\TVSeries\TVSeriesDetailService;
 use App\TmdbApi\ApiException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -40,26 +40,30 @@ class TVSeriesDetailsController extends AbstractController
     ) {}
 
     /**
-     * API endpoint to retrieve tv series details (includes seasons and episodes) from the TMDB API.
-     * Requires either a `tmdb_id` or a `media_id` as query parameter.
+     * API endpoint to retrieve TV series details (includes seasons and episodes) from the TMDB API.
+     * Requires either a `tmdb_id` or a `media_id` as a query parameter.
      * @example https://127.0.0.1:8000/api/tv?media_id=1&tmdb_id=205366
-     * @param Request $request
+     * @param User $user
      * @param TVSeriesDetailDto $dto
      * @return JsonResponse
      * @throws ApiException
      * @throws ExceptionInterface
      */
     #[IsAuthenticated]
-    #[Route('/api/tv', name: 'get_tv_series_details', methods: ['GET'])]
+    #[Route(
+        path: '/api/tv',
+        name: 'get_tv_series_details',
+        methods: ['GET'],
+        stateless: true,
+    )]
     public function getTVSeriesDetails(
-        Request $request,
+        User $user,
         #[MapQueryString] TVSeriesDetailDto $dto,
     ): JsonResponse
     {
-        $userId = $request->attributes->get('user_id');
         $result = $this->tvSeriesDetailService->getTVSeriesDetails(
             dto: $dto,
-            userId: $userId
+            user: $user
         );
 
         if (isset($result['error']))

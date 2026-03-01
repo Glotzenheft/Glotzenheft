@@ -36,19 +36,24 @@ class TVSeasonDetailsController extends AbstractController
     ){}
 
     /**
-     * @param TVSeasonDetailDto $params
+     * @param TVSeasonDetailDto $dto
      * @return JsonResponse
      * @throws ApiException
      */
     #[IsAuthenticated]
-    #[Route('/api/tv/season', name: 'get_tv_season_details', methods: ['GET'])]
+    #[Route(
+        path: '/api/tv/season',
+        name: 'get_tv_season_details',
+        methods: ['GET'],
+        stateless: true,
+    )]
     public function getTVSeasonDetails(
         #[MapQueryString]
-        TVSeasonDetailDto $params
+        TVSeasonDetailDto $dto
     ): JsonResponse
     {
         return $this->json(
-            $this->service->getSeasonDetails($params)
+            $this->service->getSeasonDetails($dto)
         );
     }
 }

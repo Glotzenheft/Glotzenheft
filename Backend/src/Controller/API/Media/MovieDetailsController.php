@@ -20,13 +20,13 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Media;
 
+use App\Entity\User;
 use App\Model\Request\Movie\MovieDetailDto;
 use App\Security\IsAuthenticated;
 use App\Service\TMDB\Movies\MovieDetailService;
 use App\TmdbApi\ApiException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -43,20 +43,28 @@ class MovieDetailsController extends AbstractController
      * API endpoint to retrieve movie details from the TMDB API.
      * Requires either a `tmdb_id` or a `media_id` as query parameter.
      * @example https://127.0.0.1:8000/api/movie?tmdb_id=372058&media_id=6
-     * @param Request $request
+     * @param User $user
      * @param MovieDetailDto $dto
      * @return JsonResponse
-     * @throws ExceptionInterface|ApiException
+     * @throws ApiException
+     * @throws ExceptionInterface
      */
     #[IsAuthenticated]
-    #[Route('/api/movie', name: 'get_movie_details', methods: ['GET'])]
+    #[Route(
+        path: '/api/movie',
+        name: 'get_movie_details',
+        methods: ['GET'],
+        stateless: true,
+    )]
     public function getMovieDetails(
-        Request $request,
+        User $user,
         #[MapQueryString] MovieDetailDto $dto,
     ): JsonResponse
     {
-        $userId = $request->attributes->get('user_id');
-        $result = $this->movieDetailService->getMovieDetails($dto, $userId);
+        $result = $this->movieDetailService->getMovieDetails(
+            dto: $dto,
+            user: $user
+        );
 
         if (isset($result['error']))
         {
