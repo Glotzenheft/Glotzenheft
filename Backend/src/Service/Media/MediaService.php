@@ -293,14 +293,18 @@ readonly class MediaService
         {
             $isChanged = true;
             $media->getTmdbGenres()->clear();
+            $allGenres = $this->entityManager->getRepository(TMDBGenre::class)->findAll();
+            $genreMap = [];
+            foreach ($allGenres as $g)
+            {
+                $genreMap[$g->getTmdbGenreID()] = $g;
+            }
+
             foreach ($tmdbData->getGenres() ?? [] as $genreData)
             {
-                $tmdbGenre = $this->entityManager->getRepository(TMDBGenre::class)->findOneBy([
-                    'tmdbGenreID' => $genreData->getId()
-                ]);
-                if ($tmdbGenre instanceof TMDBGenre)
+                if (isset($genreMap[$genreData->getId()]))
                 {
-                    $media->addTmdbGenre($tmdbGenre);
+                    $media->addTmdbGenre($genreMap[$genreData->getId()]);
                 }
             }
         }
