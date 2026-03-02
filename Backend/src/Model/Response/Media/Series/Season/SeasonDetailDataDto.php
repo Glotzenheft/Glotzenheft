@@ -69,7 +69,7 @@ readonly class SeasonDetailDataDto
             tmdbSeasonId: $season->getTmdbSeasonId(),
             name: $season->getName(),
             overview: $season->getOverview(),
-            airDate: $season->getAirDate(),
+            airDate: $season->getAirDate()?->format('Y-m-d'),
             episodeCount: $season->getEpisodeCount(),
             posterPath: $season->getPosterPath(),
             episodes: $episodeDtos,
