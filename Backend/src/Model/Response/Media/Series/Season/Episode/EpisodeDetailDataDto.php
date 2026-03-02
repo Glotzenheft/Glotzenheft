@@ -53,7 +53,7 @@ readonly class EpisodeDetailDataDto
             episodeNumber: $episode->getEpisodeNumber(),
             runtime: $episode->getRuntime(),
             stillPath: $episode->getStillPath(),
-            airDate: $episode->getAirDate(),
+            airDate: $episode->getAirDate()?->format('Y-m-d'),
         );
     }
 }
