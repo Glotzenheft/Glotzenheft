@@ -36,7 +36,7 @@ readonly class TracklistSeasonDetailDataDto
         /**
          * @var TracklistEpisodeDetailDataDto[]
          */
-        public array $tracklistEpisodesDtos,
+        public array $tracklistEpisodes,
     ){}
 
     /**
@@ -68,9 +68,9 @@ readonly class TracklistSeasonDetailDataDto
         return new self(
             id: $tracklistSeason->getId(),
             createdAt: $tracklistSeason->getCreatedAt()->format('Y-m-d H:i:s'),
-            updatedAt: $tracklistSeason->getUpdatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $tracklistSeason->getUpdatedAt()?->format('Y-m-d H:i:s'),
             seasonDto: $seasonDto,
-            tracklistEpisodesDtos: $tracklistEpisodeDtos,
+            tracklistEpisodes: $tracklistEpisodeDtos,
         );
     }
 }
