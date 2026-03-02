@@ -23,6 +23,7 @@ namespace App\Model\Response\Tracklist;
 use App\Entity\Tracklist;
 use App\Model\Response\Media\MediaLightDetailResponseDto;
 use App\Model\Response\Tracklist\TracklistSeason\TracklistSeasonDetailDataDto;
+use App\Model\Response\TracklistTag\TracklistTagLightResponseDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
 
 readonly class TracklistResponseDto
@@ -51,7 +52,7 @@ readonly class TracklistResponseDto
     /**
      * @param Tracklist $tracklist
      * @param MediaLightDetailResponseDto|null $mediaDto
-     * @param TracklistTagResponseDto[]|null $tagDtos
+     * @param TracklistTagLightResponseDto[]|null $tagDtos
      * @param TracklistSeasonDetailDataDto[]|null $tracklistSeasonDtos
      * @return self
      */
@@ -72,7 +73,7 @@ readonly class TracklistResponseDto
             $tagDtos = [];
             foreach ($tracklist->getTracklistTags() as $tag)
             {
-                $tagDtos[] = TracklistTagResponseDto::fromEntity($tag);
+                $tagDtos[] = TracklistTagLightResponseDto::fromEntity($tag);
             }
         }
 
@@ -93,8 +94,8 @@ readonly class TracklistResponseDto
             status: $tracklist->getStatus()->value,
             rating: $tracklist->getRating(),
             isRewatching: $tracklist->isRewatching(),
-            startDate: $tracklist->getStartDate(),
-            finishDate: $tracklist->getFinishDate(),
+            startDate: $tracklist->getStartDate()?->format('Y-m-d'),
+            finishDate: $tracklist->getFinishDate()?->format('Y-m-d'),
             media: $mediaDto,
             tracklistSeasons: $tracklistSeasonDtos,
             tags: $tagDtos,
