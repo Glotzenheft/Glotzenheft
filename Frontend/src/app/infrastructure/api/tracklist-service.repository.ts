@@ -51,8 +51,8 @@ export class R_TracklistHttp implements I_TracklistRepository {
     public joinTVWithTracklists = (data: Season): TVWithTracklist => {
         const tvWithTracklist = {
             id: data.media.id,
-            tmdbID: data.media.tmdbID,
-            imdbID: data.media.imdbID,
+            tmdbId: data.media.tmdbId,
+            imdbId: data.media.imdbId,
             originalName: data.media.originalName,
             name: data.media.name,
             description: data.media.description,
@@ -73,7 +73,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
 
                     return {
                         id: season.id,
-                        tmdbSeasonID: season.tmdbSeasonID,
+                        tmdbSeasonId: season.tmdbSeasonId,
                         seasonNumber: season.seasonNumber,
                         name: season.name,
                         overview: season.overview,
@@ -93,7 +93,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
             type: data.media.type,
             posterPath: data.media.posterPath,
             backdropPath: data.media.backdropPath,
-            mediaID: data.media.mediaID,
+            mediaId: data.media.mediaId,
         };
 
         return tvWithTracklist;
@@ -101,11 +101,11 @@ export class R_TracklistHttp implements I_TracklistRepository {
 
     public extractTracklistsOfTV = (data: Season): ExtractedTracklist[] => {
         return data.tracklists.map((tracklist: SeasonTracklist) => {
-            const episodes: { episodeID: number }[] =
+            const episodes: { episodeId: number }[] =
                 tracklist.tracklistSeasons[0].tracklistEpisodes.map(
                     (epi: TracklistEpisode) => {
                         return {
-                            episodeID: epi.id,
+                            episodeId: epi.id,
                         };
                     },
                 );

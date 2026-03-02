@@ -40,7 +40,7 @@ export interface I_MediaRepository {
     getHeader: () => HttpHeaders | null;
     getAllFilms: () => Observable<Film[]>;
     getMediaIdForMedia: (
-        tmdbID: number,
+        tmdbId: number,
         isMovie: boolean,
     ) => Observable<MediaIDResponse>;
     getSeasonForTV: (mediaID: string) => Observable<Season> | null;

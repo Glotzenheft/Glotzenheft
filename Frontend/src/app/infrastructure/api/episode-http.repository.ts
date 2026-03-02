@@ -47,13 +47,13 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
 
         const url: string =
             ROUTE_CREATE_TRACKLIST_EPISODE[0] +
-            tracklistEpisode.tracklistSeasonID +
+            tracklistEpisode.tracklistSeasonId +
             ROUTE_CREATE_TRACKLIST_EPISODE[1] +
-            tracklistEpisode.episodeID +
+            tracklistEpisode.episodeId +
             ROUTE_CREATE_TRACKLIST_EPISODE[2] +
             tracklistEpisode.watchDate +
             ROUTE_CREATE_TRACKLIST_EPISODE[3] +
-            tracklistEpisode.tracklistID;
+            tracklistEpisode.tracklistId;
 
         return this.http.post<any>(url, {}, { headers: header }).pipe(
             shareReplay(1),
@@ -74,11 +74,11 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
 
         const url: string =
             ROUTE_UPDATE_TRACKLIST_EPISODE[0] +
-            tracklistEpisode.tracklistID +
+            tracklistEpisode.tracklistId +
             ROUTE_UPDATE_TRACKLIST_EPISODE[1] +
-            tracklistEpisode.tracklistSeasonID +
+            tracklistEpisode.tracklistSeasonId +
             ROUTE_UPDATE_TRACKLIST_EPISODE[2] +
-            tracklistEpisode.episodeID +
+            tracklistEpisode.episodeId +
             ROUTE_UPDATE_TRACKLIST_EPISODE[3] +
             tracklistEpisode.watchDate;
 
@@ -91,8 +91,8 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
     };
 
     public deleteTracklistEpisode = (
-        tracklistID: number,
-        tracklistSeasonID: number,
+        tracklistId: number,
+        tracklistSeasonId: number,
         tracklistEpisodeId: number,
     ): Observable<any> | null => {
         const header = this.getHeaderUseCase.execute();
@@ -103,9 +103,9 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
 
         const url: string =
             ROUTE_DELETE_TRACKLIST_EPISODE[0] +
-            tracklistID +
+            tracklistId +
             ROUTE_DELETE_TRACKLIST_EPISODE[1] +
-            tracklistSeasonID +
+            tracklistSeasonId +
             ROUTE_DELETE_TRACKLIST_EPISODE[2] +
             tracklistEpisodeId;
 
