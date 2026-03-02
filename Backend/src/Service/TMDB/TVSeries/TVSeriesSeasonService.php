@@ -82,9 +82,15 @@ readonly class TVSeriesSeasonService
                 language: $language
             );
 
-            $season = $this->entityManager->getRepository(Season::class)->findOneBy([
-                'tmdbSeasonID' => $response->getId()
-            ]);
+            $season = null;
+            foreach ($media->getSeasons() as $existingSeason)
+            {
+                if ($existingSeason->getTmdbSeasonID() === $response->getId())
+                {
+                    $season = $existingSeason;
+                    break;
+                }
+            }
 
             $isNewSeason = !$season instanceof Season;
             if ($isNewSeason)
@@ -140,25 +146,9 @@ readonly class TVSeriesSeasonService
             }
 
             $existingEpisodes = [];
-            if (!$isNewSeason)
+            foreach ($season->getEpisodes() as $episode)
             {
-                $episodeIdsFromApi = array_map(fn($ep) => $ep->getId(), $response->getEpisodes());
-                if (!empty($episodeIdsFromApi))
-                {
-                    $episodesFromDb = $this->entityManager->getRepository(Episode::class)
-                        ->createQueryBuilder('e')
-                        ->where('e.season = :season')
-                        ->andWhere('e.tmdbEpisodeID IN (:ids)')
-                        ->setParameter('season', $season)
-                        ->setParameter('ids', $episodeIdsFromApi)
-                        ->getQuery()
-                        ->getResult();
-
-                    foreach ($episodesFromDb as $episode)
-                    {
-                        $existingEpisodes[$episode->getTmdbEpisodeID()] = $episode;
-                    }
-                }
+                $existingEpisodes[$episode->getTmdbEpisodeID()] = $episode;
             }
 
             foreach ($response->getEpisodes() as $episodeData)

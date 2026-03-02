@@ -25,36 +25,42 @@ use App\Entity\User;
 use App\Enum\MediaType;
 use App\Model\Request\Media\MediaDetailDtoInterface;
 use App\Model\Request\Media\MediaIdDto;
+use App\Model\Response\Media\MediaDetailDataDto;
+use App\Model\Response\Media\MediaResponseDto;
+use App\Model\Response\Tracklist\TracklistResponseDto;
+use App\Repository\MediaRepository;
 use App\Repository\TracklistRepository;
 use App\TmdbApi\ApiException;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 abstract class AbstractMediaDetailService
 {
     public function __construct(
         protected EntityManagerInterface $entityManager,
         protected MediaService           $mediaService,
-        protected TracklistRepository    $tracklistRepository
+        protected TracklistRepository    $tracklistRepository,
+        protected MediaRepository        $mediaRepository,
     ){}
 
     /**
      * @param MediaDetailDtoInterface $dto
-     * @param int|null $userId
-     * @return array{media: Media, tracklists: array}|array{error: string, code: int}
+     * @param User $user
+     * @return MediaResponseDto
      * @throws ApiException
      */
-    public function getDetails(MediaDetailDtoInterface $dto, ?int $userId): array
+    public function getDetails(
+        MediaDetailDtoInterface $dto,
+        User $user,
+    ): MediaResponseDto
     {
         $media = $this->findMedia($dto);
         if (!$media instanceof Media)
         {
             if ($dto->getTmdbId() === null)
             {
-                return [
-                    'error' => 'Media not found.',
-                    'code' => 404
-                ];
+                throw new NotFoundHttpException('Media not found.');
             }
             $media = $this->mediaService->findOrCreateMedia(
                 new MediaIdDto(
@@ -70,24 +76,23 @@ abstract class AbstractMediaDetailService
             language: $dto->getLanguage()
         );
 
-        $tracklists = [];
-        if ($userId)
+        $tracklists = $this->tracklistRepository->findTracklistsByUserAndMediaWithSeasonsEpisodesAndTags(
+            user: $user,
+            media: $media
+        );
+
+        $mediaDto = MediaDetailDataDto::fromEntity($media);
+
+        $tracklistDtos = [];
+        foreach ($tracklists as $tracklist)
         {
-            $user = $this->entityManager->getRepository(User::class)->find($userId);
-            if (!$user instanceof User)
-            {
-                return [
-                    'error' => 'User not found.',
-                    'code' => 404
-                ];
-            }
-            $tracklists = $this->tracklistRepository->findByUserAndMediaWithSeasonsAndEpisodes($user, $media);
+            $tracklistDtos[] = TracklistResponseDto::fromEntity($tracklist);
         }
 
-        return [
-            'media' => $media,
-            'tracklists' => $tracklists,
-        ];
+        return new MediaResponseDto(
+            media: $mediaDto,
+            tracklists: $tracklistDtos
+        );
     }
 
     /**
@@ -101,25 +106,32 @@ abstract class AbstractMediaDetailService
      */
     private function findMedia(MediaDetailDtoInterface $dto): ?Media
     {
-        $repository = $this->entityManager->getRepository(Media::class);
-        $criteria = [
-            'type' => $this->getMediaType()
-        ];
-
         if ($dto->getMediaId() !== null)
         {
-            $criteria['id'] = $dto->getMediaId();
-        }
-        elseif ($dto->getTmdbId() !== null)
-        {
-            $criteria['tmdbID'] = $dto->getTmdbId();
-        }
-        else
-        {
-            return null;
+            $media = $this->mediaRepository->findMediaWithSeasonsAndEpisodesById(
+                id: $dto->getMediaId()
+            );
+
+            if ($media instanceof Media)
+            {
+                return $media;
+            }
         }
 
-        return $repository->findOneBy($criteria);
+        if ($dto->getTmdbId() !== null)
+        {
+            $media = $this->mediaRepository->findMediaWithSeasonsAndEpisodesByTmdbIdAndType(
+                tmdbId: $dto->getTmdbId(),
+                type: $this->getMediaType()->value
+            );
+
+            if ($media instanceof Media)
+            {
+                return $media;
+            }
+        }
+
+        return null;
     }
 
     /**
@@ -137,6 +149,10 @@ abstract class AbstractMediaDetailService
                 MediaType::TV => $this->mediaService->updateTvSeriesFromTmdb($media, $language),
                 MediaType::Movie => $this->mediaService->updateMovieFromTmdb($media, $language),
             };
+
+            $media->setUpdatedAt(new DateTimeImmutable());
+
+            $this->entityManager->persist($media);
             $this->entityManager->flush();
         }
     }

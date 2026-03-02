@@ -73,6 +73,7 @@ import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-c
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
+import {Tag} from 'primeng/tag';
 
 @Component({
     selector: 'app-film-page',
@@ -94,6 +95,7 @@ import { ApiRecommendationComponent } from '../api-recommendation/api-recommenda
         ApiRecommendationComponent,
         MediaMetadataComponent,
         TracklistFormularComponent,
+        Tag,
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -112,7 +114,7 @@ import { ApiRecommendationComponent } from '../api-recommendation/api-recommenda
     ],
 })
 export class FilmPageComponent implements OnInit, OnDestroy {
-    public movieID: string | null = null;
+    public movieId: string | null = null;
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
     public isInvalidID: boolean = false;
@@ -158,8 +160,8 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.activatedRoute.params.subscribe((params: Params) => {
-            this.movieID = params['id'];
-            this.loadData(this.movieID);
+            this.movieId = params['id'];
+            this.loadData(this.movieId);
         });
 
         this.createSubscription =
@@ -274,22 +276,22 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public loadData = (movieID: string | null) => {
         this.serverNotAvailablePage = false;
         this.isLoading = true;
-        this.movieID = movieID;
+        this.movieId = movieID;
         this.recommendations = null;
         this.apiRecommendations = null;
         this.currentTab = TABLIST[0];
 
-        if (!this.movieID) {
+        if (!this.movieId) {
             this.hasError = true;
             return;
         }
 
-        if (!this.validateMediaURLUseCase.execute(this.movieID)) {
+        if (!this.validateMediaURLUseCase.execute(this.movieId)) {
             this.isInvalidID = true;
             return;
         }
 
-        this.filmData$ = this.getFilmDetailsUseCase.execute(this.movieID);
+        this.filmData$ = this.getFilmDetailsUseCase.execute(this.movieId);
 
         if (!this.filmData$) {
             this.hasError = true;
@@ -307,7 +309,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
                 });
 
                 if (
-                    this.movieID?.includes(MEDIA_ID_NOT_EXISTS) &&
+                    this.movieId?.includes(MEDIA_ID_NOT_EXISTS) &&
                     res.media.id
                 ) {
                     // replacing the url with "media_id" if necessary
@@ -346,7 +348,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     public refreshPage = () => {
         this.setVisibilityStatus(0);
-        this.loadData(this.movieID);
+        this.loadData(this.movieId);
     };
 
     public onChangeTab = (newTab: string) => {
@@ -375,6 +377,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             },
             tracklistSeasons: [],
             isRewatching: false,
+            tags: [],
         };
     };
 

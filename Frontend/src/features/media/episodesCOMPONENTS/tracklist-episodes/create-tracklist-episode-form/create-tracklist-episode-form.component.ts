@@ -202,10 +202,10 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         }
 
         const createEpisodeData: CreateTracklistEpisode = {
-            tracklistID: this.inpTracklist().id,
-            tracklistSeasonID: this.inpTracklist().tracklistSeasons[0].id,
+            tracklistId: this.inpTracklist().id,
+            tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
             watchDate: formattedDate,
-            episodeID: this.inpEpisode().id,
+            episodeId: this.inpEpisode().id,
         };
 
         this.makeAPIRequest(createEpisodeData, 0);
@@ -248,10 +248,10 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             );
 
         const updateEpisodeData: CreateTracklistEpisode = {
-            tracklistID: this.inpTracklist().id,
-            tracklistSeasonID: this.inpTracklist().tracklistSeasons[0].id,
+            tracklistId: this.inpTracklist().id,
+            tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
             watchDate: formattedDate,
-            episodeID: episodeInTracklist[0].id, // tracklist episode id
+            episodeId: episodeInTracklist[0].id, // tracklist episode id
         };
 
         this.makeAPIRequest(updateEpisodeData, 1);
@@ -281,10 +281,10 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         }
 
         const deleteEpisodeData: CreateTracklistEpisode = {
-            tracklistID: this.inpTracklist().id,
-            tracklistSeasonID: this.inpTracklist().tracklistSeasons[0].id,
+            tracklistId: this.inpTracklist().id,
+            tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
             watchDate: '',
-            episodeID: episodeInTracklist[0].id, // tracklist episode id
+            episodeId: episodeInTracklist[0].id, // tracklist episode id
         };
 
         this.makeAPIRequest(deleteEpisodeData, 2);
@@ -416,9 +416,9 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
             // delete episode
             this.deleteEpisodeRequestData$ =
                 this.deleteTracklistEpisodeUseCase.execute(
-                    episodeData.tracklistID,
-                    episodeData.tracklistSeasonID,
-                    episodeData.episodeID,
+                    episodeData.tracklistId,
+                    episodeData.tracklistSeasonId,
+                    episodeData.episodeId,
                 );
 
             if (!this.deleteEpisodeRequestData$) {

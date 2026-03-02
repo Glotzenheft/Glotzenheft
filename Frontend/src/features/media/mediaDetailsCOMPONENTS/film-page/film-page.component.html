@@ -66,10 +66,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 <p>kein Bild vorhanden</p>
                             }
                             @else {
-                                <img 
-                                    [src]="POSTER_PATH + filmData.media.posterPath" 
-                                    [alt]="'Dies ist das Bild für von ' + filmData.media.name" 
-                                    loading="lazy" 
+                                <img
+                                    [src]="POSTER_PATH + filmData.media.posterPath"
+                                    [alt]="'Dies ist das Bild für von ' + filmData.media.name"
+                                    loading="lazy"
                                     />
                             }
                         </div>
@@ -78,13 +78,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div>
                             <h2>Beschreibung</h2>
                             @if (filmData.media.description) {
-                                <p class="descriptionP">{{ filmData.media.description }}</p>    
-                            } 
+                                <p class="descriptionP">{{ filmData.media.description }}</p>
+                            }
                             @else {
                                 <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
                             }
 
-                            <a [href]="TMDB_ROUTE + filmData.media.tmdbID"
+                            <a [href]="TMDB_ROUTE + filmData.media.tmdbId"
                                target="_blank"
                                rel="noopener noreferrer"
                                class="linkA"
@@ -93,9 +93,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 TMDB
                             </a>
 
-                            @if (filmData.media.imdbID) {
+                            @if (filmData.media.imdbId) {
                                 <br>
-                                <a [href]="'https://www.imdb.com/de/title/' + filmData.media.imdbID"
+                                <a [href]="'https://www.imdb.com/de/title/' + filmData.media.imdbId"
                                    target="_blank"
                                    rel="noopener noreferrer"
                                    class="linkA"
@@ -105,17 +105,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 </a>
                             }
 
-                    @if (filmData.media.firstAirDate) {
-                        <p>Erstausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
-                    } 
-                    @else {
-                        <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
-                    }
+                            @if (filmData.media.firstAirDate) {
+                                <p>Erstausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
+                            } @else {
+                                <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
+                            }
 
-
-                    @if (filmData.media.seasons.length > 0) {
-                        <p>Anzahl der Staffeln: {{ filmData.media.seasons.length }}</p>
-                    }
+                            @if (filmData.media.runtime) {
+                                <p>Filmlaufzeit: {{ filmData.media.runtime }} Minuten</p>
+                            } @else {
+                                <p><i>keine Filmlaufzeit vorhanden</i></p>
+                            }
                 </div>
             </div>
         </div>
@@ -129,35 +129,42 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <div class="newWatchlistButton">
                 @for (tracklist of filmData.tracklists; track $index) {
                     <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
+                        @for (tag of tracklist.tags; track tag.id) {
+                            <p-tag
+                                [value]="tag.tagName"
+                                [style]="{'background-color': tag.color}">
+                            </p-tag>
+                        }
+
                         <p>Status: {{ convertStatus(tracklist.status) }}</p>
-                        <p-button 
-                            label="Tracklist bearbeiten" 
+                        <p-button
+                            label="Trackliste bearbeiten"
                             icon="pi pi-pencil"
-                            (onClick)="setSelectedTracklist(tracklist)" 
+                            (onClick)="setSelectedTracklist(tracklist)"
                             />
                     </p-panel>
                 }
             </div>
         } @else if (currentTab === tabsList[1]) {
             <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
-                [inpTmdbId]="filmData.media.tmdbID" (outSetRecommendations)="setAPIRecommendations($event)" />
-        } 
+                [inpTmdbId]="filmData.media.tmdbId" (outSetRecommendations)="setAPIRecommendations($event)" />
+        }
         @else {
             <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
         }
 
-        
+
     </div>
 </div>
 
 }
 
     <ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
-        <app-tracklist-formular 
-            [inpIsMovie]="true" 
-            [inpIsUpdating]="false" 
+        <app-tracklist-formular
+            [inpIsMovie]="true"
+            [inpIsUpdating]="false"
             [inpTracklist]="getDefaultTracklist(filmData.media.name)"
-            (outSubmitTracklist)="createNewTracklist($event, filmData.media.id)" 
+            (outSubmitTracklist)="createNewTracklist($event, filmData.media.id)"
             (outCancelTracklist)="cancelTracklist()"
         />
     </ng-container>
@@ -168,7 +175,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         selectedTracklist &&
         (filmData$ | async)
         ">
-        <app-tracklist-formular 
+        <app-tracklist-formular
             [inpIsMovie]="true"
             [inpIsUpdating]="true"
             [inpTracklist]="selectedTracklist"

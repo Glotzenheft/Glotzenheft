@@ -31,8 +31,10 @@ class TracklistTagLightResponseDto
         public ?string $color,
         public ?string $description,
         public ?string $icon,
-        public ?string $slug,
-        public bool $isSpoiler
+        public string $slug,
+        public bool $isSpoiler,
+        public string $createdAt,
+        public ?string $updatedAt,
     ){}
 
     public static function fromEntity(TracklistTag $tag): self
@@ -46,6 +48,8 @@ class TracklistTagLightResponseDto
             icon: $tag->getIcon(),
             slug: $tag->getSlug(),
             isSpoiler: $tag->isSpoiler(),
+            createdAt: $tag->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $tag->getUpdatedAt()?->format('Y-m-d H:i:s'),
         );
     }
 }

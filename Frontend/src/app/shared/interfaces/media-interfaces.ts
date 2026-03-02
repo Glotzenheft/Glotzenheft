@@ -21,22 +21,27 @@ export interface TMDBGenre {
     id: number;
     tmdbGenreID: number;
     name: string;
+    createdAt: string;
+    updatedAt: string | null;
 }
 
 export interface Film {
     media: {
         id: number; // media id from own db
-        tmdbID: number; // tmdb id from external api
-        imdbID: string;
-        originalName: string;
-        name: string;
+        createdAt: string;
+        updatedAt: string | null;
         description: string;
         firstAirDate: string;
+        tmdbId: number; // tmdb id from external api
+        imdbId: string;
+        originalName: string;
+        name: string;
         tmdbGenres: TMDBGenre[];
         seasons: any[];
         type: string;
         posterPath: string;
         backdropPath: string;
+        runtime: number|null;
     };
 
     tracklists: SeasonTracklist[];
@@ -57,7 +62,7 @@ export interface SeasonEpisode {
 
 export interface SeasonWithEpisodes {
     id: number;
-    tmdbSeasonID: number;
+    tmdbSeasonId: number;
     seasonNumber: number;
     name: string;
     overview: string;
@@ -67,21 +72,24 @@ export interface SeasonWithEpisodes {
     episodes: SeasonEpisode[];
 }
 
+//todo rename to series
 export interface Season {
     media: {
         id: number;
-        tmdbID: number;
-        imdbID: string;
-        originalName: string;
-        name: string;
+        createdAt: string;
+        updatedAt: string | null;
         description: string;
         firstAirDate: string;
-        tmdbGenres: { id: number; tmdbGenreID: number; name: string }[];
+        tmdbId: number;
+        imdbId: string;
+        originalName: string;
+        name: string;
+        tmdbGenres: TMDBGenre[];
         seasons: SeasonWithEpisodes[];
         type: string;
         posterPath: string;
         backdropPath: string;
-        mediaID: string | null;
+        mediaId: string | null;
     };
     tracklists: SeasonTracklist[];
 }

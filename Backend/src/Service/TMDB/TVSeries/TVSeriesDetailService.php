@@ -20,9 +20,10 @@ declare(strict_types=1);
 
 namespace App\Service\TMDB\TVSeries;
 
-use App\Entity\Media;
+use App\Entity\User;
 use App\Enum\MediaType;
 use App\Model\Request\TV\TVSeriesDetailDto;
+use App\Model\Response\Media\MediaResponseDto;
 use App\Service\Media\AbstractMediaDetailService;
 use App\TmdbApi\ApiException;
 
@@ -30,18 +31,18 @@ class TVSeriesDetailService extends AbstractMediaDetailService
 {
     /**
      * @param TVSeriesDetailDto $dto
-     * @param int|null $userId
-     * @return array{media: Media, tracklists: array}|array{error: string, code: int}
+     * @param User $user
+     * @return MediaResponseDto
      * @throws ApiException
      */
     public function getTVSeriesDetails(
         TVSeriesDetailDto $dto,
-        ?int $userId
-    ): array
+        User $user
+    ): MediaResponseDto
     {
         return $this->getDetails(
             dto: $dto,
-            userId: $userId,
+            user: $user
         );
     }
 

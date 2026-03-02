@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { TracklistStatusType } from '../variables/tracklist';
 import { SeasonEpisode } from './media-interfaces';
+import {TracklistTags} from './tracklist-tags-interfaces';
 
 export interface TrackListCreation {
     name: string;
@@ -82,6 +83,7 @@ export interface Tracklist {
     };
     tracklistSeasons: TracklistSeason[];
     isRewatching: boolean;
+    tags: TracklistTags[];
 }
 
 export interface I_TracklistFormOutput
@@ -118,13 +120,14 @@ export interface SeasonTracklist {
         };
     }[];
     isRewatching: boolean;
+    tags: TracklistTags[];
 }
 
 // interfaces for season together with tracklists ----------------------------------------------------
 
 export interface SeasonEpisodeWithTracklist {
     id: number;
-    tmdbEpisodeID: number;
+    tmdbEpisodeId: number;
     name: string;
     overview: string;
     episodeNumber: number;
@@ -136,7 +139,7 @@ export interface SeasonEpisodeWithTracklist {
 
 export interface TVSeasonWithTracklist {
     id: number;
-    tmdbSeasonID: number;
+    tmdbSeasonId: number;
     seasonNumber: number;
     name: string;
     overview: string;
@@ -149,8 +152,8 @@ export interface TVSeasonWithTracklist {
 
 export interface TVWithTracklist {
     id: number;
-    tmdbID: number;
-    imdbID: string;
+    tmdbId: number;
+    imdbId: string;
     originalName: string;
     name: string;
     description: string;
@@ -160,7 +163,7 @@ export interface TVWithTracklist {
     type: string;
     posterPath: string;
     backdropPath: string;
-    mediaID: string | null;
+    mediaId: string | null;
 }
 
 export interface SeasonTracklistType {
@@ -177,7 +180,7 @@ export interface TracklistForSeasonList {
 export interface ExtractedTracklist {
     tracklistId: number;
     episodes: {
-        episodeID: number;
+        episodeId: number;
     }[];
 }
 

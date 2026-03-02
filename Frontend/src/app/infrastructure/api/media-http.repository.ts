@@ -194,7 +194,7 @@ export class R_MediaHttp implements I_MediaRepository {
     /**
      * For getting the mediaID from the database.
      *
-     * @param tmdbID string
+     * @param tmdbId string
      * @param isMovie boolean
      * @returns
      */
@@ -203,7 +203,7 @@ export class R_MediaHttp implements I_MediaRepository {
         Function in the app: on multi search, the user clicks on the media (movie or tv) but there is only tmdb id available at this moment
         -> this function sends a request to the api -> media is created (if not) and mediaID will be returned
         */
-        tmdbID: number,
+        tmdbId: number,
         isMovie: boolean,
     ): Observable<MediaIDResponse> => {
         const header = this.getHeader();
@@ -212,7 +212,7 @@ export class R_MediaHttp implements I_MediaRepository {
         }
 
         const movieType: string = isMovie ? 'movie' : 'tv';
-        const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbID}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
+        const url: string = `${ROUTE_MEDIA_ID_FOR_MEDIA[0]}${tmdbId}${ROUTE_MEDIA_ID_FOR_MEDIA[1]}${movieType}`;
 
         return this.http.get<MediaIDResponse>(url, { headers: header }).pipe(
             shareReplay(1),

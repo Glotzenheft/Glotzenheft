@@ -36,17 +36,22 @@ class MovieRecommendationController extends AbstractController
     ){}
 
     /**
-     * @param MovieRecommendationDto $params
+     * @param MovieRecommendationDto $dto
      * @return JsonResponse
      * @throws ApiException
      */
     #[IsAuthenticated]
-    #[Route('/api/movie/recommendations', name: 'get_movie_recommendations', methods: ['GET'])]
+    #[Route(
+        path: '/api/movie/recommendations',
+        name: 'get_movie_recommendations',
+        methods: ['GET'],
+        stateless: true,
+    )]
     public function movieRecommendationsEndpoint(
-        #[MapQueryString] MovieRecommendationDto $params
+        #[MapQueryString] MovieRecommendationDto $dto
     ): JsonResponse
     {
-        $response = $this->recommendationService->getMovieRecommendations($params);
+        $response = $this->recommendationService->getMovieRecommendations($dto);
 
         $data = [
             'page' => $response->getPage(),

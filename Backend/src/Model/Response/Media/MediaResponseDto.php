@@ -1,3 +1,4 @@
+<?php
 /*
 This file is part of Glotzenheft.
 
@@ -15,23 +16,20 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Season } from '../shared/interfaces/media-interfaces';
+declare(strict_types=1);
 
-export const TEST_SEASON: Season = {
-    media: {
-        id: 0,
-        tmdbID: 0,
-        imdbID: '',
-        originalName: '',
-        name: '',
-        description: '',
-        firstAirDate: '',
-        tmdbGenres: [],
-        seasons: [],
-        type: '',
-        posterPath: '',
-        backdropPath: '',
-        mediaID: null,
-    },
-    tracklists: [],
-};
+namespace App\Model\Response\Media;
+
+use App\Model\Response\Tracklist\TracklistResponseDto;
+
+readonly class MediaResponseDto
+{
+
+    public function __construct(
+        public MediaDetailDataDto $media,
+        /**
+         * @var TracklistResponseDto[]
+         */
+        public array $tracklists,
+    ){}
+}

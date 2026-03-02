@@ -157,6 +157,7 @@ export class TracklistFormularComponent implements OnInit {
             rating: this.tracklistForm?.get('rating')?.value,
             isRewatching: this.tracklistForm?.get('isRewatching')?.value,
             tracklistName: this.tracklistForm?.get('trackListName')?.value,
+            tags: [],
         });
         this.isTracklistSubmitted = false;
     };

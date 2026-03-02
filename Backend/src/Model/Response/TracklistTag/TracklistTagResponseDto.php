@@ -31,17 +31,33 @@ readonly class TracklistTagResponseDto
         public ?string $color,
         public ?string $description,
         public ?string $icon,
-        public ?string $slug,
+        public string $slug,
         public bool $isSpoiler,
+        public string $createdAt,
+        public ?string $updatedAt,
+        /**
+         * @var array<TracklistTracklistTagResponseDto>
+         */
         public array $tracklists
     ){}
 
-    public static function fromEntity(TracklistTag $tag): self
+    /**
+     * @param TracklistTag $tag
+     * @param array<TracklistTracklistTagResponseDto>|null $tracklistDtos
+     * @return self
+     */
+    public static function fromEntity(
+        TracklistTag $tag,
+        ?array $tracklistDtos = null,
+    ): self
     {
-        $tracklistDtos = [];
-        foreach ($tag->getTracklists() as $tracklist)
+        if ($tracklistDtos === null)
         {
-            $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist);
+            $tracklistDtos = [];
+            foreach ($tag->getTracklists() as $tracklist)
+            {
+                $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist);
+            }
         }
 
         return new self(
@@ -53,6 +69,8 @@ readonly class TracklistTagResponseDto
             icon: $tag->getIcon(),
             slug: $tag->getSlug(),
             isSpoiler: $tag->isSpoiler(),
+            createdAt: $tag->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $tag->getUpdatedAt()?->format('Y-m-d H:i:s'),
             tracklists: $tracklistDtos,
         );
     }

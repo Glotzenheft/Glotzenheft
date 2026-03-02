@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+declare(strict_types=1);
+
 namespace App\Repository;
 
 use App\Entity\Media;
@@ -32,28 +34,49 @@ class MediaRepository extends ServiceEntityRepository
         parent::__construct($registry, Media::class);
     }
 
-//    /**
-//     * @return Media[] Returns an array of Media objects
-//     */
-//    public function findByExampleField($value): array
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->orderBy('m.id', 'ASC')
-//            ->setMaxResults(10)
-//            ->getQuery()
-//            ->getResult()
-//        ;
-//    }
+    /**
+     * @param int $id
+     * @return Media|null
+     */
+    public function findMediaWithSeasonsAndEpisodesById(
+        int $id
+    ): ?Media
+    {
+        return $this->createQueryBuilder('media')
+            ->leftJoin('media.seasons', 'seasons')
+            ->leftJoin('seasons.episodes', 'episodes')
+            ->leftJoin('media.tmdbGenres', 'genres')
+            ->addSelect('seasons', 'episodes', 'genres')
 
-//    public function findOneBySomeField($value): ?Media
-//    {
-//        return $this->createQueryBuilder('m')
-//            ->andWhere('m.exampleField = :val')
-//            ->setParameter('val', $value)
-//            ->getQuery()
-//            ->getOneOrNullResult()
-//        ;
-//    }
+            ->where('media.id = :id')
+            ->setParameter('id', $id)
+
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param int $tmdbId
+     * @param string $type
+     * @return Media|null
+     */
+    public function findMediaWithSeasonsAndEpisodesByTmdbIdAndType(
+        int $tmdbId,
+        string $type
+    ): ?Media
+    {
+        return $this->createQueryBuilder('media')
+            ->leftJoin('media.seasons', 'seasons')
+            ->leftJoin('seasons.episodes', 'episodes')
+            ->leftJoin('media.tmdbGenres', 'genres')
+            ->addSelect('seasons', 'episodes', 'genres')
+
+            ->where('media.type = :type')
+            ->andWhere('media.tmdbId = :tmdbId')
+            ->setParameter('type', $type)
+            ->setParameter('tmdbId', $tmdbId)
+
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
 }

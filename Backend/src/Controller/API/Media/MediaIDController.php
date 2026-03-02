@@ -45,14 +45,18 @@ class MediaIDController extends AbstractController
      * @throws ApiException
      */
     #[IsAuthenticated]
-    #[Route('/api/media', name: 'get_media_id', methods: ['GET'])]
+    #[Route(
+        path: '/api/media',
+        name: 'get_media_id',
+        methods: ['GET'],
+        stateless: true,
+    )]
     public function mediaIdEndpoint(
         #[MapQueryString] MediaIdDto $params
     ): JsonResponse
     {
-        $mediaId = $this->mediaService->findOrCreateMedia(params: $params)->getId();
         return $this->json([
-            'media_id' => $mediaId,
+            'media_id' => $this->mediaService->findOrCreateMedia(params: $params)->getId(),
         ]);
     }
 }

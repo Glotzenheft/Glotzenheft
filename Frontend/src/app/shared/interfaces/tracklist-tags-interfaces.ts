@@ -15,9 +15,15 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-export interface CreateTracklistEpisode {
-    tracklistId: number;
-    tracklistSeasonId: number;
-    watchDate: string;
-    episodeId: number;
+export interface TracklistTags {
+    id: number;
+    tagName: string;
+    tracklistTagType: string;
+    color: string | null;
+    description: string | null;
+    icon: string | null;
+    slug: string;
+    isSpoiler: boolean;
+    createdAt: string;
+    updatedAt: string | null;
 }

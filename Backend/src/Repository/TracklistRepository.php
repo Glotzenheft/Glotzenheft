@@ -15,6 +15,7 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
+declare(strict_types=1);
 
 namespace App\Repository;
 
@@ -34,12 +35,20 @@ class TracklistRepository extends ServiceEntityRepository
         parent::__construct($registry, Tracklist::class);
     }
 
-    public function findByUserAndMediaWithSeasonsAndEpisodes(User $user, Media $media): array
+    /**
+     * @param User $user
+     * @param Media $media
+     * @return array
+     */
+    public function findByUserAndMediaWithSeasonsAndEpisodes(
+        User $user,
+        Media $media
+    ): array
     {
         return $this->createQueryBuilder('t')
-            ->leftJoin('t.tracklistSeasons', 's') // Verknüpfung zu TracklistSeason
-            ->leftJoin('s.tracklistEpisodes', 'e') // Verknüpfung zu TracklistEpisode
-            ->addSelect('s', 'e') // Sorgt dafür, dass die Objekte mitgeladen werden
+            ->leftJoin('t.tracklistSeasons', 's')
+            ->leftJoin('s.tracklistEpisodes', 'e')
+            ->addSelect('s', 'e')
             ->where('t.user = :user')
             ->andWhere('t.media = :media')
             ->setParameter('user', $user)
@@ -48,29 +57,27 @@ class TracklistRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-
-    //    /**
-    //     * @return Tracklist[] Returns an array of Tracklist objects
-    //     */
-    //    public function findByExampleField($value): array
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->orderBy('t.id', 'ASC')
-    //            ->setMaxResults(10)
-    //            ->getQuery()
-    //            ->getResult()
-    //        ;
-    //    }
-
-    //    public function findOneBySomeField($value): ?Tracklist
-    //    {
-    //        return $this->createQueryBuilder('t')
-    //            ->andWhere('t.exampleField = :val')
-    //            ->setParameter('val', $value)
-    //            ->getQuery()
-    //            ->getOneOrNullResult()
-    //        ;
-    //    }
+    /**
+     * @param User $user
+     * @param Media $media
+     * @return array
+     */
+    public function findTracklistsByUserAndMediaWithSeasonsEpisodesAndTags(
+        User $user,
+        Media $media
+    ): array
+    {
+        return $this->createQueryBuilder('t')
+            ->leftJoin('t.tracklistSeasons', 's')
+            ->leftJoin('s.tracklistEpisodes', 'e')
+            ->leftJoin('t.tracklistTags', 'tags')
+            ->addSelect('s', 'e')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->where('t.user = :user')
+            ->andWhere('t.media = :media')
+            ->setParameter('user', $user)
+            ->setParameter('media', $media)
+            ->getQuery()
+            ->getResult();
+    }
 }

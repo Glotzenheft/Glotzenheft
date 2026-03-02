@@ -83,6 +83,7 @@ import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-c
 import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-delete-response-subject.use-case';
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
+import {Tag} from 'primeng/tag';
 
 @Component({
     selector: 'app-season-page',
@@ -110,6 +111,7 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
         ApiRecommendationComponent,
         MediaMetadataComponent,
         TracklistFormularComponent,
+        Tag,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -129,8 +131,9 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
         UC_TriggerTracklistDELETESubject,
     ],
 })
+//todo rename to Series
 export class SeasonPageComponent implements OnInit, OnDestroy {
-    public tvSeriesID: string | null = null;
+    public tvSeriesId: string | null = null;
     public seasonData$: Observable<Season> | null = null;
     public numberOfEpisodes$: Observable<number> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
@@ -175,6 +178,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         tracklistName: '',
         tracklistSeasons: [],
         isRewatching: false,
+        tags: [],
     };
     private createSubscription: Subscription | null = null;
     private updateSubscription: Subscription | null = null;
@@ -203,8 +207,8 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
-            this.tvSeriesID = params['id'];
-            this.loadData(this.tvSeriesID);
+            this.tvSeriesId = params['id'];
+            this.loadData(this.tvSeriesId);
         });
 
         this.createSubscription =
@@ -423,6 +427,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             },
             tracklistSeasons: [],
             isRewatching: false,
+            tags: [],
         };
     };
 
@@ -514,7 +519,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public refreshPage = () => {
         this.currentSeason = null;
         this.setVisibility(0);
-        this.loadData(this.tvSeriesID);
+        this.loadData(this.tvSeriesId);
     };
 
     public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {

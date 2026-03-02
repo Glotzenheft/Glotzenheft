@@ -62,12 +62,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <div class="seasonMetaPicture">
                         @if (!seasonData.media.posterPath) {
                             <p><i>kein Bild vorhanden</i></p>
-                        } 
+                        }
                         @else {
-                            <img 
+                            <img
                                 [src]="POSTER_PATH + seasonData.media.posterPath"
-                                [alt]="'Dies ist das Bild für von ' + seasonData.media.name" 
-                                loading="lazy" 
+                                [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
+                                loading="lazy"
                             />
                         }
                     </div>
@@ -77,12 +77,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <h2>Beschreibung</h2>
                         @if (seasonData.media.description) {
                             <p class="descriptionP">{{ seasonData.media.description }}</p>
-                        } 
+                        }
                         @else {
                             <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
                         }
 
-                        <a [href]="TMDB_ROUTE + seasonData.media.tmdbID"
+                        <a [href]="TMDB_ROUTE + seasonData.media.tmdbId"
                            target="_blank"
                            rel="noopener noreferrer"
                            class="linkA"
@@ -91,9 +91,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             TMDB
                         </a>
 
-                        @if (seasonData.media.imdbID) {
+                        @if (seasonData.media.imdbId) {
                             <br>
-                            <a [href]="'https://www.imdb.com/de/title/' + seasonData.media.imdbID"
+                            <a [href]="'https://www.imdb.com/de/title/' + seasonData.media.imdbId"
                                target="_blank"
                                rel="noopener noreferrer"
                                class="linkA"
@@ -105,7 +105,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                         @if (seasonData.media.firstAirDate) {
                             <p>Erstausstrahlung am {{ seasonData.media.firstAirDate | dateFormatting }}</p>
-                        } 
+                        }
                         @else {
                             <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
                         }
@@ -123,9 +123,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             @if (tvDataWithTracklist && tvDataWithTracklist.seasons && tvDataWithTracklist.seasons.length > 0) {
                                 <p-accordion>
                                 @for (season of tvDataWithTracklist.seasons; track $index) {
-                                    <p-accordion-panel 
-                                        [value]="$index" 
-                                        class="panel" 
+                                    <p-accordion-panel
+                                        [value]="$index"
+                                        class="panel"
                                         (click)="setSelectedSeason(season)"
                                         >
                                         <p-accordion-header>{{ season.name }}</p-accordion-header>
@@ -134,12 +134,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                 <div class="seasonPoster">
                                                     @if (!season.posterPath) {
                                                         <p>kein Bild vorhanden</p>
-                                                    } 
+                                                    }
                                                     @else {
-                                                        <img 
-                                                            [src]="POSTER_PATH + season.posterPath" 
-                                                            [alt]="'Dies ist das Bild für von ' + seasonData.media.name" 
-                                                            loading="lazy" 
+                                                        <img
+                                                            [src]="POSTER_PATH + season.posterPath"
+                                                            [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
+                                                            loading="lazy"
                                                         />
                                                     }
                                                 </div>
@@ -150,14 +150,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                 Beschreibung: <br />
                                                                 {{ season.overview }}
                                                             </p>
-                                                        } 
+                                                        }
                                                         @else {
                                                             <p>Beschreibung: <i>keine Beschreibung vorhanden</i></p>
                                                         }
 
                                                         @if (season.airDate) {
                                                             <p>Erstausstrahlung: {{ season.airDate | dateFormatting }}</p>
-                                                        } 
+                                                        }
                                                         @else {
                                                             <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
                                                         }
@@ -169,10 +169,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                                             @if (season.tracklistsForSeason && season.tracklistsForSeason.length > 0) {
                                                 <div class="tracklistSelectionDIV">
-                                                    <p-select 
-                                                        [options]="season.tracklistsForSeason" 
+                                                    <p-select
+                                                        [options]="season.tracklistsForSeason"
                                                         optionLabel="tracklistName"
-                                                        formControlName="selectedTracklist" 
+                                                        formControlName="selectedTracklist"
                                                         placeholder="Trackliste auswählen ..."
                                                         >
                                                     </p-select>
@@ -183,23 +183,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                 </div>
                                             }
 
+                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
+                                                <div
+                                                    style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                                    @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value.tags; track tag.id) {
+                                                        <p-tag
+                                                            [value]="tag.tagName"
+                                                            [style]="{'background-color': tag.color}">
+                                                        </p-tag>
+                                                    }
+                                                </div>
+                                            }
+
                                             <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="openTracklistForm(season)" />
 
                                             @if (
                                                 tracklistSelectionForm.get('selectedTracklist')?.value &&
                                                 tracklistSelectionForm.get('selectedTracklist')?.value !== EMPTY_TRACKLIST
                                                 ) {
-                                                <app-episode-list 
+                                                <app-episode-list
                                                     [episodeList]="season.episodes"
-                                                    [tracklistSelectionForm]="tracklistSelectionForm" 
+                                                    [tracklistSelectionForm]="tracklistSelectionForm"
                                                     [selectedSeason]="selectedSeason"
                                                     [tracklistsOfSeason]="tracklistsOfSeason" [inpSelectedTracklist]="
                                                         tracklistSelectionForm.get('selectedTracklist')?.value
                                                         ? tracklistSelectionForm.get('selectedTracklist')?.value
                                                         : null
-                                                    " 
+                                                    "
                                                     [inpIsWithTracklist]="true" (setEpisode)="setCurrentEpisode($event, false)"
-                                                    (setEpisodeForEditing)="setCurrentEpisode($event, true)" 
+                                                    (setEpisodeForEditing)="setCurrentEpisode($event, true)"
                                                     />
                                             }
 
@@ -208,13 +220,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                 !tracklistSelectionForm.get('selectedTracklist')?.value ||
                                                 tracklistSelectionForm.get('selectedTracklist')?.value === EMPTY_TRACKLIST
                                                 ) {
-                                                <app-episode-list 
+                                                <app-episode-list
                                                     [episodeList]="season.episodes"
-                                                    [tracklistSelectionForm]="tracklistSelectionForm" 
+                                                    [tracklistSelectionForm]="tracklistSelectionForm"
                                                     [selectedSeason]="null"
-                                                    [tracklistsOfSeason]="[]" 
-                                                    [inpSelectedTracklist]="null" 
-                                                    [inpIsWithTracklist]="false" 
+                                                    [tracklistsOfSeason]="[]"
+                                                    [inpSelectedTracklist]="null"
+                                                    [inpIsWithTracklist]="false"
                                                     />
                                                 }
                                         </p-accordion-content>
@@ -227,18 +239,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 }
             }
             @else if (currentTab === tabList[1]) {
-                <app-api-recommendation 
-                    [inpIsMovie]="false" 
+                <app-api-recommendation
+                    [inpIsMovie]="false"
                     [inpRecommendations]="apiRecommendations"
-                    [inpTmdbId]="seasonData.media.tmdbID" 
-                    (outSetRecommendations)="getRecommendations($event)" 
+                    [inpTmdbId]="seasonData.media.tmdbId"
+                    (outSetRecommendations)="getRecommendations($event)"
                     />
-            } 
+            }
             @else {
-                <app-media-metadata 
-                    [inpIsMovie]="false" 
-                    [inpSeasonData]="seasonData" 
-                    [inpFilmData]="null" 
+                <app-media-metadata
+                    [inpIsMovie]="false"
+                    [inpSeasonData]="seasonData"
+                    [inpFilmData]="null"
                 />
             }
 
@@ -251,9 +263,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         currentSeason &&
         (seasonData$ | async) as seasonData
         ">
-        <app-tracklist-formular 
-            [inpIsMovie]="false" 
-            [inpIsUpdating]="false" 
+        <app-tracklist-formular
+            [inpIsMovie]="false"
+            [inpIsUpdating]="false"
             [inpTracklist]="getDefaultTracklist(seasonData.media.name + ' - Staffel ' + currentSeason.seasonNumber)"
             (outSubmitTracklist)="createNewTracklist($event, seasonData.media.id, currentSeason.id)"
             (outCancelTracklist)="cancelTracklistForm()"
@@ -265,9 +277,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         tracklistSelectionForm.get('selectedTracklist')?.value &&
         (seasonData$ | async)
         ">
-        <app-tracklist-formular 
-            [inpIsMovie]="false" 
-            [inpIsUpdating]="true" 
+        <app-tracklist-formular
+            [inpIsMovie]="false"
+            [inpIsUpdating]="true"
             [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
             (outCancelTracklist)="cancelTracklistForm()"
             (outSubmitTracklist)="updateTracklist($event, tracklistSelectionForm.get('selectedTracklist')?.value)"
@@ -276,33 +288,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </ng-container>
 
     @if (
-        isTracklistFormVisible === 3 
-        && tracklistSelectionForm.get('selectedTracklist')?.value 
+        isTracklistFormVisible === 3
+        && tracklistSelectionForm.get('selectedTracklist')?.value
         && currentEpisode && currentSeason
         ) {
-        <app-create-tracklist-episode-form 
+        <app-create-tracklist-episode-form
             [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
-            [inpEpisode]="currentEpisode" 
-            [inpSeasonID]="currentSeason.id" 
+            [inpEpisode]="currentEpisode"
+            [inpSeasonID]="currentSeason.id"
             [inpIsEpisodeEditing]="false"
-            (saveEpisode)="refreshPage()" 
-            (cancelEpisode)="cancelTracklistForm()" 
+            (saveEpisode)="refreshPage()"
+            (cancelEpisode)="cancelTracklistForm()"
             />
     }
 
     @if (
-        isTracklistFormVisible === 4 
-        && tracklistSelectionForm.get('selectedTracklist')?.value 
-        && currentEpisode 
+        isTracklistFormVisible === 4
+        && tracklistSelectionForm.get('selectedTracklist')?.value
+        && currentEpisode
         && currentSeason
         ) {
-        <app-create-tracklist-episode-form 
+        <app-create-tracklist-episode-form
             [inpTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value"
-            [inpEpisode]="currentEpisode" 
-            [inpSeasonID]="currentSeason.id" 
+            [inpEpisode]="currentEpisode"
+            [inpSeasonID]="currentSeason.id"
             [inpIsEpisodeEditing]="true"
-            (saveEpisode)="refreshPage()" 
-            (cancelEpisode)="cancelTracklistForm()" 
+            (saveEpisode)="refreshPage()"
+            (cancelEpisode)="cancelTracklistForm()"
             />
     }
 }
