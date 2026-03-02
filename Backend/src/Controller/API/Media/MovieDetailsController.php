@@ -27,16 +27,15 @@ use App\Service\TMDB\Movies\MovieDetailService;
 use App\TmdbApi\ApiException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
-use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
 class MovieDetailsController extends AbstractController
 {
     public function __construct(
         private readonly MovieDetailService $movieDetailService,
-        private readonly NormalizerInterface $normalizer,
     ){}
 
     /**
@@ -47,7 +46,6 @@ class MovieDetailsController extends AbstractController
      * @param MovieDetailDto $dto
      * @return JsonResponse
      * @throws ApiException
-     * @throws ExceptionInterface
      */
     #[IsAuthenticated]
     #[Route(
@@ -66,23 +64,9 @@ class MovieDetailsController extends AbstractController
             user: $user
         );
 
-        if (isset($result['error']))
-        {
-            return $this->json(
-                data: $result['error'],
-                status: $result['code']
-            );
-        }
-
-        return $this->json([
-            'media' => $this->normalizer->normalize(
-                $result['media'],
-                context: ['groups' => ['media_details']]
-            ),
-            'tracklists' => $this->normalizer->normalize(
-                $result['tracklists'],
-                context: ['groups' => ['tracklist_details']]
-            ),
-        ]);
+        return $this->json(
+            data: $result,
+            status: Response::HTTP_OK,
+        );
     }
 }
