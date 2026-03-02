@@ -72,7 +72,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('s.tracklistEpisodes', 'e')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('s', 'e')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
             ->where('t.user = :user')
             ->andWhere('t.media = :media')
             ->setParameter('user', $user)

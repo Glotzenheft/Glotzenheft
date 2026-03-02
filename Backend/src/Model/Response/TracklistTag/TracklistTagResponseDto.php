@@ -31,14 +31,19 @@ readonly class TracklistTagResponseDto
         public ?string $color,
         public ?string $description,
         public ?string $icon,
-        public ?string $slug,
+        public string $slug,
         public bool $isSpoiler,
+        public string $createdAt,
+        public ?string $updatedAt,
+        /**
+         * @var array<TracklistTracklistTagResponseDto>
+         */
         public array $tracklists
     ){}
 
     /**
      * @param TracklistTag $tag
-     * @param TracklistTracklistTagResponseDto[]|null $tracklistDtos
+     * @param array<TracklistTracklistTagResponseDto>|null $tracklistDtos
      * @return self
      */
     public static function fromEntity(
@@ -64,6 +69,8 @@ readonly class TracklistTagResponseDto
             icon: $tag->getIcon(),
             slug: $tag->getSlug(),
             isSpoiler: $tag->isSpoiler(),
+            createdAt: $tag->getCreatedAt()->format('Y-m-d H:i:s'),
+            updatedAt: $tag->getUpdatedAt()?->format('Y-m-d H:i:s'),
             tracklists: $tracklistDtos,
         );
     }
