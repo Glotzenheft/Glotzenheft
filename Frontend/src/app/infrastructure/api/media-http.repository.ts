@@ -47,7 +47,6 @@ import {
 import { REQUEST_THROTTLE_TIME } from '../../shared/variables/message-vars';
 import { KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN } from '../../shared/variables/local-storage-keys';
 import {
-    ROUTE_CHECK_USER_AUTH,
     ROUTE_CREATE_NEW_TRACKLIST,
     ROUTE_DELETE_TRACKLIST,
     ROUTE_GET_ALL_USER_TRACKLISTS,
@@ -62,8 +61,6 @@ import {
 import { I_MediaRepository } from '../../core/interfaces/media.repository';
 import {
     I_APIRecommendationResponse,
-    I_HighestRecommendations,
-    I_Recommendations,
 } from '../../shared/interfaces/recommendation-interfaces';
 
 @Injectable({
@@ -373,7 +370,7 @@ export class R_MediaHttp implements I_MediaRepository {
         }
 
         return this.http
-            .patch<Tracklist>(ROUTE_UPDATE_TRACKLIST, tracklistData, {
+            .patch<Tracklist>(ROUTE_UPDATE_TRACKLIST + '/' + tracklistData.tracklist_id, tracklistData, {
                 headers: header,
             })
             .pipe(
@@ -401,7 +398,7 @@ export class R_MediaHttp implements I_MediaRepository {
             return EMPTY;
         }
 
-        const url: string = ROUTE_DELETE_TRACKLIST + tracklistID;
+        const url: string = ROUTE_DELETE_TRACKLIST + '/' + tracklistID;
 
         return this.http.delete(url, { headers: header }).pipe(
             shareReplay(1),

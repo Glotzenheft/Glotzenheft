@@ -58,20 +58,20 @@ export const ROUTE_REGISTER: string = API_ROUTE + 'register';
 
 export const ROUTE_LOGIN: string = API_ROUTE + 'login';
 
-export const ROUTE_CREATE_NEW_TRACKLIST: string = API_ROUTE + 'tracklist';
+export const ROUTE_CREATE_NEW_TRACKLIST: string = API_ROUTE + 'tracklists';
 
 export const ROUTE_GET_ALL_USER_TRACKLISTS: string =
-    API_ROUTE + 'user-tracklists';
+    API_ROUTE + 'tracklists';
 
 export const ROUTE_DELETE_USER_ACCOUNT: string = API_ROUTE + 'user';
 
-export const ROUTE_UPDATE_TRACKLIST: string = API_ROUTE + 'tracklist';
+export const ROUTE_UPDATE_TRACKLIST: string = API_ROUTE + 'tracklists';
 
 export const ROUTE_GET_TRACKLIST: string =
     API_ROUTE + 'tracklist?tracklist_id=';
 
 export const ROUTE_DELETE_TRACKLIST: string =
-    API_ROUTE + 'tracklist?tracklist_id=';
+    API_ROUTE + 'tracklists';
 
 // api routes for episodes --------------------------
 export const ROUTE_CREATE_TRACKLIST_EPISODE: string[] = [
