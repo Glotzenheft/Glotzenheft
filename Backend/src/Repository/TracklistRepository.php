@@ -58,4 +58,73 @@ class TracklistRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    /**
+     * @param int $tracklistId
+     * @param User $user
+     * @return Tracklist|null
+     */
+    public function findTracklistByTracklistIdAndUserWithSeasonEpisodesAndTags(
+        int $tracklistId,
+        User $user
+    ): ?Tracklist
+    {
+        return $this->createQueryBuilder('tracklist')
+            ->leftJoin('t.tracklistSeasons', 'season')
+            ->leftJoin('s.tracklistEpisodes', 'episodes')
+            ->leftJoin('t.tracklistTags', 'tags')
+            ->addSelect('season', 'episodes')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+
+            ->where('tracklist.id = :tracklistId')
+            ->andWhere('tracklist.user = :user')
+            ->setParameter('tracklistId', $tracklistId)
+            ->setParameter('user', $user)
+
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findAllTracklistsByUserWithSeasonEpisodesAndTags(
+        User $user
+    ): array
+    {
+        return $this->createQueryBuilder('tracklist')
+            ->leftJoin('tracklist.tracklistSeasons', 'season')
+            ->leftJoin('season.tracklistEpisodes', 'episodes')
+            ->leftJoin('tracklist.tracklistTags', 'tags')
+            ->addSelect('season', 'episodes')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+
+            ->where('tracklist.user = :user')
+            ->setParameter('user', $user)
+
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findAllTracklistsByUserWithMediaAndTags(
+        User $user
+    ): array
+    {
+        return $this->createQueryBuilder('tracklist')
+            ->leftJoin('tracklist.tracklistTags', 'tags')
+            ->leftJoin('tracklist.media', 'media')
+            ->addSelect('PARTIAL media.{id, posterPath, type, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+
+            ->where('tracklist.user = :user')
+            ->setParameter('user', $user)
+
+            ->getQuery()
+            ->getResult();
+    }
 }
