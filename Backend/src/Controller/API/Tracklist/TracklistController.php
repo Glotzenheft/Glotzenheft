@@ -44,46 +44,44 @@ class TracklistController extends AbstractController
     ){}
 
     /**
-     * Retrieve all tracklists from a user.
-     * User identification by the bearer token.
-     * @example https://127.0.0.1:8000/api/user-tracklists
      * @param User $user
      * @return JsonResponse
      */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/user-tracklists',
+        path: '/api/tracklists',
         name: 'get_tracklists',
-        methods: ['GET']
+        methods: ['GET'],
+        stateless: true,
     )]
     public function getTracklistsEndpoint(User $user): JsonResponse
     {
-        $tracklists = $this->tracklistService->getUserTracklists($user);
-
         return $this->json(
-            data: $tracklists,
-            context: ['groups' => ['tracklist_details', 'tracklist_episodes']]
+            data: $this->tracklistService->getUserTracklists($user),
+            status: Response::HTTP_OK
         );
     }
 
     /**
-     * @param TracklistIdDto $dto
      * @param User $user
+     * @param int $tracklistId
      * @return JsonResponse
      */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/tracklist',
+        path: '/api/tracklists/{tracklistId}',
         name: 'get_tracklist',
-        methods: ['GET']
+        requirements: ['tracklistId' => '\d+'],
+        methods: ['GET'],
+        stateless: true,
     )]
     public function getTracklistEndpoint(
-        #[MapQueryString] TracklistIdDto $dto,
-        User $user
+        User $user,
+        int $tracklistId,
     ): JsonResponse
     {
         $tracklist = $this->tracklistService->getTracklist(
-            tracklistId: $dto->tracklistId,
+            tracklistId: $tracklistId,
             user: $user
         );
         return $this->json(
@@ -116,9 +114,11 @@ class TracklistController extends AbstractController
      */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/tracklist',
+        path: '/api/tracklists',
         name: 'create_tracklist',
-        methods: ['POST'])]
+        methods: ['POST'],
+        stateless: true,
+    )]
     public function createTracklistEndpoint(
         #[MapRequestPayload] CreateTracklistDto $dto,
         User $user,
@@ -141,14 +141,13 @@ class TracklistController extends AbstractController
     /**
      * Updates a tracklist.
      *
+     * @param int $tracklistId
      * @param UpdateTracklistDto $dto
      * @param User $user
      * @param Request $request
      * @return JsonResponse
-     * @example PATCH /api/tracklist
+     * @example PATCH /api/tracklists/{tracklistId}
      *          Header: Authorization: Bearer <JWT-TOKEN>
-     *          Required parameter in JSON body:
-     *          - `tracklist_id` (int) - The ID of the tracklist to update.
      *          Optional parameter in JSON body:
      *          - `tracklist_status` (string) - Status of the tracklist.
      *          - `tracklist_name` (string) - Name of the tracklist.
@@ -159,21 +158,24 @@ class TracklistController extends AbstractController
      *          - `return` - set to "minimal" for a 204 response
      *          Optional header paramter:
      *          - `Prefer` - set to "return=minimal" for a 204 response
-     *
      */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/tracklist',
+        path: '/api/tracklists/{tracklistId}',
         name: 'update_tracklist',
-        methods: ['PATCH']
+        requirements: ['tracklistId' => '\d+'],
+        methods: ['PATCH'],
+        stateless: true,
     )]
     public function updateTracklistEndpoint(
+        int $tracklistId,
         #[MapRequestPayload] UpdateTracklistDto $dto,
         User $user,
         Request $request
     ): JsonResponse
     {
         $tracklist = $this->tracklistService->updateTracklist(
+            tracklistId: $tracklistId,
             dto: $dto,
             user: $user,
             requestData: $request->toArray()
@@ -190,7 +192,7 @@ class TracklistController extends AbstractController
     /**
      * Delete a tracklist and its tracklist season and tracklist episodes if available.
      *
-     * @param TracklistIdDto $dto
+     * @param int $tracklistId
      * @param User $user
      * @return JsonResponse
      * @example DELETE /api/tracklist
@@ -200,17 +202,19 @@ class TracklistController extends AbstractController
      */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/tracklist',
+        path: '/api/tracklists/{tracklistId}',
         name: 'delete_tracklist',
-        methods: ['DELETE']
+        requirements: ['tracklistId' => '\d+'],
+        methods: ['DELETE'],
+        stateless: true,
     )]
     public function deleteTracklist(
-        #[MapQueryString] TracklistIdDto $dto,
+        int $tracklistId,
         User $user
     ): JsonResponse
     {
         $this->tracklistService->deleteTracklist(
-            tracklistId: $dto->tracklistId,
+            tracklistId: $tracklistId,
             user: $user
         );
 

@@ -27,16 +27,25 @@ use App\Entity\TracklistSeason;
 use App\Entity\User;
 use App\Model\Request\Tracklist\CreateTracklistDto;
 use App\Model\Request\Tracklist\UpdateTracklistDto;
-use App\Service\RequestTrait;
+use App\Model\Response\Tracklist\TracklistLightResponseDto;
+use App\Repository\SeasonRepository;
+use App\Repository\TracklistRepository;
+use App\Service\Traits\EntityValidationTrait;
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
-use Symfony\Component\HttpKernel\Exception\UnauthorizedHttpException;
 
-class TracklistService
+readonly class TracklistService
 {
-    use RequestTrait;
+    use EntityValidationTrait;
+
+    public function __construct(
+        private TracklistRepository $tracklistRepository,
+        private SeasonRepository    $seasonRepository,
+        private EntityManagerInterface $entityManager
+    ){}
 
     /**
      * Get all tracklists of the user.
@@ -46,12 +55,19 @@ class TracklistService
      */
     public function getUserTracklists(User $user): array
     {
-        return $user->getTracklists()->toArray();
+        $tracklists = $this->tracklistRepository->findAllTracklistsByUserWithMediaAndTags(
+            user: $user
+        );
+
+        return array_map(
+            fn(Tracklist $tracklist) => TracklistLightResponseDto::fromEntity(tracklist: $tracklist),
+            $tracklists
+        );
     }
 
     /**
      * Get tracklist entity based on its id.
-     * Only returns the tracklist, if the request is from the creator of the tracklist.
+     * Only returns the tracklist if the request is from the creator of the tracklist.
      *
      * @param int $tracklistId
      * @param User $user
@@ -64,7 +80,8 @@ class TracklistService
     {
         return $this->findAndValidateTracklist(
             tracklistId: $tracklistId,
-            user: $user
+            user: $user,
+            tracklistRepository: $this->tracklistRepository
         );
     }
 
@@ -130,20 +147,23 @@ class TracklistService
     }
 
     /**
+     * @param int $tracklistId
      * @param UpdateTracklistDto $dto
      * @param User $user
      * @param array $requestData
      * @return Tracklist
      */
     public function updateTracklist(
+        int $tracklistId,
         UpdateTracklistDto $dto,
         User $user,
         array $requestData
     ): Tracklist
     {
         $tracklist = $this->findAndValidateTracklist(
-            tracklistId: $dto->tracklistId,
-            user: $user
+            tracklistId: $tracklistId,
+            user: $user,
+            tracklistRepository: $this->tracklistRepository
         );
 
         if (array_key_exists('tracklist_name', $requestData)
@@ -206,7 +226,8 @@ class TracklistService
     {
         $tracklist = $this->findAndValidateTracklist(
             tracklistId: $tracklistId,
-            user: $user
+            user: $user,
+            tracklistRepository: $this->tracklistRepository
         );
 
         $this->entityManager->remove($tracklist);
@@ -240,32 +261,5 @@ class TracklistService
         $tracklist->setFinishDate($finishDate ?: null);
 
         $tracklist->setUpdatedAt(new DateTimeImmutable());
-    }
-
-    /**
-     * @param int $tracklistId
-     * @param User $user
-     * @return Tracklist
-     */
-    private function findAndValidateTracklist(
-        int $tracklistId,
-        User $user
-    ): Tracklist
-    {
-        $tracklist = $this->entityManager
-            ->getRepository(Tracklist::class)
-            ->find($tracklistId);
-
-        if (!$tracklist)
-        {
-            throw new NotFoundHttpException('Tracklist not found');
-        }
-
-        if ($tracklist->getUser() !== $user)
-        {
-            throw new UnauthorizedHttpException('Bearer', 'User is not authorized to access this tracklist.');
-        }
-
-        return $tracklist;
     }
 }
