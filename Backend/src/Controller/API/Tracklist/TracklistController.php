@@ -54,7 +54,8 @@ class TracklistController extends AbstractController
     #[Route(
         path: '/api/user-tracklists',
         name: 'get_tracklists',
-        methods: ['GET']
+        methods: ['GET'],
+        stateless: true,
     )]
     public function getTracklistsEndpoint(User $user): JsonResponse
     {
@@ -75,7 +76,8 @@ class TracklistController extends AbstractController
     #[Route(
         path: '/api/tracklist',
         name: 'get_tracklist',
-        methods: ['GET']
+        methods: ['GET'],
+        stateless: true,
     )]
     public function getTracklistEndpoint(
         #[MapQueryString] TracklistIdDto $dto,
@@ -118,7 +120,9 @@ class TracklistController extends AbstractController
     #[Route(
         path: '/api/tracklist',
         name: 'create_tracklist',
-        methods: ['POST'])]
+        methods: ['POST'],
+        stateless: true,
+    )]
     public function createTracklistEndpoint(
         #[MapRequestPayload] CreateTracklistDto $dto,
         User $user,
@@ -165,7 +169,8 @@ class TracklistController extends AbstractController
     #[Route(
         path: '/api/tracklist',
         name: 'update_tracklist',
-        methods: ['PATCH']
+        methods: ['PATCH'],
+        stateless: true,
     )]
     public function updateTracklistEndpoint(
         #[MapRequestPayload] UpdateTracklistDto $dto,
@@ -202,7 +207,8 @@ class TracklistController extends AbstractController
     #[Route(
         path: '/api/tracklist',
         name: 'delete_tracklist',
-        methods: ['DELETE']
+        methods: ['DELETE'],
+        stateless: true,
     )]
     public function deleteTracklist(
         #[MapQueryString] TracklistIdDto $dto,
