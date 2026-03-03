@@ -83,6 +83,11 @@ export const SIDEBAR_LEGAL_MENU: SidebarMenuItem[] = [
         icon: 'pi pi-flag',
         routerLink: LEGAL_URLS.terms,
     },
+    {
+        label: 'GitHub Repository',
+        icon: 'pi pi-github',
+        action: APP_ACTIONS.openGitHub,
+    }
 ];
 
 export const SIDEBAR_OPTION_MENU: SidebarMenuItem[] = [

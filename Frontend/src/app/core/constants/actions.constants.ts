@@ -17,6 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 export const APP_ACTIONS = {
     logout: 'logout',
+    openGitHub: 'openGitHub',
 } as const;
 
 export type AppAction = typeof APP_ACTIONS[keyof typeof APP_ACTIONS];
