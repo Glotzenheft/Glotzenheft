@@ -40,28 +40,6 @@ class TracklistRepository extends ServiceEntityRepository
      * @param Media $media
      * @return array
      */
-    public function findByUserAndMediaWithSeasonsAndEpisodes(
-        User $user,
-        Media $media
-    ): array
-    {
-        return $this->createQueryBuilder('t')
-            ->leftJoin('t.tracklistSeasons', 's')
-            ->leftJoin('s.tracklistEpisodes', 'e')
-            ->addSelect('s', 'e')
-            ->where('t.user = :user')
-            ->andWhere('t.media = :media')
-            ->setParameter('user', $user)
-            ->setParameter('media', $media)
-            ->getQuery()
-            ->getResult();
-    }
-
-    /**
-     * @param User $user
-     * @param Media $media
-     * @return array
-     */
     public function findTracklistsByUserAndMediaWithSeasonsEpisodesAndTags(
         User $user,
         Media $media
