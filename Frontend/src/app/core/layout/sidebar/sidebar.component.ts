@@ -32,6 +32,8 @@ import {
 import { SidebarMenuItem } from '../../models/sidebar.models';
 import { UC_IsSearchBarVisible } from '../../use-cases/user/get-is-search-bar-visible.use-case';
 import { UC_LogoutOfAccount } from '../../use-cases/user/log-out-of-account.use-case';
+import {AppAction} from '../../constants/actions.constants';
+import {EXTERNAL_URLS} from '../../constants/urls.constants';
 
 @Component({
     selector: 'app-sidebar',
@@ -113,24 +115,38 @@ export class SidebarComponent implements OnInit, OnDestroy {
     }
 
     private mapItemToPrimeNg(item: SidebarMenuItem, withTooltip: boolean = false): MenuItem {
-        const link = item.routerLink ? [item.routerLink] : undefined;
-
-        let isActive = false;
-        if (item.routerLink) {
-            isActive = this.router.isActive(item.routerLink, {
-                paths: 'subset',
-                queryParams: 'ignored',
-                fragment: 'ignored',
-                matrixParams: 'ignored',
-            });
-        }
-
-        return {
+        const menuItem: MenuItem = {
             label: withTooltip ? undefined : item.label,
             icon: item.icon,
-            routerLink: link,
-            styleClass: withTooltip ? 'icon-only-menu-item' : isActive ? 'active-sidebar-menu' : '',
             tooltip: withTooltip ? item.label : undefined,
+            styleClass: withTooltip ? 'icon-only-menu-item' : ''
         };
+
+        if (item.action) {
+            menuItem.command = () => this.handleAction(item.action!);
+        }
+        else if (item.routerLink) {
+            menuItem.routerLink = [item.routerLink];
+
+            if (!withTooltip
+                && this.router.isActive(item.routerLink, { paths: 'subset', queryParams: 'ignored', fragment: 'ignored', matrixParams: 'ignored' })
+            ) {
+                menuItem.styleClass = 'active-sidebar-menu';
+            }
+        }
+
+        return menuItem;
+    }
+
+    private handleAction(action: AppAction): void {
+        switch (action) {
+            case 'logout':
+                this.logoutUseCase.execute();
+                break;
+            case 'openGitHub':
+                const win = window.open(EXTERNAL_URLS.gitHubRepo, '_blank', 'noopener,noreferrer');
+                win?.focus();
+                break;
+        }
     }
 }

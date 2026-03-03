@@ -58,7 +58,7 @@ export const AUTHENTICATION_URLS = {
     register: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.register}`,
     resetPassword: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.resetPassword}`,
     deleteAccount: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.deleteAccount}`,
-}
+} as const;
 
 export const SIDEBAR_OPTION_URLS = {
     resetPassword: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.resetPassword}`,
@@ -75,4 +75,8 @@ export const MEDIA_URLS = {
     baseUrl: `${MEDIA_PATHS.base}`,
     movieUrl: `${MEDIA_PATHS.base}/${MEDIA_PATHS.movie}`,
     tvUrl: `${MEDIA_PATHS.base}/${MEDIA_PATHS.tv}`,
-}
+} as const;
+
+export const EXTERNAL_URLS = {
+    gitHubRepo: 'https://github.com/Glotzenheft/Glotzenheft/',
+} as const;
