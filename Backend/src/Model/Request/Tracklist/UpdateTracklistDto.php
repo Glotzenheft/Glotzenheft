@@ -27,11 +27,6 @@ use Symfony\Component\Validator\Constraints as Assert;
 readonly class UpdateTracklistDto
 {
     public function __construct(
-        #[SerializedName('tracklist_id')]
-        #[Assert\NotBlank(message: 'Field "tracklist_id" is required.')]
-        #[Assert\Type('integer')]
-        public ?int $tracklistId = null,
-
         #[SerializedName('tracklist_name')]
         #[Assert\NotBlank(allowNull: true)]
         #[Assert\Length(
