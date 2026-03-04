@@ -30,7 +30,7 @@ import {
     provideClientHydration,
     withEventReplay,
 } from '@angular/platform-browser';
-import { provideHttpClient } from '@angular/common/http';
+import {provideHttpClient, withFetch} from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ChartModule } from 'primeng/chart';
 import { provideAppConfig } from './app.providers';
@@ -96,7 +96,7 @@ export const appConfig: ApplicationConfig = {
                 firstDayOfWeek: 1,
             },
         }),
-        provideHttpClient(),
+        provideHttpClient(withFetch()),
         MessageService,
         ChartModule,
         ...provideAppConfig(),
