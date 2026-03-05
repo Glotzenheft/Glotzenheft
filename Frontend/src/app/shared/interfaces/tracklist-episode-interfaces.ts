@@ -18,6 +18,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export interface CreateTracklistEpisode {
     tracklistId: number;
     tracklistSeasonId: number;
-    watchDate: string;
+    watchDateTime: string;
     episodeId: number;
 }

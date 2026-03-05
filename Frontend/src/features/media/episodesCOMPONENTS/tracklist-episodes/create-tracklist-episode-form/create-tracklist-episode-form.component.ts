@@ -128,23 +128,23 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         const isEpisodeInTracklist: boolean =
             episodeInTracklist.length === 1 && this.inpIsEpisodeEditing();
 
-        if (episodeInTracklist[0] && episodeInTracklist[0].watchDate) {
-            const watchDateAsDate = new Date(episodeInTracklist[0].watchDate);
-            watchDateAsDate.setHours(watchDateAsDate.getHours());
+        if (episodeInTracklist[0] && episodeInTracklist[0].watchDateTime) {
+            const watchDateTimeAsDate = new Date(episodeInTracklist[0].watchDateTime);
+            watchDateTimeAsDate.setHours(watchDateTimeAsDate.getHours());
             this.createEpisodeForm = this.formBuilder.group({
-                watchDate: [
+                watchDateTime: [
                     isEpisodeInTracklist &&
                     episodeInTracklist[0] &&
-                    episodeInTracklist[0].watchDate &&
-                    episodeInTracklist[0].watchDate.length > 0
-                        ? watchDateAsDate
+                    episodeInTracklist[0].watchDateTime &&
+                    episodeInTracklist[0].watchDateTime.length > 0
+                        ? watchDateTimeAsDate
                         : null,
                 ],
             });
             return;
         }
         this.createEpisodeForm = this.formBuilder.group({
-            watchDate: [!this.inpIsEpisodeEditing() ? new Date() : null],
+            watchDateTimeAsDate: [!this.inpIsEpisodeEditing() ? new Date() : null],
         });
 
         // set local storage tracklist to selected tracklist
@@ -175,36 +175,36 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.disableAllButtons();
 
         this.isCreateButtonEnabled = false;
-        const watchDate: string | null =
-            this.createEpisodeForm.get('watchDate')?.value;
-        let formattedDate: string = '';
+        const watchDateTime: string | null =
+            this.createEpisodeForm.get('watchDateTime')?.value;
+        let formattedDateTime: string = '';
 
-        if (watchDate !== null) {
-            const watchDateAsDate = new Date(watchDate);
+        if (watchDateTime !== null) {
+            const watchDateTimeAsDate = new Date(watchDateTime);
 
-            const year = watchDateAsDate.getFullYear();
-            const month = String(watchDateAsDate.getMonth() + 1).padStart(
+            const year = watchDateTimeAsDate.getFullYear();
+            const month = String(watchDateTimeAsDate.getMonth() + 1).padStart(
                 2,
                 '0',
             );
-            const day = String(watchDateAsDate.getDate()).padStart(2, '0');
-            const hours = String(watchDateAsDate.getHours()).padStart(2, '0');
-            const minutes = String(watchDateAsDate.getMinutes()).padStart(
+            const day = String(watchDateTimeAsDate.getDate()).padStart(2, '0');
+            const hours = String(watchDateTimeAsDate.getHours()).padStart(2, '0');
+            const minutes = String(watchDateTimeAsDate.getMinutes()).padStart(
                 2,
                 '0',
             );
-            const seconds = String(watchDateAsDate.getSeconds()).padStart(
+            const seconds = String(watchDateTimeAsDate.getSeconds()).padStart(
                 2,
                 '0',
             );
 
-            formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
 
         const createEpisodeData: CreateTracklistEpisode = {
             tracklistId: this.inpTracklist().id,
             tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
-            watchDate: formattedDate,
+            watchDateTime: formattedDateTime,
             episodeId: this.inpEpisode().id,
         };
 
@@ -214,30 +214,30 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public saveEditedEpisode = () => {
         this.disableAllButtons();
 
-        const watchDate: string | null =
-            this.createEpisodeForm.get('watchDate')?.value;
-        let formattedDate: string = '';
+        const watchDateTime: string | null =
+            this.createEpisodeForm.get('watchDateTime')?.value;
+        let formattedDateTime: string = '';
 
-        if (watchDate !== null) {
-            const watchDateAsDate = new Date(watchDate);
+        if (watchDateTime !== null) {
+            const watchDateTimeAsDate = new Date(watchDateTime);
 
-            const year = watchDateAsDate.getFullYear();
-            const month = String(watchDateAsDate.getMonth() + 1).padStart(
+            const year = watchDateTimeAsDate.getFullYear();
+            const month = String(watchDateTimeAsDate.getMonth() + 1).padStart(
                 2,
                 '0',
             );
-            const day = String(watchDateAsDate.getDate()).padStart(2, '0');
-            const hours = String(watchDateAsDate.getHours()).padStart(2, '0');
-            const minutes = String(watchDateAsDate.getMinutes()).padStart(
+            const day = String(watchDateTimeAsDate.getDate()).padStart(2, '0');
+            const hours = String(watchDateTimeAsDate.getHours()).padStart(2, '0');
+            const minutes = String(watchDateTimeAsDate.getMinutes()).padStart(
                 2,
                 '0',
             );
-            const seconds = String(watchDateAsDate.getSeconds()).padStart(
+            const seconds = String(watchDateTimeAsDate.getSeconds()).padStart(
                 2,
                 '0',
             );
 
-            formattedDate = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
         }
 
         const episodeInTracklist =
@@ -250,7 +250,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         const updateEpisodeData: CreateTracklistEpisode = {
             tracklistId: this.inpTracklist().id,
             tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
-            watchDate: formattedDate,
+            watchDateTime: formattedDateTime,
             episodeId: episodeInTracklist[0].id, // tracklist episode id
         };
 
@@ -283,7 +283,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         const deleteEpisodeData: CreateTracklistEpisode = {
             tracklistId: this.inpTracklist().id,
             tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
-            watchDate: '',
+            watchDateTime: '',
             episodeId: episodeInTracklist[0].id, // tracklist episode id
         };
 

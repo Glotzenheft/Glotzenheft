@@ -190,5 +190,5 @@ export interface TracklistEpisode {
         id: number;
     };
     id: number;
-    watchDate: string;
+    watchDateTime: string;
 }

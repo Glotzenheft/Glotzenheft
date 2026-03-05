@@ -51,7 +51,7 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
             ROUTE_CREATE_TRACKLIST_EPISODE[1] +
             tracklistEpisode.episodeId +
             ROUTE_CREATE_TRACKLIST_EPISODE[2] +
-            tracklistEpisode.watchDate +
+            tracklistEpisode.watchDateTime +
             ROUTE_CREATE_TRACKLIST_EPISODE[3] +
             tracklistEpisode.tracklistId;
 
@@ -80,7 +80,7 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
             ROUTE_UPDATE_TRACKLIST_EPISODE[2] +
             tracklistEpisode.episodeId +
             ROUTE_UPDATE_TRACKLIST_EPISODE[3] +
-            tracklistEpisode.watchDate;
+            tracklistEpisode.watchDateTime;
 
         return this.http.patch<any>(url, {}, { headers: header }).pipe(
             shareReplay(1),
