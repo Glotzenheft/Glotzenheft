@@ -106,3 +106,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         align-items: center;
     }
 }
+
+@media (min-width: 2000px) {
+    .createTracklistEpisodeDIV {
+        height: 100%;
+    }
+
+    .createTracklistEpisodeWrapperDIV {
+        width: 90%;
+    }
+}
