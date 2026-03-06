@@ -21,3 +21,8 @@ export interface CreateTracklistEpisode {
     watchDateTime: string;
     episodeId: number;
 }
+
+export interface UpdateTracklistEpisode {
+    watchDateTime: string | null;
+    tracklistEpisodeId: number;
+}
