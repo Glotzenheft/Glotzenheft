@@ -27,8 +27,6 @@ export interface I_EpisodeRepository {
         tracklistEpisode: UpdateTracklistEpisode,
     ) => Observable<any> | null;
     deleteTracklistEpisode: (
-        tracklistID: number,
-        tracklistSeasonID: number,
         tracklistEpisodeId: number,
     ) => Observable<any> | null;
 }

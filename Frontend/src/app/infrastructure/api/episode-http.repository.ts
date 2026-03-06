@@ -19,9 +19,7 @@ import {HttpClient, HttpErrorResponse} from '@angular/common/http';
 import {Injectable} from '@angular/core';
 import {CreateTracklistEpisode, UpdateTracklistEpisode} from '../../shared/interfaces/tracklist-episode-interfaces';
 import {catchError, Observable, shareReplay, throwError} from 'rxjs';
-import {
-    ROUTE_DELETE_TRACKLIST_EPISODE, ROUTE_TRACKLIST_EPISODES,
-} from '../../shared/variables/api-routes';
+import { ROUTE_TRACKLIST_EPISODES } from '../../shared/variables/api-routes';
 import {I_EpisodeRepository} from '../../core/interfaces/episode.repository';
 import {UC_GetHeader} from '../../core/use-cases/media/get-header.use-case';
 
@@ -82,23 +80,13 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
     };
 
     public deleteTracklistEpisode = (
-        tracklistId: number,
-        tracklistSeasonId: number,
         tracklistEpisodeId: number,
     ): Observable<any> | null => {
         const header = this.getHeaderUseCase.execute();
 
-        if (!header) {
-            return null;
-        }
+        if (!header) return null;
 
-        const url: string =
-            ROUTE_DELETE_TRACKLIST_EPISODE[0] +
-            tracklistId +
-            ROUTE_DELETE_TRACKLIST_EPISODE[1] +
-            tracklistSeasonId +
-            ROUTE_DELETE_TRACKLIST_EPISODE[2] +
-            tracklistEpisodeId;
+        const url: string = `${ROUTE_TRACKLIST_EPISODES}/${tracklistEpisodeId}`;
 
         return this.http.delete<any>(url, { headers: header }).pipe(
             shareReplay(1),

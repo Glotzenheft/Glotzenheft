@@ -73,14 +73,8 @@ export const ROUTE_GET_TRACKLIST: string =
 export const ROUTE_DELETE_TRACKLIST: string =
     API_ROUTE + 'tracklists';
 
-// api routes for episodes --------------------------
+// api routes for tracklist episodes --------------------------
 export const ROUTE_TRACKLIST_EPISODES: string = API_ROUTE + 'tracklist-episodes';
-
-export const ROUTE_DELETE_TRACKLIST_EPISODE: string[] = [
-    API_ROUTE + 'tracklist-episode?tracklist_id=',
-    '&tracklist_season_id=',
-    '&tracklist_episode_id=',
-];
 
 // api routes for statistics ---------------------------------
 export const ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY: string =

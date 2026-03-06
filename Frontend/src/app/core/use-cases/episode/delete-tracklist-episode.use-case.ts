@@ -30,13 +30,9 @@ export class UC_DeleteTracklistEpisode {
     ) {}
 
     public execute = (
-        tracklistID: number,
-        tracklistSeasonID: number,
         tracklistEpisodeId: number,
     ): Observable<any> | null => {
         return this.episodeRepository.deleteTracklistEpisode(
-            tracklistID,
-            tracklistSeasonID,
             tracklistEpisodeId,
         );
     };
