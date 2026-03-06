@@ -23,6 +23,7 @@ namespace App\Controller\API\Tracklist;
 use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\TracklistEpisode\CreateTracklistEpisodeRequestDto;
+use App\Model\Request\TracklistEpisode\UpdateTracklistEpisodeRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\Tracklist\TracklistEpisodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -71,27 +72,33 @@ class TracklistEpisodeController extends AbstractController
         );
     }
 
-    /**
-     * @param Request $request
-     * @return JsonResponse
-     */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/tracklist-episode',
+        path: '/api/tracklist-episodes/{tracklistEpisodeId}',
         name: 'update_tracklist_episode',
+        requirements: ['tracklistEpisodeId' => '\d+'],
         methods: ['PATCH'],
         stateless: true,
     )]
-    public function updateTracklistEpisode(Request $request): JsonResponse
+    public function updateTracklistEpisode(
+        int $tracklistEpisodeId,
+        #[MapRequestPayload] UpdateTracklistEpisodeRequestDto $dto,
+        User $user,
+        Request $request
+    ): JsonResponse
     {
-        $tracklistEpisode = $this->tracklistEpisodeService->updateTracklistEpisode($request);
+        $tracklistEpisodeResponse = $this->tracklistEpisodeService->updateTracklistEpisode(
+            tracklistEpisodeId: $tracklistEpisodeId,
+            dto: $dto,
+            user: $user,
+            request: $request
+        );
 
-        if (isset($tracklistEpisode['error']))
-        {
-            return $this->json($tracklistEpisode['error'], (int) $tracklistEpisode['code']);
-        }
-
-        return $this->json([$tracklistEpisode], context: ['groups' => ['tracklist_episode']]);
+        return $this->createConditionalResponse(
+            request: $request,
+            data: $tracklistEpisodeResponse,
+            successStatus: Response::HTTP_OK,
+        );
     }
 
     /**

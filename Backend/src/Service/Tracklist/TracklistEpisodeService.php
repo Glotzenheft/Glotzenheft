@@ -26,6 +26,7 @@ use App\Entity\TracklistEpisode;
 use App\Entity\TracklistSeason;
 use App\Entity\User;
 use App\Model\Request\TracklistEpisode\CreateTracklistEpisodeRequestDto;
+use App\Model\Request\TracklistEpisode\UpdateTracklistEpisodeRequestDto;
 use App\Model\Response\Tracklist\TracklistSeason\TracklistEpisode\TracklistEpisodeDetailDataDto;
 use App\Repository\EpisodeRepository;
 use App\Repository\TracklistEpisodeRepository;
@@ -33,8 +34,6 @@ use App\Repository\TracklistRepository;
 use App\Repository\TracklistSeasonRepository;
 use App\Service\RequestTrait;
 use App\Service\Traits\EntityValidationTrait;
-use DateMalformedStringException;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
@@ -77,39 +76,41 @@ class TracklistEpisodeService
         return TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
     }
 
-    public function updateTracklistEpisode(Request $request): array
+    /**
+     * @param int $tracklistEpisodeId
+     * @param UpdateTracklistEpisodeRequestDto $dto
+     * @param User $user
+     * @param Request $request
+     * @return TracklistEpisodeDetailDataDto
+     */
+    public function updateTracklistEpisode(
+        int $tracklistEpisodeId,
+        UpdateTracklistEpisodeRequestDto $dto,
+        User $user,
+        Request $request
+    ): TracklistEpisodeDetailDataDto
     {
-        $this->data = $this->handleRequest($request);
 
-        $tracklistEpisode = $this->validateAndGetTracklistEpisode();
-        if (is_array($tracklistEpisode))
+        $tracklistEpisode = $this->tracklistEpisodeRepository->find($tracklistEpisodeId);
+
+        if (!$tracklistEpisode instanceof TracklistEpisode || $tracklistEpisode->getTracklistSeason()->getTracklist()->getUser() !== $user)
         {
-            return $tracklistEpisode;
+            throw new NotFoundHttpException('Tracklist episode not found or access denied.');
         }
 
-        $watchDate = null;
-        if (isset($this->data['watch_date']))
+        $requestData = $request->toArray();
+
+        if (array_key_exists('watch_date_time', $requestData))
         {
-            try
-            {
-                $watchDate = new DateTime($this->data['watch_date']);
-            }
-            catch (DateMalformedStringException $e)
-            {
-                return $this->returnWatchDateError();
-            }
+            $tracklistEpisode->setWatchDate($dto->watchDateTime);
         }
 
-        $tracklistEpisode
-            ->setWatchDate($watchDate)
-            ->setUpdatedAt(new DateTimeImmutable())
-        ;
+        $tracklistEpisode->setUpdatedAt(new DateTimeImmutable());
+
         $this->entityManager->persist($tracklistEpisode);
         $this->entityManager->flush();
 
-        return [
-            'tracklist_episode' => $tracklistEpisode
-        ];
+        return TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
     }
 
     public function deleteTracklistEpisode(Request $request): array
