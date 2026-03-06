@@ -74,12 +74,7 @@ export const ROUTE_DELETE_TRACKLIST: string =
     API_ROUTE + 'tracklists';
 
 // api routes for episodes --------------------------
-export const ROUTE_CREATE_TRACKLIST_EPISODE: string[] = [
-    API_ROUTE + 'tracklist-episode?tracklist_season_id=',
-    '&episode_id=',
-    '&watch_date=',
-    '&tracklist_id=',
-];
+export const ROUTE_CREATE_TRACKLIST_EPISODE: string = API_ROUTE + 'tracklist-episodes';
 
 export const ROUTE_UPDATE_TRACKLIST_EPISODE: string[] = [
     // for updating the watch date of an episode

@@ -15,17 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { HttpClient, HttpErrorResponse } from '@angular/common/http';
-import { Injectable } from '@angular/core';
-import { CreateTracklistEpisode } from '../../shared/interfaces/tracklist-episode-interfaces';
-import { catchError, Observable, shareReplay, throwError } from 'rxjs';
+import {HttpClient, HttpErrorResponse} from '@angular/common/http';
+import {Injectable} from '@angular/core';
+import {CreateTracklistEpisode} from '../../shared/interfaces/tracklist-episode-interfaces';
+import {catchError, Observable, shareReplay, throwError} from 'rxjs';
 import {
     ROUTE_CREATE_TRACKLIST_EPISODE,
     ROUTE_DELETE_TRACKLIST_EPISODE,
     ROUTE_UPDATE_TRACKLIST_EPISODE,
 } from '../../shared/variables/api-routes';
-import { I_EpisodeRepository } from '../../core/interfaces/episode.repository';
-import { UC_GetHeader } from '../../core/use-cases/media/get-header.use-case';
+import {I_EpisodeRepository} from '../../core/interfaces/episode.repository';
+import {UC_GetHeader} from '../../core/use-cases/media/get-header.use-case';
 
 @Injectable({
     providedIn: 'root',
@@ -45,17 +45,16 @@ export class R_EpisodeHttp implements I_EpisodeRepository {
             return null;
         }
 
-        const url: string =
-            ROUTE_CREATE_TRACKLIST_EPISODE[0] +
-            tracklistEpisode.tracklistSeasonId +
-            ROUTE_CREATE_TRACKLIST_EPISODE[1] +
-            tracklistEpisode.episodeId +
-            ROUTE_CREATE_TRACKLIST_EPISODE[2] +
-            tracklistEpisode.watchDateTime +
-            ROUTE_CREATE_TRACKLIST_EPISODE[3] +
-            tracklistEpisode.tracklistId;
+        const body = {
+            tracklist_id: tracklistEpisode.tracklistId,
+            tracklist_season_id: tracklistEpisode.tracklistSeasonId,
+            episode_id: tracklistEpisode.episodeId,
+            watch_date_time: tracklistEpisode.watchDateTime,
+        };
 
-        return this.http.post<any>(url, {}, { headers: header }).pipe(
+        console.log(body);
+
+        return this.http.post<any>(ROUTE_CREATE_TRACKLIST_EPISODE, body, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
