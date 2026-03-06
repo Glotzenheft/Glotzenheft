@@ -124,7 +124,7 @@ class TracklistTagController extends AbstractController
         #[MapRequestPayload] CreateTracklistTagRequestDto $dto,
         User $user,
         Request $request,
-    ): JsonResponse
+    ): Response
     {
         $tagResponse = $this->tracklistTagService->createTracklistTag(
             user:$user,
@@ -151,7 +151,7 @@ class TracklistTagController extends AbstractController
         #[MapRequestPayload] UpdateTracklistTagRequestDto $dto,
         User $user,
         Request $request,
-    ): JsonResponse
+    ): Response
     {
         $tagResponse = $this->tracklistTagService->updateTracklistTag(
             id: $tagId,
