@@ -25,102 +25,56 @@ use App\Entity\Tracklist;
 use App\Entity\TracklistEpisode;
 use App\Entity\TracklistSeason;
 use App\Entity\User;
+use App\Model\Request\TracklistEpisode\CreateTracklistEpisodeRequestDto;
+use App\Model\Response\Tracklist\TracklistSeason\TracklistEpisode\TracklistEpisodeDetailDataDto;
+use App\Repository\EpisodeRepository;
+use App\Repository\TracklistEpisodeRepository;
+use App\Repository\TracklistRepository;
+use App\Repository\TracklistSeasonRepository;
 use App\Service\RequestTrait;
+use App\Service\Traits\EntityValidationTrait;
 use DateMalformedStringException;
 use DateTime;
 use DateTimeImmutable;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 class TracklistEpisodeService
 {
     use RequestTrait;
+    use EntityValidationTrait;
+
+    public function __construct(
+        private readonly TracklistRepository        $tracklistRepository,
+        private readonly TracklistSeasonRepository  $tracklistSeasonRepository,
+        private readonly TracklistEpisodeRepository $tracklistEpisodeRepository,
+        private readonly EpisodeRepository          $episodeRepository,
+        private readonly EntityManagerInterface     $entityManager,
+    ){}
 
     /**
-     * @param Request $request
-     * @return TracklistEpisode[]
+     * @param CreateTracklistEpisodeRequestDto $dto
+     * @param User $user
+     * @return TracklistEpisodeDetailDataDto
      */
-    public function createTracklistEpisode(Request $request): array
+    public function createTracklistEpisode(
+        CreateTracklistEpisodeRequestDto $dto,
+        User $user,
+    ): TracklistEpisodeDetailDataDto
     {
-        $this->data = $this->handleRequest($request);
+        [$tracklistSeason, $episode] = $this->fetchAndValidateDependencies($dto, $user);
 
-        if (!isset($this->data['tracklist_id'], $this->data['tracklist_season_id'], $this->data['episode_id'], $this->data['user_id']))
-        {
-            return $this->returnInvalidRequest();
-        }
-
-        $user = $this->entityManager->getRepository(User::class)->find($this->data['user_id']);
-        if (!$user instanceof User)
-        {
-            return $this->returnUserNotFound();
-        }
-
-        $tracklist = $this->entityManager->getRepository(Tracklist::class)->find($this->data['tracklist_id']);
-        if (!$tracklist instanceof Tracklist)
-        {
-            return $this->returnTracklistNotFound();
-        }
-
-        if ($user !== $tracklist->getUser())
-        {
-            return $this->returnUserNotAuthorized();
-        }
-
-        $tracklistSeason = $this->entityManager->getRepository(TracklistSeason::class)->find($this->data['tracklist_season_id']);
-        if (!$tracklistSeason instanceof TracklistSeason)
-        {
-            return $this->returnTracklistSeasonNotFound();
-        }
-
-        if ($tracklistSeason->getTracklist() !== $tracklist)
-        {
-            return $this->returnWrongTracklistTracklistSeason();
-        }
-
-        $episode = $this->entityManager->getRepository(Episode::class)->find($this->data['episode_id']);
-        if (!$episode instanceof Episode)
-        {
-            return $this->returnEpisodeNotFound();
-        }
-
-        $season = $tracklistSeason->getSeason();
-        if ($episode->getSeason() !== $season)
-        {
-            return $this->returnWrongSeasonEpisode();
-        }
-
-        $existingEntity = $this->entityManager->getRepository(TracklistEpisode::class)->findOneBy([
-            'tracklistSeason' => $tracklistSeason,
-            'episode' => $episode,
-        ]);
-
-        if ($existingEntity instanceof TracklistEpisode)
-        {
-            return $this->returnTracklistEpisodeAlreadyExistsError();
-        }
-
-        $watchDate = null;
-        if (isset($this->data['watch_date']))
-        {
-            $watchDate = DateTime::createFromFormat('Y-m-d H:i:s', $this->data['watch_date']);
-            if (!$watchDate instanceof DateTime)
-            {
-                $watchDate = null;
-            }
-        }
-
-        $tracklistEpisode = new TracklistEpisode();
-        $tracklistEpisode
+        $tracklistEpisode = (new TracklistEpisode())
             ->setTracklistSeason($tracklistSeason)
             ->setEpisode($episode)
-            ->setWatchDate($watchDate)
-        ;
+            ->setWatchDate($dto->watchDateTime);
 
         $this->entityManager->persist($tracklistEpisode);
         $this->entityManager->flush();
 
-        return [
-            'tracklist_episode' => $tracklistEpisode
-        ];
+        return TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
     }
 
     public function updateTracklistEpisode(Request $request): array
@@ -244,5 +198,48 @@ class TracklistEpisodeService
         }
 
         return $tracklistEpisode;
+    }
+
+    /**
+     * @param CreateTracklistEpisodeRequestDto $dto
+     * @param User $user
+     * @return array{0: TracklistSeason, 1: Episode}
+     */
+    private function fetchAndValidateDependencies(
+        CreateTracklistEpisodeRequestDto $dto,
+        User $user
+    ): array
+    {
+        $tracklistSeason = $this->tracklistSeasonRepository->findOneBy([
+            'id' => $dto->tracklistSeasonId,
+            'tracklist' => $dto->tracklistId,
+        ]);
+
+        if (!$tracklistSeason instanceof TracklistSeason || $tracklistSeason->getTracklist()->getUser() !== $user)
+        {
+            throw new NotFoundHttpException('Tracklist season not found, belongs to wrong tracklist, or access denied.');
+        }
+
+        $episode = $this->episodeRepository->findOneBy([
+            'id' => $dto->episodeId,
+            'season' => $tracklistSeason->getSeason(),
+        ]);
+
+        if (!$episode instanceof Episode)
+        {
+            throw new NotFoundHttpException(message: 'Episode not found or does not belong to the correct season.');
+        }
+
+        $existingEntity = $this->tracklistEpisodeRepository->findOneBy([
+            'tracklistSeason' => $tracklistSeason,
+            'episode' => $episode,
+        ]);
+
+        if ($existingEntity instanceof TracklistEpisode)
+        {
+            throw new ConflictHttpException(message: 'This episode is already added to the tracklist season.');
+        }
+
+        return [$tracklistSeason, $episode];
     }
 }
