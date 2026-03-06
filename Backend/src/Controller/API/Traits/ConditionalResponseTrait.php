@@ -40,7 +40,7 @@ trait ConditionalResponseTrait
      * @param int $successStatus
      * @param array $context
      * @param string|null $locationUrl
-     * @return JsonResponse
+     * @return Response|JsonResponse
      */
     private function createConditionalResponse(
         Request $request,
@@ -48,7 +48,7 @@ trait ConditionalResponseTrait
         int $successStatus,
         array $context = [],
         ?string $locationUrl = null
-    ): Response
+    ): Response|JsonResponse
     {
         $wantsMinimalByQuery = $request->query->get(key: 'return') === 'minimal';
         $preferHeader = $request->headers->get(
