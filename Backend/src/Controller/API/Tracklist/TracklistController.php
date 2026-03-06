@@ -95,7 +95,7 @@ class TracklistController extends AbstractController
      * @param CreateTracklistDto $dto
      * @param User $user
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      * @example POST /api/tracklist
      *          Header: Authorization: Bearer <JWT-TOKEN>
      *          Required parameter in JSON body:
@@ -123,7 +123,7 @@ class TracklistController extends AbstractController
         #[MapRequestPayload] CreateTracklistDto $dto,
         User $user,
         Request $request
-    ): JsonResponse
+    ): Response
     {
         $tracklist = $this->tracklistService->createTracklist(
             dto: $dto,
@@ -145,7 +145,7 @@ class TracklistController extends AbstractController
      * @param UpdateTracklistDto $dto
      * @param User $user
      * @param Request $request
-     * @return JsonResponse
+     * @return Response
      * @example PATCH /api/tracklists/{tracklistId}
      *          Header: Authorization: Bearer <JWT-TOKEN>
      *          Optional parameter in JSON body:
@@ -172,7 +172,7 @@ class TracklistController extends AbstractController
         #[MapRequestPayload] UpdateTracklistDto $dto,
         User $user,
         Request $request
-    ): JsonResponse
+    ): Response
     {
         $tracklist = $this->tracklistService->updateTracklist(
             tracklistId: $tracklistId,

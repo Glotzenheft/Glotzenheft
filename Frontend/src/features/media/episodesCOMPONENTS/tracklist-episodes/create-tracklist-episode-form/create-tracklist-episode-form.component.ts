@@ -40,7 +40,10 @@ import {
     TracklistEpisode,
 } from '../../../../../app/shared/interfaces/tracklist-interfaces';
 import { SeasonEpisode } from '../../../../../app/shared/interfaces/media-interfaces';
-import { CreateTracklistEpisode } from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
+import {
+    CreateTracklistEpisode,
+    UpdateTracklistEpisode
+} from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
 import {
     ERR_OBJECT_INVALID_AUTHENTICATION,
     getMessageObject,
@@ -164,101 +167,56 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public submitForm = () => {
         this.disableAllButtons();
 
-        this.isCreateButtonEnabled = false;
-        const watchDateTime: string | null =
-            this.createEpisodeForm.get('watchDateTime')?.value;
-        let formattedDateTime: string = '';
-
-        if (watchDateTime !== null) {
-            const watchDateTimeAsDate = new Date(watchDateTime);
-
-            const year = watchDateTimeAsDate.getFullYear();
-            const month = String(watchDateTimeAsDate.getMonth() + 1).padStart(
-                2,
-                '0',
-            );
-            const day = String(watchDateTimeAsDate.getDate()).padStart(2, '0');
-            const hours = String(watchDateTimeAsDate.getHours()).padStart(2, '0');
-            const minutes = String(watchDateTimeAsDate.getMinutes()).padStart(
-                2,
-                '0',
-            );
-            const seconds = String(watchDateTimeAsDate.getSeconds()).padStart(
-                2,
-                '0',
-            );
-
-            formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
-        }
+        const formattedDateTime = this.getFormattedWatchDateTime();
 
         const createEpisodeData: CreateTracklistEpisode = {
             tracklistId: this.inpTracklist().id,
             tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
-            watchDateTime: formattedDateTime,
+            watchDateTime: formattedDateTime || '', // Fallback, falls die API noch zwingend einen String erwartet
             episodeId: this.inpEpisode().id,
         };
 
-        this.makeAPIRequest(createEpisodeData, 0);
+        this.executeCreateApiRequest(createEpisodeData);
     };
 
     public saveEditedEpisode = () => {
         this.disableAllButtons();
 
-        const watchDateTime: string | null =
-            this.createEpisodeForm.get('watchDateTime')?.value;
-        let formattedDateTime: string = '';
+        const formattedDateTime = this.getFormattedWatchDateTime();
 
-        if (watchDateTime !== null) {
-            const watchDateTimeAsDate = new Date(watchDateTime);
+        const episodeInTracklist = this.inpTracklist().tracklistSeasons[0]?.tracklistEpisodes.find(
+            (epis: TracklistEpisode) => epis.episode.id === this.inpEpisode().id
+        );
 
-            const year = watchDateTimeAsDate.getFullYear();
-            const month = String(watchDateTimeAsDate.getMonth() + 1).padStart(
-                2,
-                '0',
+        if (!episodeInTracklist) {
+            this.messageService.add(
+                getMessageObject(
+                    'error',
+                    'Episode nicht gefunden',
+                    'Die Episode konnte in der Trackliste nicht gefunden werden.',
+                ),
             );
-            const day = String(watchDateTimeAsDate.getDate()).padStart(2, '0');
-            const hours = String(watchDateTimeAsDate.getHours()).padStart(2, '0');
-            const minutes = String(watchDateTimeAsDate.getMinutes()).padStart(
-                2,
-                '0',
-            );
-            const seconds = String(watchDateTimeAsDate.getSeconds()).padStart(
-                2,
-                '0',
-            );
-
-            formattedDateTime = `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+            this.enableAllButtons();
+            return;
         }
 
-        const episodeInTracklist =
-            this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
-                (epis: TracklistEpisode) => {
-                    return this.inpEpisode().id === epis.episode.id;
-                },
-            );
-
-        const updateEpisodeData: CreateTracklistEpisode = {
-            tracklistId: this.inpTracklist().id,
-            tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
+        const updateEpisodeData: UpdateTracklistEpisode = {
             watchDateTime: formattedDateTime,
-            episodeId: episodeInTracklist[0].id, // tracklist episode id
+            tracklistEpisodeId: episodeInTracklist.id,
         };
 
-        this.makeAPIRequest(updateEpisodeData, 1);
+        this.executeUpdateApiRequest(updateEpisodeData);
     };
 
     public deleteEpisode = () => {
         this.disableAllButtons();
         this.setDeletionDialogVisibilityStatus(false);
 
-        const episodeInTracklist =
-            this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
-                (epis: TracklistEpisode) => {
-                    return this.inpEpisode().id === epis.episode.id;
-                },
-            );
+        const episodeInTracklist = this.inpTracklist().tracklistSeasons[0]?.tracklistEpisodes.find(
+            (epis: TracklistEpisode) => epis.episode.id === this.inpEpisode().id
+        );
 
-        if (episodeInTracklist.length < 1) {
+        if (!episodeInTracklist) {
             this.messageService.add(
                 getMessageObject(
                     'error',
@@ -266,192 +224,106 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
                     'Das Löschen ist fehlgeschlagen. Bitte probiere es erneut.',
                 ),
             );
-
+            this.enableAllButtons();
             return;
         }
 
-        const deleteEpisodeData: CreateTracklistEpisode = {
-            tracklistId: this.inpTracklist().id,
-            tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
-            watchDateTime: '',
-            episodeId: episodeInTracklist[0].id, // tracklist episode id
-        };
+        this.executeDeleteApiRequest(episodeInTracklist.id);
+    };
 
-        this.makeAPIRequest(deleteEpisodeData, 2);
+    private executeCreateApiRequest = (episodeData: CreateTracklistEpisode) => {
+        this.createEpisodeRequestData$ = this.createTracklistEpisodeUseCase.execute(episodeData);
+
+        if (!this.createEpisodeRequestData$) {
+            this.messageService.add(getMessageObject('error', 'Fehler beim Hinzufügen', 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten.'));
+            this.enableAllButtons();
+            return;
+        }
+
+        this.createEpisodeRequestData$.subscribe({
+            next: () => {
+                this.messageService.add(getMessageObject('success', 'Episode erfolgreich hinzugefügt'));
+                this.saveEpisode.emit(true);
+                this.enableAllButtons();
+            },
+            error: (err: any) => this.handleApiError(err, 'Fehler beim Hinzufügen', 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten.')
+        });
+    };
+
+    private executeUpdateApiRequest = (episodeData: UpdateTracklistEpisode) => {
+        this.updateEpisodeRequestData$ = this.updateTracklistEpisodeUseCase.execute(episodeData);
+
+        if (!this.updateEpisodeRequestData$) {
+            this.messageService.add(getMessageObject('error', 'Fehler beim Speichern', 'Beim Speichern der Episode ist ein Fehler aufgetreten.'));
+            this.enableAllButtons();
+            return;
+        }
+
+        this.updateEpisodeRequestData$.subscribe({
+            next: () => {
+                this.messageService.add(getMessageObject('success', 'Episode erfolgreich gespeichert'));
+                this.saveEpisode.emit(true);
+                this.enableAllButtons();
+            },
+            error: (err: any) => this.handleApiError(err, 'Fehler beim Speichern', 'Beim Speichern der Episode ist ein Fehler aufgetreten.')
+        });
+    };
+
+    private executeDeleteApiRequest = (tracklistEpisodeId: number) => {
+        this.deleteEpisodeRequestData$ = this.deleteTracklistEpisodeUseCase.execute(tracklistEpisodeId);
+
+        if (!this.deleteEpisodeRequestData$) {
+            this.messageService.add(getMessageObject('error', 'Fehler beim Löschen', 'Beim Löschen der Episode ist ein Fehler aufgetreten.'));
+            this.enableAllButtons();
+            return;
+        }
+
+        this.deleteEpisodeRequestData$.subscribe({
+            next: () => {
+                this.messageService.add(getMessageObject('success', 'Episode erfolgreich gelöscht'));
+                this.saveEpisode.emit(true);
+                this.enableAllButtons();
+            },
+            error: (err: any) => this.handleApiError(err, 'Fehler beim Löschen', 'Beim Löschen der Episode ist ein Fehler aufgetreten.')
+        });
     };
 
     /**
-     *
-     * @param episodeData CreateTracklistEpisode
-     * @param episodeActionNumber number -> 0 (create), 1 (update) or 2 (delete) episode
-     * @returns
+     * Liest das Datum aus dem Formular aus und formatiert es im Y-m-d H:i:s Format.
+     * Gibt null zurück, wenn kein gültiges Datum eingegeben wurde.
      */
-    public makeAPIRequest = (
-        episodeData: CreateTracklistEpisode,
-        episodeActionNumber: number,
-    ) => {
-        this.disableAllButtons();
+    private getFormattedWatchDateTime = (): string | null => {
+        const rawWatchDateTime = this.createEpisodeForm.get('watchDateTime')?.value;
 
-        // = 0: create episode; = 1: update selected episode; = 2: delete episode
-        const errorMessageSummary: string =
-            episodeActionNumber === 0
-                ? 'Fehler beim Hinzufügen der Episode'
-                : episodeActionNumber === 1
-                  ? 'Fehler beim Speichern der Episode'
-                  : 'Fehler beim Löschen der Episode';
-
-        const errorMessageDetail: string =
-            episodeActionNumber === 0
-                ? 'Beim Hinzufügen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
-                : episodeActionNumber === 1
-                  ? 'Beim Speichern der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.'
-                  : 'Beim Löschen der Episode ist ein Fehler aufgetreten. Bitte probiere es erneut.';
-
-        if (episodeActionNumber === 0) {
-            // create episode
-            this.createEpisodeRequestData$ =
-                this.createTracklistEpisodeUseCase.execute(episodeData);
-
-            if (!this.createEpisodeRequestData$) {
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        errorMessageSummary,
-                        errorMessageDetail,
-                    ),
-                );
-                return;
-            }
-
-            this.createEpisodeRequestData$.subscribe({
-                next: () => {
-                    this.messageService.add(
-                        getMessageObject(
-                            'success',
-                            'Episode erfolgreich hinzugefügt',
-                        ),
-                    );
-                    this.saveEpisode.emit(true);
-                    this.enableAllButtons();
-                },
-                error: (err: any) => {
-                    if (err.status === 401) {
-                        // logout user of account
-                        this.logOutOfAccountUseCase.execute();
-                        this.messageService.add(
-                            ERR_OBJECT_INVALID_AUTHENTICATION,
-                        );
-                        this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
-                        this.enableAllButtons();
-                        return;
-                    }
-                    this.messageService.add(
-                        getMessageObject(
-                            'error',
-                            errorMessageSummary,
-                            errorMessageDetail,
-                        ),
-                    );
-                    this.enableAllButtons();
-                },
-            });
-
-            return;
-        } else if (episodeActionNumber === 1) {
-            // updating episode
-            this.updateEpisodeRequestData$ =
-                this.updateTracklistEpisodeUseCase.execute(episodeData);
-
-            if (!this.updateEpisodeRequestData$) {
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        errorMessageSummary,
-                        errorMessageDetail,
-                    ),
-                );
-                return;
-            }
-
-            this.updateEpisodeRequestData$.subscribe({
-                next: () => {
-                    this.messageService.add(
-                        getMessageObject(
-                            'success',
-                            'Episode erfolgreich gespeichert',
-                        ),
-                    );
-                    this.saveEpisode.emit(true);
-                    this.enableAllButtons();
-                },
-                error: (err: any) => {
-                    if (err.status === 401) {
-                        this.messageService.add(
-                            ERR_OBJECT_INVALID_AUTHENTICATION,
-                        );
-                        this.enableAllButtons();
-                        return;
-                    }
-                    this.messageService.add(
-                        getMessageObject(
-                            'error',
-                            errorMessageSummary,
-                            errorMessageDetail,
-                        ),
-                    );
-                    this.enableAllButtons();
-                },
-            });
-        } else if (episodeActionNumber === 2) {
-            // delete episode
-            this.deleteEpisodeRequestData$ =
-                this.deleteTracklistEpisodeUseCase.execute(
-                    episodeData.tracklistId,
-                    episodeData.tracklistSeasonId,
-                    episodeData.episodeId,
-                );
-
-            if (!this.deleteEpisodeRequestData$) {
-                this.messageService.add(
-                    getMessageObject(
-                        'error',
-                        errorMessageSummary,
-                        errorMessageDetail,
-                    ),
-                );
-                return;
-            }
-
-            this.deleteEpisodeRequestData$.subscribe({
-                next: () => {
-                    this.messageService.add(
-                        getMessageObject(
-                            'success',
-                            'Episode erfolgreich gelöscht',
-                        ),
-                    );
-                    this.saveEpisode.emit(true);
-                    this.enableAllButtons();
-                },
-                error: (err: any) => {
-                    if (err.status === 401) {
-                        this.messageService.add(
-                            ERR_OBJECT_INVALID_AUTHENTICATION,
-                        );
-                        this.enableAllButtons();
-                        return;
-                    }
-                    this.messageService.add(
-                        getMessageObject(
-                            'error',
-                            errorMessageSummary,
-                            errorMessageDetail,
-                        ),
-                    );
-                    this.enableAllButtons();
-                },
-            });
+        if (!rawWatchDateTime) {
+            return null;
         }
+
+        const date = new Date(rawWatchDateTime);
+
+        if (isNaN(date.getTime())) {
+            return null;
+        }
+
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        const hours = String(date.getHours()).padStart(2, '0');
+        const minutes = String(date.getMinutes()).padStart(2, '0');
+        const seconds = String(date.getSeconds()).padStart(2, '0');
+
+        return `${year}-${month}-${day} ${hours}:${minutes}:${seconds}`;
+    };
+
+    private handleApiError = (err: any, summary: string, detail: string) => {
+        if (err.status === 401) {
+            this.logOutOfAccountUseCase.execute();
+            this.messageService.add(ERR_OBJECT_INVALID_AUTHENTICATION);
+            void this.router.navigateByUrl(ROUTES_LIST[10].fullUrl);
+        } else {
+            this.messageService.add(getMessageObject('error', summary, detail));
+        }
+        this.enableAllButtons();
     };
 
     public cancelEpisodeForm = () => {

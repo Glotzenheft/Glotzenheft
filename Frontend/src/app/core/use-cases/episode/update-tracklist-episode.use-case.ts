@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observable } from 'rxjs';
-import { CreateTracklistEpisode } from '../../../shared/interfaces/tracklist-episode-interfaces';
+import {UpdateTracklistEpisode} from '../../../shared/interfaces/tracklist-episode-interfaces';
 import {
     I_EpisodeRepository,
     IT_EPISODE_REPOSITORY,
@@ -31,7 +31,7 @@ export class UC_UpdateTracklistEpisode {
     ) {}
 
     public execute = (
-        tracklistEpisode: CreateTracklistEpisode,
+        tracklistEpisode: UpdateTracklistEpisode,
     ): Observable<any> | null => {
         return this.episodeRepository.updateTracklistEpisode(tracklistEpisode);
     };

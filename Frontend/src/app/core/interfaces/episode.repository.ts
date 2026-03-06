@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Observable } from 'rxjs';
-import { CreateTracklistEpisode } from '../../shared/interfaces/tracklist-episode-interfaces';
+import {CreateTracklistEpisode, UpdateTracklistEpisode} from '../../shared/interfaces/tracklist-episode-interfaces';
 import { InjectionToken } from '@angular/core';
 
 export interface I_EpisodeRepository {
@@ -24,11 +24,9 @@ export interface I_EpisodeRepository {
         tracklistEpisode: CreateTracklistEpisode,
     ) => Observable<any> | null;
     updateTracklistEpisode: (
-        tracklistEpisode: CreateTracklistEpisode,
+        tracklistEpisode: UpdateTracklistEpisode,
     ) => Observable<any> | null;
     deleteTracklistEpisode: (
-        tracklistID: number,
-        tracklistSeasonID: number,
         tracklistEpisodeId: number,
     ) => Observable<any> | null;
 }
