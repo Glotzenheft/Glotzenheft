@@ -20,29 +20,32 @@ declare(strict_types=1);
 
 namespace App\Model\Request\TracklistEpisode;
 
+use DateTimeImmutable;
+use Symfony\Component\Serializer\Annotation\Context;
 use Symfony\Component\Serializer\Attribute\SerializedName;
+use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Validator\Constraints as Assert;
 
-readonly class CreateTracklistEpisodeDto
+readonly class CreateTracklistEpisodeRequestDto
 {
     public function __construct(
         #[Assert\Type('integer')]
         #[SerializedName('tracklist_id')]
         #[Assert\NotBlank(message: 'Field "tracklist_id" is required.')]
-        public ?int $tracklistId = null,
+        public ?int               $tracklistId = null,
 
         #[Assert\Type('integer')]
         #[SerializedName('tracklist_season_id')]
         #[Assert\NotBlank(message: 'Field "tracklist_season_id" is required.')]
-        public ?int $tracklistSeasonId = null,
+        public ?int               $tracklistSeasonId = null,
 
         #[Assert\Type('integer')]
         #[SerializedName('episode_id')]
         #[Assert\NotBlank(message: 'Field "episode_id" is required.')]
-        public ?int $episodeId = null,
+        public ?int               $episodeId = null,
 
+        #[Context([DateTimeNormalizer::FORMAT_KEY => 'Y-m-d H:i:s'])]
         #[SerializedName('watch_date_time')]
-        #[Assert\DateTime(message: 'Field "watch_date_time" must be a valid date time in Y-m-d H:i:s format or null.')]
-        public ?string $watchDateTime = null,
+        public ?DateTimeImmutable $watchDateTime = null,
     ){}
 }
