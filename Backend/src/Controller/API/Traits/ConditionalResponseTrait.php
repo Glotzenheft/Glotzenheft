@@ -32,23 +32,25 @@ trait ConditionalResponseTrait
 {
     /**
      * Erstellt eine HTTP-Antwort, die entweder das volle Datenobjekt (2xx)
-     * oder eine leere Antwort (204) zurückgibt, basierend auf den
-     * Client-Präferenzen im Query oder Header.
+     * oder eine leere Antwort (204) zurückgibt, wenn es kein POST-Endpunkt ist,
+     * basierend auf den Client-Präferenzen im Query oder Header.
      *
      * @param Request $request
      * @param mixed $data
      * @param int $successStatus
      * @param array $context
+     * @param string|null $locationUrl
      * @return JsonResponse
      */
     private function createConditionalResponse(
         Request $request,
         mixed $data,
         int $successStatus,
-        array $context = []
-    ): JsonResponse
+        array $context = [],
+        ?string $locationUrl = null
+    ): Response
     {
-        $wantsMinimalByQuery = $request->query->get('return') === 'minimal';
+        $wantsMinimalByQuery = $request->query->get(key: 'return') === 'minimal';
         $preferHeader = $request->headers->get(
             key: 'Prefer',
             default: ''
@@ -57,10 +59,24 @@ trait ConditionalResponseTrait
 
         if ($wantsMinimalByQuery || $wantsMinimalByHeader)
         {
-            return $this->json(
-                data: null,
-                status: Response::HTTP_NO_CONTENT
+            $minimalStatus = $successStatus === Response::HTTP_CREATED
+                ? Response::HTTP_CREATED
+                : Response::HTTP_NO_CONTENT;
+
+            $response = new Response(
+                content: '',
+                status: $minimalStatus
             );
+
+            if ($minimalStatus === Response::HTTP_CREATED && $locationUrl !== null)
+            {
+                $response->headers->set(
+                    key: 'Location',
+                    values: $locationUrl
+                );
+            }
+
+            return $response;
         }
 
         return $this->json(
