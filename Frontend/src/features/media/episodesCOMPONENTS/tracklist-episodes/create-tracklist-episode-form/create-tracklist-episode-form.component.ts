@@ -117,39 +117,29 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        // extract the episode of the tracklist (for retrieving e. g. watchDate and trakcklist episode id)
-        const episodeInTracklist =
-            this.inpTracklist().tracklistSeasons[0].tracklistEpisodes.filter(
-                (epis: TracklistEpisode) => {
-                    return this.inpEpisode().id === epis.episode.id;
-                },
-            );
+        const seasons = this.inpTracklist().tracklistSeasons;
+        const currentEpisodeId = this.inpEpisode().id;
 
-        const isEpisodeInTracklist: boolean =
-            episodeInTracklist.length === 1 && this.inpIsEpisodeEditing();
+        const episodeInTracklist = seasons.length > 0
+            ? seasons[0].tracklistEpisodes.find(epis => epis.episode.id === currentEpisodeId)
+            : null;
 
-        if (episodeInTracklist[0] && episodeInTracklist[0].watchDateTime) {
-            const watchDateTimeAsDate = new Date(episodeInTracklist[0].watchDateTime);
-            watchDateTimeAsDate.setHours(watchDateTimeAsDate.getHours());
-            this.createEpisodeForm = this.formBuilder.group({
-                watchDateTime: [
-                    isEpisodeInTracklist &&
-                    episodeInTracklist[0] &&
-                    episodeInTracklist[0].watchDateTime &&
-                    episodeInTracklist[0].watchDateTime.length > 0
-                        ? watchDateTimeAsDate
-                        : null,
-                ],
-            });
-            return;
+        let initialDate: Date | null;
+
+        if (this.inpIsEpisodeEditing()) {
+            initialDate = episodeInTracklist?.watchDateTime
+                ? new Date(episodeInTracklist.watchDateTime)
+                : null;
+        } else {
+            initialDate = new Date();
         }
+
         this.createEpisodeForm = this.formBuilder.group({
-            watchDateTimeAsDate: [!this.inpIsEpisodeEditing() ? new Date() : null],
+            watchDateTime: [initialDate]
         });
 
-        // set local storage tracklist to selected tracklist
         this.setSelectedTracklistInLocalStorageUseCase.execute(
-            this.inpTracklist().id,
+            this.inpTracklist().id
         );
     }
 
