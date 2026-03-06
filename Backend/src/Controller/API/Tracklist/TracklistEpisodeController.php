@@ -85,7 +85,7 @@ class TracklistEpisodeController extends AbstractController
         #[MapRequestPayload] UpdateTracklistEpisodeRequestDto $dto,
         User $user,
         Request $request
-    ): JsonResponse
+    ): Response|JsonResponse
     {
         $tracklistEpisodeResponse = $this->tracklistEpisodeService->updateTracklistEpisode(
             tracklistEpisodeId: $tracklistEpisodeId,
@@ -102,25 +102,28 @@ class TracklistEpisodeController extends AbstractController
     }
 
     /**
-     * @param Request $request
+     * @param int $tracklistEpisodeId
+     * @param User $user
      * @return JsonResponse
      */
     #[IsAuthenticated]
     #[Route(
-        path: '/api/tracklist-episode',
+        path: '/api/tracklist-episodes/{tracklistEpisodeId}',
         name: 'delete_tracklist_episode',
+        requirements: ['tracklistEpisodeId' => '\d+'],
         methods: ['DELETE'],
         stateless: true,
     )]
-    public function deleteTracklistEpisode(Request $request): JsonResponse
+    public function deleteTracklistEpisode(
+        int $tracklistEpisodeId,
+        User $user,
+    ): JsonResponse
     {
-        $tracklistEpisode = $this->tracklistEpisodeService->deleteTracklistEpisode($request);
+        $this->tracklistEpisodeService->deleteTracklistEpisode(
+            tracklistEpisodeId: $tracklistEpisodeId,
+            user: $user
+        );
 
-        if (isset($tracklistEpisode['error']))
-        {
-            return $this->json($tracklistEpisode['error'], (int) $tracklistEpisode['code']);
-        }
-
-        return $this->json($tracklistEpisode['message']);
+        return $this->json(null, Response::HTTP_NO_CONTENT);
     }
 }
