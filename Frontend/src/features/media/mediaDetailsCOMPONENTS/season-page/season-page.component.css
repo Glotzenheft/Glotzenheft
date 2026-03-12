@@ -97,6 +97,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .tracklistSelectionDIV div {
         width: 50%;
     }
+
+    .episodes {
+        margin-bottom: 6rem;
+    }
 }
 
 @media (min-width: 950px) {
@@ -105,27 +109,30 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     .headingDIV {
-        height: 6rem;
+        height: 2vw;
     }
 
     .seasonMeta {
         width: 100%;
-        height: 20rem;
+        height: auto;
+        min-height: 20rem;
         display: flex;
         justify-content: center;
-        align-items: flex-start;
+        align-items: center;
     }
 
     .seasonPictureWrapper {
         height: 100%;
         display: flex;
         align-items: center;
+        max-width: 16%;
     }
 
     .seasonMetaPicture {
         /* width: 13rem; */
         width: auto;
-        height: 13rem;
+        height: auto;
+        min-height: 20rem;
         border: 0.2rem solid white;
         margin-right: 1rem;
         display: flex;
@@ -136,12 +143,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .seasonMetaContent {
         width: calc(100% - 13rem);
 
-        height: 20rem;
+        height: auto;
     }
 
     .seasonMetaContent div {
         border-left: 0.1rem solid white;
         padding-left: var(--padding--left-right);
+        height: auto;
+        margin-left: 1.5rem;
     }
 
     .bigButton .p-button {
@@ -150,7 +159,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .seasonWrapper {
         width: 100%;
-        height: 20rem;
+        height: auto;
+        min-height: 20rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -201,4 +211,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .linkA {
     color: white;
     font-weight: bold;
+}
+
+:host ::ng-deep .p-image-preview-indicator {
+    border-radius: 8px;
+}
+
+:host ::ng-deep .p-image {
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-flex; /* Verhindert kleine Abstände unter dem Bild */
 }

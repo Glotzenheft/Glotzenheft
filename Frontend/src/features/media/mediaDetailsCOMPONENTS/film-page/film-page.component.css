@@ -19,6 +19,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .filmDetailsWrapper {
         height: 75rem;
         width: 100%;
+        margin-bottom: 12rem;
     }
 
     img {
@@ -82,7 +83,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .seasonMeta {
         width: 100%;
-        height: 25rem;
+        height: auto;
+        min-height: 20rem;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -93,12 +95,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         display: flex;
         justify-content: center;
         align-items: center;
+        max-width: 16%;
     }
 
     .seasonMetaPicture {
         /* width: 13rem; */
         width: auto;
-        height: 13rem;
+        height: auto;
+        min-height: 20rem;
         border: 0.2rem solid white;
         margin-right: 1rem;
         display: flex;
@@ -109,13 +113,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .seasonMetaContent {
         width: calc(100% - 13rem);
 
-        height: 100%;
+        height: auto;
     }
 
     .seasonMetaContent div {
         border-left: 0.1rem solid white;
         padding-left: var(--padding--left-right);
-        height: 100%;
+        height: auto;
+        margin-left: 1.5rem;
     }
 
     .bigButton .p-button {
@@ -144,9 +149,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     height: 10rem;
 }
 
-h1 {
-    margin-bottom: 2rem;
-}
 
 .linkA {
     color: white;
@@ -161,4 +163,14 @@ h1 {
 
 .recommendationA:hover {
     cursor: pointer;
+}
+
+:host ::ng-deep .p-image-preview-indicator {
+    border-radius: 8px;
+}
+
+:host ::ng-deep .p-image {
+    border-radius: 8px;
+    overflow: hidden;
+    display: inline-flex; /* Verhindert kleine Abstände unter dem Bild */
 }

@@ -22,24 +22,70 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <div class="createTracklistEpisodeFormDIV">
             <form [formGroup]="createEpisodeForm" (submit)="inpIsEpisodeEditing() ? saveEditedEpisode() : submitForm()">
                 <h2>{{ inpTracklist().tracklistName }}</h2>
-                <p>Episodenname: {{ inpEpisode().name }}</p>
-                <p>Laufzeit: {{ inpEpisode().runtime ? inpEpisode().runtime + ' min': " nicht vorhanden" }}</p>
-                <p>Erscheinungsdatum: {{inpEpisode().airDate ? (inpEpisode().airDate | date:'dd.MM.yyyy') : " nicht vorhanden" }}</p>
-                <p>Episodennummer: {{ inpEpisode().episodeNumber }}</p>
+                <div class="createTracklistEpisodeFlexContainer">
+                    <div class="createTracklistEpisodeDataWrapper">
+                        <p>Episodenname: {{ inpEpisode().name }}</p>
+                        <p>Laufzeit: {{ inpEpisode().runtime ? inpEpisode().runtime + ' min': " nicht vorhanden" }}</p>
+                        <p>Erscheinungsdatum: {{inpEpisode().airDate ? (inpEpisode().airDate | date:'dd.MM.yyyy') : " nicht vorhanden" }}</p>
+                        <p>Episodennummer: {{ inpEpisode().episodeNumber }}</p>
 
-                <p-float-label variant="in">
-                    <p-date-picker
-                        inputId="watch"
-                        dateFormat="dd.mm.yy"
-                        formControlName="watchDateTime"
-                        [showIcon]="true"
-                        [showTime]="true"
-                        [hourFormat]="'24'"
-                        [showOnFocus]="false"
-                        [showButtonBar]="true"
-                        />
-                    <label [for]="'watch'">Wann geschaut? (optional)</label>
-                </p-float-label>
+                        <p-float-label variant="in">
+                            <p-date-picker
+                                inputId="watch"
+                                dateFormat="dd.mm.yy"
+                                formControlName="watchDateTime"
+                                [showIcon]="true"
+                                [showTime]="true"
+                                [hourFormat]="'24'"
+                                [showOnFocus]="false"
+                                [showButtonBar]="true"
+                            />
+                            <label [for]="'watch'">Wann geschaut? (optional)</label>
+                        </p-float-label>
+                    </div>
+
+                    <div class="createTracklistEpisodeImageWrapper">
+                        @if (inpEpisode().stillPath && !imageError) {
+                            @if (isThumbnailLoading) {
+                                <p-progressSpinner
+                                    styleClass="w-4rem h-4rem"
+                                    strokeWidth="4"
+                                    fill="transparent"
+                                    animationDuration=".5s" />
+                            }
+
+                            <p-image
+                                [src]="posterPath + inpEpisode().stillPath"
+                                [previewImageSrc]="originalPosterPath + inpEpisode().stillPath"
+                                [alt]="'Poster für die Episode ' + inpEpisode().name"
+                                [preview]="true"
+                                appendTo="body"
+                                loading="lazy"
+                            >
+                                <ng-template #indicator>
+                                    <i class="pi pi-search"></i>
+                                    <p>Klicken, um zu vergrößern.</p>
+                                </ng-template>
+
+                                <ng-template #image>
+                                    <img [ngSrc]="posterPath + inpEpisode().stillPath"
+                                         (load)="isThumbnailLoading = false"
+                                         (error)="handleImageError()"
+                                         [alt]="'Poster für die Episode ' + inpEpisode().name"
+                                         width="960"
+                                         height="540"
+                                         style="border-radius: 8px; object-fit: cover;"
+                                    />
+                                </ng-template>
+                            </p-image>
+                        } @else {
+                            <div class="image-error-fallback">
+                                <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                                <p>Kein Bild für "{{ inpEpisode().name }}" verfügbar</p>
+                            </div>
+                        }
+                    </div>
+                </div>
 
                 <div class="formAcions">
                     @if (!inpIsEpisodeEditing()) {

@@ -57,22 +57,50 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             }
 
             <div *ngIf="filmData$ | async as filmData">
-                <h1>{{ filmData.media.name }}</h1>
+                <div class="headingDIV">
+                    <h1>{{ filmData.media.name }}</h1>
+                </div>
 
                 <div class="seasonMeta">
                     <div class="seasonPictureWrapper">
-                        <div class="seasonMetaPicture">
-                            @if (filmData.media.posterPath === null) {
-                                <p>kein Bild vorhanden</p>
+                        @if (filmData.media.posterPath && !imageError) {
+                            @if (isThumbnailLoading) {
+                                <p-progressSpinner
+                                    styleClass="w-4rem h-4rem"
+                                    strokeWidth="4"
+                                    fill="transparent"
+                                    animationDuration=".5s" />
                             }
-                            @else {
-                                <img
-                                    [src]="POSTER_PATH + filmData.media.posterPath"
-                                    [alt]="'Dies ist das Bild für von ' + filmData.media.name"
-                                    loading="lazy"
+
+                            <p-image
+                                [src]="POSTER_PATH + filmData.media.posterPath"
+                                [previewImageSrc]="originalPosterPath + filmData.media.posterPath"
+                                [alt]="'Poster für den Film' + filmData.media.name"
+                                [preview]="true"
+                                appendTo="body"
+                                loading="lazy"
+                            >
+                                <ng-template #image>
+                                    <img
+                                        [ngSrc]="POSTER_PATH + filmData.media.posterPath"
+                                        (load)="isThumbnailLoading = false"
+                                        (error)="handleImageError()"
+                                        [alt]="'Poster für den Film ' + filmData.media.name"
+                                        width="200"
+                                        height="300"
+                                        class="episode-dialog-img"
+                                        style="object-fit: cover; border-radius: 8px; cursor: pointer;"
                                     />
-                            }
-                        </div>
+                                </ng-template>
+
+                            </p-image>
+                        }
+                        @else {
+                            <div class="image-error-fallback2">
+                                <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                                <p>Kein Poster für den Film "{{ filmData.media.name }}" vorhanden.</p>
+                            </div>
+                        }
                     </div>
                     <div class="seasonMetaContent">
                         <div>

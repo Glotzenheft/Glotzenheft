@@ -54,7 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <ng-template #header>
                     <tr>
                         <th>Vorschau/Poster</th>
-                        <th>Datum</th>
+                        <th>Datum/Uhrzeit</th>
                         <th>Episode</th>
                         <th>Laufzeit</th>
                         <th>Film/Serie</th>
@@ -62,29 +62,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </tr>
                 </ng-template>
 
-                <ng-template #body let-tracklist>
+                <ng-template #body let-tracklist let-rowIndex="rowIndex">
                     @if (!tracklist.isDateSplitter) {
                         <tr>
                             <td>
                                 <ng-container *ngIf="tracklist.picture as picture; else noImage">
-                                    <img
-                                            [src]="posterPath + picture"
-                                            [alt]="
-                  'Cover von ' +
-                  tracklist.mediaTitle +
-                  (tracklist.episodeNumber
-                    ? ' - Episode ' + tracklist.episodeNumber
-                    : '')
-                "
-                                            loading="lazy"
-                                    />
+                                    <p-image
+                                        [src]="originalPosterPath + picture"
+                                        [previewImageSrc]="originalPosterPath + picture"
+                                        [alt]="'Cover von ' + tracklist.mediaTitle"
+                                        [preview]="true"
+                                        appendTo="body"
+                                        loading="lazy"
+                                    >
+                                        <ng-template #image>
+                                            <img
+                                                [ngSrc]="posterPath + picture"
+                                                [alt]="'Poster von ' + tracklist.mediaTitle + (tracklist.episodeNumber? ' - Episode ' + tracklist.episodeNumber: '')"
+                                                [priority]="rowIndex < 2 "
+                                                width="160"
+                                                height="90"
+                                                class="p-image-preview-container"
+                                                style="object-fit: cover; border-radius: 4px; cursor: pointer; height: auto; max-height: 6rem; max-width: 160px;"
+                                            />
+                                        </ng-template>
+                                    </p-image>
                                 </ng-container>
                                 <ng-template #noImage>
-                                    <i>kein Bild vorhanden</i>
+                                    <div class="image-error-fallback" style="max-width: 160px;">
+                                        <i class="pi pi-image" style="font-size: 1rem; color: #999;"></i>
+                                    </div>
                                 </ng-template>
                             </td>
                             <td>
-                                {{ tracklist.date | dateFormatting }}
+                                {{ tracklist.date | dateTimeWithUnitFormatting }}
                             </td>
                             <td>
                                 {{

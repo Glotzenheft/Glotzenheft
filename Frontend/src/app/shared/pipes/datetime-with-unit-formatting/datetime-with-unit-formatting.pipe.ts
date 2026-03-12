@@ -1,0 +1,44 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+import { Pipe, PipeTransform } from '@angular/core';
+
+@Pipe({
+    name: 'dateTimeWithUnitFormatting',
+})
+export class DatetimeWithUnitFormattingPipe implements PipeTransform {
+    transform(date: string): string {
+        if (!date) return '';
+
+        const _date = new Date(date);
+
+        if (isNaN(_date.getTime())) return '';
+
+        const datePart = _date.toLocaleDateString('de-DE', {
+            day: '2-digit',
+            month: '2-digit',
+            year: 'numeric',
+        });
+
+        const timePart = _date.toLocaleTimeString('de-DE', {
+            hour: '2-digit',
+            minute: '2-digit',
+        });
+
+        return `${datePart} ${timePart}\u00A0Uhr`;
+    }
+}

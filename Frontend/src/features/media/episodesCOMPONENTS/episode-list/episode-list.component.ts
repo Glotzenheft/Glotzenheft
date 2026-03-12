@@ -22,10 +22,11 @@ import {
     InputSignal,
     Output,
 } from '@angular/core';
-import { DialogModule } from 'primeng/dialog';
 import { FormGroup } from '@angular/forms';
+import { DialogModule } from 'primeng/dialog';
 import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
+import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { SeasonEpisode } from '../../../../app/shared/interfaces/media-interfaces';
 import {
@@ -33,14 +34,31 @@ import {
     TracklistEpisode,
     TVSeasonWithTracklist,
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
-import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import {
+    TMDB_POSTER_PATH,
+    TMDB_ORIGINAL_IMAGE_PATH,
+} from '../../../../app/shared/variables/tmdb-vars';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
-import {DecimalPipe} from "@angular/common";
-import {DateTimeFormattingPipe} from "../../../../pipes/datetime-formatting/datetime-formatting.pipe";
+import {
+    DecimalPipe,
+    NgOptimizedImage
+} from "@angular/common";
+import { DatetimeWithUnitFormattingPipe } from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
+import {Image} from 'primeng/image';
 
 @Component({
     selector: 'app-episode-list',
-    imports: [DialogModule, DateFormattingPipe, ButtonModule, TooltipModule, DecimalPipe, DateTimeFormattingPipe],
+    imports: [
+        DialogModule,
+        DateFormattingPipe,
+        ButtonModule,
+        TooltipModule,
+        DecimalPipe,
+        DatetimeWithUnitFormattingPipe,
+        NgOptimizedImage,
+        Image,
+        ProgressSpinnerModule,
+    ],
     providers: [UC_ShortenString],
     templateUrl: './episode-list.component.html',
     styleUrl: './episode-list.component.css',
@@ -60,6 +78,7 @@ export class EpisodeListComponent {
     public inpIsWithTracklist: InputSignal<boolean> = input.required<boolean>();
 
     public posterPath: string = TMDB_POSTER_PATH;
+    public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
 
     public currentEpisodeForDialog: SeasonEpisode | null = null;
     public isEpisodeDialogVisible: boolean = false;
@@ -69,11 +88,21 @@ export class EpisodeListComponent {
     @Output() setEpisodeForEditing: EventEmitter<SeasonEpisode> =
         new EventEmitter<SeasonEpisode>();
 
-    constructor(public shortenStringUseCase: UC_ShortenString) {}
+    public isThumbnailLoading = true;
+    public imageError = false;
+
+    constructor(
+        public shortenStringUseCase: UC_ShortenString
+    ) {}
 
     public openDialog = (currenEpisode: SeasonEpisode) => {
+        this.isThumbnailLoading = true;
+        this.imageError = false;
         this.currentEpisodeForDialog = currenEpisode;
-        this.isEpisodeDialogVisible = true;
+
+        setTimeout(() => {
+            this.isEpisodeDialogVisible = true;
+        }, 0);
     };
 
     public checkEpisodeInCurrentTracklist = (episodeID: number): boolean => {
@@ -97,5 +126,30 @@ export class EpisodeListComponent {
         }
 
         this.setEpisodeForEditing.emit(episode);
+    };
+
+    public handleImageError() {
+        this.isThumbnailLoading = false;
+        this.imageError = true;
+    }
+
+    public getTracklistEpisodeId = (episodeID: number): number | null => {
+        // Sicherstellen, dass wir im Tracklist-Modus sind und eine Tracklist geladen ist
+        if (!this.inpIsWithTracklist() || !this.inpSelectedTracklist()) {
+            return null;
+        }
+
+        const tracklist = this.inpSelectedTracklist();
+
+        // Wir greifen auf die Episoden der ersten Season der Tracklist zu (analog zu deiner check-Funktion)
+        const season = tracklist?.tracklistSeasons?.[0];
+        if (!season) return null;
+
+        // Suche nach dem Eintrag, bei dem die TMDB-Episode-ID übereinstimmt
+        const foundEntry = season.tracklistEpisodes.find(
+            (te: TracklistEpisode) => te.episode.id === episodeID
+        );
+
+        return foundEntry ? foundEntry.id : null;
     };
 }

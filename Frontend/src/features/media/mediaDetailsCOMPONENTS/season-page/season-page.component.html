@@ -59,18 +59,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </div>
             <div class="seasonMeta">
                 <div class="seasonPictureWrapper">
-                    <div class="seasonMetaPicture">
-                        @if (!seasonData.media.posterPath) {
-                            <p><i>kein Bild vorhanden</i></p>
+                    @if (seasonData.media.posterPath && !imageError) {
+                        @if (isThumbnailLoading) {
+                            <p-progressSpinner
+                                styleClass="w-4rem h-4rem"
+                                strokeWidth="4"
+                                fill="transparent"
+                                animationDuration=".5s" />
                         }
-                        @else {
-                            <img
-                                [src]="POSTER_PATH + seasonData.media.posterPath"
-                                [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
-                                loading="lazy"
-                            />
-                        }
-                    </div>
+
+                        <p-image
+                            [src]="POSTER_PATH + seasonData.media.posterPath"
+                            [previewImageSrc]="originalPosterPath + seasonData.media.posterPath"
+                            [alt]="'Poster für die Serie' + seasonData.media.name"
+                            [preview]="true"
+                            appendTo="body"
+                            loading="lazy"
+                        >
+                            <ng-template #image>
+                                <img
+                                    [ngSrc]="POSTER_PATH + seasonData.media.posterPath"
+                                    (load)="isThumbnailLoading = false"
+                                    (error)="handleImageError()"
+                                    [alt]="'Poster für die Serie ' + seasonData.media.name"
+                                    width="200"
+                                    height="300"
+                                    class="episode-dialog-img"
+                                    style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                />
+                            </ng-template>
+
+                        </p-image>
+                    }
+                    @else {
+                        <div class="image-error-fallback2">
+                            <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                            <p>Kein Poster für die Serie "{{ seasonData.media.name }}" vorhanden.</p>
+                        </div>
+                    }
                 </div>
                 <div class="seasonMetaContent">
                     <div>
@@ -132,15 +158,43 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                         <p-accordion-content>
                                             <div class="seasonWrapper">
                                                 <div class="seasonPoster">
-                                                    @if (!season.posterPath) {
-                                                        <p>kein Bild vorhanden</p>
+                                                    @if (season.posterPath && !imageError) {
+                                                        @if (isThumbnailLoading) {
+                                                            <p-progressSpinner
+                                                                styleClass="w-4rem h-4rem"
+                                                                strokeWidth="4"
+                                                                fill="transparent"
+                                                                animationDuration=".5s" />
+                                                        }
+
+                                                        <p-image
+                                                            [src]="POSTER_PATH + season.posterPath"
+                                                            [previewImageSrc]="originalPosterPath + season.posterPath"
+                                                            [alt]="'Poster für ' + season.name"
+                                                            [preview]="true"
+                                                            appendTo="body"
+                                                            loading="lazy"
+                                                        >
+                                                            <ng-template #image>
+                                                                <img
+                                                                    [ngSrc]="POSTER_PATH + season.posterPath"
+                                                                    (load)="isThumbnailLoading = false"
+                                                                    (error)="handleImageError()"
+                                                                    [alt]="'Poster für ' + season.name"
+                                                                    width="200"
+                                                                    height="300"
+                                                                    class="episode-dialog-img"
+                                                                    style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                                                />
+                                                            </ng-template>
+
+                                                        </p-image>
                                                     }
                                                     @else {
-                                                        <img
-                                                            [src]="POSTER_PATH + season.posterPath"
-                                                            [alt]="'Dies ist das Bild für von ' + seasonData.media.name"
-                                                            loading="lazy"
-                                                        />
+                                                        <div class="image-error-fallback2">
+                                                            <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                                                            <p>Kein Poster für die Serie "{{ seasonData.media.name }}" vorhanden.</p>
+                                                        </div>
                                                     }
                                                 </div>
                                                 <div class="seasonMeta">

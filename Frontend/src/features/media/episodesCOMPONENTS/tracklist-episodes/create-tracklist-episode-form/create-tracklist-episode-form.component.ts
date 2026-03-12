@@ -54,7 +54,13 @@ import { UC_UpdateTracklistEpisode } from '../../../../../app/core/use-cases/epi
 import { UC_DeleteTracklistEpisode } from '../../../../../app/core/use-cases/episode/delete-tracklist-episode.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 import { UC_SetSelectedTracklistInLocalStorage } from '../../../../../app/core/use-cases/tracklist/set-selected-tracklist-in-local-storage.use-case';
-import { DatePipe } from '@angular/common';
+import {DatePipe, NgOptimizedImage} from '@angular/common';
+import {Image} from 'primeng/image';
+import {
+    TMDB_POSTER_PATH,
+    TMDB_ORIGINAL_IMAGE_PATH,
+} from '../../../../../app/shared/variables/tmdb-vars';
+import {ProgressSpinner} from 'primeng/progressspinner';
 
 @Component({
     selector: 'app-create-tracklist-episode-form',
@@ -69,6 +75,9 @@ import { DatePipe } from '@angular/common';
         TooltipModule,
         DeleteDialogComponent,
         DatePipe,
+        Image,
+        NgOptimizedImage,
+        ProgressSpinner
     ],
     providers: [
         UC_CreateTracklistEpisode,
@@ -107,6 +116,12 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public isUpdateButtonEnabled: boolean = true;
     public isDeleteButtonEnabled: boolean = true;
     public isCancelButtonEnabled: boolean = true;
+
+    public posterPath: string = TMDB_POSTER_PATH;
+    public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
+
+    public isThumbnailLoading = true;
+    public imageError = false;
 
     constructor(
         private messageService: MessageService,
@@ -333,4 +348,9 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public setDeletionDialogVisibilityStatus = (status: boolean) => {
         this.isDeletionDialogVisible = status;
     };
+
+    public handleImageError() {
+        this.isThumbnailLoading = false;
+        this.imageError = true;
+    }
 }

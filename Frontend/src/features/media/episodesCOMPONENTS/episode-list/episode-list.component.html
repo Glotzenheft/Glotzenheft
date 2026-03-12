@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-@if(inpIsWithTracklist()) { 
+@if(inpIsWithTracklist()) {
     @if(episodeList().length > 0) {
         <div class="episodeDIVWrapper">
             @for (episode of episodeList(); track $index) {
@@ -30,19 +30,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </div>
 
                     @if (!checkEpisodeInCurrentTracklist(episode.id)) {
-                        <p-button 
-                            icon="pi pi-plus" 
-                            severity="secondary" 
+                        <p-button
+                            icon="pi pi-plus"
+                            severity="secondary"
                             pTooltip="Episode zur Watchlist hinzufügen"
-                            (onClick)="selectEpisode(episode, false)" 
+                            (onClick)="selectEpisode(episode, false)"
                             />
                     }
                     @else {
-                        <p-button 
-                            icon="pi pi-pencil" 
-                            severity="secondary" 
+                        <p-button
+                            icon="pi pi-pencil"
+                            severity="secondary"
                             pTooltip="Episode bearbeiten"
-                            (onClick)="selectEpisode(episode, true)" 
+                            (onClick)="selectEpisode(episode, true)"
                             />
                     }
                 </div>
@@ -50,7 +50,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
     }
 }
-@else { 
+@else {
     @if (episodeList().length > 0) {
         <div class="episodeDIVWrapper">
             @for ( episode of episodeList(); track $index) {
@@ -65,39 +65,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 @if (isEpisodeDialogVisible && currentEpisodeForDialog) {
-    <p-dialog 
+    <p-dialog
         [(visible)]="isEpisodeDialogVisible"
         [header]="'E' + (currentEpisodeForDialog.episodeNumber | number:'2.0-0') + ': ' + currentEpisodeForDialog.name"
         [modal]="true"
         [draggable]="true"
-        [style]="{ width: '80%', height: 'auto' }"
+        styleClass="episode-details-dialog"
         [maximizable]="true"
+        [dismissableMask]="true"
         >
         <div class="episodeDialogDIV">
             <div class="episodePosterDIV">
-                @if (currentEpisodeForDialog.stillPath) {
-                    <img 
+                @if (currentEpisodeForDialog.stillPath && !imageError) {
+                    @if (isThumbnailLoading) {
+                        <p-progressSpinner
+                            styleClass="w-4rem h-4rem"
+                            strokeWidth="4"
+                            fill="transparent"
+                            animationDuration=".5s" />
+                    }
+
+                    <p-image
                         [src]="posterPath + currentEpisodeForDialog.stillPath"
-                        [alt]="'Poster für ' + currentEpisodeForDialog.name" 
-                        loading="lazy" 
-                        />
+                        [previewImageSrc]="originalPosterPath + currentEpisodeForDialog.stillPath"
+                        [alt]="'Poster für ' + currentEpisodeForDialog.name"
+                        [preview]="true"
+                        appendTo="body"
+                        loading="lazy"
+                    >
+
+                        <ng-template #image>
+                            <img
+                                [ngSrc]="posterPath + currentEpisodeForDialog.stillPath"
+                                (load)="isThumbnailLoading = false"
+                                (error)="handleImageError()"
+                                [alt]="'Poster für ' + currentEpisodeForDialog.name"
+                                width="300"
+                                height="169"
+                                class="episode-dialog-img"
+                                style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                            />
+                        </ng-template>
+                    </p-image>
                 } @else {
-                    <p>
-                        <i>kein Poster vorhanden</i>
-                    </p>
+                    <div class="image-error-fallback">
+                        <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                        <p>Kein Bild für "{{ currentEpisodeForDialog.name }}" verfügbar</p>
+                    </div>
                 }
             </div>
-            <p>{{ currentEpisodeForDialog.overview }}</p>
-            <p><strong>Erstausstrahlung am:</strong> {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
-            <p><strong>Laufzeit:</strong> {{ currentEpisodeForDialog.runtime}} Minuten</p>
-            <p><strong>ID:</strong> {{ currentEpisodeForDialog.id}}</p>
-            <p><strong>Erstellt:</strong> {{ currentEpisodeForDialog.createdAt | dateTimeFormatting }} </p>
-            @if (currentEpisodeForDialog.updatedAt) {
-                <p><strong>Aktualisiert:</strong> {{ currentEpisodeForDialog.updatedAt | dateTimeFormatting }} </p>
-            } @else {
-                <p><strong>Aktualisiert:</strong> - </p>
-            }
-            
+
+            <div class="episodeContent">
+                <p class="overviewText">{{ currentEpisodeForDialog.overview }}</p>
+                <div class="metadataGrid">
+                    <p><strong>Erstausstrahlung am:</strong> {{ currentEpisodeForDialog.airDate | dateFormatting }}</p>
+                    <p><strong>Laufzeit:</strong> {{ currentEpisodeForDialog.runtime}} Minuten</p>
+                    <p><strong>Episoden Id:</strong> {{ currentEpisodeForDialog.id}}</p>
+                    <p><strong>Erstellt:</strong> {{ currentEpisodeForDialog.createdAt | dateTimeWithUnitFormatting }} </p>
+                    <p><strong>Aktualisiert: </strong> {{ currentEpisodeForDialog.updatedAt ? (currentEpisodeForDialog.updatedAt | dateTimeWithUnitFormatting) : '-' }} </p>
+                    <p><strong>Tracklist Episoden Id: </strong>
+                    @let tracklistEpId = getTracklistEpisodeId(currentEpisodeForDialog.id);
+                    @if (tracklistEpId) {
+                         {{ tracklistEpId }}
+                    } @else {
+                            -
+                    }
+                    </p>
+                </div>
+            </div>
+
         </div>
     </p-dialog>
 }

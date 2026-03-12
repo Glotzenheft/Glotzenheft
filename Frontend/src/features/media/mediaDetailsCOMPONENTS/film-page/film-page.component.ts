@@ -15,8 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { CommonModule, Location } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import {
+    CommonModule,
+    Location,
+    NgOptimizedImage
+} from '@angular/common';
+import {
+    Component,
+    OnDestroy,
+    OnInit
+} from '@angular/core';
 import {
     FormBuilder,
     FormGroup,
@@ -55,7 +63,10 @@ import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
 import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film-details.use-case';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
-import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import {
+    TMDB_POSTER_PATH,
+    TMDB_ORIGINAL_IMAGE_PATH,
+} from '../../../../app/shared/variables/tmdb-vars';
 import { TMDB_MAIN_ROUTE } from '../../../../app/shared/variables/tmdb-route';
 import { MediaTabsComponent } from '../../../sharedCOMPONENTS/media-tabs/media-tabs.component';
 import { TABLIST } from '../../../../app/shared/variables/tab-lists';
@@ -74,6 +85,7 @@ import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
 import {Tag} from 'primeng/tag';
+import {Image} from 'primeng/image';
 
 @Component({
     selector: 'app-film-page',
@@ -96,6 +108,8 @@ import {Tag} from 'primeng/tag';
         MediaMetadataComponent,
         TracklistFormularComponent,
         Tag,
+        Image,
+        NgOptimizedImage,
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -126,7 +140,12 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public isTracklistSubmitted: boolean = false;
     public visibilityStatus: number = 0;
     public selectedTracklist: SeasonTracklist | null = null;
+
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
+    public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
+    public isThumbnailLoading = true;
+    public imageError = false;
+
     public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + 'movie/';
 
     public convertStatus = convertTracklistStatusIntoGerman;
@@ -419,4 +438,9 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public cancelTracklist = () => {
         this.setVisibilityStatus(0);
     };
+
+    public handleImageError() {
+        this.isThumbnailLoading = false;
+        this.imageError = true;
+    }
 }
