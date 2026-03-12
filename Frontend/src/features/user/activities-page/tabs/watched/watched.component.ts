@@ -20,13 +20,20 @@ import { ButtonModule } from 'primeng/button';
 import { TableModule } from 'primeng/table';
 import { MessageService } from 'primeng/api';
 import { Observable } from 'rxjs';
-import { DateFormattingPipe } from '../../../../../pipes/date-formatting/date-formatting.pipe';
-import { CommonModule } from '@angular/common';
+import {
+    CommonModule,
+    NgOptimizedImage,
+    NgIf
+} from '@angular/common';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DropdownModule } from 'primeng/dropdown';
+import { ImageModule } from 'primeng/image';
 import { FormsModule } from '@angular/forms';
-import { TMDB_POSTER_PATH } from '../../../../../app/shared/variables/tmdb-vars';
+import {
+    TMDB_ORIGINAL_IMAGE_PATH,
+    TMDB_POSTER_PATH
+} from '../../../../../app/shared/variables/tmdb-vars';
 import {
     ERR_OBJECT_INVALID_AUTHENTICATION,
     getMessageObject,
@@ -43,6 +50,7 @@ import {
 import { PaginationComponent } from '../../../../sharedCOMPONENTS/pagination/pagination.component';
 import { UC_NavigateToSpecificPage } from '../../../../../app/core/use-cases/navigation/navigate-to-specific-page.use-case';
 import { SelectOption } from '../../../../../shared/interfaces/select-option.interface';
+import { DatetimeWithUnitFormattingPipe} from '../../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 
 @Component({
     selector: 'app-watched',
@@ -50,13 +58,16 @@ import { SelectOption } from '../../../../../shared/interfaces/select-option.int
     imports: [
         TableModule,
         ButtonModule,
-        DateFormattingPipe,
         CommonModule,
         TooltipModule,
         ProgressSpinnerModule,
         DropdownModule,
         FormsModule,
         PaginationComponent,
+        DatetimeWithUnitFormattingPipe,
+        NgOptimizedImage,
+        ImageModule,
+        NgIf,
     ],
     templateUrl: './watched.component.html',
     styleUrls: ['./watched.component.css'],
@@ -83,6 +94,7 @@ export class WatchedComponent implements OnInit {
     public serverNotAvailablePage: boolean = false;
 
     public posterPath: string = TMDB_POSTER_PATH;
+    public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
 
     public isLoading: boolean = false;
 
