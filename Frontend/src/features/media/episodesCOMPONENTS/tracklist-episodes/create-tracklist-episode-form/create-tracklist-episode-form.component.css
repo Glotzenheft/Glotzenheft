@@ -126,43 +126,40 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         flex: 1 1 50%;
         width: 50%;
         max-width: none !important;
-        display: flex; /* Hilft bei der Ausrichtung des Inhalts */
+        display: flex;
         justify-content: flex-end;
     }
 
-    /* 1. Das Host-Element der Komponente ansprechen */
     .createTracklistEpisodeImageWrapper ::ng-deep p-image {
-        display: block; /* Wichtig: Damit die Breite überhaupt wirkt */
+        display: block;
         width: 100% !important;
     }
 
-    /* 2. Den internen Container von PrimeNG ansprechen */
     .createTracklistEpisodeImageWrapper ::ng-deep .p-image {
         display: flex;
         width: 100% !important;
     }
 
-    /* 3. Das eigentliche Bild auf volle Breite zwingen */
     .createTracklistEpisodeImageWrapper ::ng-deep .p-image img {
         width: 100% !important;
         height: auto !important;
-        max-width: none !important; /* Entfernt eventuelle Limits */
+        max-width: none !important;
         object-fit: cover;
     }
 }
 
 .createTracklistEpisodeFlexContainer {
     display: flex;
-    justify-content: space-between; /* Verteilt Platz zwischen Daten und Bild */
-    align-items: center;        /* Richtet beides oben an der Kante aus */
-    gap: 3vw;                      /* Abstand zwischen Daten und Bild */
+    justify-content: space-between;
+    align-items: center;
+    gap: 3vw;
     width: 100%;
     min-height: 50%;
     margin-top: 1rem;
 }
 
 .createTracklistEpisodeDataWrapper {
-    flex: 1 1 40%; /* Die Daten nehmen den restlichen verfügbaren Platz ein */
+    flex: 1 1 40%;
     display: flex;
     flex-direction: column;
     justify-content: space-between;
