@@ -81,7 +81,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 :host {
     display: block;
-    height: 100%;
     --p-menu-item-focus-background: transparent;
     --p-menu-item-focus-color: inherit;
     --p-menu-item-focus-text-decoration: none;
@@ -195,6 +194,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         justify-content: flex-start;
         width: 100%;
         height: 5rem;
+        flex-direction: row;
     }
 
     .sidebarToggleDIV {
@@ -224,6 +224,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 @media (min-width: 850px) and (max-width: 940px) {
+    :host {
+        height: 100%;
+    }
     .appHeading {
         width: 100%;
         font-size: 1.2rem;
@@ -274,6 +277,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 @media (min-width: 940px) {
+    :host {
+        height: 100%;
+    }
     .appHeading {
         width: 100%;
         display: flex;
