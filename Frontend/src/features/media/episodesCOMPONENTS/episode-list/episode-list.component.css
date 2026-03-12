@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     padding-top: var(--padding--top-bottom);
 }
 
-.episodeDIV {
+.episodeDIV,
+.episodeInTracklistDIV {
     width: 100%;
     height: 3rem;
     border: 0.1rem solid black;
@@ -37,7 +38,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     padding-right: calc(0.5 * var(--padding--left-right));
 }
 
-.episodeDIV:hover {
+.episodeDIV:hover,
+.episodeInTracklistDIV:hover{
     cursor: pointer;
     background-color: black;
     color: white;
@@ -51,37 +53,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     font-weight: bolder;
 }
 
+:host ::ng-deep .episode-details-dialog {
+    width: 75vw;
+    max-width: 100rem;
+    aspect-ratio: 4 / 3;
+}
+
 .episodeDialogDIV {
     width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
 }
 
 .episodeInTracklistDIV {
-    width: 100%;
-    height: 3rem;
-    border: 0.1rem solid black;
-    border-radius: var(--border--radius);
     background: rgba(5, 150, 105, 0.9);
     color: white;
-    margin-bottom: 1rem;
-
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-
-    transition-duration: var(--transition--duration);
-
-    padding-left: calc(0.5 * var(--padding--left-right));
-    padding-right: calc(0.5 * var(--padding--left-right));
 }
 
 .episodeInTracklistDIV div {
     width: 100%;
-}
-
-.episodeInTracklistDIV:hover {
-    cursor: pointer;
-    background-color: black;
-    color: white;
 }
 
 .episodeInTracklistDIV p {
@@ -89,20 +80,66 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .episodePosterDIV {
-    width: 100%;
+    max-width: 800px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
     display: flex;
     justify-content: center;
     align-items: center;
+    min-height: 180px;
+    border-radius: 8px;
+    background-color: rgba(0,0,0,0.03);
+    overflow: hidden;
+    position: relative;
+}
+
+.episode-dialog-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.episode-dialog-img:hover {
+    transform: scale(1.02);
+}
+
+.indicator-text {
+    font-size: 0.9rem;
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+:host ::ng-deep .p-image-preview-mask {
+    background: rgba(0, 0, 0, 0.7);
 }
 
 @media (max-width: 560px) {
-    .episodeDialogDIV img {
-        height: 8rem;
+    .episode-dialog-img {
+        max-width: 250px;
     }
 }
 
-@media (min-width: 560px) {
-    .episodeDialogDIV img {
-        height: 12rem;
+.overviewText {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1rem;
+}
+
+.metadataGrid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+    border-top: 1px solid #eee;
+    padding-top: 0.25rem;
+}
+
+@media (max-width: 768px) {
+    :host ::ng-deep .episode-details-dialog {
+        width: 95vw;
+    }
+
+    .metadataGrid {
+        margin-bottom: 5rem;
     }
 }
