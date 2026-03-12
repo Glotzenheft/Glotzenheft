@@ -19,7 +19,7 @@ import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { map, Observable, Subscription } from 'rxjs';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { PanelModule } from 'primeng/panel';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -56,7 +56,10 @@ import {
     TVSeasonWithTracklist,
     TVWithTracklist,
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
-import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
+import {
+    TMDB_POSTER_PATH,
+    TMDB_ORIGINAL_IMAGE_PATH,
+} from '../../../../app/shared/variables/tmdb-vars';
 import {
     ERR_OBJECT_INVALID_AUTHENTICATION,
     getMessageObject,
@@ -84,6 +87,7 @@ import { UC_GetTracklistDELETEResponseSubject } from '../../../../app/core/use-c
 import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-update.subject.use-case';
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import {Tag} from 'primeng/tag';
+import {Image} from 'primeng/image';
 
 @Component({
     selector: 'app-season-page',
@@ -112,6 +116,8 @@ import {Tag} from 'primeng/tag';
         MediaMetadataComponent,
         TracklistFormularComponent,
         Tag,
+        Image,
+        NgOptimizedImage,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -137,8 +143,13 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public seasonData$: Observable<Season> | null = null;
     public numberOfEpisodes$: Observable<number> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
+
     public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
+    public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
+    public isThumbnailLoading = true;
+    public imageError = false;
+
     public readonly TMDB_ROUTE: string = TMDB_MAIN_ROUTE + 'tv/';
     public currentTab: string = TABLIST[0];
     public tabList: string[] = TABLIST;
@@ -576,4 +587,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public cancelTracklistForm = () => {
         this.setVisibility(0);
     };
+
+    public handleImageError() {
+        this.isThumbnailLoading = false;
+        this.imageError = true;
+    }
 }
