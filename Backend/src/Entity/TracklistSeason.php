@@ -39,7 +39,7 @@ class TracklistSeason
     #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'tracklistSeasons')]
+    #[ORM\OneToOne(inversedBy: 'tracklistSeason', cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     private ?Tracklist $tracklist = null;
 
@@ -57,6 +57,18 @@ class TracklistSeason
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $backupHash = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $startEpisodeNumber = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $endEpisodeNumber = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $customSeasonNumber = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $customPartNumber = null;
 
     public function __construct()
     {
@@ -130,6 +142,54 @@ class TracklistSeason
     public function setBackupHash(?string $backupHash): static
     {
         $this->backupHash = $backupHash;
+
+        return $this;
+    }
+
+    public function getStartEpisodeNumber(): ?int
+    {
+        return $this->startEpisodeNumber;
+    }
+
+    public function setStartEpisodeNumber(?int $startEpisodeNumber): static
+    {
+        $this->startEpisodeNumber = $startEpisodeNumber;
+
+        return $this;
+    }
+
+    public function getEndEpisodeNumber(): ?int
+    {
+        return $this->endEpisodeNumber;
+    }
+
+    public function setEndEpisodeNumber(?int $endEpisodeNumber): static
+    {
+        $this->endEpisodeNumber = $endEpisodeNumber;
+
+        return $this;
+    }
+
+    public function getCustomSeasonNumber(): ?int
+    {
+        return $this->customSeasonNumber;
+    }
+
+    public function setCustomSeasonNumber(?int $customSeasonNumber): static
+    {
+        $this->customSeasonNumber = $customSeasonNumber;
+
+        return $this;
+    }
+
+    public function getCustomPartNumber(): ?int
+    {
+        return $this->customPartNumber;
+    }
+
+    public function setCustomPartNumber(?int $customPartNumber): static
+    {
+        $this->customPartNumber = $customPartNumber;
 
         return $this;
     }
