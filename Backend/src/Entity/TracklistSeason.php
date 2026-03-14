@@ -51,7 +51,7 @@ class TracklistSeason
     private Collection $tracklistEpisodes;
 
     #[ORM\ManyToOne(inversedBy: 'tracklistSeasons')]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(nullable: false, onDelete: 'CASCADE')]
     #[Groups(['tracklist_details', 'tracklist_episode'])]
     private ?Season $season = null;
 
