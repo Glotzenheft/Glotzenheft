@@ -296,6 +296,10 @@ export class AllUserTracklistsComponent implements OnInit {
             case 'completed':
                 this.tracklistStatusClass = 'statusCompleted';
                 return 'statusCompleted';
+
+            case 'skipping':
+                this.tracklistStatusClass = 'statusSkipping';
+                return 'statusSkipping';
         }
         return '';
     };

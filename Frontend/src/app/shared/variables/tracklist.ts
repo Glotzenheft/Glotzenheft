@@ -20,7 +20,8 @@ export type TracklistStatusType =
     | 'pausing'
     | 'dropped'
     | 'plan to watch'
-    | 'completed';
+    | 'completed'
+    | 'skipping';
 
 export const TRACK_LIST_STATUS_LIST: string[] = [
     'watching',
@@ -28,6 +29,7 @@ export const TRACK_LIST_STATUS_LIST: string[] = [
     'plan to watch',
     'dropped',
     'pausing',
+    'skipping',
 ];
 
 export const TRACK_LIST_STATUS_LIST_AS_OBJECT: {
@@ -54,6 +56,10 @@ export const TRACK_LIST_STATUS_LIST_AS_OBJECT: {
         german: 'Geplant',
         value: 'plan to watch',
     },
+    {
+        german: 'Überspringen',
+        value: 'skipping'
+    }
 ];
 
 export const convertTracklistStatusIntoGerman = (status: string): string => {
@@ -68,6 +74,8 @@ export const convertTracklistStatusIntoGerman = (status: string): string => {
             return 'Pausiert';
         case 'plan to watch':
             return 'Geplant';
+        case 'skipping':
+            return 'Überspringen';
     }
 
     return '';
