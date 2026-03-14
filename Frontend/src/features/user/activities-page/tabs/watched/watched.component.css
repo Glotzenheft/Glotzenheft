@@ -54,3 +54,38 @@ th:nth-child(3),
 th:nth-child(4) {
     text-align: center;
 }
+
+.userActivitesTableDIV {
+    max-height: 100%;
+    overflow-y: auto;
+}
+
+:host ::ng-deep .p-datatable-thead > tr > th {
+    position: sticky;
+    top: 0;
+    z-index: 10000;
+}
+
+:host ::ng-deep .p-datatable-thead {
+    z-index: 10000 !important;
+}
+:host ::ng-deep .p-datatable-table-container {
+    overflow: clip !important;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr > td .p-image {
+    position: relative !important;
+    z-index: 1;
+    max-height: 6rem;
+    max-width: 160px;
+}
+
+:host ::ng-deep .p-datatable-tbody > tr > td img {
+    position: static !important;
+    max-height: 6rem;
+    max-width: 160px;
+}
+
+:host ::ng-deep .p-image-preview-mask {
+    border-radius: 10px;
+}
