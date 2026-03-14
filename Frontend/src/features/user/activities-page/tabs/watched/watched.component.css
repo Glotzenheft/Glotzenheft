@@ -63,11 +63,11 @@ th:nth-child(4) {
 :host ::ng-deep .p-datatable-thead > tr > th {
     position: sticky;
     top: 0;
-    z-index: 10000;
+    z-index: 10;
 }
 
 :host ::ng-deep .p-datatable-thead {
-    z-index: 10000 !important;
+    z-index: 10 !important;
 }
 :host ::ng-deep .p-datatable-table-container {
     overflow: clip !important;
