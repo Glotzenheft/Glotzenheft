@@ -251,10 +251,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                                             <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="openTracklistForm(season)" />
 
-                                            @if (
-                                                tracklistSelectionForm.get('selectedTracklist')?.value &&
-                                                tracklistSelectionForm.get('selectedTracklist')?.value !== EMPTY_TRACKLIST
-                                                ) {
+                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value) {
                                                 <app-episode-list
                                                     [episodeList]="season.episodes"
                                                     [tracklistSelectionForm]="tracklistSelectionForm"
@@ -270,10 +267,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                             }
 
 
-                                            @if (
-                                                !tracklistSelectionForm.get('selectedTracklist')?.value ||
-                                                tracklistSelectionForm.get('selectedTracklist')?.value === EMPTY_TRACKLIST
-                                                ) {
+                                            @if (!tracklistSelectionForm.get('selectedTracklist')?.value) {
                                                 <app-episode-list
                                                     [episodeList]="season.episodes"
                                                     [tracklistSelectionForm]="tracklistSelectionForm"

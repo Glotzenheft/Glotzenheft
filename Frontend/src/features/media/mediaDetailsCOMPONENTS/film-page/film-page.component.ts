@@ -137,7 +137,6 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     public filmData$: Observable<Film> | null = null;
     public trackListForm!: FormGroup;
-    public isTracklistSubmitted: boolean = false;
     public visibilityStatus: number = 0;
     public selectedTracklist: SeasonTracklist | null = null;
 
@@ -383,18 +382,25 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     public getDefaultTracklist = (tracklistName: string): Tracklist => {
         return {
+            createdAt: '',
+            updatedAt: null,
             id: 0,
             rating: null,
             status: 'watching',
             startDate: null,
             finishDate: null,
             tracklistName: tracklistName,
+            comment: null,
+            customAirDate: null,
+            language: null,
+            subtitle: null,
+            customPosterPath: null,
             media: {
                 id: 0,
                 type: '',
                 posterPath: '',
             },
-            tracklistSeasons: [],
+            tracklistSeason: null,
             isRewatching: false,
             tags: [],
         };
@@ -413,6 +419,11 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             tracklist_rating: event.rating,
             is_rewatching: event.isRewatching,
             media_type: 'movie',
+            comment: event.comment,
+            custom_air_date: event.customAirDate,
+            language: event.language,
+            subtitle: event.subtitle,
+            custom_poster_path: event.customPosterPath,
         });
     };
 
@@ -428,6 +439,11 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             tracklist_finish_date: event.finishDate,
             tracklist_start_date: event.startDate,
             tracklist_rating: event.rating,
+            comment: event.comment,
+            custom_air_date: event.customAirDate,
+            language: event.language,
+            subtitle: event.subtitle,
+            custom_poster_path: event.customPosterPath,
         });
     };
 

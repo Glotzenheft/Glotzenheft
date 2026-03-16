@@ -176,21 +176,6 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     public isEditingButtonVisible: boolean = true;
     public isLoading: boolean = false;
-    public EMPTY_TRACKLIST: SeasonTracklist = {
-        id: -1,
-        media: {
-            id: -1, // id of the tv or movie itself
-            type: '', // "movie" or "tv"
-        },
-        rating: -1,
-        status: '',
-        startDate: '',
-        finishDate: '',
-        tracklistName: '',
-        tracklistSeasons: [],
-        isRewatching: false,
-        tags: [],
-    };
     private createSubscription: Subscription | null = null;
     private updateSubscription: Subscription | null = null;
     private deleteSubscription: Subscription | null = null;
@@ -396,7 +381,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                     this.joinTVWithTracklistsUseCase.execute(res);
 
                 this.tracklistSelectionForm = this.formBuilder.group({
-                    selectedTracklist: [this.EMPTY_TRACKLIST],
+                    selectedTracklist: [null],
                 });
                 this.tracklistsOfSeason = res.tracklists;
 
@@ -425,20 +410,27 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     public getDefaultTracklist = (tracklistName: string): Tracklist => {
         return {
+            createdAt: '',
+            updatedAt: null,
             id: 0,
             rating: null,
             status: 'watching',
             startDate: null,
             finishDate: null,
             tracklistName: tracklistName,
+            comment: null,
+            customAirDate: null,
+            language: null,
+            subtitle: null,
+            customPosterPath: null,
             media: {
                 id: 0,
                 type: '',
                 posterPath: '',
             },
-            tracklistSeasons: [],
+            tracklistSeason: null,
             isRewatching: false,
-            tags: [],
+            tags: []
         };
     };
 
@@ -485,29 +477,18 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                     )[0];
             }
 
-            this.tracklistSelectionForm
-                .get('selectedTracklist')
-                ?.setValue(
-                    season.tracklistsForSeason.length > 0
-                        ? currentTracklistInLocalStorage
-                            ? currentTracklistInLocalStorage
-                            : season.tracklistsForSeason[0]
-                        : this.EMPTY_TRACKLIST,
-                );
+            const tracklistToSelect = season.tracklistsForSeason.length > 0
+                ? (currentTracklistInLocalStorage ?? season.tracklistsForSeason[0])
+                : null;
+
+            this.tracklistSelectionForm.get('selectedTracklist')?.setValue(tracklistToSelect);
         }
 
         this.selectedSeason = season;
         this.currentSeason = season;
 
-        if (
-            this.tracklistSelectionForm.get('selectedTracklist')?.value !==
-            this.EMPTY_TRACKLIST
-        ) {
-            this.isEditingButtonVisible = true;
-            return;
-        }
-
-        this.isEditingButtonVisible = false;
+        const selectedValue = this.tracklistSelectionForm.get('selectedTracklist')?.value;
+        this.isEditingButtonVisible = !!selectedValue;
     };
 
     public setVisibility = (page: number) => {
@@ -562,6 +543,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             tracklist_rating: event.rating,
             is_rewatching: event.isRewatching,
             media_type: 'tv',
+            comment: event.comment,
+            custom_air_date: event.customAirDate,
+            language: event.language,
+            subtitle: event.subtitle,
+            custom_poster_path: event.customPosterPath,
+            start_episode_number: event.startEpisodeNumber,
+            end_episode_number: event.endEpisodeNumber,
+            custom_season_number: event.customSeasonNumber,
+            custom_part_number: event.customPartNumber,
         });
     };
 
@@ -577,6 +567,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             tracklist_start_date: event.startDate,
             tracklist_finish_date: event.finishDate,
             is_rewatching: event.isRewatching,
+            comment: event.comment,
+            custom_air_date: event.customAirDate,
+            language: event.language,
+            subtitle: event.subtitle,
+            custom_poster_path: event.customPosterPath,
+            start_episode_number: event.startEpisodeNumber,
+            end_episode_number: event.endEpisodeNumber,
+            custom_season_number: event.customSeasonNumber,
+            custom_part_number: event.customPartNumber,
         });
     };
 
