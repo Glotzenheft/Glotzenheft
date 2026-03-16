@@ -234,7 +234,7 @@ readonly class TracklistService
             $tracklist->setCustomAirDate($customAirDate);
         }
 
-        if (array_key_exists('languages', $requestData))
+        if (array_key_exists('language', $requestData))
         {
             $tracklist->setLanguage($dto->language);
         }
