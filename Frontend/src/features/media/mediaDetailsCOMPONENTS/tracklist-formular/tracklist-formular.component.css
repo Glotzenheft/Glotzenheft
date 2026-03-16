@@ -15,80 +15,81 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+.create-new-tracklist form {
+    height: auto;
+    min-height: 100%;
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 1.5rem;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+}
+
+.ratingDIV {
+    height: 4rem;
+
+    background-color: white;
+    color: black;
+
+    display: flex;
+    justify-content: space-evenly;
+    align-items: center;
+
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+
+    border-radius: var(--border--radius);
+}
+
+.ratingDIV p {
+    width: 30%;
+}
+
+.ratingP {
+    text-align: center;
+}
+
+.date-picker-wrapper {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.language-select-wrapper {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
 @media (max-width: 850px) {
-    .createMovieTracklistWrapper {
+    .create-tracklist-wrapper {
         width: 100%;
-        height: 60rem;
-        /* overflow-y: auto; */
+        height: auto;
+        min-height: 60rem;
         overflow-x: hidden;
-        overflow-y: hidden;
+        overflow-y: auto;
         padding-bottom: var(--padding--top-bottom);
     }
 
-    .createNewTracklist {
+    .create-tracklist-window {
         width: 100%;
-        height: 76%;
-        /*overflow: hidden;*/
+        height: 100%;
+    }
+
+    .create-new-tracklist {
+        width: 100%;
+        height: auto;
+        min-height: 76%;
+
         background-color: rgba(255, 255, 255, 0.8);
 
         padding-left: calc(0.5 * var(--padding--left-right));
         padding-right: calc(0.5 * var(--padding--left-right));
 
         border-radius: var(--border--radius);
-
-        /* padding-top: var(--padding--top-bottom);
-          padding-bottom: var(--padding--top-bottom); */
-    }
-
-    .createNewTracklist form {
-        height: 100%;
-        width: 100%;
-        /*overflow: hidden;*/
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-    }
-
-    .startDateDIV {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    /* .movieListDIV {
-      width: 100%;
-      height: 50%;
-
-      display: flex;
-      flex-direction: column;
-      justify-content: space-evenly;
-
-      padding-left: var(--padding--left-right);
-      padding-right: var(--padding--left-right);
-    } */
-
-    .ratingDIV {
-        height: 4rem;
-
-        background-color: white;
-        color: black;
-
-        display: flex;
-        justify-content: space-evenly;
-        align-items: center;
-
-        margin-top: 1rem;
-        margin-bottom: 1rem;
-
-        border-radius: var(--border--radius);
-    }
-
-    .ratingDIV p {
-        width: 30%;
-    }
-
-    .ratingP {
-        text-align: center;
     }
 
     .tracklistActions {
@@ -97,96 +98,74 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
+        gap: 1rem;
+        margin-bottom: 2rem;
     }
-
-    .createMovieWindow {
-        width: 100%;
-        height: 100%;
-    }
-}
-
-@media (min-width: 850px) {
-    .createMovieTracklistWrapper {
-        width: 100%;
-        height: 50rem;
-        /* overflow-y: auto; */
-        overflow-x: hidden;
-        overflow-y: hidden;
-        padding-bottom: var(--padding--top-bottom);
-    }
-
-    .createNewTracklist {
-        width: 80%;
-        height: 80%;
-        /*overflow: hidden;*/
-        background-color: rgba(255, 255, 255, 0.8);
-
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-
-        border-radius: var(--border--radius);
-
-        /* padding-top: var(--padding--top-bottom);
-            padding-bottom: var(--padding--top-bottom); */
-    }
-
-    .createNewTracklist form {
-        height: 100%;
-        width: 100%;
-        /*overflow: hidden;*/
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-    }
-
-    .startDateDIV {
-        display: flex;
-        align-items: center;
-        justify-content: flex-start;
-    }
-
-    .createMovieWindow {
-        height: 100%;
-        width: 100%;
-        display: flex;
-        justify-content: center;
-        align-items: center;
-    }
-
-    /* .movieListDIV {
-        width: 100%;
-        height: 50%;
-
-        display: flex;
-        flex-direction: column;
-        justify-content: space-evenly;
-
-        padding-left: var(--padding--left-right);
-        padding-right: var(--padding--left-right);
-      } */
 
     .ratingDIV {
-        height: 4rem;
+        height: auto;
+        padding: 1rem 0;
 
         background-color: white;
         color: black;
 
         display: flex;
-        justify-content: space-evenly;
+        flex-direction: column;
+
+        justify-content: center;
         align-items: center;
+        gap: 0.5rem;
 
         margin-top: 1rem;
         margin-bottom: 1rem;
-
         border-radius: var(--border--radius);
     }
 
     .ratingDIV p {
-        width: 30%;
+        width: 100%;
+        text-align: center;
+        margin: 0;
     }
 
-    .ratingP {
-        text-align: center;
+    .date-picker-wrapper ::ng-deep p-date-picker {
+        display: inline-grid;
+        width: 100%;
+    }
+}
+
+@media (min-width: 850px) {
+    .create-tracklist-wrapper {
+        width: 100%;
+        height: 100%;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    .create-tracklist-window {
+        height: 100%;
+        width: 80%;
+        justify-items: center;
+    }
+
+    .create-tracklist-window h1 {
+        width: 90%;
+        max-width: 1000px;
+
+        text-align: left;
+        margin-bottom: 1rem;
+    }
+
+    .create-new-tracklist {
+        width: 90%;
+        max-width: 1000px;
+        height: auto;
+        min-height: 80%;
+        background-color: rgba(255, 255, 255, 0.8);
+
+        padding-left: var(--padding--left-right);
+        padding-right: var(--padding--left-right);
+        border-radius: var(--border--radius);
     }
 
     .tracklistActions {
@@ -195,25 +174,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         display: flex;
         justify-content: space-evenly;
     }
+
+    .date-picker-wrapper {
+        flex-direction: row;
+        justify-content: space-between;
+    }
+
+    .language-select-wrapper {
+        flex-direction: row;
+    }
 }
 
 @media (min-width: 2000px) {
-    .createMovieTracklistWrapper {
+    .create-tracklist-wrapper {
         width: 100%;
-        height: 80%;
+        min-height: 80%;
+        height: auto;
         overflow-x: hidden;
         overflow-y: hidden;
         padding-bottom: var(--padding--top-bottom);
     }
 
-    .createNewTracklist {
-        width: 80%;
+    .create-new-tracklist {
+        max-width: 1200px;
         height: 90%;
         overflow: hidden;
         background-color: rgba(255, 255, 255, 0.8);
         padding-left: var(--padding--left-right);
         padding-right: var(--padding--left-right);
         border-radius: var(--border--radius);
+    }
+
+    .create-tracklist-window h1 {
+        max-width: 1200px;
     }
 }
 
@@ -242,4 +235,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .rewatching-checkbox label:hover {
     cursor: pointer;
+}
+
+.date-picker-wrapper label {
+    max-width: calc(100% - 3.5rem);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }

@@ -48,6 +48,9 @@ import {
     SeasonTracklist,
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { DeleteDialogComponent } from '../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
+import {TextareaModule} from 'primeng/textarea';
+import * as isoLangs from '@cospired/i18n-iso-languages';
+import localeDe from '@cospired/i18n-iso-languages/langs/de.json';
 
 @Component({
     selector: 'app-tracklist-formular',
@@ -63,6 +66,7 @@ import { DeleteDialogComponent } from '../../../sharedCOMPONENTS/delete-dialog/d
         Checkbox,
         Message,
         DeleteDialogComponent,
+        TextareaModule,
     ],
     templateUrl: './tracklist-formular.component.html',
     styleUrl: './tracklist-formular.component.css',
@@ -90,75 +94,115 @@ export class TracklistFormularComponent implements OnInit {
         output<I_TracklistFormOutput>();
     public outDeleteTracklist: OutputEmitterRef<number> = output<number>();
 
-    constructor(private readonly formBuilder: FormBuilder) {}
+    public languageOptions: any[] = [];
+
+    constructor(private readonly formBuilder: FormBuilder) {
+        isoLangs.registerLocale(localeDe);
+    }
 
     ngOnInit(): void {
+        const tracklist = this.inpTracklist();
+        const season = tracklist.tracklistSeason;
+
+        const allLangs = isoLangs.getNames('de');
+        const frequentLangsCodes = ['de', 'en', 'ja', 'ko'];
+
+        const frequentItems = frequentLangsCodes.map(code => ({
+            name: allLangs[code],
+            code: code,
+        }));
+
+        const otherItems = Object.keys(allLangs)
+            .filter(code => !frequentLangsCodes.includes(code))
+            .map(code => ({
+                name: allLangs[code],
+                code: code
+            }))
+            .sort((a, b) => a.name.localeCompare(b.name));
+
+        this.languageOptions = [
+            {
+                groupName: 'Häufig genutzt',
+                items: frequentItems
+            },
+            {
+                groupName: 'Alphabetisch',
+                items: otherItems
+            }
+        ];
+
         this.tracklistForm = this.formBuilder.group({
-            trackListName: [
-                this.inpTracklist().tracklistName ?? '',
-                Validators.required,
-            ],
+            trackListName: [tracklist.tracklistName ?? '', Validators.required],
             status: [
                 {
-                    name: convertTracklistStatusIntoGerman(
-                        this.inpTracklist().status,
-                    ),
-                    value: this.inpTracklist().status,
+                    name: convertTracklistStatusIntoGerman(tracklist.status),
+                    value: tracklist.status,
                 },
                 Validators.required,
             ],
-            startDate: this.inpTracklist().startDate
-                ? new Date(this.inpTracklist().startDate!)
-                : null,
-            finishDate: this.inpTracklist().finishDate
-                ? new Date(this.inpTracklist().finishDate!)
-                : null,
-            rating: this.inpTracklist().rating ?? null,
-            isRewatching: this.inpTracklist().isRewatching ?? false,
+            startDate: tracklist.startDate ? new Date(tracklist.startDate) : null,
+            finishDate: tracklist.finishDate ? new Date(tracklist.finishDate) : null,
+            rating: tracklist.rating ?? null,
+            isRewatching: tracklist.isRewatching ?? false,
+            comment: [tracklist.comment ?? null],
+            language: [tracklist.language ?? null],
+            subtitle: [tracklist.subtitle ?? null],
+            customAirDate: [tracklist.customAirDate ? new Date(tracklist.customAirDate) : null],
+            customPosterPath: [tracklist.customPosterPath ?? ''],
+            // Fields for series
+            customSeasonNumber: [season?.customSeasonNumber ?? null],
+            customPartNumber: [season?.customPartNumber ?? null],
+            startEpisodeNumber: [season?.startEpisodeNumber ?? null],
+            endEpisodeNumber: [season?.endEpisodeNumber ?? null],
         });
     }
 
     public submitTracklist = () => {
         this.isTracklistSubmitted = true;
 
-        if (this.tracklistForm?.invalid) {
+        if (!this.tracklistForm || this.tracklistForm.invalid) {
             return;
         }
 
-        let formattedStartDate: string = '';
-        let formattedEndDate: string = '';
-        const formStartDate: string | undefined =
-            this.tracklistForm?.get('startDate')?.value;
-        const formEndDate: string | undefined =
-            this.tracklistForm?.get('finishDate')?.value;
+        const formValues = this.tracklistForm.value;
 
-        const formatDateLocal = (dateInput: string | Date): string => {
-            const date = new Date(dateInput);
-            const year = date.getFullYear();
-            const month = (date.getMonth() + 1).toString().padStart(2, '0');
-            const day = date.getDate().toString().padStart(2, '0');
-
-            return `${year}-${month}-${day}`;
+        const formatDateTimeLocal = (dateInput: any): string | null => {
+            if (!dateInput) return null;
+            const d = new Date(dateInput);
+            const pad = (n: number) => n.toString().padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
         };
 
-        if (formStartDate) {
-            formattedStartDate = formatDateLocal(formStartDate);
-        }
-        if (formEndDate) {
-            formattedEndDate = formatDateLocal(formEndDate);
-        }
+        const formatDateLocal = (dateInput: any): string | null => {
+            if (!dateInput) return null;
+            const d = new Date(dateInput);
+            const pad = (n: number) => n.toString().padStart(2, '0');
+            return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+        };
 
         this.outSubmitTracklist.emit({
             id: this.inpTracklist().id,
-            status: this.tracklistForm?.get('status')?.value
-                .value as TracklistStatusType,
-            startDate: formattedStartDate,
-            finishDate: formattedEndDate,
-            rating: this.tracklistForm?.get('rating')?.value,
-            isRewatching: this.tracklistForm?.get('isRewatching')?.value,
-            tracklistName: this.tracklistForm?.get('trackListName')?.value,
-            tags: [],
+            tracklistName: formValues.trackListName,
+            status: formValues.status.value as TracklistStatusType,
+            startDate: formatDateTimeLocal(formValues.startDate),
+            createdAt: '',
+            tracklistSeason: null,
+            updatedAt: null,
+            finishDate: formatDateTimeLocal(formValues.finishDate),
+            rating: formValues.rating,
+            isRewatching: formValues.isRewatching,
+            comment: formValues.comment,
+            language: formValues.language,
+            subtitle: formValues.subtitle,
+            customAirDate: formatDateLocal(formValues.customAirDate),
+            customPosterPath: formValues.customPosterPath,
+            customSeasonNumber: formValues.customSeasonNumber,
+            customPartNumber: formValues.customPartNumber,
+            startEpisodeNumber: formValues.startEpisodeNumber,
+            endEpisodeNumber: formValues.endEpisodeNumber,
+            tags: this.inpTracklist().tags || []
         });
+
         this.isTracklistSubmitted = false;
     };
 

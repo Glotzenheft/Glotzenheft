@@ -16,11 +16,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if (tracklistForm) {
-    <div class="createMovieTracklistWrapper">
-        <h1>{{ inpIsUpdating() ? "Trackliste aktualisieren" : "Neue Trackliste anlegen" }}</h1>
-
-        <div class="createMovieWindow">
-            <div class="createNewTracklist">
+    <div class="create-tracklist-wrapper">
+        <div class="create-tracklist-window">
+            <h1>{{ inpIsUpdating() ? "Trackliste aktualisieren" : "Neue Trackliste anlegen" }}</h1>
+            <div class="create-new-tracklist">
                 <form (ngSubmit)="submitTracklist()" [formGroup]="tracklistForm">
                     <div>
                         <p-float-label variant="in">
@@ -36,13 +35,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                     <div>
                         <p-float-label variant="in">
-                            <p-select 
+                            <p-select
                                 id="inpStatus"
                                 formControlName="status"
                                 optionLabel="name"
                                 placeholder="Status auswählen ..."
-                                [options]="tracklistSelectionList" 
+                                [options]="tracklistSelectionList"
                                 [checkmark]="true"
+                                appendTo="body"
                                 />
                             <label for="inpStatus">Status der Trackliste (Pflichtfeld)</label>
                         </p-float-label>
@@ -53,38 +53,115 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         }
                     </div>
 
-                    <div>
-                        <p-float-label variant="in">
-                            <p-date-picker 
-                                formControlName="finishDate"
-                                dateFormat="dd.mm.yy"
-                                inputId="inpEnd"
-                                [showIcon]="true"
-                                [showOnFocus]="false"
-                                [minDate]="tracklistForm.get('startDate')?.value"
-                                [showButtonBar]="true"
+                    <div class="date-picker-wrapper">
+                        <div>
+                            <p-float-label variant="in">
+                                <p-date-picker
+                                    formControlName="startDate"
+                                    dateFormat="dd.mm.yy"
+                                    inputId="inpStart"
+                                    [hourFormat]="'24'"
+                                    [showIcon]="true"
+                                    [showOnFocus]="false"
+                                    [maxDate]="tracklistForm.get('finishDate')?.value"
+                                    [showButtonBar]="true"
+                                    [showTime]="true"
+                                    appendTo="body"
+                                />
+                                <label for="inpStart">Startdatum (optional)</label>
+                            </p-float-label>
+                        </div>
+
+                        <div>
+                            <p-float-label variant="in">
+                                <p-date-picker
+                                    formControlName="customAirDate"
+                                    dateFormat="dd.mm.yy"
+                                    inputId="inpCustomAirDate"
+                                    [showIcon]="true"
+                                    [showOnFocus]="false"
+                                    [minDate]="tracklistForm.get('customAirDate')?.value"
+                                    [showButtonBar]="true"
+                                    appendTo="body"
+                                />
+                                <label for="inpEnd">Erscheinungsdatum (optional)</label>
+                            </p-float-label>
+                        </div>
+
+                        <div>
+                            <p-float-label variant="in">
+                                <p-date-picker
+                                    formControlName="finishDate"
+                                    dateFormat="dd.mm.yy"
+                                    inputId="inpEnd"
+                                    [hourFormat]="'24'"
+                                    [showIcon]="true"
+                                    [showOnFocus]="false"
+                                    [minDate]="tracklistForm.get('startDate')?.value"
+                                    [showButtonBar]="true"
+                                    [showTime]="true"
+                                    appendTo="body"
+                                />
+                                <label for="inpEnd">Enddatum (optional)</label>
+                            </p-float-label>
+                        </div>
+                    </div>
+
+                    <div class="language-select-wrapper">
+                        <p-float-label variant="in" style="flex: 1;">
+                            <p-select
+                                id="inpLang"
+                                formControlName="language"
+                                [options]="languageOptions"
+                                [group]="true"
+                                optionGroupLabel="groupName"
+                                optionGroupChildren="items"
+                                optionLabel="name"
+                                optionValue="code"
+                                [filter]="true"
+                                filterBy="name"
+                                [showClear]="true"
+                                appendTo="body"
+                                [style]="{'width': '100%'}"
                             />
-                            <label for="inpEnd">Enddatum (optional)</label>
+                            <label for="inpLang">Sprache</label>
+                        </p-float-label>
+
+                        <p-float-label variant="in" style="flex: 1;">
+                            <p-select
+                                id="inpSub"
+                                formControlName="subtitle"
+                                [options]="languageOptions"
+                                [group]="true"
+                                optionGroupLabel="groupName"
+                                optionGroupChildren="items"
+                                optionLabel="name"
+                                optionValue="code"
+                                [filter]="true"
+                                filterBy="name"
+                                [showClear]="true"
+                                appendTo="body"
+                                [style]="{'width': '100%'}"
+                            />
+                            <label for="inpSub">Untertitel</label>
                         </p-float-label>
                     </div>
 
-                    <div>
+                    <div class="form-row">
                         <p-float-label variant="in">
-                            <p-date-picker 
-                                formControlName="startDate"
-                                dateFormat="dd.mm.yy"
-                                inputId="inpStart"
-                                [showIcon]="true"
-                                [showOnFocus]="false"
-                                [maxDate]="tracklistForm.get('finishDate')?.value"
-                                [showButtonBar]="true"
-                            />
-                            <label for="inpStart">Startdatum (optional)</label>
+                            <textarea
+                                pTextarea
+                                formControlName="comment"
+                                id="inpComment"
+                                rows="3"
+                                style="width: 100%; resize: vertical; min-height: 4rem;"
+                            ></textarea>
+                            <label for="inpComment">Dein Kommentar / Notizen</label>
                         </p-float-label>
                     </div>
 
                     <div class="rewatching-checkbox">
-                        <p-checkbox 
+                        <p-checkbox
                             formControlName="isRewatching"
                             inputId="inpRewatching"
                             [binary]="true"
@@ -96,19 +173,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <p>Bewertung:</p>
                         <p-rating [stars]="10" formControlName="rating" />
                         <p class="ratingP">{{ tracklistForm.get("rating")?.value && tracklistForm.get("rating")?.value + " / 10" }}</p>
-                        
                     </div>
 
 
                     <div class="tracklistActions">
-                        <p-button 
+                        <p-button
                             type="submit"
                             icon="pi pi-save"
                             [label]="inpIsUpdating() ? 'Speichern' : 'Anlegen'"
                         />
 
                         @if (inpIsUpdating()) {
-                            <p-button 
+                            <p-button
                                 severity="danger"
                                 icon="pi pi-trash"
                                 label="Löschen"
@@ -116,7 +192,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             />
                         }
 
-                        <p-button 
+                        <p-button
                             label="Abbrechen"
                             icon="pi p-times"
                             severity="secondary"
@@ -130,7 +206,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 @if (isDeleteDialogVisible) {
-    <app-delete-dialog 
+    <app-delete-dialog
         [inpHeading]="'Tracklist löschen'"
         [inpText]="'Willst du diese Tracklist wirklich löschen?'"
         [inpIsButtonEnabled]="true"
