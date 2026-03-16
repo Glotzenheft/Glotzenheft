@@ -64,6 +64,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     gap: 1rem;
 }
 
+.delete-tracklist-dialog ::ng-deep .p-dialog{
+    max-width: 500px;
+}
+
 @media (max-width: 850px) {
     .create-tracklist-wrapper {
         width: 100%;
@@ -129,6 +133,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .date-picker-wrapper ::ng-deep p-date-picker {
         display: inline-grid;
+        width: 100%;
+    }
+
+    .delete-tracklist-dialog ::ng-deep .p-dialog{
         width: 100%;
     }
 }
