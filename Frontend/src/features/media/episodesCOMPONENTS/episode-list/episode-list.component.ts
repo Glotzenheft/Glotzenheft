@@ -106,8 +106,14 @@ export class EpisodeListComponent {
     };
 
     public checkEpisodeInCurrentTracklist = (episodeID: number): boolean => {
+        const selectedTracklist = this.inpSelectedTracklist();
+
+        if (!selectedTracklist || !selectedTracklist.tracklistSeason) {
+            return false;
+        }
+
         const episodesOfTracklist: number[] =
-            this.inpSelectedTracklist()!.tracklistSeasons[0].tracklistEpisodes.map(
+            selectedTracklist.tracklistSeason.tracklistEpisodes.map(
                 (epis: TracklistEpisode) => {
                     return epis.episode.id;
                 },
@@ -139,15 +145,14 @@ export class EpisodeListComponent {
             return null;
         }
 
-        const tracklist = this.inpSelectedTracklist();
+        const currentSeason = this.inpSelectedTracklist()?.tracklistSeason;
 
-        // Wir greifen auf die Episoden der ersten Season der Tracklist zu (analog zu deiner check-Funktion)
-        const season = tracklist?.tracklistSeasons?.[0];
-        if (!season) return null;
+        if (!currentSeason) {
+            return null;
+        }
 
-        // Suche nach dem Eintrag, bei dem die TMDB-Episode-ID übereinstimmt
-        const foundEntry = season.tracklistEpisodes.find(
-            (te: TracklistEpisode) => te.episode.id === episodeID
+        const foundEntry = currentSeason.tracklistEpisodes.find(
+            (te: TracklistEpisode) => te.episode.id === episodeID,
         );
 
         return foundEntry ? foundEntry.id : null;

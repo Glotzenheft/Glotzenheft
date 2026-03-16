@@ -135,11 +135,11 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        const seasons = this.inpTracklist().tracklistSeasons;
-        const currentEpisodeId = this.inpEpisode().id;
+        const season = this.inpTracklist().tracklistSeason;
+        const currentEpisodeId = this.inpEpisode()?.id;
 
-        const episodeInTracklist = seasons.length > 0
-            ? seasons[0].tracklistEpisodes.find(epis => epis.episode.id === currentEpisodeId)
+        const episodeInTracklist = season
+            ? season.tracklistEpisodes.find(epis => epis.episode.id === currentEpisodeId)
             : null;
 
         let initialDate: Date | null;
@@ -182,11 +182,21 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
     public submitForm = () => {
         this.disableAllButtons();
 
+        const tracklist = this.inpTracklist();
+        const episode = this.inpEpisode();
         const formattedDateTime = this.getFormattedWatchDateTime();
+
+        const tracklistSeasonId = tracklist.tracklistSeason?.id;
+        const episodeId = episode?.id;
+
+        if (!tracklistSeasonId || !episodeId || !formattedDateTime) {
+            this.enableAllButtons();
+            return;
+        }
 
         const createEpisodeData: CreateTracklistEpisode = {
             tracklistId: this.inpTracklist().id,
-            tracklistSeasonId: this.inpTracklist().tracklistSeasons[0].id,
+            tracklistSeasonId: tracklistSeasonId,
             watchDateTime: formattedDateTime || '', // Fallback, falls die API noch zwingend einen String erwartet
             episodeId: this.inpEpisode().id,
         };
@@ -199,7 +209,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
 
         const formattedDateTime = this.getFormattedWatchDateTime();
 
-        const episodeInTracklist = this.inpTracklist().tracklistSeasons[0]?.tracklistEpisodes.find(
+        const episodeInTracklist = this.inpTracklist().tracklistSeason?.tracklistEpisodes.find(
             (epis: TracklistEpisode) => epis.episode.id === this.inpEpisode().id
         );
 
@@ -227,7 +237,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.disableAllButtons();
         this.setDeletionDialogVisibilityStatus(false);
 
-        const episodeInTracklist = this.inpTracklist().tracklistSeasons[0]?.tracklistEpisodes.find(
+        const episodeInTracklist = this.inpTracklist().tracklistSeason?.tracklistEpisodes.find(
             (epis: TracklistEpisode) => epis.episode.id === this.inpEpisode().id
         );
 
