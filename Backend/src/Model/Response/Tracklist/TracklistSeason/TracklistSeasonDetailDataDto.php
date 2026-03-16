@@ -31,6 +31,10 @@ readonly class TracklistSeasonDetailDataDto
         public int $id,
         public string $createdAt,
         public ?string $updatedAt,
+        public ?int    $startEpisodeNumber,
+        public ?int    $endEpisodeNumber,
+        public ?int    $customSeasonNumber,
+        public ?int    $customPartNumber,
         #[SerializedName('season')]
         public SeasonLightDetailDataDto $seasonDto,
         /**
@@ -69,6 +73,10 @@ readonly class TracklistSeasonDetailDataDto
             id: $tracklistSeason->getId(),
             createdAt: $tracklistSeason->getCreatedAt()->format('Y-m-d H:i:s'),
             updatedAt: $tracklistSeason->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            startEpisodeNumber: $tracklistSeason->getStartEpisodeNumber(),
+            endEpisodeNumber: $tracklistSeason->getEndEpisodeNumber(),
+            customSeasonNumber: $tracklistSeason->getCustomSeasonNumber(),
+            customPartNumber: $tracklistSeason->getCustomPartNumber(),
             seasonDto: $seasonDto,
             tracklistEpisodes: $tracklistEpisodeDtos,
         );
