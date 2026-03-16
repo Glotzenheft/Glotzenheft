@@ -68,6 +68,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     max-width: 500px;
 }
 
+.optional-season-data-grid {
+    padding-top: 1rem;
+    border-top: 1px solid rgba(0,0,0,0.3);
+}
+
+.optional-season-data-grid p {
+    margin-top: 0;
+    margin-bottom: 0.5rem;
+    text-shadow: 0 0 10px black;
+}
+
 @media (max-width: 850px) {
     .create-tracklist-wrapper {
         width: 100%;

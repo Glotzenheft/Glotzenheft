@@ -147,6 +147,34 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </p-float-label>
                     </div>
 
+                    @if (!inpIsMovie()) {
+                        <div class="optional-season-data-grid">
+                            <p><strong>Staffel- & Episodenkorrektur</strong></p>
+
+                            <div class="date-picker-wrapper" style="margin-top: 1rem;">
+                                <p-float-label variant="in" style="flex: 1;">
+                                    <input type="number" pInputText formControlName="customSeasonNumber" id="inpCS" style="width: 100%;">
+                                    <label for="inpCS">Logische Staffel Nr.</label>
+                                </p-float-label>
+                                <p-float-label variant="in" style="flex: 1;">
+                                    <input type="number" pInputText formControlName="customPartNumber" id="inpCP" style="width: 100%;">
+                                    <label for="inpCP">Part / Cour</label>
+                                </p-float-label>
+                            </div>
+
+                            <div class="date-picker-wrapper" style="margin-top: 1rem;">
+                                <p-float-label variant="in" style="flex: 1;">
+                                    <input type="number" pInputText formControlName="startEpisodeNumber" id="inpSE" style="width: 100%;">
+                                    <label for="inpSE">Erste Episode (Nr.)</label>
+                                </p-float-label>
+                                <p-float-label variant="in" style="flex: 1;">
+                                    <input type="number" pInputText formControlName="endEpisodeNumber" id="inpEE" style="width: 100%;">
+                                    <label for="inpEE">Letzte Episode (Nr.)</label>
+                                </p-float-label>
+                            </div>
+                        </div>
+                    }
+
                     <div class="form-row">
                         <p-float-label variant="in">
                             <textarea
