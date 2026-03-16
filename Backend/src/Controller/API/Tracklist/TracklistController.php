@@ -134,7 +134,6 @@ class TracklistController extends AbstractController
             request: $request,
             data: $tracklist,
             successStatus: Response::HTTP_CREATED,
-            context: ['groups' => ['tracklist_details']]
         );
     }
 
@@ -185,7 +184,6 @@ class TracklistController extends AbstractController
             request: $request,
             data: $tracklist,
             successStatus: Response::HTTP_OK,
-            context: ['groups' => ['tracklist_details']]
         );
     }
 
