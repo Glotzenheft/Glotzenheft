@@ -157,4 +157,20 @@ export class EpisodeListComponent {
 
         return foundEntry ? foundEntry.id : null;
     };
+
+    public getEpisodeDisplayTitle = (episode: SeasonEpisode, index: number): string => {
+        const relativeNumber = index + 1;
+        const originalNumber = episode.episodeNumber;
+
+        // Hilfsfunktion für die Null davor (z.B. 1 wird zu 01, 12 bleibt 12)
+        const pad = (num: number) => num.toString().padStart(2, '0');
+
+        if (relativeNumber !== originalNumber) {
+            // Filter ist aktiv: Relative Nummer (Index) + Originale Nummer (TMDB)
+            return `E${pad(relativeNumber)} (E${pad(originalNumber)}): ${episode.name}`;
+        }
+
+        // Kein Filter aktiv (oder Liste beginnt ohnehin bei 1): Nur Original anzeigen
+        return `E${pad(originalNumber)}: ${episode.name}`;
+    };
 }

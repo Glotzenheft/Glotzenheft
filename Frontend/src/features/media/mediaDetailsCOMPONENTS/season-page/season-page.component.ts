@@ -88,6 +88,7 @@ import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import {Tag} from 'primeng/tag';
 import {Image} from 'primeng/image';
+import {Checkbox} from 'primeng/checkbox';
 
 @Component({
     selector: 'app-season-page',
@@ -118,6 +119,7 @@ import {Image} from 'primeng/image';
         Tag,
         Image,
         NgOptimizedImage,
+        Checkbox,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -591,4 +593,44 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.isThumbnailLoading = false;
         this.imageError = true;
     }
+
+    public applyEpisodeFilter: boolean = true;
+
+    // NEU: Prüft, ob die Trackliste überhaupt Grenzen (Start/Ende) definiert hat
+    public hasCustomEpisodeBoundaries = (tracklist: SeasonTracklist | null): boolean => {
+        if (!tracklist || !tracklist.tracklistSeason) return false;
+        return tracklist.tracklistSeason.startEpisodeNumber !== null ||
+            tracklist.tracklistSeason.endEpisodeNumber !== null;
+    };
+
+    // NEU: Filtert die Episoden basierend auf dem Schalter und den eingestellten Grenzen
+    public getFilteredEpisodes = (
+        episodes: SeasonEpisode[],
+        tracklist: SeasonTracklist | null
+    ): SeasonEpisode[] => {
+        // Wenn der Schalter aus ist oder keine Trackliste/Season existiert -> alle anzeigen
+        if (!this.applyEpisodeFilter || !tracklist || !tracklist.tracklistSeason) {
+            return episodes;
+        }
+
+        const start = tracklist.tracklistSeason.startEpisodeNumber;
+        const end = tracklist.tracklistSeason.endEpisodeNumber;
+
+        if (start === null && end === null) {
+            return episodes; // Keine Grenzen definiert -> alle anzeigen
+        }
+
+        return episodes.filter((epi: SeasonEpisode) => {
+            let isValid = true;
+            // Wenn eine Start-Episode definiert ist und die aktuelle davor liegt -> wegfiltern
+            if (start !== null && epi.episodeNumber < start) {
+                isValid = false;
+            }
+            // Wenn eine End-Episode definiert ist und die aktuelle danach liegt -> wegfiltern
+            if (end !== null && epi.episodeNumber > end) {
+                isValid = false;
+            }
+            return isValid;
+        });
+    };
 }

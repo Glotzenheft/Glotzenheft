@@ -252,31 +252,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                             <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="openTracklistForm(season)" />
 
                                             @if (tracklistSelectionForm.get('selectedTracklist')?.value) {
+
+                                                @if (hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value)) {
+                                                    <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
+                                                        <p-checkbox
+                                                            [(ngModel)]="applyEpisodeFilter"
+                                                            [binary]="true"
+                                                            inputId="filterSwitch"
+                                                            [ngModelOptions]="{standalone: true}">
+                                                        </p-checkbox>
+                                                        <label for="filterSwitch" style="cursor: pointer; margin: 0; font-weight: bold;">
+                                                            Nur definierte Episoden dieser Trackliste anzeigen
+                                                        </label>
+                                                    </div>
+                                                }
+
                                                 <app-episode-list
-                                                    [episodeList]="season.episodes"
+                                                    [episodeList]="getFilteredEpisodes(season.episodes, tracklistSelectionForm.get('selectedTracklist')?.value)"
                                                     [tracklistSelectionForm]="tracklistSelectionForm"
                                                     [selectedSeason]="selectedSeason"
-                                                    [tracklistsOfSeason]="tracklistsOfSeason" [inpSelectedTracklist]="
-                                                        tracklistSelectionForm.get('selectedTracklist')?.value
-                                                        ? tracklistSelectionForm.get('selectedTracklist')?.value
-                                                        : null
-                                                    "
-                                                    [inpIsWithTracklist]="true" (setEpisode)="setCurrentEpisode($event, false)"
+                                                    [tracklistsOfSeason]="tracklistsOfSeason"
+                                                    [inpSelectedTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value || null"
+                                                    [inpIsWithTracklist]="true"
+                                                    (setEpisode)="setCurrentEpisode($event, false)"
                                                     (setEpisodeForEditing)="setCurrentEpisode($event, true)"
-                                                    />
+                                                />
                                             }
-
-
-                                            @if (!tracklistSelectionForm.get('selectedTracklist')?.value) {
-                                                <app-episode-list
-                                                    [episodeList]="season.episodes"
-                                                    [tracklistSelectionForm]="tracklistSelectionForm"
-                                                    [selectedSeason]="null"
-                                                    [tracklistsOfSeason]="[]"
-                                                    [inpSelectedTracklist]="null"
-                                                    [inpIsWithTracklist]="false"
-                                                    />
-                                                }
                                         </p-accordion-content>
                                     </p-accordion-panel>
                                     }
