@@ -38,11 +38,13 @@ readonly class TracklistResponseDto
         public bool    $isRewatching,
         public ?string $startDate,
         public ?string $finishDate,
+        public ?string $comment,
+        public ?string $customAirDate,
+        public ?string $language,
+        public ?string $subtitle,
+        public ?string $customPosterPath,
         public MediaLightDetailResponseDto $media,
-        /**
-         * @var TracklistSeasonDetailDataDto[]
-         */
-        public array   $tracklistSeasons,
+        public ?TracklistSeasonDetailDataDto   $tracklistSeason,
         /**
          * @var TracklistTagResponseDto[]
          */
@@ -53,14 +55,14 @@ readonly class TracklistResponseDto
      * @param Tracklist $tracklist
      * @param MediaLightDetailResponseDto|null $mediaDto
      * @param TracklistTagLightResponseDto[]|null $tagDtos
-     * @param TracklistSeasonDetailDataDto[]|null $tracklistSeasonDtos
+     * @param TracklistSeasonDetailDataDto|null $tracklistSeasonDto
      * @return self
      */
     public static function fromEntity(
         Tracklist $tracklist,
         ?MediaLightDetailResponseDto $mediaDto = null,
         ?array $tagDtos = null,
-        ?array $tracklistSeasonDtos = null,
+        ?TracklistSeasonDetailDataDto $tracklistSeasonDto = null,
     ): self
     {
         if ($mediaDto === null)
@@ -77,13 +79,10 @@ readonly class TracklistResponseDto
             }
         }
 
-        if ($tracklistSeasonDtos === null)
+        $mediaType = $tracklist->getMedia()->getType()->value;
+        if ($mediaType === 'tv' && $tracklistSeasonDto === null)
         {
-            $tracklistSeasonDtos = [];
-            foreach ($tracklist->getTracklistSeasons() as $season)
-            {
-                $tracklistSeasonDtos[] = TracklistSeasonDetailDataDto::fromEntity($season);
-            }
+            $tracklistSeasonDto = TracklistSeasonDetailDataDto::fromEntity($tracklist->getTracklistSeason());
         }
 
         return new self(
@@ -94,10 +93,15 @@ readonly class TracklistResponseDto
             status: $tracklist->getStatus()->value,
             rating: $tracklist->getRating(),
             isRewatching: $tracklist->isRewatching(),
-            startDate: $tracklist->getStartDate()?->format('Y-m-d'),
-            finishDate: $tracklist->getFinishDate()?->format('Y-m-d'),
+            startDate: $tracklist->getStartDate()?->format('Y-m-d H:i:s'),
+            finishDate: $tracklist->getFinishDate()?->format('Y-m-d H:i:s'),
+            comment: $tracklist->getComment(),
+            customAirDate: $tracklist->getCustomAirDate()?->format('Y-m-d'),
+            language: $tracklist->getLanguage(),
+            subtitle: $tracklist->getSubtitle(),
+            customPosterPath: $tracklist->getCustomPosterPath(),
             media: $mediaDto,
-            tracklistSeasons: $tracklistSeasonDtos,
+            tracklistSeason: $tracklistSeasonDto,
             tags: $tagDtos,
         );
     }

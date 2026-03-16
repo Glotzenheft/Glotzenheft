@@ -37,6 +37,10 @@ readonly class TracklistLightResponseDto
         public bool    $isRewatching,
         public ?string $startDate,
         public ?string $finishDate,
+        public ?string $customAirDate,
+        public ?string $language,
+        public ?string $subtitle,
+        public ?string $customPosterPath,
         public MediaLightDetailResponseDto $media,
         /**
          * @var TracklistTagResponseDto[]
@@ -78,8 +82,12 @@ readonly class TracklistLightResponseDto
             status: $tracklist->getStatus()->value,
             rating: $tracklist->getRating(),
             isRewatching: $tracklist->isRewatching(),
-            startDate: $tracklist->getStartDate()?->format('Y-m-d'),
-            finishDate: $tracklist->getFinishDate()?->format('Y-m-d'),
+            startDate: $tracklist->getStartDate()?->format('Y-m-d H:i:s'),
+            finishDate: $tracklist->getFinishDate()?->format('Y-m-d H:i:s'),
+            customAirDate: $tracklist->getCustomAirDate()?->format('Y-m-d'),
+            language: $tracklist->getLanguage(),
+            subtitle: $tracklist->getSubtitle(),
+            customPosterPath: $tracklist->getCustomPosterPath(),
             media: $mediaDto,
             tags: $tagDtos,
         );
