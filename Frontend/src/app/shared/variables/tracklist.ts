@@ -57,7 +57,7 @@ export const TRACK_LIST_STATUS_LIST_AS_OBJECT: {
         value: 'plan to watch',
     },
     {
-        german: 'Überspringen',
+        german: 'Übersprungen',
         value: 'skipping'
     }
 ];
@@ -75,7 +75,7 @@ export const convertTracklistStatusIntoGerman = (status: string): string => {
         case 'plan to watch':
             return 'Geplant';
         case 'skipping':
-            return 'Überspringen';
+            return 'Übersprungen';
     }
 
     return '';
