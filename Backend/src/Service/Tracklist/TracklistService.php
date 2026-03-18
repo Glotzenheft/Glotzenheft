@@ -147,7 +147,12 @@ readonly class TracklistService
 
             $tracklistSeason = (new TracklistSeason())
                 ->setSeason($season)
-                ->setTracklist($tracklist);
+                ->setTracklist($tracklist)
+                ->setStartEpisodeNumber($dto->startEpisodeNumber)
+                ->setEndEpisodeNumber($dto->endEpisodeNumber)
+                ->setCustomSeasonNumber($dto->customSeasonNumber)
+                ->setCustomPartNumber($dto->customPartNumber);
+
             $this->entityManager->persist($tracklistSeason);
             $tracklist->setTracklistSeason($tracklistSeason);
         }
