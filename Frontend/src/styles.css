@@ -1657,6 +1657,7 @@ p {
 
     background-color: #f8f9fa;
     border: 1px dashed #dee2e6;
+    border-radius: 10px;
     color: #6c757d;
     text-align: center;
     padding: 1rem;
