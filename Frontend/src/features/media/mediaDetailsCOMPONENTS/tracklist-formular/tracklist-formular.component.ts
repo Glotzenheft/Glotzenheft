@@ -155,6 +155,49 @@ export class TracklistFormularComponent implements OnInit {
             startEpisodeNumber: [season?.startEpisodeNumber ?? null],
             endEpisodeNumber: [season?.endEpisodeNumber ?? null],
         });
+
+        this.tracklistForm.get('isRewatching')?.valueChanges.subscribe((isRewatching: boolean) => {
+            const nameCtrl = this.tracklistForm?.get('trackListName');
+            if (nameCtrl && nameCtrl.value) {
+                const currentName = nameCtrl.value as string;
+                const suffix = ' Rewatch';
+
+                if (isRewatching && !currentName.endsWith(suffix)) {
+                    nameCtrl.setValue(currentName + suffix);
+                } else if (!isRewatching && currentName.endsWith(suffix)) {
+                    nameCtrl.setValue(currentName.substring(0, currentName.length - suffix.length));
+                }
+            }
+        });
+
+        // DYNAMIK 2: Status-Wechsel füllt das Enddatum mit der letzten Episode
+        this.tracklistForm.get('status')?.valueChanges.subscribe((newStatusObj: any) => {
+            if (!newStatusObj) return;
+            const statusVal = newStatusObj.value;
+
+            // Prüfen, ob der Status auf abgeschlossen oder abgebrochen wechselt
+            if (statusVal === 'completed' || statusVal === 'dropped') {
+                const finishDateCtrl = this.tracklistForm?.get('finishDate');
+                const eps = this.inpTracklist().tracklistSeason?.tracklistEpisodes;
+
+                // Prüfen, ob überhaupt schon Episoden in dieser Trackliste getrackt wurden (wichtig für Updates)
+                if (eps && eps.length > 0) {
+                    // Wandelt alle Timestamps in Millisekunden um und sortiert ungültige aus
+                    const timestamps = eps
+                        .map(e => e.watchDateTime ? new Date(e.watchDateTime).getTime() : 0)
+                        .filter(t => t > 0);
+
+                    if (timestamps.length > 0) {
+                        // Höchsten Wert = Zuletzt geschaute Episode
+                        const maxTime = Math.max(...timestamps);
+
+                        if (!finishDateCtrl?.value) {
+                            finishDateCtrl?.setValue(new Date(maxTime));
+                        }
+                    }
+                }
+            }
+        });
     }
 
     public submitTracklist = () => {

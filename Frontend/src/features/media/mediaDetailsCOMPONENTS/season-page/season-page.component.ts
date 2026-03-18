@@ -410,18 +410,43 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         return tracklistNumber + 1;
     };
 
-    public getDefaultTracklist = (tracklistName: string): Tracklist => {
+    public getDefaultTracklist = (
+        tracklistName: string
+    ): Tracklist => {
+        let airDateToUse = null;
+        let startEp = null;
+        let customSeason = null;
+
+        const season = this.currentSeason;
+        if (season)
+        {
+            customSeason = season.seasonNumber;
+            startEp = 1;
+
+            if (season.airDate)
+            {
+                airDateToUse = season.airDate;
+            }
+            else if (season.episodes
+                && season.episodes.length > 0
+                && season.episodes[0].airDate
+            )
+            {
+                airDateToUse = season.episodes[0].airDate;
+            }
+        }
+
         return {
             createdAt: '',
             updatedAt: null,
             id: 0,
             rating: null,
             status: 'watching',
-            startDate: null,
+            startDate: new Date().toISOString(),
             finishDate: null,
             tracklistName: tracklistName,
             comment: null,
-            customAirDate: null,
+            customAirDate: airDateToUse,
             language: null,
             subtitle: null,
             customPosterPath: null,
@@ -430,7 +455,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                 type: '',
                 posterPath: '',
             },
-            tracklistSeason: null,
+            tracklistSeason: season ? {
+                id: 0,
+                startEpisodeNumber: startEp,
+                endEpisodeNumber: null,
+                customSeasonNumber: customSeason,
+                customPartNumber: null,
+                season: season as any,
+                tracklistEpisodes: []
+            } : null,
             isRewatching: false,
             tags: []
         };
