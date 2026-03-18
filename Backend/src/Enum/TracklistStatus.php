@@ -27,5 +27,6 @@ enum TracklistStatus: string
     case DROPPED = 'dropped';
     case PLAN_TO_WATCH = 'plan to watch';
     case COMPLETED = 'completed';
+    case SKIPPING = 'skipping';
 }
 

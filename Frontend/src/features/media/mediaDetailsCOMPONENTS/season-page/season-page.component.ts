@@ -88,6 +88,7 @@ import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import {Tag} from 'primeng/tag';
 import {Image} from 'primeng/image';
+import {Checkbox} from 'primeng/checkbox';
 
 @Component({
     selector: 'app-season-page',
@@ -118,6 +119,7 @@ import {Image} from 'primeng/image';
         Tag,
         Image,
         NgOptimizedImage,
+        Checkbox,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -176,21 +178,6 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     public isEditingButtonVisible: boolean = true;
     public isLoading: boolean = false;
-    public EMPTY_TRACKLIST: SeasonTracklist = {
-        id: -1,
-        media: {
-            id: -1, // id of the tv or movie itself
-            type: '', // "movie" or "tv"
-        },
-        rating: -1,
-        status: '',
-        startDate: '',
-        finishDate: '',
-        tracklistName: '',
-        tracklistSeasons: [],
-        isRewatching: false,
-        tags: [],
-    };
     private createSubscription: Subscription | null = null;
     private updateSubscription: Subscription | null = null;
     private deleteSubscription: Subscription | null = null;
@@ -396,7 +383,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                     this.joinTVWithTracklistsUseCase.execute(res);
 
                 this.tracklistSelectionForm = this.formBuilder.group({
-                    selectedTracklist: [this.EMPTY_TRACKLIST],
+                    selectedTracklist: [null],
                 });
                 this.tracklistsOfSeason = res.tracklists;
 
@@ -423,22 +410,62 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         return tracklistNumber + 1;
     };
 
-    public getDefaultTracklist = (tracklistName: string): Tracklist => {
+    public getDefaultTracklist = (
+        tracklistName: string
+    ): Tracklist => {
+        let airDateToUse = null;
+        let startEp = null;
+        let customSeason = null;
+
+        const season = this.currentSeason;
+        if (season)
+        {
+            customSeason = season.seasonNumber;
+            startEp = 1;
+
+            if (season.airDate)
+            {
+                airDateToUse = season.airDate;
+            }
+            else if (season.episodes
+                && season.episodes.length > 0
+                && season.episodes[0].airDate
+            )
+            {
+                airDateToUse = season.episodes[0].airDate;
+            }
+        }
+
         return {
+            createdAt: '',
+            updatedAt: null,
             id: 0,
             rating: null,
             status: 'watching',
-            startDate: null,
+            startDate: new Date().toISOString(),
             finishDate: null,
             tracklistName: tracklistName,
+            comment: null,
+            customAirDate: airDateToUse,
+            language: null,
+            subtitle: null,
+            customPosterPath: null,
             media: {
                 id: 0,
                 type: '',
                 posterPath: '',
             },
-            tracklistSeasons: [],
+            tracklistSeason: season ? {
+                id: 0,
+                startEpisodeNumber: startEp,
+                endEpisodeNumber: null,
+                customSeasonNumber: customSeason,
+                customPartNumber: null,
+                season: season as any,
+                tracklistEpisodes: []
+            } : null,
             isRewatching: false,
-            tags: [],
+            tags: []
         };
     };
 
@@ -485,29 +512,18 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                     )[0];
             }
 
-            this.tracklistSelectionForm
-                .get('selectedTracklist')
-                ?.setValue(
-                    season.tracklistsForSeason.length > 0
-                        ? currentTracklistInLocalStorage
-                            ? currentTracklistInLocalStorage
-                            : season.tracklistsForSeason[0]
-                        : this.EMPTY_TRACKLIST,
-                );
+            const tracklistToSelect = season.tracklistsForSeason.length > 0
+                ? (currentTracklistInLocalStorage ?? season.tracklistsForSeason[0])
+                : null;
+
+            this.tracklistSelectionForm.get('selectedTracklist')?.setValue(tracklistToSelect);
         }
 
         this.selectedSeason = season;
         this.currentSeason = season;
 
-        if (
-            this.tracklistSelectionForm.get('selectedTracklist')?.value !==
-            this.EMPTY_TRACKLIST
-        ) {
-            this.isEditingButtonVisible = true;
-            return;
-        }
-
-        this.isEditingButtonVisible = false;
+        const selectedValue = this.tracklistSelectionForm.get('selectedTracklist')?.value;
+        this.isEditingButtonVisible = !!selectedValue;
     };
 
     public setVisibility = (page: number) => {
@@ -562,6 +578,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             tracklist_rating: event.rating,
             is_rewatching: event.isRewatching,
             media_type: 'tv',
+            comment: event.comment,
+            custom_air_date: event.customAirDate,
+            language: event.language,
+            subtitle: event.subtitle,
+            custom_poster_path: event.customPosterPath,
+            start_episode_number: event.startEpisodeNumber,
+            end_episode_number: event.endEpisodeNumber,
+            custom_season_number: event.customSeasonNumber,
+            custom_part_number: event.customPartNumber,
         });
     };
 
@@ -577,6 +602,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             tracklist_start_date: event.startDate,
             tracklist_finish_date: event.finishDate,
             is_rewatching: event.isRewatching,
+            comment: event.comment,
+            custom_air_date: event.customAirDate,
+            language: event.language,
+            subtitle: event.subtitle,
+            custom_poster_path: event.customPosterPath,
+            start_episode_number: event.startEpisodeNumber,
+            end_episode_number: event.endEpisodeNumber,
+            custom_season_number: event.customSeasonNumber,
+            custom_part_number: event.customPartNumber,
         });
     };
 
@@ -592,4 +626,44 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.isThumbnailLoading = false;
         this.imageError = true;
     }
+
+    public applyEpisodeFilter: boolean = true;
+
+    // NEU: Prüft, ob die Trackliste überhaupt Grenzen (Start/Ende) definiert hat
+    public hasCustomEpisodeBoundaries = (tracklist: SeasonTracklist | null): boolean => {
+        if (!tracklist || !tracklist.tracklistSeason) return false;
+        return tracklist.tracklistSeason.startEpisodeNumber !== null ||
+            tracklist.tracklistSeason.endEpisodeNumber !== null;
+    };
+
+    // NEU: Filtert die Episoden basierend auf dem Schalter und den eingestellten Grenzen
+    public getFilteredEpisodes = (
+        episodes: SeasonEpisode[],
+        tracklist: SeasonTracklist | null
+    ): SeasonEpisode[] => {
+        // Wenn der Schalter aus ist oder keine Trackliste/Season existiert -> alle anzeigen
+        if (!this.applyEpisodeFilter || !tracklist || !tracklist.tracklistSeason) {
+            return episodes;
+        }
+
+        const start = tracklist.tracklistSeason.startEpisodeNumber;
+        const end = tracklist.tracklistSeason.endEpisodeNumber;
+
+        if (start === null && end === null) {
+            return episodes; // Keine Grenzen definiert -> alle anzeigen
+        }
+
+        return episodes.filter((epi: SeasonEpisode) => {
+            let isValid = true;
+            // Wenn eine Start-Episode definiert ist und die aktuelle davor liegt -> wegfiltern
+            if (start !== null && epi.episodeNumber < start) {
+                isValid = false;
+            }
+            // Wenn eine End-Episode definiert ist und die aktuelle danach liegt -> wegfiltern
+            if (end !== null && epi.episodeNumber > end) {
+                isValid = false;
+            }
+            return isValid;
+        });
+    };
 }

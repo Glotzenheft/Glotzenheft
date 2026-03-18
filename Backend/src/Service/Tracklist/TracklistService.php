@@ -31,7 +31,6 @@ use App\Model\Response\Tracklist\TracklistLightResponseDto;
 use App\Repository\SeasonRepository;
 use App\Repository\TracklistRepository;
 use App\Service\Traits\EntityValidationTrait;
-use DateTime;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -90,12 +89,12 @@ readonly class TracklistService
      * Returns the tracklist entity.
      * @param CreateTracklistDto $dto
      * @param User $user
-     * @return Tracklist
+     * @return TracklistLightResponseDto
      */
     public function createTracklist(
         CreateTracklistDto $dto,
         User $user
-    ): Tracklist
+    ): TracklistLightResponseDto
     {
         $media = $this->entityManager
             ->getRepository(Media::class)
@@ -110,14 +109,27 @@ readonly class TracklistService
             ->setUser($user)
             ->setStatus($dto->tracklistStatus)
             ->setMedia($media)
-            ->setIsRewatching($dto->isRewatching);
+            ->setIsRewatching($dto->isRewatching)
+            ->setRating($dto->rating)
+            ->setComment($dto->comment)
+            ->setLanguage($dto->language)
+            ->setSubtitle($dto->subtitle)
+            ->setCustomPosterPath($dto->customPosterPath);
 
-        $this->setOptionalTracklistProperties(
-            tracklist: $tracklist,
-            rating: $dto->rating,
-            startDateStr: $dto->startDate,
-            finishDateStr: $dto->finishDate
-        );
+        $startDate = $dto->startDate
+            ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->startDate)
+            : null;
+        $tracklist->setStartDate($startDate ?: null);
+
+        $finishDate = $dto->finishDate
+            ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->finishDate)
+            : null;
+        $tracklist->setFinishDate($finishDate ?: null);
+
+        $customAirDate = $dto->customAirDate
+            ? DateTimeImmutable::createFromFormat('Y-m-d', $dto->customAirDate)
+            : null;
+        $tracklist->setCustomAirDate($customAirDate ?: null);
 
         if ($dto->mediaType === 'tv')
         {
@@ -135,15 +147,20 @@ readonly class TracklistService
 
             $tracklistSeason = (new TracklistSeason())
                 ->setSeason($season)
-                ->setTracklist($tracklist);
+                ->setTracklist($tracklist)
+                ->setStartEpisodeNumber($dto->startEpisodeNumber)
+                ->setEndEpisodeNumber($dto->endEpisodeNumber)
+                ->setCustomSeasonNumber($dto->customSeasonNumber)
+                ->setCustomPartNumber($dto->customPartNumber);
+
             $this->entityManager->persist($tracklistSeason);
-            $tracklist->addTracklistSeason($tracklistSeason);
+            $tracklist->setTracklistSeason($tracklistSeason);
         }
 
         $this->entityManager->persist($tracklist);
         $this->entityManager->flush();
 
-        return $tracklist;
+        return TracklistLightResponseDto::fromEntity($tracklist);
     }
 
     /**
@@ -151,14 +168,14 @@ readonly class TracklistService
      * @param UpdateTracklistDto $dto
      * @param User $user
      * @param array $requestData
-     * @return Tracklist
+     * @return TracklistLightResponseDto
      */
     public function updateTracklist(
         int $tracklistId,
         UpdateTracklistDto $dto,
         User $user,
         array $requestData
-    ): Tracklist
+    ): TracklistLightResponseDto
     {
         $tracklist = $this->findAndValidateTracklist(
             tracklistId: $tracklistId,
@@ -196,7 +213,7 @@ readonly class TracklistService
         if (array_key_exists('tracklist_start_date', $requestData))
         {
             $startDate = $dto->startDate
-                ? DateTime::createFromFormat('Y-m-d', $dto->startDate)
+                ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->startDate)
                 : null;
             $tracklist->setStartDate($startDate);
         }
@@ -204,14 +221,51 @@ readonly class TracklistService
         if (array_key_exists('tracklist_finish_date', $requestData))
         {
             $finishDate = $dto->finishDate
-                ? DateTime::createFromFormat('Y-m-d', $dto->finishDate)
+                ? DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $dto->finishDate)
                 : null;
             $tracklist->setFinishDate($finishDate);
         }
 
-        $tracklist->setUpdatedAt(new DateTimeImmutable());
+        if (array_key_exists('comment', $requestData))
+        {
+            $tracklist->setComment($dto->comment);
+        }
+
+        if (array_key_exists('custom_air_date', $requestData))
+        {
+            $customAirDate = $dto->customAirDate
+                ? DateTimeImmutable::createFromFormat('Y-m-d', $dto->customAirDate)
+                : null;
+            $tracklist->setCustomAirDate($customAirDate);
+        }
+
+        if (array_key_exists('language', $requestData))
+        {
+            $tracklist->setLanguage($dto->language);
+        }
+
+        if (array_key_exists('subtitle', $requestData))
+        {
+            $tracklist->setSubtitle($dto->subtitle);
+        }
+
+        if (array_key_exists('custom_poster_path', $requestData))
+        {
+            $tracklist->setCustomPosterPath($dto->customPosterPath);
+        }
+
+        $tracklistSeason = $tracklist->getTracklistSeason();
+        if ($tracklistSeason instanceof TracklistSeason)
+        {
+            $this->setTracklistSeasonProperties(
+                tracklistSeason: $tracklistSeason,
+                requestData: $requestData,
+                dto: $dto
+            );
+        }
+
         $this->entityManager->flush();
-        return $tracklist;
+        return TracklistLightResponseDto::fromEntity($tracklist);
     }
 
     /**
@@ -235,31 +289,35 @@ readonly class TracklistService
     }
 
     /**
-     * @param Tracklist $tracklist
-     * @param int|null $rating
-     * @param string|null $startDateStr
-     * @param string|null $finishDateStr
+     * @param TracklistSeason $tracklistSeason
+     * @param array $requestData
+     * @param UpdateTracklistDto $dto
      * @return void
      */
-    private function setOptionalTracklistProperties(
-        Tracklist $tracklist,
-        ?int $rating,
-        ?string $startDateStr,
-        ?string $finishDateStr
+    private function setTracklistSeasonProperties(
+        TracklistSeason $tracklistSeason,
+        array $requestData,
+        UpdateTracklistDto $dto
     ): void
     {
-        $tracklist->setRating($rating);
+        if (array_key_exists('start_episode_number', $requestData))
+        {
+            $tracklistSeason->setStartEpisodeNumber($dto->startEpisodeNumber);
+        }
 
-        $startDate = $startDateStr
-            ? DateTime::createFromFormat('Y-m-d', $startDateStr)
-            : null;
-        $tracklist->setStartDate($startDate ?: null);
+        if (array_key_exists('end_episode_number', $requestData))
+        {
+            $tracklistSeason->setEndEpisodeNumber($dto->endEpisodeNumber);
+        }
 
-        $finishDate = $finishDateStr
-            ? DateTime::createFromFormat('Y-m-d', $finishDateStr)
-            : null;
-        $tracklist->setFinishDate($finishDate ?: null);
+        if (array_key_exists('custom_season_number', $requestData))
+        {
+            $tracklistSeason->setCustomSeasonNumber($dto->customSeasonNumber);
+        }
 
-        $tracklist->setUpdatedAt(new DateTimeImmutable());
+        if (array_key_exists('custom_part_number', $requestData))
+        {
+            $tracklistSeason->setCustomPartNumber($dto->customPartNumber);
+        }
     }
 }

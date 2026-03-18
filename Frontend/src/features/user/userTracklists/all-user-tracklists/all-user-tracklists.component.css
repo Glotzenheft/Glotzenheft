@@ -234,3 +234,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     width: 100%;
     margin-bottom: 8rem;
 }
+
+.statusSkipping {
+    background-color: #610596;
+}

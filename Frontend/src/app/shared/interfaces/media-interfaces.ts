@@ -139,4 +139,13 @@ export interface UpdateTracklistRequest {
     tracklist_start_date?: string | null;
     tracklist_finish_date?: string | null;
     is_rewatching?: boolean;
+    comment?: string | null;
+    custom_air_date?: string | null;
+    language?: string | null;
+    subtitle?: string | null;
+    custom_poster_path?: string | null;
+    start_episode_number?: number | null;
+    end_episode_number?: number | null;
+    custom_season_number?: number | null;
+    custom_part_number?: number | null;
 }

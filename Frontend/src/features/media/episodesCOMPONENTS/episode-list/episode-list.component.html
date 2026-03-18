@@ -26,7 +26,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     "
                     >
                     <div (click)="openDialog(episode)">
-                        <p [pTooltip]="episode.name">E{{ episode.episodeNumber | number: '2.0-0'}}: {{ shortenStringUseCase.execute(episode.name) }}</p>
+                        <p [pTooltip]="episode.name">
+                            {{ getEpisodeDisplayTitle(episode, $index) }}
+                        </p>
                     </div>
 
                     @if (!checkEpisodeInCurrentTracklist(episode.id)) {

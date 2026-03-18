@@ -56,13 +56,51 @@ readonly class UpdateTracklistDto
         public ?int $rating = null,
 
         #[SerializedName('tracklist_start_date')]
-        #[Assert\Date(message: 'The start date must be a valid date in Y-m-d format or null.')]
+        #[Assert\DateTime(
+            format: 'Y-m-d H:i:s',
+            message: 'The start date must be a valid date in Y-m-d H:i:s format or null.'
+        )]
         public ?string $startDate = null,
 
         #[SerializedName('tracklist_finish_date')]
-        #[Assert\Date(
-            message: 'The finish date must be a valid date in Y-m-d format or null.'
+        #[Assert\DateTime(
+            format: 'Y-m-d H:i:s',
+            message: 'The finish date must be a valid date in Y-m-d H:i:s format or null.'
         )]
-        public ?string $finishDate = null
+        public ?string $finishDate = null,
+
+        #[Assert\Type('string')]
+        public ?string $comment = null,
+
+        #[SerializedName('custom_air_date')]
+        #[Assert\Date(message: 'The custom air date must be a valid date in Y-m-d format or null.')]
+        public ?string $customAirDate = null,
+
+        #[Assert\Language]
+        public ?string $language = null,
+
+        #[SerializedName('subtitle')]
+        #[Assert\Language]
+        public ?string $subtitle = null,
+
+        #[SerializedName('custom_poster_path')]
+        #[Assert\Type('string')]
+        public ?string $customPosterPath = null,
+
+        #[SerializedName('start_episode_number')]
+        #[Assert\Type('integer')]
+        public ?int $startEpisodeNumber = null,
+
+        #[SerializedName('end_episode_number')]
+        #[Assert\Type('integer')]
+        public ?int $endEpisodeNumber = null,
+
+        #[SerializedName('custom_season_number')]
+        #[Assert\Type('integer')]
+        public ?int $customSeasonNumber = null,
+
+        #[SerializedName('custom_part_number')]
+        #[Assert\Type('integer')]
+        public ?int $customPartNumber = null,
     ) {}
 }

@@ -49,7 +49,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
      * @returns TVWithTracklist
      */
     public joinTVWithTracklists = (data: Season): TVWithTracklist => {
-        const tvWithTracklist = {
+        return {
             id: data.media.id,
             tmdbId: data.media.tmdbId,
             imdbId: data.media.imdbId,
@@ -59,29 +59,26 @@ export class R_TracklistHttp implements I_TracklistRepository {
             firstAirDate: data.media.firstAirDate,
             tmdbGenres: data.media.tmdbGenres,
             seasons: data.media.seasons
-                .map((season: SeasonWithEpisodes) => {
-                    // get all tracklists for the season
+                .map((seasonEntity: SeasonWithEpisodes) => {
                     const tracklistWithSeason: SeasonTracklist[] = [];
 
                     for (const tracklist of data.tracklists) {
-                        for (const trackSeason of tracklist.tracklistSeasons) {
-                            if (trackSeason.season.id === season.id) {
-                                tracklistWithSeason.push(tracklist);
-                            }
+                        if (tracklist.tracklistSeason?.season.id === seasonEntity.id) {
+                            tracklistWithSeason.push(tracklist);
                         }
                     }
 
                     return {
-                        id: season.id,
-                        tmdbSeasonId: season.tmdbSeasonId,
-                        seasonNumber: season.seasonNumber,
-                        name: season.name,
-                        overview: season.overview,
-                        airDate: season.airDate,
-                        episodeCount: season.episodeCount,
-                        posterPath: season.posterPath,
+                        id: seasonEntity.id,
+                        tmdbSeasonId: seasonEntity.tmdbSeasonId,
+                        seasonNumber: seasonEntity.seasonNumber,
+                        name: seasonEntity.name,
+                        overview: seasonEntity.overview,
+                        airDate: seasonEntity.airDate,
+                        episodeCount: seasonEntity.episodeCount,
+                        posterPath: seasonEntity.posterPath,
                         tracklistsForSeason: tracklistWithSeason,
-                        episodes: season.episodes,
+                        episodes: seasonEntity.episodes,
                     };
                 })
                 .sort(
@@ -95,20 +92,18 @@ export class R_TracklistHttp implements I_TracklistRepository {
             backdropPath: data.media.backdropPath,
             mediaId: data.media.mediaId,
         };
-
-        return tvWithTracklist;
     };
 
     public extractTracklistsOfTV = (data: Season): ExtractedTracklist[] => {
         return data.tracklists.map((tracklist: SeasonTracklist) => {
             const episodes: { episodeId: number }[] =
-                tracklist.tracklistSeasons[0].tracklistEpisodes.map(
+                tracklist.tracklistSeason?.tracklistEpisodes.map(
                     (epi: TracklistEpisode) => {
                         return {
-                            episodeId: epi.id,
+                            episodeId: epi.episode.id,
                         };
                     },
-                );
+                ) || [];
 
             return {
                 tracklistId: tracklist.id,
@@ -140,20 +135,20 @@ export class R_TracklistHttp implements I_TracklistRepository {
             return true;
         }
 
-        // checking if given episode is in the first season of all seasons of the tracklist
-        // selectedTracklistFull will only be one tracklist + there is only one season per tracklist!
+        const currentTracklistSeason = selectedTracklistFull[0].tracklistSeason;
+
+        if (!currentTracklistSeason) {
+            return false;
+        }
+
         const trackSeasonEpisodeIDs: number[] =
-            selectedTracklistFull[0].tracklistSeasons[0].tracklistEpisodes.map(
+            currentTracklistSeason.tracklistEpisodes.map(
                 (episode: TracklistEpisode) => {
-                    return episode.id;
+                    return episode.episode.id;
                 },
             );
 
-        if (trackSeasonEpisodeIDs.includes(episodeID)) {
-            return true;
-        }
-
-        return false;
+        return trackSeasonEpisodeIDs.includes(episodeID);
     };
 
     // functions for refreshing pages ---------------------------

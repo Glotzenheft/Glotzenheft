@@ -23,6 +23,7 @@ namespace App\Entity;
 use App\Entity\Traits\TimestampsTrait;
 use App\Enum\TracklistStatus;
 use App\Repository\TracklistRepository;
+use DateTimeImmutable;
 use DateTimeInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -64,25 +65,22 @@ class Tracklist
     private ?TracklistStatus $status = null;
 
     #[Groups(['tracklist_details'])]
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Context(['datetime_format' => 'Y-m-d'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Context(['datetime_format' => 'Y-m-d H:i:s'])]
     private ?DateTimeInterface $startDate = null;
 
     #[Groups(['tracklist_details'])]
-    #[ORM\Column(type: Types::DATE_MUTABLE, nullable: true)]
-    #[Context(['datetime_format' => 'Y-m-d'])]
+    #[ORM\Column(type: Types::DATETIME_IMMUTABLE, nullable: true)]
+    #[Context(['datetime_format' => 'Y-m-d H:i:s'])]
     private ?DateTimeInterface $finishDate = null;
 
     #[Groups(['tracklist_details'])]
     #[ORM\Column(length: 255)]
     private ?string $tracklistName = null;
 
-    /**
-     * @var Collection<int, TracklistSeason>
-     */
-    #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'tracklist', cascade: ['persist', 'remove'], orphanRemoval: true)]
+    #[ORM\OneToOne(mappedBy: 'tracklist', cascade: ['persist', 'remove'])]
     #[Groups(['tracklist_details'])]
-    private Collection $tracklistSeasons;
+    private ?TracklistSeason $tracklistSeason = null;
 
     #[ORM\Column(options: ['default' => false])]
     #[Groups(['tracklist_details'])]
@@ -100,9 +98,23 @@ class Tracklist
     )]
     private Collection $tracklistTags;
 
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
+    private ?string $comment = null;
+
+    #[ORM\Column(type: Types::DATE_IMMUTABLE, nullable: true)]
+    private ?DateTimeImmutable $customAirDate = null;
+
+    #[ORM\Column(length: 2, nullable: true)]
+    private ?string $language = null;
+
+    #[ORM\Column(length: 2, nullable: true)]
+    private ?string $subtitle = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $customPosterPath = null;
+
     public function __construct()
     {
-        $this->tracklistSeasons = new ArrayCollection();
         $this->tracklistTags = new ArrayCollection();
     }
 
@@ -193,33 +205,17 @@ class Tracklist
         return $this;
     }
 
-    /**
-     * @return Collection<int, TracklistSeason>
-     */
-    public function getTracklistSeasons(): Collection
+    public function getTracklistSeason(): ?TracklistSeason
     {
-        return $this->tracklistSeasons;
+        return $this->tracklistSeason;
     }
 
-    public function addTracklistSeason(TracklistSeason $tracklistSeason): static
+    public function setTracklistSeason(?TracklistSeason $tracklistSeason): static
     {
-        if (!$this->tracklistSeasons->contains($tracklistSeason)) {
-            $this->tracklistSeasons->add($tracklistSeason);
+        if ($tracklistSeason !== null && $tracklistSeason->getTracklist() !== $this) {
             $tracklistSeason->setTracklist($this);
         }
-
-        return $this;
-    }
-
-    public function removeTracklistSeason(TracklistSeason $tracklistSeason): static
-    {
-        if ($this->tracklistSeasons->removeElement($tracklistSeason)) {
-            // set the owning side to null (unless already changed)
-            if ($tracklistSeason->getTracklist() === $this) {
-                $tracklistSeason->setTracklist(null);
-            }
-        }
-
+        $this->tracklistSeason = $tracklistSeason;
         return $this;
     }
 
@@ -270,6 +266,66 @@ class Tracklist
         if ($this->tracklistTags->removeElement($tracklistTag)) {
             $tracklistTag->removeTracklist($this);
         }
+
+        return $this;
+    }
+
+    public function getComment(): ?string
+    {
+        return $this->comment;
+    }
+
+    public function setComment(?string $comment): static
+    {
+        $this->comment = $comment;
+
+        return $this;
+    }
+
+    public function getCustomAirDate(): ?DateTimeImmutable
+    {
+        return $this->customAirDate;
+    }
+
+    public function setCustomAirDate(?DateTimeImmutable $customAirDate): static
+    {
+        $this->customAirDate = $customAirDate;
+
+        return $this;
+    }
+
+    public function getLanguage(): ?string
+    {
+        return $this->language;
+    }
+
+    public function setLanguage(?string $language): static
+    {
+        $this->language = $language;
+
+        return $this;
+    }
+
+    public function getSubtitle(): ?string
+    {
+        return $this->subtitle;
+    }
+
+    public function setSubtitle(?string $subtitle): static
+    {
+        $this->subtitle = $subtitle;
+
+        return $this;
+    }
+
+    public function getCustomPosterPath(): ?string
+    {
+        return $this->customPosterPath;
+    }
+
+    public function setCustomPosterPath(?string $customPosterPath): static
+    {
+        $this->customPosterPath = $customPosterPath;
 
         return $this;
     }

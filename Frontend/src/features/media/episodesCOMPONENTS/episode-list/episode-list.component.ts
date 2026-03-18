@@ -106,8 +106,14 @@ export class EpisodeListComponent {
     };
 
     public checkEpisodeInCurrentTracklist = (episodeID: number): boolean => {
+        const selectedTracklist = this.inpSelectedTracklist();
+
+        if (!selectedTracklist || !selectedTracklist.tracklistSeason) {
+            return false;
+        }
+
         const episodesOfTracklist: number[] =
-            this.inpSelectedTracklist()!.tracklistSeasons[0].tracklistEpisodes.map(
+            selectedTracklist.tracklistSeason.tracklistEpisodes.map(
                 (epis: TracklistEpisode) => {
                     return epis.episode.id;
                 },
@@ -139,17 +145,32 @@ export class EpisodeListComponent {
             return null;
         }
 
-        const tracklist = this.inpSelectedTracklist();
+        const currentSeason = this.inpSelectedTracklist()?.tracklistSeason;
 
-        // Wir greifen auf die Episoden der ersten Season der Tracklist zu (analog zu deiner check-Funktion)
-        const season = tracklist?.tracklistSeasons?.[0];
-        if (!season) return null;
+        if (!currentSeason) {
+            return null;
+        }
 
-        // Suche nach dem Eintrag, bei dem die TMDB-Episode-ID übereinstimmt
-        const foundEntry = season.tracklistEpisodes.find(
-            (te: TracklistEpisode) => te.episode.id === episodeID
+        const foundEntry = currentSeason.tracklistEpisodes.find(
+            (te: TracklistEpisode) => te.episode.id === episodeID,
         );
 
         return foundEntry ? foundEntry.id : null;
+    };
+
+    public getEpisodeDisplayTitle = (episode: SeasonEpisode, index: number): string => {
+        const relativeNumber = index + 1;
+        const originalNumber = episode.episodeNumber;
+
+        // Hilfsfunktion für die Null davor (z.B. 1 wird zu 01, 12 bleibt 12)
+        const pad = (num: number) => num.toString().padStart(2, '0');
+
+        if (relativeNumber !== originalNumber) {
+            // Filter ist aktiv: Relative Nummer (Index) + Originale Nummer (TMDB)
+            return `E${pad(relativeNumber)} (E${pad(originalNumber)}): ${episode.name}`;
+        }
+
+        // Kein Filter aktiv (oder Liste beginnt ohnehin bei 1): Nur Original anzeigen
+        return `E${pad(originalNumber)}: ${episode.name}`;
     };
 }

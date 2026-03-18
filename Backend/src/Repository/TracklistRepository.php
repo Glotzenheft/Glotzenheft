@@ -46,7 +46,7 @@ class TracklistRepository extends ServiceEntityRepository
     ): array
     {
         return $this->createQueryBuilder('t')
-            ->leftJoin('t.tracklistSeasons', 's')
+            ->leftJoin('t.tracklistSeason', 's')
             ->leftJoin('s.tracklistEpisodes', 'e')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('s', 'e')
@@ -70,7 +70,7 @@ class TracklistRepository extends ServiceEntityRepository
     ): ?Tracklist
     {
         return $this->createQueryBuilder('tracklist')
-            ->leftJoin('t.tracklistSeasons', 'season')
+            ->leftJoin('t.tracklistSeason', 'season')
             ->leftJoin('s.tracklistEpisodes', 'episodes')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('season', 'episodes')
@@ -94,7 +94,7 @@ class TracklistRepository extends ServiceEntityRepository
     ): array
     {
         return $this->createQueryBuilder('tracklist')
-            ->leftJoin('tracklist.tracklistSeasons', 'season')
+            ->leftJoin('tracklist.tracklistSeason', 'season')
             ->leftJoin('season.tracklistEpisodes', 'episodes')
             ->leftJoin('tracklist.tracklistTags', 'tags')
             ->addSelect('season', 'episodes')
@@ -102,6 +102,51 @@ class TracklistRepository extends ServiceEntityRepository
 
             ->where('tracklist.user = :user')
             ->setParameter('user', $user)
+
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findAllTracklistsByUserWithSeasonAndEpisodes(
+        User $user
+    ): array
+    {
+        return $this->createQueryBuilder('tracklist')
+            ->leftJoin('tracklist.tracklistSeason', 'season')
+            ->leftJoin('season.tracklistEpisodes', 'episodes')
+            ->addSelect('season', 'episodes')
+
+            ->where('tracklist.user = :user')
+            ->setParameter('user', $user)
+
+            ->getQuery()
+            ->getResult();
+    }
+
+    /**
+     * @param User $user
+     * @return array
+     */
+    public function findAllSeriesTracklistsByUserWithSeasonAndEpisodes(
+        User $user
+    ): array
+    {
+        return $this->createQueryBuilder('tracklist')
+            ->leftJoin('tracklist.tracklistSeason', 'season')
+            ->leftJoin('season.tracklistEpisodes', 'episodes')
+            ->join('tracklist.media', 'media')
+
+            ->addSelect('season', 'episodes')
+
+            ->where('tracklist.user = :user')
+            ->setParameter('user', $user)
+
+            ->andWhere('media.type = :type')
+            ->setParameter('type', 'tv')
 
             ->getQuery()
             ->getResult();
