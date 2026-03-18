@@ -65,7 +65,7 @@ class SyncTracklistDatesCommand extends Command
 
         $user = $this->entityManager->getRepository(User::class)->find($userId);
 
-        $tracklists = $this->tracklistRepository->findAllTracklistsByUserWithSeasonAndEpisodes($user);
+        $tracklists = $this->tracklistRepository->findAllSeriesTracklistsByUserWithSeasonAndEpisodes($user);
         if (empty($tracklists))
         {
             $io->warning("Keine Tracklisten gefunden.");
@@ -74,6 +74,9 @@ class SyncTracklistDatesCommand extends Command
 
         $this->stopwatch->start('sync_tracklist_dates');
         $updatedCounter = 0;
+        $notUpdatedCounter = 0;
+        $startDateUpdatedCounter = 0;
+        $finishDateUpdatedCounter = 0;
         $tracklistCounter = count($tracklists);
         $io->info("Es wurden $tracklistCounter Tracklisten gefunden.");
         /**
@@ -84,13 +87,16 @@ class SyncTracklistDatesCommand extends Command
             $tracklistSeason = $tracklist->getTracklistSeason();
             if (!$tracklistSeason instanceof TracklistSeason)
             {
-                $io->info("Film " . $tracklist->getTracklistName() . " übersprungen.");
+                $io->info("Tracklist " . $tracklist->getTracklistName() . " übersprungen (keine Season).");
+                $notUpdatedCounter++;
                 continue;
             }
 
             $tracklistEpisodes = $tracklistSeason->getTracklistEpisodes();
             if ($tracklistEpisodes->isEmpty())
             {
+                $io->info("Tracklist " . $tracklist->getTracklistName() . " übersprungen (keine Episoden).");
+                $notUpdatedCounter++;
                 continue;
             }
 
@@ -148,6 +154,7 @@ class SyncTracklistDatesCommand extends Command
             {
                 $tracklist->setStartDate($calculatedStartDate);
                 $changed = true;
+                $startDateUpdatedCounter++;
             }
 
             // --- FINISHDATE ---
@@ -173,12 +180,17 @@ class SyncTracklistDatesCommand extends Command
                 {
                     $tracklist->setFinishDate($calculatedFinishDate);
                     $changed = true;
+                    $finishDateUpdatedCounter++;
                 }
             }
 
             if ($changed)
             {
                 $updatedCounter++;
+            }
+            else
+            {
+                $notUpdatedCounter++;
             }
         }
 
@@ -189,6 +201,9 @@ class SyncTracklistDatesCommand extends Command
         $this->stopwatch->stop('command');
         $commandTime = $this->stopwatch->getEvent('command')->getDuration();
         $io->info("Dauer: $commandTime ms, DB: $dbTime ms");
+        $io->info("Es wurden $notUpdatedCounter Tracklisten nicht aktualisiert.");
+        $io->info("Es wurde $startDateUpdatedCounter mal das Startdatum aktualisiert.");
+        $io->info("Es wurde $finishDateUpdatedCounter mal das Enddatum aktualisiert.");
         $io->success("Fertig! Es wurden $updatedCounter Tracklisten für User $userId synchronisiert.");
 
         return Command::SUCCESS;
