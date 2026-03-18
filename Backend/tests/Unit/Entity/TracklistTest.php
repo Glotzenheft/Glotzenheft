@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 declare(strict_types=1);
 
-namespace App\Tests\Entity;
+namespace App\Tests\Unit\Entity;
 
 use App\Entity\Tracklist;
 use App\Entity\Media;
@@ -43,7 +43,7 @@ class TracklistTest extends TestCase
         $this->assertNull($tracklist->getStartDate());
         $this->assertNull($tracklist->getFinishDate());
         $this->assertNull($tracklist->getTracklistName());
-        $this->assertCount(0, $tracklist->getTracklistSeasons());
+        $this->assertNull($tracklist->getTracklistSeason());
     }
 
     public function testSetAndGetMedia(): void

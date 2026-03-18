@@ -117,6 +117,10 @@ class ImportBackupService
                 );
                 $this->importStatus = false;
             }
+            catch (Exception)
+            {
+                $this->importStatus = false;
+            }
         }
 
         $this->entityManager->flush();
@@ -179,14 +183,14 @@ class ImportBackupService
             }
         }
 
-        $startDate = DateTime::createFromFormat('Y-m-d', $tracklistData['startDate'] ?? '');
-        if (!$startDate instanceof DateTime)
+        $startDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $tracklistData['startDate'] ?? '');
+        if (!$startDate instanceof DateTimeImmutable)
         {
             $startDate = null;
         }
 
-        $finishDate = DateTime::createFromFormat('Y-m-d', $tracklistData['finishDate'] ?? '');
-        if (!$finishDate instanceof DateTime)
+        $finishDate = DateTimeImmutable::createFromFormat('Y-m-d H:i:s', $tracklistData['finishDate'] ?? '');
+        if (!$finishDate instanceof DateTimeImmutable)
         {
             $finishDate = null;
         }
@@ -296,12 +300,11 @@ class ImportBackupService
         }
 
         $seasonNumber = $seasonData['seasonNumber'];
-        foreach ($tracklist->getTracklistSeasons() as $existingSeason)
+        $existingSeason = $tracklist->getTracklistSeason();
+        if ($existingSeason instanceof TracklistSeason &&
+            $existingSeason->getSeason()?->getSeasonNumber() === $seasonNumber)
         {
-            if ($existingSeason->getSeason()?->getSeasonNumber() === $seasonNumber)
-            {
-                return $existingSeason;
-            }
+            return $existingSeason;
         }
 
         $season = $tracklist
@@ -319,7 +322,7 @@ class ImportBackupService
             }
             else
             {
-                throw new Exception("Could not find Season {$seasonNumber} for media.");
+                throw new Exception("Could not find Season $seasonNumber for media.");
             }
 
         }

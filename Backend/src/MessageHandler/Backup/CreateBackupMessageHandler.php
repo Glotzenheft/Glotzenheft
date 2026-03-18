@@ -97,7 +97,7 @@ readonly class CreateBackupMessageHandler
                     datetime: 'now',
                     timezone: new DateTimeZone('Europe/Berlin')));
 
-            $this->logger->info(message: 'Backup import completed.');
+            $this->logger->info(message: 'Backup creation completed.');
             $this->entityManager->flush();
         }
         catch (Exception $e)

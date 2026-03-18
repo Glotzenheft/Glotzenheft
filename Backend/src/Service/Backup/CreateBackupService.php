@@ -66,15 +66,15 @@ readonly class CreateBackupService
                 'status'        => $tracklist->getStatus()?->value,
                 'rating'        => $tracklist->getRating(),
                 'isRewatching'  => $tracklist->isRewatching(),
-                'startDate'     => $tracklist->getStartDate()?->format('Y-m-d'),
-                'finishDate'    => $tracklist->getFinishDate()?->format('Y-m-d'),
+                'startDate'     => $tracklist->getStartDate()?->format('Y-m-d H:i:s'),
+                'finishDate'    => $tracklist->getFinishDate()?->format('Y-m-d H:i:s'),
                 'updatedAt'     => $tracklist->getUpdatedAt()?->format('Y-m-d H:i:s'),
                 'createdAt'     => $tracklist->getCreatedAt()?->format('Y-m-d H:i:s'),
             ];
 
             if ($media->getType() === MediaType::TV)
             {
-                $entryData['seasons'] = $this->buildSeasonsData($tracklist->getTracklistSeasons()->toArray());
+                $entryData['seasons'] = $this->buildSeasonsData($tracklist->getTracklistSeason());
             }
 
             $hash = $this->hashService->generateForData($entryData);
@@ -93,31 +93,29 @@ readonly class CreateBackupService
     }
 
     /**
-     * @param array<TracklistSeason> $tracklistSeasons
+     * @param TracklistSeason $tracklistSeason
      * @return array
      */
-    private function buildSeasonsData(array $tracklistSeasons): array
+    private function buildSeasonsData(TracklistSeason $tracklistSeason): array
     {
         $seasonsData = [];
-        foreach ($tracklistSeasons as $tracklistSeason)
+        $season = $tracklistSeason->getSeason();
+        if (!$season instanceof Season)
         {
-            if (!$tracklistSeason instanceof TracklistSeason)
-                continue;
-            $season = $tracklistSeason->getSeason();
-            if (!$season instanceof Season)
-                continue;
-
-            $seasonEntry = [
-                'seasonNumber'  => $season->getSeasonNumber(),
-                'episodes'      => $this->buildEpisodesData($tracklistSeason->getTracklistEpisodes()->toArray()),
-                'createdAt'     => $tracklistSeason->getCreatedAt()?->format('Y-m-d H:i:s'),
-            ];
-
-            $hash = $this->hashService->generateForData($seasonEntry);
-            $seasonEntry['hash'] = $tracklistSeason->getBackupHash() ?? $hash;
-
-            $seasonsData[] = $seasonEntry;
+            return $seasonsData;
         }
+
+        $seasonEntry = [
+            'seasonNumber'  => $season->getSeasonNumber(),
+            'episodes'      => $this->buildEpisodesData($tracklistSeason->getTracklistEpisodes()->toArray()),
+            'createdAt'     => $tracklistSeason->getCreatedAt()?->format('Y-m-d H:i:s'),
+        ];
+
+        $hash = $this->hashService->generateForData($seasonEntry);
+        $seasonEntry['hash'] = $tracklistSeason->getBackupHash() ?? $hash;
+
+        $seasonsData[] = $seasonEntry;
+
         return $seasonsData;
     }
 
