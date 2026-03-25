@@ -154,23 +154,72 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <div class="backButtonDIV">
                 <p-button label="Neue Trackliste erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
             </div>
-            <div class="newWatchlistButton">
+            <div class="movie-tracklist-wrapper">
                 @for (tracklist of filmData.tracklists; track $index) {
-                    <p-panel [header]="tracklist.tracklistName" [toggleable]="true" [collapsed]="true">
-                        @for (tag of tracklist.tags; track tag.id) {
-                            <p-tag
-                                [value]="tag.tagName"
-                                [style]="{'background-color': tag.color}">
-                            </p-tag>
-                        }
+                    <p-card
+                        styleClass="movie-tracklist-card"
+                    >
+                        <ng-template #title>
+                            <div class="movie-tracklist-card-title" [title]="tracklist.tracklistName">
+                                {{ tracklist.tracklistName }}
+                            </div>
+                        </ng-template>
 
-                        <p>Status: {{ convertStatus(tracklist.status) }}</p>
-                        <p-button
-                            label="Trackliste bearbeiten"
-                            icon="pi pi-pencil"
-                            (onClick)="setSelectedTracklist(tracklist)"
-                            />
-                    </p-panel>
+                        <ng-template #subtitle>
+                            {{ convertStatus(tracklist.status) }}
+                        </ng-template>
+
+                        <ng-template #content>
+                            <div class="movie-tracklist-card-tags-wrapper">
+                                @for (tag of tracklist.tags; track tag.id) {
+                                    <p-tag
+                                        [value]="tag.tagName"
+                                        [style]="{'background-color': tag.color}">
+                                    </p-tag>
+                                }
+                            </div>
+
+                            <span>
+                                Start:
+                                @if (tracklist.startDate) {
+                                    {{ tracklist.startDate | dateTimeWithUnitFormatting }}
+                                } @else {
+                                    <i>-</i>
+                                }
+                            </span>
+                            <span>
+                                Ende:
+                                @if (tracklist.finishDate) {
+                                    {{ tracklist.finishDate | dateTimeWithUnitFormatting }}
+                                } @else {
+                                    <i>-</i>
+                                }
+                            </span>
+                        </ng-template>
+
+                        <ng-template #footer>
+                            <div class="movie-tracklist-card-footer-wrapper">
+                                <div class="movie-tracklist-card-rating-wrapper">
+                                    <p-rating
+                                        [ngModel]="tracklist.rating"
+                                        [readonly]="true"
+                                        [stars]="10"
+                                    >
+                                    </p-rating>
+                                    @if (tracklist.rating) {
+                                        {{ tracklist.rating + ' / 10'}}
+                                    }
+                                </div>
+
+                                <p-button
+                                    label="Trackliste bearbeiten"
+                                    icon="pi pi-pencil"
+                                    (onClick)="setSelectedTracklist(tracklist)"
+                                />
+                            </div>
+
+                        </ng-template>
+                    </p-card>
                 }
             </div>
         } @else if (currentTab === tabsList[1]) {
