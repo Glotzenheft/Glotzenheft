@@ -86,6 +86,9 @@ import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases
 import { ApiRecommendationComponent } from '../api-recommendation/api-recommendation.component';
 import {Tag} from 'primeng/tag';
 import {Image} from 'primeng/image';
+import {
+    DatetimeWithUnitFormattingPipe
+} from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 
 @Component({
     selector: 'app-film-page',
@@ -110,6 +113,7 @@ import {Image} from 'primeng/image';
         Tag,
         Image,
         NgOptimizedImage,
+        DatetimeWithUnitFormattingPipe,
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -134,6 +138,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public isInvalidID: boolean = false;
     public currentTab: string = TABLIST[0];
     public readonly tabsList: string[] = TABLIST;
+    public movieAirDate: string | null = null;
 
     public filmData$: Observable<Film> | null = null;
     public trackListForm!: FormGroup;
@@ -334,6 +339,10 @@ export class FilmPageComponent implements OnInit, OnDestroy {
                     this.location.replaceState(`/media/movie/${res.media.id}`);
                 }
 
+                if (res.media.firstAirDate) {
+                    this.movieAirDate = res.media.firstAirDate;
+                }
+
                 this.isLoading = false;
             },
             error: (err) => {
@@ -387,11 +396,11 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             id: 0,
             rating: null,
             status: 'watching',
-            startDate: null,
+            startDate: new Date().toISOString(),
             finishDate: null,
             tracklistName: tracklistName,
             comment: null,
-            customAirDate: null,
+            customAirDate: this.movieAirDate,
             language: null,
             subtitle: null,
             customPosterPath: null,
