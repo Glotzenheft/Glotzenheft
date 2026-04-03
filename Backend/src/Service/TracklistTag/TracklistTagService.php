@@ -149,6 +149,7 @@ readonly class TracklistTagService
             ->setDescription($dto->description)
             ->setIcon($dto->icon)
             ->setIsSpoiler($dto->isSpoiler)
+            ->setIsAdult($dto->isAdult)
             ->setSlug($slug);
 
         if ($dto->tracklistId !== null)
@@ -245,6 +246,13 @@ readonly class TracklistTagService
         )
         {
             $tag->setIsSpoiler($dto->isSpoiler);
+        }
+
+        if (array_key_exists('is_adult', $requestData)
+            && $dto->isAdult !== null
+        )
+        {
+            $tag->setIsAdult($dto->isAdult);
         }
 
         $tag->setUpdatedAt(new DateTimeImmutable());
