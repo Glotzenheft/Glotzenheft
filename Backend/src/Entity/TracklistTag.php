@@ -73,6 +73,9 @@ class TracklistTag
     #[ORM\JoinColumn(nullable: false)]
     private ?User $user = null;
 
+    #[ORM\Column(options: ["default" => false])]
+    private ?bool $isAdult = null;
+
     public function __construct()
     {
         $this->tracklists = new ArrayCollection();
@@ -202,6 +205,18 @@ class TracklistTag
     public function setUser(?User $user): static
     {
         $this->user = $user;
+
+        return $this;
+    }
+
+    public function isAdult(): ?bool
+    {
+        return $this->isAdult;
+    }
+
+    public function setIsAdult(bool $isAdult): static
+    {
+        $this->isAdult = $isAdult;
 
         return $this;
     }
