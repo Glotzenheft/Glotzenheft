@@ -33,6 +33,7 @@ readonly class TracklistTagResponseDto
         public ?string $icon,
         public string $slug,
         public bool $isSpoiler,
+        public bool $isAdult,
         public string $createdAt,
         public ?string $updatedAt,
         /**
@@ -69,6 +70,7 @@ readonly class TracklistTagResponseDto
             icon: $tag->getIcon(),
             slug: $tag->getSlug(),
             isSpoiler: $tag->isSpoiler(),
+            isAdult: $tag->isAdult(),
             createdAt: $tag->getCreatedAt()->format('Y-m-d H:i:s'),
             updatedAt: $tag->getUpdatedAt()?->format('Y-m-d H:i:s'),
             tracklists: $tracklistDtos,
