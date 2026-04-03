@@ -67,5 +67,9 @@ readonly class CreateTracklistTagRequestDto
         #[SerializedName('is_spoiler')]
         #[Assert\Type('boolean')]
         public ?bool $isSpoiler = false,
+
+        #[SerializedName('is_adult')]
+        #[Assert\Type('boolean')]
+        public ?bool $isAdult = false,
     ) {}
 }
