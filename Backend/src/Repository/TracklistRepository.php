@@ -50,7 +50,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('s.tracklistEpisodes', 'e')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('s', 'e')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
             ->where('t.user = :user')
             ->andWhere('t.media = :media')
             ->setParameter('user', $user)
@@ -74,7 +74,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('s.tracklistEpisodes', 'episodes')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('season', 'episodes')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
 
             ->where('tracklist.id = :tracklistId')
             ->andWhere('tracklist.user = :user')
@@ -98,7 +98,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('season.tracklistEpisodes', 'episodes')
             ->leftJoin('tracklist.tracklistTags', 'tags')
             ->addSelect('season', 'episodes')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
 
             ->where('tracklist.user = :user')
             ->setParameter('user', $user)
@@ -164,7 +164,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('tracklist.tracklistTags', 'tags')
             ->leftJoin('tracklist.media', 'media')
             ->addSelect('PARTIAL media.{id, posterPath, type, createdAt, updatedAt}')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
 
             ->where('tracklist.user = :user')
             ->setParameter('user', $user)
