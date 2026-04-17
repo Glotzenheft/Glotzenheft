@@ -1,0 +1,17 @@
+export enum TracklistTagType {
+    FRANCHISE = 'franchise',
+    STUDIO = 'studio',
+    COUNTRY = 'country',
+    GENRE = 'genre',
+    THEME = 'theme',
+    DEMOGRAPHIC = 'demographic',
+    SEASON = 'season',
+    YEAR = 'year',
+    DECADE = 'decade',
+    PERSON = 'person',
+    FORMAT = 'format',
+    PRODUCTION_COMPANY = 'production-company',
+    SOURCE_MATERIAL = 'source-material',
+    MEDIA_PROVIDER = 'media-provider',
+    OTHER = 'other',
+}
