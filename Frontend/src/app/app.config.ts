@@ -30,13 +30,14 @@ import {
     provideClientHydration,
     withEventReplay,
 } from '@angular/platform-browser';
-import {provideHttpClient, withFetch} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ChartModule } from 'primeng/chart';
 import { provideAppConfig } from './app.providers';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
 import { CustomTitleStrategy } from './core/strategies/CustomTitle/custom-title.strategy';
+import {authInterceptor} from './core/interceptors/auth.interceptor';
 
 registerLocaleData(localeDe);
 
@@ -96,7 +97,10 @@ export const appConfig: ApplicationConfig = {
                 firstDayOfWeek: 1,
             },
         }),
-        provideHttpClient(withFetch()),
+        provideHttpClient(
+            withFetch(),
+            withInterceptors([authInterceptor])
+        ),
         MessageService,
         ChartModule,
         ...provideAppConfig(),
