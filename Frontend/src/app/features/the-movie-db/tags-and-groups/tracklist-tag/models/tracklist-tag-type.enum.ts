@@ -16,19 +16,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 export enum TracklistTagType {
-    FRANCHISE = 'franchise',
-    STUDIO = 'studio',
-    COUNTRY = 'country',
     GENRE = 'genre',
     THEME = 'theme',
     DEMOGRAPHIC = 'demographic',
+    FRANCHISE = 'franchise',
+    STUDIO = 'studio',
+    PERSON = 'person',
+    PRODUCTION_COMPANY = 'production-company',
+    MEDIA_PROVIDER = 'media-provider',
+    COUNTRY = 'country',
     SEASON = 'season',
     YEAR = 'year',
     DECADE = 'decade',
-    PERSON = 'person',
     FORMAT = 'format',
-    PRODUCTION_COMPANY = 'production-company',
     SOURCE_MATERIAL = 'source-material',
-    MEDIA_PROVIDER = 'media-provider',
     OTHER = 'other',
 }
