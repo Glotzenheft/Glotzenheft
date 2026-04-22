@@ -16,8 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {TracklistTagType} from '../../../features/tracklist-tag/models/tracklist-tag-type.enum';
-import {TRACKLIST_TAG_TYPE_LABELS} from '../../../features/tracklist-tag/models/constants/tracklist-tag-type.constants';
+import {TracklistTagType} from '../../../features/the-movie-db/tags-and-groups/tracklist-tag/models/tracklist-tag-type.enum';
+import {TRACKLIST_TAG_TYPE_LABELS} from '../../../features/the-movie-db/tags-and-groups/tracklist-tag/models/constants/tracklist-tag-type.constants';
 
 @Pipe({
     name: 'tracklistTagTypeLabel',
