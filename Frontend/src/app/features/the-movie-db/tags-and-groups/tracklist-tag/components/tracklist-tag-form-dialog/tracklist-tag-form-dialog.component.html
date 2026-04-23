@@ -1,0 +1,132 @@
+<form [formGroup]="form" (ngSubmit)="save()" class="tag-form">
+
+    <div class="form-field">
+        <label for="tag_name">Tag Name <span class="required">*</span></label>
+        <input pInputText id="tag_name" formControlName="tag_name" placeholder="z.B. Meisterwerk" class="full-width-element" />
+        @if (form.controls.tag_name.invalid && form.controls.tag_name.touched) {
+            <small class="error-text">Der Name darf nicht leer sein.</small>
+        }
+    </div>
+
+    <div class="form-field">
+        <label for="tracklist_tag_type">Typ <span class="required">*</span></label>
+        <p-dropdown
+            id="tracklist_tag_type"
+            formControlName="tracklist_tag_type"
+            [options]="typeOptions"
+            optionLabel="label"
+            optionValue="value"
+            placeholder="Typ auswählen"
+            styleClass="full-width-element">
+        </p-dropdown>
+    </div>
+
+    <div class="form-field">
+        <label for="color">Farbe</label>
+
+        <div class="custom-color-group">
+            <span
+                class="color-preview"
+                [style.background-color]="form.controls.color.value || 'transparent'"
+                (click)="nativeColorInput.click()"
+                pTooltip="Farbe auswählen">
+                @if (!form.controls.color.value) {
+                    <i class="pi pi-palette empty-color-icon"></i>
+                }
+            </span>
+
+            <input
+                #nativeColorInput
+                type="color"
+                class="hidden-color-input"
+                [value]="form.controls.color.value || '#000000'"
+                (input)="onColorChange($event)"
+            />
+
+            <input
+                pInputText
+                id="color"
+                formControlName="color"
+                placeholder="#Hexcode (leer)"
+                maxlength="7"
+            />
+
+            <p-button
+                icon="pi pi-times"
+                severity="danger"
+                (onClick)="clearColor()"
+                [disabled]="!form.controls.color.value"
+                pTooltip="Farbe entfernen">
+            </p-button>
+        </div>
+    </div>
+
+    @if (!isUpdateMode()) {
+        <div class="form-field">
+            <label for="tracklist_id">Verknüpfte Tracklist Id</label>
+            <div class="custom-input-group">
+                <p-inputNumber
+                    id="tracklist_id"
+                    formControlName="tracklist_id"
+                    [useGrouping]="false"
+                    placeholder="Keine Tracklist Id zugewiesen"
+                    styleClass="full-width-element">
+                </p-inputNumber>
+                <p-button
+                    icon="pi pi-times"
+                    severity="danger"
+                    [outlined]="true"
+                    (onClick)="clearTracklistId()"
+                    pTooltip="Tracklist Id entfernen"
+                    [disabled]="!form.controls.tracklist_id.value">
+                </p-button>
+            </div>
+            <small class="hint-text">Kann nur beim Erstellen gesetzt werden.</small>
+        </div>
+    }
+
+    <div class="form-field">
+        <label for="description">Beschreibung</label>
+        <textarea
+            pTextarea
+            id="description"
+            formControlName="description"
+            rows="3"
+            [autoResize]="true"
+            class="full-width-element">
+        </textarea>
+    </div>
+
+    <div class="form-row">
+        <div class="checkbox-wrapper">
+            <p-checkbox formControlName="is_spoiler" [binary]="true" inputId="is_spoiler"></p-checkbox>
+            <label for="is_spoiler">Spoiler</label>
+        </div>
+        <div class="checkbox-wrapper">
+            <p-checkbox formControlName="is_adult" [binary]="true" inputId="is_adult"></p-checkbox>
+            <label for="is_adult">18+</label>
+        </div>
+    </div>
+
+    <div class="form-actions">
+        <p-button
+            label="Abbrechen"
+            icon="pi pi-times"
+            severity="secondary"
+            size="large"
+            [raised]="false"
+            (onClick)="cancel()"
+            type="button">
+        </p-button>
+
+        <p-button
+            [label]="isUpdateMode() ? 'Aktualisieren' : 'Erstellen'"
+            icon="pi pi-check"
+            type="submit"
+            size="large"
+            [raised]="true"
+            [loading]="isSaving()">
+        </p-button>
+    </div>
+
+</form>

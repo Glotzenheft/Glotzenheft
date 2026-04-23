@@ -1,0 +1,144 @@
+/* ========================================================
+   THEME VARIABLEN
+   ======================================================== */
+:host {
+    --dialog-text-color: var(--text-color, #ffffff);
+    --dialog-label-color: var(--text-color, #e0e0e0);
+    --dialog-error-color: #ef4444;
+    --dialog-hint-color: #9ca3af;
+    --dialog-border-color: #424b57;
+    --input-height: 40px;
+}
+
+/* ========================================================
+   LAYOUT & STRUKTUR
+   ======================================================== */
+.tag-form {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    margin-top: 0.5rem;
+    color: var(--dialog-text-color);
+}
+
+.form-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.form-field label {
+    font-weight: 600;
+    color: var(--dialog-label-color);
+}
+
+.form-row {
+    display: flex;
+    gap: 1.5rem;
+    align-items: flex-start;
+}
+
+/* ========================================================
+   CUSTOM GROUPS (Color & Tracklist ID)
+   ======================================================== */
+.custom-color-group,
+.custom-input-group {
+    display: flex;
+    width: 100%;
+    align-items: stretch;
+    height: var(--input-height); /* Erzwingt die Container-Höhe */
+}
+
+/* Native Inputs und PrimeNG Wrapper auf 100% der Container-Höhe zwingen */
+.custom-color-group input[pInputText],
+.custom-input-group p-inputNumber,
+.custom-input-group .p-inputnumber,
+.custom-input-group .p-inputtext,
+.color-preview {
+    height: 100% !important;
+}
+
+/* Fix für PrimeNG Button-Komponente */
+:host ::ng-deep .p-button {
+    height: 100% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+/* ========================================================
+   COLOR PICKER DETAILS
+   ======================================================== */
+.color-preview {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    width: 3rem;
+    border: 1px solid var(--dialog-border-color);
+    border-right: none;
+    border-top-left-radius: 6px;
+    border-bottom-left-radius: 6px;
+    flex-shrink: 0;
+}
+
+.hidden-color-input {
+    position: absolute;
+    visibility: hidden;
+    width: 0; height: 0;
+}
+
+.custom-color-group input[pInputText] {
+    flex: 1;
+    border-radius: 0;
+}
+
+/* ========================================================
+   TRACKLIST ID DETAILS
+   ======================================================== */
+.custom-input-group p-inputNumber {
+    flex: 1;
+}
+
+:host ::ng-deep .custom-input-group .p-inputtext {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+    width: 100%;
+}
+
+/* Button-Ecken für beide Gruppen korrigieren */
+:host ::ng-deep .custom-color-group .p-button,
+:host ::ng-deep .custom-input-group .p-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+/* ========================================================
+   SONSTIGES
+   ======================================================== */
+.full-width-element {
+    width: 100%;
+}
+
+:host ::ng-deep .p-dropdown {
+    width: 100%;
+}
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+.form-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--dialog-border-color);
+}
+
+.error-text { color: var(--dialog-error-color); font-size: 0.875rem; }
+.hint-text { color: var(--dialog-hint-color); font-size: 0.875rem; }
+.required { color: var(--dialog-error-color); }
