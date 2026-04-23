@@ -74,7 +74,31 @@ export const TMDB_ROUTES: Routes = [
                 path: TMDB_SIDEBAR_PATHS.tagsAndGroups,
                 loadComponent: () => import('./tags-and-groups/tags-and-groups.component')
                     .then(m => m.TagsAndGroupsComponent),
-                title: 'Glotzentags und Glotzengruppen'
+                children: [
+                    {
+                        path: '',
+                        redirectTo: 'tags',
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: 'tags',
+                        loadComponent: () => import('../the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-overview/tracklist-tag-overview.component')
+                            .then(m => m.TracklistTagOverviewComponent),
+                        title: 'Tags',
+                    },
+                    {
+                        path: 'tag-filter',
+                        loadComponent: () => import('../the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-filter/tracklist-tag-filter.component')
+                            .then(m => m.TracklistTagFilterComponent),
+                        title: 'Tag-Filter',
+                    },
+                    {
+                        path: 'groups',
+                        loadComponent: () => import('../the-movie-db/tags-and-groups/groups/groups/groups.component')
+                            .then(m => m.GroupsComponent),
+                        title: 'Gruppen',
+                    }
+                ]
             },
             {
                 path: TMDB_SIDEBAR_PATHS.calendar,
