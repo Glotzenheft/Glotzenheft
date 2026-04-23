@@ -16,10 +16,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component } from '@angular/core';
+import { RouterOutlet } from '@angular/router';
+
+import { TagsAndGroupsTabsComponent } from './tags-and-groups-tabs/tags-and-groups-tabs.component';
 
 @Component({
   selector: 'app-tags-and-groups',
-  imports: [],
+    imports: [
+        RouterOutlet,
+        TagsAndGroupsTabsComponent
+    ],
   templateUrl: './tags-and-groups.component.html',
   styleUrl: './tags-and-groups.component.css'
 })

@@ -1,0 +1,9 @@
+<div class="activity-tabs-container">
+    <p-tabs [value]="currentTab" (valueChange)="onTabChange($event)">
+        <p-tablist>
+            @for (tab of tabs; track tab.route) {
+                <p-tab [value]="tab.route">{{ tab.label }}</p-tab>
+            }
+        </p-tablist>
+    </p-tabs>
+</div>
