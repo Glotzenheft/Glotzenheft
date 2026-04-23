@@ -1,0 +1,80 @@
+.tag-overview-container {
+    margin: 0 auto 3rem;
+}
+
+.group-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 1px solid #e2e8f0;
+
+    .group-heading {
+        font-size: 1.25rem;
+        font-weight: 600;
+        margin: 0;
+    }
+}
+
+.tag-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+    gap: 1rem;
+    margin-bottom: 0.5rem;
+}
+
+.tag-card {
+    display: flex;
+    background-color: #ffffff;
+    border: 1px solid #e2e8f0;
+    border-radius: 8px;
+    transition: all 0.2s ease;
+    color: #1a202c;
+
+    &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+    }
+}
+
+.tag-link {
+    display: flex;
+    align-items: center;
+    width: 100%;
+    padding: 0.85rem 1rem;
+    text-decoration: none;
+    color: var(--text-color);
+
+    .tag-name {
+        font-weight: 500;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+}
+
+.color-indicator {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.75rem;
+    flex-shrink: 0;
+}
+
+.no-tags-hint {
+    grid-column: 1 / -1;
+    padding: 0.5rem 0.5rem 0.5rem 0;
+    font-size: 0.9rem;
+    border-radius: 8px;
+}
+
+.loading-state {
+    text-align: center;
+    padding: 5rem;
+    font-size: 1.2rem;
+}
+
+.overview-header h1{
+    margin: 0.5rem 0 0;
+}

@@ -1,0 +1,38 @@
+<div class="tag-overview-container">
+    @if (isLoading()) {
+        <div class="loading-state">Lade Tags...</div>
+    } @else {
+
+        @for (group of groupedTags(); track group.type) {
+            <section class="tag-group-section">
+
+                <div class="group-header">
+                    <h2 class="group-heading">{{ group.type | tracklistTagTypeLabel }}</h2>
+                    <p-button
+                        icon="pi pi-plus"
+                        [rounded]="true"
+                        [text]="true"
+                        severity="secondary"
+                        (onClick)="openCreateDialog(group.type)"
+                        pTooltip="Einen Tag für die Kategorie {{ group.type | tracklistTagTypeLabel }} erstellen">
+                    </p-button>
+                </div>
+
+                <div class="tag-grid">
+                    @for (tag of group.tags; track tag.id) {
+                        <article class="tag-card">
+                            <a [routerLink]="['/tags', tag.id]" class="tag-link">
+                                @if (tag.color) {
+                                    <span class="color-indicator" [style.background-color]="tag.color"></span>
+                                }
+                                <span class="tag-name">{{ tag.tagName }}</span>
+                            </a>
+                        </article>
+                    } @empty {
+                        <div class="no-tags-hint">Noch keine Tags in dieser Kategorie vorhanden.</div>
+                    }
+                </div>
+            </section>
+        }
+    }
+</div>
