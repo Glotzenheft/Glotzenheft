@@ -20,7 +20,7 @@ import {
     LOCALE_ID,
     provideZoneChangeDetection,
 } from '@angular/core';
-import {provideRouter, TitleStrategy} from '@angular/router';
+import {provideRouter, TitleStrategy, withComponentInputBinding} from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
@@ -44,7 +44,7 @@ registerLocaleData(localeDe);
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding()),
         { provide: TitleStrategy, useClass: CustomTitleStrategy },
         provideClientHydration(withEventReplay()),
         provideAnimationsAsync(),
