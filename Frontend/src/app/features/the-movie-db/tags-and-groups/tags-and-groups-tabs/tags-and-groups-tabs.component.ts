@@ -15,11 +15,17 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Component, OnInit} from '@angular/core';
+import {Component, inject, OnInit, signal} from '@angular/core';
 import {ActivatedRoute, NavigationEnd, Router} from '@angular/router';
 import {filter} from 'rxjs';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
+
+import {
+    TRACKLIST_TAG_PATHS,
+    TRACKLIST_TAG_FILTER_PATHS,
+    GROUPS_PATHS
+} from '../../../../core/constants/paths.constants';
 
 @Component({
   selector: 'app-tags-and-groups-tabs',
@@ -32,15 +38,19 @@ import {Tab, TabList, Tabs} from 'primeng/tabs';
   styleUrl: './tags-and-groups-tabs.component.css'
 })
 export class TagsAndGroupsTabsComponent implements OnInit{
+    private router = inject(Router);
+    private route = inject(ActivatedRoute);
+
+    public isVisible = signal<boolean>(true);
+    public currentTab = signal<string>('');
+
     public readonly tabs = [
-        { route: 'tags', label: 'Tags' },
-        { route: 'tag-filter', label: 'Tag Filter' },
-        { route: 'groups', label: 'Gruppen'}
+        { route: TRACKLIST_TAG_PATHS.base, label: 'Tags' },
+        { route: TRACKLIST_TAG_FILTER_PATHS.base, label: 'Tag Filter' },
+        { route: GROUPS_PATHS.base, label: 'Gruppen'}
     ]
 
-    public currentTab: string = this.tabs[0].route;
-
-    constructor(private router: Router, private route: ActivatedRoute)
+    constructor()
     {
         this.router.events
             .pipe(
@@ -56,18 +66,25 @@ export class TagsAndGroupsTabsComponent implements OnInit{
         this.updateCurrentTabFromUrl(this.router.url);
     }
 
-    public onTabChange(event: string | number) {
-        const newTabRoute = event.toString();
-        this.currentTab = newTabRoute;
-        void this.router.navigate([newTabRoute], { relativeTo: this.route });
+    public onTabChange(newTabRoute: string | number) {
+        const routeStr: string = newTabRoute.toString();
+        this.currentTab.set(routeStr)
+        void this.router.navigate([routeStr], { relativeTo: this.route });
     }
 
     private updateCurrentTabFromUrl(url: string): void {
-        const urlSegments = url.split('/');
+        const urlSegments = url.split('?')[0].split('/');
         const lastSegment = urlSegments[urlSegments.length - 1];
 
-        if (this.tabs.some(tab => tab.route === lastSegment)) {
-            this.currentTab = lastSegment;
+        const activeTab = this.tabs.find(tab => tab.route === lastSegment);
+
+        if (activeTab) {
+            this.isVisible.set(true);
+            this.currentTab.set(activeTab.route);
+        } else if (lastSegment === 'tags-and-groups') {
+            this.isVisible.set(true);
+        } else {
+            this.isVisible.set(false);
         }
     }
 }
