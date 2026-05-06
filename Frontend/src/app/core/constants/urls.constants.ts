@@ -23,6 +23,7 @@ import {
     AUTHENTICATION_PATHS,
     BACKUP_PATHS,
     MEDIA_PATHS,
+    TRACKLIST_TAG_PATHS,
 } from "./paths.constants";
 
 export const ROOT_URLS = {
@@ -79,4 +80,10 @@ export const MEDIA_URLS = {
 
 export const EXTERNAL_URLS = {
     gitHubRepo: 'https://github.com/Glotzenheft/Glotzenheft/',
+} as const;
+
+export const TRACKLIST_TAG_URLS = {
+    overview: `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}`,
+    detail: (tagId: number | string) =>
+        `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}/${tagId}`,
 } as const;

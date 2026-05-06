@@ -62,3 +62,18 @@ export const MEDIA_PATHS = {
 export const BACKUP_PATHS = {
     base: 'backup',
 } as const;
+
+export const TRACKLIST_TAG_PATHS = {
+    base: 'tags',
+    detail: ':tagId',
+    tracklists: 'tracklists',
+    analytics: 'analytics',
+} as const;
+
+export const TRACKLIST_TAG_FILTER_PATHS = {
+    base: 'tag-filter',
+} as const;
+
+export const GROUPS_PATHS = {
+    base: 'groups'
+} as const;
