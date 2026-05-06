@@ -1,0 +1,22 @@
+.tracklist-tag-detail-container {
+    width: 100%;
+    margin-bottom: 3rem;
+}
+
+.tracklist-tag-detail-header {
+}
+
+.tracklist-tag-detail-content {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 15px;
+}
+
+.tracklist-tag-detail-content h1 {
+    margin: 0;
+}
+
+.tracklist-tag-detail-tag-type {
+
+}

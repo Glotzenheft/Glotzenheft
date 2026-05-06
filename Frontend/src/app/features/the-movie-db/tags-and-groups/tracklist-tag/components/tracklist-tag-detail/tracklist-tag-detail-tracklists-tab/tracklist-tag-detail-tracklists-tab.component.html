@@ -1,0 +1,9 @@
+@if (state.tagData()?.tracklists?.length === 0) {
+    <p>Keine Tracklisten vorhanden.</p>
+} @else {
+    <ul>
+        @for (tracklist of state.tagData()!.tracklists; track tracklist.id) {
+            <li>{{ tracklist.tracklistName }}</li>
+        }
+    </ul>
+}

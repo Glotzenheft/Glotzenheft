@@ -1,0 +1,23 @@
+<div class="tracklist-tag-detail-container">
+    @if (state.isLoading()) {
+        <div class="loading-state">Lade Tag Details...</div>
+    } @else if (state.tagData()) {
+        <header class="tracklist-tag-detail-header">
+            <div class="tracklist-tag-detail-content">
+                <h1>{{ state.tagData()!.tagName }}</h1>
+                <span class="tracklist-tag-detail-tag-type">{{ state.tagData()!.tracklistTagType | tracklistTagTypeLabel }}</span>
+            </div>
+        </header>
+
+        <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
+            <p-tablist>
+                <p-tab [value]="paths.tracklists">Verknüpfte Tracklisten</p-tab>
+                <p-tab [value]="paths.analytics">Analyse</p-tab>
+            </p-tablist>
+        </p-tabs>
+
+        <div>
+            <router-outlet></router-outlet>
+        </div>
+    }
+</div>
