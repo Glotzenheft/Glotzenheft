@@ -21,14 +21,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     } @else if (state.tagData()) {
         <header class="tracklist-tag-detail-header">
             <div class="tracklist-tag-detail-content">
-                <h1>{{ state.tagData()!.tagName }}</h1>
-                <span class="tracklist-tag-detail-tag-type">{{ state.tagData()!.tracklistTagType | tracklistTagTypeLabel }}</span>
+                <h1>{{ state.tagData()!.tagName }} ({{ state.tagData()!.tracklistTagType | tracklistTagTypeLabel }})</h1>
             </div>
         </header>
 
         <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
             <p-tablist>
-                <p-tab [value]="paths.tracklists">Verknüpfte Tracklisten</p-tab>
+                <p-tab [value]="paths.tracklists">Tracklisten</p-tab>
                 <p-tab [value]="paths.analytics">Analyse</p-tab>
             </p-tablist>
         </p-tabs>
