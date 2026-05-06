@@ -38,7 +38,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <div class="tag-grid">
                     @for (tag of group.tags; track tag.id) {
                         <article class="tag-card">
-                            <a [routerLink]="['/tags', tag.id]" class="tag-link">
+                            <a [routerLink]="['/' + getTagDetailUrl(tag.id)]" class="tag-link">
                                 @if (tag.color) {
                                     <span class="color-indicator" [style.background-color]="tag.color"></span>
                                 }

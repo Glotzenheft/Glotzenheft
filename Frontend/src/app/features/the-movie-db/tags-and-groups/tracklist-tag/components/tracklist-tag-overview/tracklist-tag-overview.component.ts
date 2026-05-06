@@ -28,6 +28,7 @@ import { TracklistTagType } from '../../models/tracklist-tag-type.enum';
 import { TracklistTagTypeLabelPipe } from '../../../../../../shared/pipes/tracklist-tags/tracklist-tag-type-label.pipe';
 import { TracklistTagFormDialogComponent } from '../tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import { Tooltip } from 'primeng/tooltip';
+import { TRACKLIST_TAG_URLS } from '../../../../../../core/constants/urls.constants';
 
 interface TagGroup {
     type: TracklistTagType;
@@ -51,6 +52,7 @@ interface TagGroup {
 export class TracklistTagOverviewComponent implements OnInit {
     private tracklistTagService = inject(TracklistTagService);
     private dialogService: DialogService = inject(DialogService);
+    readonly getTagDetailUrl = TRACKLIST_TAG_URLS.detail;
 
     groupedTags = signal<TagGroup[]>([]);
     isLoading = signal<boolean>(true);
