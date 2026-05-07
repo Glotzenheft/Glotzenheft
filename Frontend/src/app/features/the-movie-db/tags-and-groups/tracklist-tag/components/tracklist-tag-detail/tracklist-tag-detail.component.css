@@ -15,6 +15,14 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+:host {
+    --tracklist-tag-detail-text-color: #333333;
+    --tracklist-tag-detail-text-secondary: #64748b;
+    --tracklist-tag-detail-surface-ground: #f8fafc;
+    --tracklist-tag-detail-surface-border: #e2e8f0;
+    --tracklist-tag-detail-surface-card: #ffffff;
+}
+
 .tracklist-tag-detail-container {
     width: 100%;
     margin-bottom: 3rem;
@@ -27,16 +35,136 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: row;
     align-items: center;
-    justify-content: space-between;
-    gap: 15px;
-    margin-bottom: 1rem;
+    justify-content: flex-start;
+    margin-bottom: 1.5rem;
 }
 
 .tracklist-tag-detail-content h1 {
     margin: 0;
 }
 
-.tracklist-tag-detail-action-buttons {
+/* Grid Layout für den oberen Bereich */
+.tracklist-tag-detail-overview-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    margin-bottom: 2rem;
+    align-items: stretch;
+}
+
+.tracklist-tag-detail-charts-section {
     display: flex;
-    gap: 0.5rem;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.tracklist-tag-detail-charts {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    gap: 2rem;
+    justify-content: flex-start;
+    align-items: center;
+    width: 100%;
+}
+
+/* Rechter Info-Bereich */
+.tracklist-tag-detail-info-section {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    background-color: var(--tracklist-tag-detail-surface-card);
+    border: 1px solid var(--tracklist-tag-detail-surface-border);
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-sizing: border-box;
+}
+
+.tracklist-tag-detail-description {
+    flex: 1 1 auto;
+    overflow-y: auto;
+    margin-bottom: 1rem;
+    padding-right: 0.5rem;
+    color: var(--tracklist-tag-detail-text-color);
+    line-height: 1.6;
+}
+
+.tracklist-tag-detail-description p {
+    margin: 0;
+}
+
+.tracklist-tag-detail-no-description {
+    color: var(--tracklist-tag-detail-text-secondary) !important;
+    font-style: italic;
+}
+
+.tracklist-tag-detail-meta-data {
+    flex: 0 0 auto;
+    font-size: 0.85rem;
+    color: var(--tracklist-tag-detail-text-secondary);
+    border-top: 1px solid var(--tracklist-tag-detail-surface-border);
+    padding-top: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.tracklist-tag-detail-meta-row {
+    margin-bottom: 0.25rem;
+}
+
+.tracklist-tag-detail-action-buttons {
+    flex: 0 0 auto;
+    display: flex;
+    gap: 0.75rem;
+}
+
+/* Responsive Anpassungen */
+@media (max-width: 1200px) {
+    .tracklist-tag-detail-overview-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .tracklist-tag-detail-charts-section {
+        justify-content: center;
+    }
+    
+    .tracklist-tag-detail-charts {
+        justify-content: center;
+    }
+
+    .tracklist-tag-detail-info-section {
+        height: auto;
+        max-height: 400px;
+    }
+}
+
+.tracklist-tag-detail-chart-wrapper {
+    position: relative;
+    width: 250px;
+    height: 250px;
+}
+
+.tracklist-tag-detail-chart-center-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+    text-align: center;
+}
+
+.tracklist-tag-detail-center-value {
+    font-size: 1.5rem;
+    font-weight: 700;
+    line-height: 1.2;
+}
+
+.tracklist-tag-detail-center-label {
+    font-size: 0.9rem;
+    color: var(--tracklist-tag-detail-text-secondary);
+    margin-top: 0.25rem;
+    text-transform: capitalize;
 }

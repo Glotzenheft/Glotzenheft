@@ -22,6 +22,44 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <header class="tracklist-tag-detail-header">
             <div class="tracklist-tag-detail-content">
                 <h1>{{ state.tagData()!.tagName }} ({{ state.tagData()!.tracklistTagType | tracklistTagTypeLabel }})</h1>
+            </div>
+        </header>
+
+        <div class="tracklist-tag-detail-overview-grid">
+            <div class="tracklist-tag-detail-charts-section">
+                <div class="tracklist-tag-detail-charts">
+                    <div class="tracklist-tag-detail-chart-wrapper">
+                        <p-chart type="doughnut" [data]="statusChartData()" [options]="statusChartOptions()"></p-chart>
+                        <div class="tracklist-tag-detail-chart-center-text">
+                            <span class="tracklist-tag-detail-center-value">{{ statusCenterValue() }}</span>
+                            <span class="tracklist-tag-detail-center-label">{{ statusCenterLabel() }}</span>
+                        </div>
+                    </div>
+                    <div class="tracklist-tag-detail-chart-wrapper">
+                        <p-chart type="doughnut" [data]="ratingChartData()" [options]="ratingChartOptions()"></p-chart>
+                        <div class="tracklist-tag-detail-chart-center-text">
+                            <span class="tracklist-tag-detail-center-value">{{ ratingCenterValue() }}</span>
+                            <span class="tracklist-tag-detail-center-label">{{ ratingCenterLabel() }}</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="tracklist-tag-detail-info-section">
+                <div class="tracklist-tag-detail-description">
+                    @if (state.tagData()!.description) {
+                        <p>{{ state.tagData()!.description }}</p>
+                    } @else {
+                        <p class="tracklist-tag-detail-no-description">Keine Beschreibung vorhanden.</p>
+                    }
+                </div>
+
+                <div class="tracklist-tag-detail-meta-data">
+                    <div class="tracklist-tag-detail-meta-row"><strong>Erstellt am:</strong> {{ state.tagData()!.createdAt | date:'dd.MM.yyyy HH:mm' }}</div>
+                    @if (state.tagData()!.updatedAt) {
+                        <div class="tracklist-tag-detail-meta-row"><strong>Aktualisiert am:</strong> {{ state.tagData()!.updatedAt | date:'dd.MM.yyyy HH:mm' }}</div>
+                    }
+                </div>
 
                 <div class="tracklist-tag-detail-action-buttons">
                     <p-button
@@ -38,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </p-button>
                 </div>
             </div>
-        </header>
+        </div>
 
         <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
             <p-tablist>
