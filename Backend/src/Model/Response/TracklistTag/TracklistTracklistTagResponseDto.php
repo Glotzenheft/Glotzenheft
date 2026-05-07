@@ -22,12 +22,16 @@ namespace App\Model\Response\TracklistTag;
 
 use App\Entity\Tracklist;
 use App\Enum\MediaType;
+use App\Enum\TracklistStatus;
 
 readonly class TracklistTracklistTagResponseDto
 {
     public function __construct(
         public int $id,
         public string $tracklistName,
+        public TracklistStatus $tracklistStatus,
+        public ?int $tracklistRating,
+        public ?string $tracklistCustomPosterPath,
         public int $mediaId,
         public string $mediaName,
         public string $mediaOriginalName,
@@ -41,6 +45,9 @@ readonly class TracklistTracklistTagResponseDto
         return new self(
             id: $tracklist->getId(),
             tracklistName: $tracklist->getTracklistName(),
+            tracklistStatus: $tracklist->getStatus(),
+            tracklistRating: $tracklist->getRating(),
+            tracklistCustomPosterPath: $tracklist->getCustomPosterPath(),
             mediaId: $media?->getId(),
             mediaName: $media?->getName(),
             mediaOriginalName: $media?->getOriginalName(),
