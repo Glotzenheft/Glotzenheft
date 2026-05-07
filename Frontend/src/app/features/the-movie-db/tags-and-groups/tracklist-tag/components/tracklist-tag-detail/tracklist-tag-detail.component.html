@@ -22,6 +22,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <header class="tracklist-tag-detail-header">
             <div class="tracklist-tag-detail-content">
                 <h1>{{ state.tagData()!.tagName }} ({{ state.tagData()!.tracklistTagType | tracklistTagTypeLabel }})</h1>
+
+                <div class="tracklist-tag-detail-action-buttons">
+                    <p-button
+                        icon="pi pi-pencil"
+                        severity="primary"
+                        (onClick)="openEditDialog()"
+                        pTooltip="Tag bearbeiten!">
+                    </p-button>
+                    <p-button
+                        icon="pi pi-trash"
+                        severity="danger"
+                        (onClick)="deleteTag()"
+                        pTooltip="Tag löschen!">
+                    </p-button>
+                </div>
             </div>
         </header>
 

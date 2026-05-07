@@ -21,6 +21,7 @@ import {RouterModule, Router, ActivatedRoute} from '@angular/router';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TabsModule } from 'primeng/tabs';
+import { Tooltip } from 'primeng/tooltip';
 
 import { TracklistTagService } from '../../services/tracklist-tag.service';
 import { TracklistTagFormDialogComponent } from '../tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
@@ -37,6 +38,7 @@ import {TRACKLIST_TAG_PATHS} from '../../../../../../core/constants/paths.consta
         ButtonModule,
         TabsModule,
         TracklistTagTypeLabelPipe,
+        Tooltip
     ],
     providers: [
         DialogService,
@@ -88,8 +90,17 @@ export class TracklistTagDetailComponent implements OnInit{
         if (!currentTag) return;
 
         const ref = this.dialogService.open(TracklistTagFormDialogComponent, {
-            header: 'Tag bearbeiten',
-            width: '500px',
+            header: 'Neuen Tag erstellen',
+            modal: true,
+            width: '50vw',
+            closable: true,
+            contentStyle: {
+                overflow: 'auto'
+            },
+            breakpoints: {
+                '960px': '75vw',
+                '640px': '90vw'
+            },
             data: {
                 tag: currentTag
             }
@@ -106,7 +117,7 @@ export class TracklistTagDetailComponent implements OnInit{
         if(confirm('Möchtest du diesen Tag wirklich löschen?')) {
             this.tracklistTagService.deleteTag(Number(this.tagId)).subscribe({
                 next: () => {
-                    void this.router.navigate(['/', TRACKLIST_TAG_URLS.overview]);
+                    void this.router.navigate(['/' + TRACKLIST_TAG_URLS.overview]);
                 },
                 error: (err) => console.error('Fehler beim Löschen', err)
             });

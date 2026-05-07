@@ -27,9 +27,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: row;
     align-items: center;
+    justify-content: space-between;
     gap: 15px;
+    margin-bottom: 1rem;
 }
 
 .tracklist-tag-detail-content h1 {
     margin: 0;
+}
+
+.tracklist-tag-detail-action-buttons {
+    display: flex;
+    gap: 0.5rem;
 }
