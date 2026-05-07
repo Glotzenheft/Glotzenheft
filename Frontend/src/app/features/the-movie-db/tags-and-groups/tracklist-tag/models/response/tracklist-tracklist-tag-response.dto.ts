@@ -25,4 +25,6 @@ export interface TracklistTracklistTagResponseDto {
     mediaOriginalName: string;
     mediaPosterPath: string;
     mediaType: MediaType;
+    tracklistStatus: string;
+    tracklistRating: number | null;
 }
