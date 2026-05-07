@@ -24,7 +24,11 @@ export interface TracklistTracklistTagResponseDto {
     mediaName: string;
     mediaOriginalName: string;
     mediaPosterPath: string;
+    mediaFirstAirDate: string | null;
     mediaType: MediaType;
     tracklistStatus: string;
     tracklistRating: number | null;
+    tracklistCustomAirDate: string | null;
+    tracklistStartDateTime: string | null;
+    tracklistFinishDateTime: string | null;
 }

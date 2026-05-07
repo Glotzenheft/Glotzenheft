@@ -32,10 +32,14 @@ readonly class TracklistTracklistTagResponseDto
         public TracklistStatus $tracklistStatus,
         public ?int $tracklistRating,
         public ?string $tracklistCustomPosterPath,
+        public ?string $tracklistCustomAirDate,
+        public ?string $tracklistStartDateTime,
+        public ? string $tracklistFinishDateTime,
         public int $mediaId,
         public string $mediaName,
         public string $mediaOriginalName,
-        public string $mediaPosterPath,
+        public ?string $mediaPosterPath,
+        public ?string $mediaFirstAirDate,
         public MediaType $mediaType,
     ) {}
 
@@ -48,10 +52,14 @@ readonly class TracklistTracklistTagResponseDto
             tracklistStatus: $tracklist->getStatus(),
             tracklistRating: $tracklist->getRating(),
             tracklistCustomPosterPath: $tracklist->getCustomPosterPath(),
+            tracklistCustomAirDate: $tracklist->getCustomAirDate()?->format('Y-m-d'),
+            tracklistStartDateTime: $tracklist->getStartDate()?->format('Y-m-d H:i:s'),
+            tracklistFinishDateTime: $tracklist->getFinishDate()?->format('Y-m-d H:i:s'),
             mediaId: $media?->getId(),
             mediaName: $media?->getName(),
             mediaOriginalName: $media?->getOriginalName(),
             mediaPosterPath: $media?->getPosterPath(),
+            mediaFirstAirDate: $media?->getFirstAirDate()?->format('Y-m-d'),
             mediaType: $media?->getType(),
         );
     }
