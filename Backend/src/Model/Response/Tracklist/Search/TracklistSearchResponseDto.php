@@ -22,7 +22,7 @@ namespace App\Model\Response\Tracklist\Search;
 
 use App\Entity\Media;
 use App\Entity\Tracklist;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
+use UnexpectedValueException;
 
 readonly class TracklistSearchResponseDto
 {
@@ -43,7 +43,7 @@ readonly class TracklistSearchResponseDto
         $media = $tracklist->getMedia();
         if (!$media instanceof Media)
         {
-            throw new UnprocessableEntityHttpException('Internal Server Error');
+            throw new UnexpectedValueException(sprintf('Tracklist with ID %d has no associated media.', $tracklist->getId()));
         }
 
         return new self(
