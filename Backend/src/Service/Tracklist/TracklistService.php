@@ -27,6 +27,7 @@ use App\Entity\TracklistSeason;
 use App\Entity\User;
 use App\Model\Request\Tracklist\CreateTracklistDto;
 use App\Model\Request\Tracklist\UpdateTracklistDto;
+use App\Model\Response\Tracklist\Search\TracklistSearchResponseDto;
 use App\Model\Response\Tracklist\TracklistLightResponseDto;
 use App\Repository\SeasonRepository;
 use App\Repository\TracklistRepository;
@@ -319,5 +320,25 @@ readonly class TracklistService
         {
             $tracklistSeason->setCustomPartNumber($dto->customPartNumber);
         }
+    }
+
+    /**
+     * @return array<TracklistSearchResponseDto>
+     */
+    public function searchTracklists(
+        User $user,
+        string $query,
+        int $page = 1
+    ): array
+    {
+        $tracklists = $this->tracklistRepository->searchByUserAndQuery(
+            user: $user,
+            query: $query,
+            page: $page
+        );
+
+        return array_map(function (Tracklist $tracklist) {
+            return TracklistSearchResponseDto::fromEntity($tracklist);
+        }, $tracklists);
     }
 }

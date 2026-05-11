@@ -172,4 +172,46 @@ class TracklistRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+
+    /**
+     *  Sucht Tracklisten eines Nutzers basierend auf dem Namen der Trackliste,
+     *  oder dem hinterlegten Media-Namen.
+     *
+     * @param User $user
+     * @param string $query
+     * @param int $page
+     * @param int $limit
+     *
+     * @return Tracklist[]
+     */
+    public function searchByUserAndQuery(
+        User $user,
+        string $query,
+        int $page = 1,
+        int $limit = 20
+    ): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->addSelect('media', 'tracklistSeason', 'season')
+            ->join('t.media', 'media')
+            ->leftJoin('t.tracklistSeason', 'tracklistSeason')
+            ->leftJoin('tracklistSeason.season', 'season')
+            ->where('t.user = :user')
+            ->setParameter('user', $user);
+
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->like('LOWER(t.tracklistName)', ':query'),
+                $qb->expr()->like('LOWER(media.name)', ':query'),
+                $qb->expr()->like('LOWER(media.originalName)', ':query')
+            )
+        )->setParameter('query', '%' . mb_strtolower($query) . '%');
+
+        return $qb
+            ->setFirstResult(($page - 1) * $limit)
+            ->setMaxResults($limit)
+            ->getQuery()
+            ->getResult();
+    }
 }
