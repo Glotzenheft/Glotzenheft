@@ -36,13 +36,13 @@ export class TracklistTagAssociationService {
 
     addTagsToTracklist(tracklistId: number, tagIds: number[]): Observable<void> {
         return this.http.post<void>(`${this.baseUrl}/tracklists/${tracklistId}/tags`, {
-            tracklistTagIdsArray: tagIds
+            tracklist_tag_ids: tagIds
         });
     }
 
     addTracklistsToTag(tagId: number, tracklistIds: number[]): Observable<void> {
         return this.http.post<void>(`${this.baseUrl}/tags/${tagId}/tracklists`, {
-            tracklistIdsArray: tracklistIds
+            tracklist_ids: tracklistIds
         });
     }
 
@@ -56,13 +56,13 @@ export class TracklistTagAssociationService {
 
     removeTracklistsFromTag(tagId: number, tracklistIds: number[]): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/tags/${tagId}/tracklists`, {
-            body: { tracklistIdsArray: tracklistIds }
+            body: { tracklist_ids: tracklistIds }
         });
     }
 
     removeTagsFromTracklist(tracklistId: number, tagIds: number[]): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/tracklists/${tracklistId}/tags`, {
-            body: { tracklistTagIdsArray: tagIds }
+            body: { tracklist_tag_ids: tagIds }
         });
     }
 }
