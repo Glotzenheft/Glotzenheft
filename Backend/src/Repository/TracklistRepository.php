@@ -23,6 +23,7 @@ use App\Entity\Media;
 use App\Entity\Tracklist;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -183,7 +184,7 @@ class TracklistRepository extends ServiceEntityRepository
      * @param int $page
      * @param int $limit
      *
-     * @return Tracklist[]
+     * @return array
      */
     public function searchByUserAndQuery(
         User $user,
@@ -208,10 +209,12 @@ class TracklistRepository extends ServiceEntityRepository
             )
         )->setParameter('query', '%' . mb_strtolower($query) . '%');
 
-        return $qb
-            ->setFirstResult(($page - 1) * $limit)
-            ->setMaxResults($limit)
-            ->getQuery()
-            ->getResult();
+        $qb->setFirstResult(($page - 1) * $limit)->setMaxResults($limit);
+
+        $paginator = new Paginator($qb);
+        return [
+            'results' => iterator_to_array($paginator),
+            'total'   => count($paginator),
+        ];
     }
 }

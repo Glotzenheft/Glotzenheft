@@ -28,6 +28,7 @@ use App\Entity\User;
 use App\Model\Request\Tracklist\CreateTracklistDto;
 use App\Model\Request\Tracklist\UpdateTracklistDto;
 use App\Model\Response\Tracklist\Search\TracklistSearchResponseDto;
+use App\Model\Response\Tracklist\Search\TracklistSearchPaginatedResponseDto;
 use App\Model\Response\Tracklist\TracklistLightResponseDto;
 use App\Repository\SeasonRepository;
 use App\Repository\TracklistRepository;
@@ -323,22 +324,37 @@ readonly class TracklistService
     }
 
     /**
-     * @return array<TracklistSearchResponseDto>
+     * @param User $user
+     * @param string $query
+     * @param int $page
+     * @return TracklistSearchPaginatedResponseDto
      */
     public function searchTracklists(
         User $user,
         string $query,
         int $page = 1
-    ): array
+    ): TracklistSearchPaginatedResponseDto
     {
-        $tracklists = $this->tracklistRepository->searchByUserAndQuery(
+        $limit = 20;
+        $paginatedData = $this->tracklistRepository->searchByUserAndQuery(
             user: $user,
             query: $query,
-            page: $page
+            page: $page,
+            limit: $limit
         );
 
-        return array_map(function (Tracklist $tracklist) {
+        $results = array_map(function (Tracklist $tracklist) {
             return TracklistSearchResponseDto::fromEntity($tracklist);
-        }, $tracklists);
+        }, $paginatedData['results']);
+
+        $totalResults = $paginatedData['total'];
+        $totalPages = (int) ceil($totalResults / $limit);
+
+        return new TracklistSearchPaginatedResponseDto(
+            results: $results,
+            page: $page,
+            totalResults: $totalResults,
+            totalPages: $totalPages
+        );
     }
 }
