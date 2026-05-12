@@ -31,6 +31,9 @@ import { TracklistTagTypeLabelPipe } from '../../../../../../shared/pipes/trackl
 import { TracklistTagDetailStateService } from '../../services/tracklist-tag-detail-state.service';
 import {TRACKLIST_TAG_PATHS} from '../../../../../../core/constants/paths.constants';
 import { convertTracklistStatusIntoGerman } from '../../../../../../shared/variables/tracklist';
+import { TracklistSelectionDialogComponent } from '../../../../tracklists/tracklist/components/tracklist-selection-dialog/tracklist-selection-dialog.component';
+import { TracklistTagAssociationService } from '../../services/tracklist-tag-association.service';
+import { TracklistSearchResponseDto } from '../../../../tracklists/tracklist/models/response/tracklist-search-response.dto';
 
 @Component({
     selector: 'app-tracklist-tag-detail',
@@ -53,6 +56,7 @@ import { convertTracklistStatusIntoGerman } from '../../../../../../shared/varia
 })
 export class TracklistTagDetailComponent implements OnInit{
     private tracklistTagService = inject(TracklistTagService);
+    private tracklistTagAssociationService = inject(TracklistTagAssociationService);
     private dialogService = inject(DialogService);
     private router = inject(Router);
     private route = inject(ActivatedRoute);
@@ -280,6 +284,46 @@ export class TracklistTagDetailComponent implements OnInit{
         ref.onClose.subscribe((updatedTag) => {
             if (updatedTag) {
                 this.loadTag();
+            }
+        });
+    }
+
+    openTracklistSelectionDialog(): void {
+        const existingTracklistIds = this.state.tagData()?.tracklists?.map(t => t.id) || [];
+
+        const ref = this.dialogService.open(TracklistSelectionDialogComponent, {
+            header: 'Tracklisten zum Tag hinzufügen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'hidden' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: {
+                existingTracklistIds: existingTracklistIds
+            }
+        });
+
+        ref.onClose.subscribe((selectedTracklists: TracklistSearchResponseDto[] | null) => {
+            if (selectedTracklists && selectedTracklists.length > 0) {
+                if (selectedTracklists.length === 1) {
+                    this.tracklistTagAssociationService.addTracklistToTag(Number(this.tagId), selectedTracklists[0].id).subscribe({
+                        next: () => {
+                            this.loadTag();
+                        },
+                        error: (err) => console.error('Fehler beim Verknüpfen der Trackliste', err)
+                    });
+                } else {
+                    const tracklistIds = selectedTracklists.map(t => t.id);
+                    this.tracklistTagAssociationService.addTracklistsToTag(Number(this.tagId), tracklistIds).subscribe({
+                        next: () => {
+                            this.loadTag();
+                        },
+                        error: (err) => console.error('Fehler beim Verknüpfen der Tracklisten', err)
+                    });
+                }
             }
         });
     }

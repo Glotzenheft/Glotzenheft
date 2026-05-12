@@ -69,6 +69,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         pTooltip="Tag bearbeiten!">
                     </p-button>
                     <p-button
+                        icon="pi pi-plus"
+                        severity="success"
+                        (onClick)="openTracklistSelectionDialog()"
+                        pTooltip="Tracklisten hinzufügen">
+                    </p-button>
+                    <p-button
                         icon="pi pi-trash"
                         severity="danger"
                         (onClick)="deleteTag()"
