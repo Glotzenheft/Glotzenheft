@@ -1,0 +1,99 @@
+.tracklist-selection-dialog-container {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    min-height: 400px;
+}
+
+.tracklist-selection-dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0 1.5rem 0;
+    flex-shrink: 0;
+}
+
+.tracklist-selection-dialog-search-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.tracklist-selection-dialog-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+}
+
+.tracklist-selection-dialog-search-input {
+    width: 100%;
+    padding-left: 2.75rem;
+}
+
+.tracklist-selection-dialog-empty-selection {
+    color: #6b7280;
+    font-style: italic;
+    padding: 0.5rem;
+}
+
+.tracklist-selection-dialog-spinner {
+    width: 2rem;
+    height: 2rem;
+}
+
+.tracklist-selection-dialog-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tracklist-selection-dialog-selected-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.tracklist-selection-dialog-selected-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: rgba(5, 150, 105, 0.1);
+    color: var(--link--color, #059669);
+    border-radius: 6px;
+}
+
+.tracklist-selection-dialog-media-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tracklist-selection-dialog-load-more {
+    display: flex;
+    justify-content: center;
+    margin-top: 1rem;
+}
+
+.tracklist-selection-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem 0 0 0;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+::ng-deep .tracklist-selection-dialog-table .p-datatable-wrapper {
+    overflow: visible;
+}
+
+::ng-deep .p-accordion .p-accordion-content {
+    padding: 0.5rem;
+}

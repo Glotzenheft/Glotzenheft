@@ -1,0 +1,107 @@
+<div class="tracklist-selection-dialog-container">
+    <!-- Header with Search Input -->
+    <div class="tracklist-selection-dialog-header">
+        <div class="tracklist-selection-dialog-search-wrapper">
+            <i class="pi pi-search tracklist-selection-dialog-search-icon"></i>
+            <input
+                type="text"
+                pInputText
+                [formControl]="searchControl"
+                placeholder="Suche nach Film- oder Serientitel..."
+                class="tracklist-selection-dialog-search-input"
+            />
+        </div>
+        @if (isLoading()) {
+            <p-progressSpinner
+                styleClass="tracklist-selection-dialog-spinner"
+                strokeWidth="6"
+                animationDuration=".5s"
+            ></p-progressSpinner>
+        }
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="tracklist-selection-dialog-content">
+        <!-- Collapsible Section for Selected Items -->
+        <p-accordion value="selected-items">
+            <p-accordion-panel value="selected-items">
+                <p-accordionheader>Ausgewählte Tracklisten ({{ selectedTracklists().length }})</p-accordionheader>
+                <p-accordioncontent>
+                    @if (selectedTracklists().length === 0) {
+                        <div class="tracklist-selection-dialog-empty-selection">
+                            Noch keine Tracklisten ausgewählt.
+                        </div>
+                    } @else {
+                        <div class="tracklist-selection-dialog-selected-items">
+                            @for (item of selectedTracklists(); track item.id) {
+                                <div class="tracklist-selection-dialog-selected-item">
+                                    <span>{{ item.tracklistName }} ({{ item.mediaName }})</span>
+                                    <p-button icon="pi pi-times" [text]="true" [rounded]="true" severity="secondary"
+                                              (onClick)="removeFromSelection(item.id)"></p-button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </p-accordioncontent>
+            </p-accordion-panel>
+        </p-accordion>
+
+        <!-- Table for Search Results -->
+        <p-table
+            [value]="availableTracklists()"
+            [(selection)]="currentSelection"
+            (selectionChange)="onSelectionChange($event)"
+            dataKey="id"
+            styleClass="p-datatable-sm tracklist-selection-dialog-table"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                    <th>Tracklist-Name</th>
+                    <th>
+                        <div class="tracklist-selection-dialog-media-header">
+                            <span>Medium</span>
+                            <p-button
+                                icon="pi pi-globe"
+                                [text]="true"
+                                [rounded]="true"
+                                severity="secondary"
+                                (click)="showOriginalName.set(!showOriginalName())"
+                                [pTooltip]="showOriginalName() ? 'Lokalen Namen anzeigen' : 'Originalnamen anzeigen'"
+                                tooltipPosition="top"
+                            ></p-button>
+                        </div>
+                    </th>
+                    <th>Format</th>
+                    <th>Staffel</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tracklist>
+                <tr>
+                    <td><p-tableCheckbox [value]="tracklist" /></td>
+                    <td>{{ tracklist.tracklistName }}</td>
+                    <td>{{ showOriginalName() ? tracklist.mediaOriginalName : tracklist.mediaName }}</td>
+                    <td>{{ tracklist.mediaType }}</td>
+                    <td>{{ tracklist.seasonNumber ?? '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="5">{{ emptyMessage() }}</td></tr>
+            </ng-template>
+        </p-table>
+
+        @if (hasMoreResults()) {
+            <div class="tracklist-selection-dialog-load-more">
+                <p-button label="Weitere Ergebnisse laden" [text]="true" (onClick)="loadMore()" [loading]="isLoading()"></p-button>
+            </div>
+        }
+    </div>
+
+    <!-- Footer with Action Buttons -->
+    <div class="tracklist-selection-dialog-footer">
+        <p-button label="Abbrechen" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Auswahl aufheben" severity="warn" [disabled]="selectedTracklists().length === 0" (onClick)="selectedTracklists.set([])"></p-button>
+        <p-button label="Alle auswählen" severity="info" [disabled]="availableTracklists().length === 0" (onClick)="toggleSelectAll()"></p-button>
+        <p-button label="Verknüpfen" icon="pi pi-link" [disabled]="selectedTracklists().length === 0" (onClick)="confirmSelection()"></p-button>
+    </div>
+</div>
