@@ -1,0 +1,105 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.tracklist-unlink-dialog-container {
+    display: flex;
+    flex-direction: column;
+    height: 70vh;
+    min-height: 400px;
+}
+
+.tracklist-unlink-dialog-header {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 0 0 1.5rem 0;
+    flex-shrink: 0;
+}
+
+.tracklist-unlink-dialog-search-wrapper {
+    position: relative;
+    flex-grow: 1;
+}
+
+.tracklist-unlink-dialog-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+}
+
+.tracklist-unlink-dialog-search-input {
+    width: 100%;
+    padding-left: 2.75rem;
+}
+
+.tracklist-unlink-dialog-empty-selection {
+    color: #6b7280;
+    font-style: italic;
+    padding: 0.5rem;
+}
+
+.tracklist-unlink-dialog-content {
+    flex-grow: 1;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.tracklist-unlink-dialog-selected-items {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    max-height: 150px;
+    overflow-y: auto;
+    padding-right: 0.5rem;
+}
+
+.tracklist-unlink-dialog-selected-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.5rem;
+    background-color: rgba(239, 68, 68, 0.1);
+    color: var(--link--color, #ef4444);
+    border-radius: 6px;
+}
+
+.tracklist-unlink-dialog-media-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.tracklist-unlink-dialog-footer {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.75rem;
+    padding: 1.5rem 0 0 0;
+    border-top: 1px solid #e2e8f0;
+    flex-shrink: 0;
+}
+
+::ng-deep .tracklist-unlink-dialog-table .p-datatable-wrapper {
+    overflow: visible;
+}
+
+::ng-deep .p-accordion .p-accordion-content {
+    padding: 0.5rem;
+}
