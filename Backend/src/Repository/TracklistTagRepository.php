@@ -46,7 +46,7 @@ class TracklistTagRepository extends ServiceEntityRepository
             ->addSelect('tracklists')
             ->leftJoin('tag.tracklists', 'tracklists')
 
-            ->addSelect('partial media.{id, originalName, name, posterPath, type}')
+            ->addSelect('partial media.{id, originalName, name, posterPath, type, firstAirDate}')
             ->leftJoin('tracklists.media', 'media')
 
             ->andWhere('tag.id = :id')
