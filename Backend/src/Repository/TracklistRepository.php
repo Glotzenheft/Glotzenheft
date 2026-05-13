@@ -217,4 +217,31 @@ class TracklistRepository extends ServiceEntityRepository
             'total'   => count($paginator),
         ];
     }
+
+    /**
+     * Finds the count of watched episodes for a given list of tracklist IDs.
+     *
+     * @param array<int> $tracklistIds
+     * @return array<int, int> An associative array mapping tracklistId to its watched episodes count.
+     */
+    public function findWatchedEpisodesCountForTracklists(array $tracklistIds): array
+    {
+        if (empty($tracklistIds)) {
+            return [];
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $counts = $qb
+            ->select('t.id as tracklistId', 'COUNT(te.id) as watchedEpisodesCount')
+            ->from(Tracklist::class, 't')
+            ->join('t.tracklistSeason', 'ts')
+            ->join('ts.tracklistEpisodes', 'te')
+            ->where($qb->expr()->in('t.id', ':tracklistIds'))
+            ->groupBy('t.id')
+            ->setParameter('tracklistIds', $tracklistIds)
+            ->getQuery()
+            ->getResult();
+
+        return array_column($counts, 'watchedEpisodesCount', 'tracklistId');
+    }
 }
