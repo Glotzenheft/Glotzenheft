@@ -18,11 +18,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import {Component, inject} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {TracklistTagDetailStateService} from '../../../services/tracklist-tag-detail-state.service';
+import {RouterLink} from '@angular/router';
 
 @Component({
     selector: 'app-tracklist-tag-detail-tracklists-tab',
     standalone: true,
-    imports: [CommonModule],
+    imports: [CommonModule, RouterLink],
     templateUrl: './tracklist-tag-detail-tracklists-tab.component.html',
     styleUrl: './tracklist-tag-detail-tracklists-tab.component.css'
 })

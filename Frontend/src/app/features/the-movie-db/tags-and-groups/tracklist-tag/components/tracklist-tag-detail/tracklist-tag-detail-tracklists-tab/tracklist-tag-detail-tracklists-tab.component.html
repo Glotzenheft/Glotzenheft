@@ -20,7 +20,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 } @else {
     <ul>
         @for (tracklist of state.tagData()!.tracklists; track tracklist.id) {
-            <li>{{ tracklist.tracklistName }}</li>
+            <li>
+                <a [routerLink]="['/media', tracklist.mediaType, tracklist.mediaId]">{{ tracklist.tracklistName }}</a>
+            </li>
         }
     </ul>
 }
