@@ -114,6 +114,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .tracklist-tag-detail-action-buttons {
     flex: 0 0 auto;
     display: flex;
+    flex-wrap: wrap;
     gap: 0.75rem;
 }
 
@@ -122,11 +123,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .tracklist-tag-detail-overview-grid {
         grid-template-columns: 1fr;
     }
-    
+
     .tracklist-tag-detail-charts-section {
         justify-content: center;
     }
-    
+
     .tracklist-tag-detail-charts {
         justify-content: center;
     }
@@ -167,4 +168,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     color: var(--tracklist-tag-detail-text-secondary);
     margin-top: 0.25rem;
     text-transform: capitalize;
+}
+
+@media (max-width: 768px) {
+    .tracklist-tag-detail-container {
+        margin-bottom: 10rem;
+    }
 }

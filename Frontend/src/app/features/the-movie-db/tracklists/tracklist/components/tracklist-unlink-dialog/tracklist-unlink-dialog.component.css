@@ -103,3 +103,33 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ::ng-deep .p-accordion .p-accordion-content {
     padding: 0.5rem;
 }
+
+@media (max-width: 768px) {
+    .tracklist-unlink-dialog-content {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+
+    .tracklist-unlink-dialog-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tracklist-unlink-dialog-footer p-button,
+    .tracklist-unlink-dialog-footer ::ng-deep .p-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    ::ng-deep .tracklist-unlink-dialog-table .p-datatable-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    ::ng-deep .tracklist-unlink-dialog-table .p-datatable-wrapper {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    ::ng-deep .tracklist-unlink-dialog-table th,
+    ::ng-deep .tracklist-unlink-dialog-table td {
+        white-space: nowrap;
+    }
+}

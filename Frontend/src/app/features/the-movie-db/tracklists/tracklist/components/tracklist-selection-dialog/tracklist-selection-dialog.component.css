@@ -114,3 +114,32 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ::ng-deep .p-accordion .p-accordion-content {
     padding: 0.5rem;
 }
+
+@media (max-width: 768px) {
+    .tracklist-selection-dialog-content {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    .tracklist-selection-dialog-footer {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .tracklist-selection-dialog-footer p-button,
+    .tracklist-selection-dialog-footer ::ng-deep .p-button {
+        width: 100%;
+        justify-content: center;
+    }
+
+    ::ng-deep .tracklist-selection-dialog-table .p-datatable-wrapper::-webkit-scrollbar {
+        display: none;
+    }
+    ::ng-deep .tracklist-selection-dialog-table .p-datatable-wrapper {
+        -ms-overflow-style: none;
+        scrollbar-width: none;
+    }
+    ::ng-deep .tracklist-selection-dialog-table th,
+    ::ng-deep .tracklist-selection-dialog-table td {
+        white-space: nowrap;
+    }
+}
