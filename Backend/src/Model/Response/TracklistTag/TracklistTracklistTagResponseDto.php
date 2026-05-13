@@ -23,6 +23,7 @@ namespace App\Model\Response\TracklistTag;
 use App\Entity\Tracklist;
 use App\Enum\MediaType;
 use App\Enum\TracklistStatus;
+use UnexpectedValueException;
 
 readonly class TracklistTracklistTagResponseDto
 {
@@ -34,33 +35,66 @@ readonly class TracklistTracklistTagResponseDto
         public ?string $tracklistCustomPosterPath,
         public ?string $tracklistCustomAirDate,
         public ?string $tracklistStartDateTime,
-        public ? string $tracklistFinishDateTime,
+        public ?string $tracklistFinishDateTime,
+        public ?string $tracklistLanguage,
+        public ?string $tracklistSubtitle,
+        public ?int $tracklistSeasonCustomSeasonNumber,
+        public ?int $tracklistSeasonCustomPartNumber,
+        public ?int $tracklistSeasonFirstEpisodeNumber,
+        public ?int $tracklistSeasonLastEpisodeNumber,
         public int $mediaId,
         public string $mediaName,
         public string $mediaOriginalName,
         public ?string $mediaPosterPath,
         public ?string $mediaFirstAirDate,
         public MediaType $mediaType,
+        public ?int $mediaSeasonNumber,
+        public ?string $mediaSeasonAirDate,
+        public ?int $mediaSeasonEpisodeCount,
+        public ?string $mediaSeasonPosterPath,
+        public ?int $watchedEpisodes,
     ) {}
 
-    public static function fromEntity(Tracklist $tracklist): self
+    /**#
+     * @param Tracklist $tracklist
+     * @param int|null $watchedEpisodes
+     * @return self
+     */
+    public static function fromEntity(
+        Tracklist $tracklist,
+        ?int $watchedEpisodes = null
+    ): self
     {
-        $media = $tracklist->getMedia();
+        $media = $tracklist->getMedia() ?? throw new UnexpectedValueException('Tracklist media cannot be null');
+        $tracklistSeason = $tracklist->getTracklistSeason();
+        $mediaSeason = $tracklistSeason?->getSeason();
+
         return new self(
-            id: $tracklist->getId(),
-            tracklistName: $tracklist->getTracklistName(),
-            tracklistStatus: $tracklist->getStatus(),
+            id: $tracklist->getId() ?? throw new UnexpectedValueException('Tracklist Id cannot be null'),
+            tracklistName: $tracklist->getTracklistName() ?? throw new UnexpectedValueException('Tracklist name cannot be null'),
+            tracklistStatus: $tracklist->getStatus() ?? throw new UnexpectedValueException('Tracklist status cannot be null'),
             tracklistRating: $tracklist->getRating(),
             tracklistCustomPosterPath: $tracklist->getCustomPosterPath(),
             tracklistCustomAirDate: $tracklist->getCustomAirDate()?->format('Y-m-d'),
             tracklistStartDateTime: $tracklist->getStartDate()?->format('Y-m-d H:i:s'),
             tracklistFinishDateTime: $tracklist->getFinishDate()?->format('Y-m-d H:i:s'),
-            mediaId: $media?->getId(),
-            mediaName: $media?->getName(),
-            mediaOriginalName: $media?->getOriginalName(),
-            mediaPosterPath: $media?->getPosterPath(),
-            mediaFirstAirDate: $media?->getFirstAirDate()?->format('Y-m-d'),
-            mediaType: $media?->getType(),
+            tracklistLanguage: $tracklist->getLanguage(),
+            tracklistSubtitle: $tracklist->getSubtitle(),
+            tracklistSeasonCustomSeasonNumber: $tracklistSeason?->getCustomSeasonNumber(),
+            tracklistSeasonCustomPartNumber: $tracklistSeason?->getCustomPartNumber(),
+            tracklistSeasonFirstEpisodeNumber: $tracklistSeason?->getStartEpisodeNumber(),
+            tracklistSeasonLastEpisodeNumber: $tracklistSeason?->getEndEpisodeNumber(),
+            mediaId: $media->getId() ?? throw new UnexpectedValueException('Media Id cannot be null'),
+            mediaName: $media->getName() ?? throw new UnexpectedValueException('Media name cannot be null'),
+            mediaOriginalName: $media->getOriginalName() ?? throw new UnexpectedValueException('Media original name cannot be null'),
+            mediaPosterPath: $media->getPosterPath(),
+            mediaFirstAirDate: $media->getFirstAirDate()?->format('Y-m-d'),
+            mediaType: $media->getType() ?? throw new UnexpectedValueException('Media type cannot be null'),
+            mediaSeasonNumber: $mediaSeason?->getSeasonNumber(),
+            mediaSeasonAirDate: $mediaSeason?->getAirDate()?->format('Y-m-d'),
+            mediaSeasonEpisodeCount: $mediaSeason?->getEpisodeCount(),
+            mediaSeasonPosterPath: $mediaSeason?->getPosterPath(),
+            watchedEpisodes: $watchedEpisodes,
         );
     }
 }

@@ -27,6 +27,7 @@ use App\Model\Request\TracklistTag\CreateTracklistTagRequestDto;
 use App\Model\Request\TracklistTag\UpdateTracklistTagRequestDto;
 use App\Model\Response\TracklistTag\TracklistTagLightResponseDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
+use App\Model\Response\TracklistTag\TracklistTracklistTagResponseDto;
 use App\Repository\TracklistRepository;
 use App\Repository\TracklistTagRepository;
 use App\Service\Traits\EntityValidationTrait;
@@ -101,7 +102,23 @@ readonly class TracklistTagService
             throw new NotFoundHttpException(message: 'Tag not found or access denied.');
         }
 
-        return TracklistTagResponseDto::fromEntity($tag);
+        $tracklists = $tag->getTracklists();
+        $tracklistDtos = [];
+
+        if (!$tracklists->isEmpty())
+        {
+            $tracklistIds = $tracklists->map(fn(Tracklist $t) => $t->getId())->toArray();
+
+            $watchedEpisodesCountMap = $this->tracklistRepository->findWatchedEpisodesCountForTracklists($tracklistIds);
+
+            foreach ($tracklists as $tracklist)
+            {
+                $count = $watchedEpisodesCountMap[$tracklist->getId()] ?? 0;
+                $tracklistDtos[] = TracklistTracklistTagResponseDto::fromEntity($tracklist, $count);
+            }
+        }
+
+        return TracklistTagResponseDto::fromEntity($tag, $tracklistDtos);
     }
 
     /**
