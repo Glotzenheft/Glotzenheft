@@ -33,6 +33,8 @@ import {TRACKLIST_TAG_PATHS} from '../../../../../../core/constants/paths.consta
 import { convertTracklistStatusIntoGerman } from '../../../../../../shared/variables/tracklist';
 import { TracklistSelectionDialogComponent } from '../../../../tracklists/tracklist/components/tracklist-selection-dialog/tracklist-selection-dialog.component';
 import { TracklistTagAssociationService } from '../../services/tracklist-tag-association.service';
+import { TracklistUnlinkDialogComponent } from '../../../../tracklists/tracklist/components/tracklist-unlink-dialog/tracklist-unlink-dialog.component';
+import { TracklistTracklistTagResponseDto} from '../../models/response/tracklist-tracklist-tag-response.dto';
 import { TracklistSearchResponseDto } from '../../../../tracklists/tracklist/models/response/tracklist-search-response.dto';
 
 @Component({
@@ -322,6 +324,43 @@ export class TracklistTagDetailComponent implements OnInit{
                             this.loadTag();
                         },
                         error: (err) => console.error('Fehler beim Verknüpfen der Tracklisten', err)
+                    });
+                }
+            }
+        });
+    }
+
+    openTracklistUnlinkDialog(): void {
+        const tracklists = this.state.tagData()?.tracklists;
+        if (!tracklists || tracklists.length === 0) return;
+
+        const ref = this.dialogService.open(TracklistUnlinkDialogComponent, {
+            header: 'Tracklisten vom Tag entfernen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'hidden' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: {
+                tracklists: tracklists
+            }
+        });
+
+        ref.onClose.subscribe((selectedTracklists: TracklistTracklistTagResponseDto[] | null) => {
+            if (selectedTracklists && selectedTracklists.length > 0) {
+                const tracklistIds = selectedTracklists.map(t => t.id);
+                if (selectedTracklists.length === 1) {
+                    this.tracklistTagAssociationService.removeTracklistFromTag(Number(this.tagId), tracklistIds[0]).subscribe({
+                        next: () => this.loadTag(),
+                        error: (err) => console.error('Fehler beim Entfernen der Trackliste', err)
+                    });
+                } else {
+                    this.tracklistTagAssociationService.removeTracklistsFromTag(Number(this.tagId), tracklistIds).subscribe({
+                        next: () => this.loadTag(),
+                        error: (err) => console.error('Fehler beim Entfernen der Tracklisten', err)
                     });
                 }
             }

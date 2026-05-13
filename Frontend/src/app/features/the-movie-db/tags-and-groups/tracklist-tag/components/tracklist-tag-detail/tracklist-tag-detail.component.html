@@ -75,6 +75,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         pTooltip="Tracklisten hinzufügen">
                     </p-button>
                     <p-button
+                        icon="pi pi-minus"
+                        severity="warn"
+                        (onClick)="openTracklistUnlinkDialog()"
+                        pTooltip="Tracklisten entfernen"
+                        [disabled]="totalTracklists() === 0"></p-button>
+                    <p-button
                         icon="pi pi-trash"
                         severity="danger"
                         (onClick)="deleteTag()"
