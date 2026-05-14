@@ -41,6 +41,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             <span class="tracklist-tag-detail-center-value">{{ ratingCenterValue() }}</span>
                             <span class="tracklist-tag-detail-center-label">{{ ratingCenterLabel() }}</span>
                         </div>
+
+                        <div class="tracklist-tag-detail-rating-chart-toggle">
+                            <p-toggle-switch
+                                inputId="unratedToggle"
+                                [ngModel]="showUnratedTracklists()"
+                                (ngModelChange)="showUnratedTracklists.set($event)">
+                            </p-toggle-switch>
+                        </div>
                     </div>
                 </div>
             </div>

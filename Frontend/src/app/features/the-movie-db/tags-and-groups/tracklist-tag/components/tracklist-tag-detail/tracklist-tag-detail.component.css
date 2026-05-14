@@ -170,6 +170,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     text-transform: capitalize;
 }
 
+.tracklist-tag-detail-rating-chart-toggle {
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    transform: scale(0.8);
+    transform-origin: bottom right;
+    z-index: 10;
+}
+
 @media (max-width: 768px) {
     .tracklist-tag-detail-container {
         margin-bottom: 10rem;

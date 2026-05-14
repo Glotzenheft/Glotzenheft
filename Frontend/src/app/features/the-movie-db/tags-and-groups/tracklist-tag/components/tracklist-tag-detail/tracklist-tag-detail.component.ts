@@ -23,6 +23,8 @@ import { DialogService } from 'primeng/dynamicdialog';
 import { TabsModule } from 'primeng/tabs';
 import { Tooltip } from 'primeng/tooltip';
 import { ChartModule } from 'primeng/chart';
+import { ToggleSwitch } from 'primeng/toggleswitch';
+import { FormsModule } from '@angular/forms';
 
 import { TracklistTagService } from '../../services/tracklist-tag.service';
 import { TracklistTagFormDialogComponent } from '../tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
@@ -36,6 +38,7 @@ import { TracklistTagAssociationService } from '../../services/tracklist-tag-ass
 import { TracklistUnlinkDialogComponent } from '../../../../tracklists/tracklist/components/tracklist-unlink-dialog/tracklist-unlink-dialog.component';
 import { TracklistTracklistTagResponseDto} from '../../models/response/tracklist-tracklist-tag-response.dto';
 import { TracklistSearchResponseDto } from '../../../../tracklists/tracklist/models/response/tracklist-search-response.dto';
+import { RATING_COLORS, STATUS_COLORS, FALLBACK_COLOR, getHoverColor } from '../../../../../../core/constants/color.constants';
 
 @Component({
     selector: 'app-tracklist-tag-detail',
@@ -46,7 +49,9 @@ import { TracklistSearchResponseDto } from '../../../../tracklists/tracklist/mod
         TabsModule,
         TracklistTagTypeLabelPipe,
         Tooltip,
-        ChartModule
+        ChartModule,
+        ToggleSwitch,
+        FormsModule
     ],
     providers: [
         DialogService,
@@ -69,6 +74,8 @@ export class TracklistTagDetailComponent implements OnInit{
 
     activeTab: WritableSignal<string> = signal<string>('tracklists')
     paths = TRACKLIST_TAG_PATHS;
+
+    showUnratedTracklists = signal<boolean>(true);
 
     totalTracklists = computed(() => this.state.tagData()?.tracklists?.length || 0);
 
@@ -132,14 +139,17 @@ export class TracklistTagDetailComponent implements OnInit{
             statusCounts[status] = (statusCounts[status] || 0) + 1;
         });
 
-        const colors = ['#3B82F6', '#10B981', '#F59E0B', '#06B6D4', '#EC4899', '#6366F1', '#14B8A6', '#F97316', '#8B5CF6', '#84CC16'];
-        const hoverColors = ['#60A5FA', '#34D399', '#FBBF24', '#22D3EE', '#F472B6', '#818CF8', '#2DD4BF', '#FB923C', '#A78BFA', '#A3E635'];
+        const labels = Object.keys(statusCounts);
+        const data = Object.values(statusCounts);
+
+        const colors = labels.map(label => STATUS_COLORS[label] || FALLBACK_COLOR);
+        const hoverColors = colors.map(color => getHoverColor(color, 20)); // Macht die Farbe 20% heller
 
         return {
-            labels: Object.keys(statusCounts),
+            labels: labels,
             datasets: [
                 {
-                    data: Object.values(statusCounts),
+                    data: data,
                     backgroundColor: colors,
                     hoverBackgroundColor: hoverColors,
                     borderWidth: 0
@@ -150,8 +160,13 @@ export class TracklistTagDetailComponent implements OnInit{
 
     ratingChartData = computed(() => {
         const tracklists = this.state.tagData()?.tracklists || [];
+        const showUnrated = this.showUnratedTracklists();
 
-        if (tracklists.length === 0) {
+        const filteredTracklists = tracklists.filter(t => {
+            return !(!showUnrated && (t.tracklistRating === null || t.tracklistRating === undefined));
+        });
+
+        if (filteredTracklists.length === 0) {
             return {
                 labels: ['Keine Daten'],
                 datasets: [{
@@ -165,7 +180,7 @@ export class TracklistTagDetailComponent implements OnInit{
         }
 
         const ratingCounts: Record<string, number> = {};
-        tracklists.forEach(t => {
+        filteredTracklists.forEach(t => {
             const rating = t.tracklistRating !== null && t.tracklistRating !== undefined ? t.tracklistRating.toString() : 'Keine';
             ratingCounts[rating] = (ratingCounts[rating] || 0) + 1;
         });
@@ -178,8 +193,8 @@ export class TracklistTagDetailComponent implements OnInit{
 
         const data = labels.map(label => ratingCounts[label]);
 
-        const colors = ['#F59E0B', '#10B981', '#3B82F6', '#8B5CF6', '#EC4899', '#06B6D4', '#14B8A6', '#F97316', '#6366F1', '#84CC16', '#94A3B8'];
-        const hoverColors = ['#FBBF24', '#34D399', '#60A5FA', '#A78BFA', '#F472B6', '#22D3EE', '#2DD4BF', '#FB923C', '#818CF8', '#A3E635', '#CBD5E1'];
+        const colors = labels.map(label => RATING_COLORS[label] || FALLBACK_COLOR);
+        const hoverColors = colors.map(color => getHoverColor(color, 20));
 
         return {
             labels: labels,
@@ -224,7 +239,7 @@ export class TracklistTagDetailComponent implements OnInit{
                 tooltip: { enabled: false }
             },
             onHover: (event: any, elements: any[], chart: any) => {
-                if (this.totalTracklists() === 0) {
+            if (chart.data.labels[0] === 'Keine Daten') {
                     this.hoveredRating.set(null);
                     return;
                 }
