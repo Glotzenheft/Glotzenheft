@@ -22,6 +22,7 @@ export enum TracklistTagType {
     FRANCHISE = 'franchise',
     STUDIO = 'studio',
     PERSON = 'person',
+    TRANSLATOR = 'translator',
     PRODUCTION_COMPANY = 'production-company',
     MEDIA_PROVIDER = 'media-provider',
     COUNTRY = 'country',
