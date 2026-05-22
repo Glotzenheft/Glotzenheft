@@ -181,12 +181,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                             <div class="film-page-tag-actions">
                                 <p-button
+                                    icon="pi pi-plus"
+                                    label="Tag erstellen"
+                                    (onClick)="openCreateTagDialog(tracklist)"
+                                    size="small"
+                                    [outlined]="true"
+                                ></p-button>
+
+                                <p-button
                                     icon="pi pi-tags"
                                     label="Tags verknüpfen"
                                     (onClick)="openTagSelectionDialog(tracklist)"
                                     size="small"
                                     [outlined]="true"
                                 ></p-button>
+
                                 @if (tracklist.tags.length > 0) {
                                     <p-button
                                         label="Tags entfernen"

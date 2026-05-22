@@ -249,12 +249,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                             [outlined]="true"
                                                         ></p-button>
 
+                                                        <p-button
+                                                            icon="pi pi-plus"
+                                                            label="Tag erstellen"
+                                                            (onClick)="openCreateTagDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                            size="small"
+                                                            [outlined]="true"
+                                                        ></p-button>
 
                                                         <p-button
                                                             icon="pi pi-tags"
                                                             label="Tags verknüpfen"
                                                             (onClick)="openTagSelectionDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
-                                                            size="small" [outlined]="true"
+                                                            size="small"
+                                                            [outlined]="true"
                                                         ></p-button>
 
                                                         @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
@@ -262,7 +270,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                 label="Tags entfernen"
                                                                 severity="danger"
                                                                 (onClick)="openTagUnlinkDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
-                                                                size="small" [outlined]="true"
+                                                                size="small"
+                                                                [outlined]="true"
                                                             >
                                                                 <ng-template pTemplate="icon">
                                                                     <div style="position: relative; display: inline-flex; margin-right: 0.5rem;">

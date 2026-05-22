@@ -92,6 +92,9 @@ import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { TracklistTagSelectionDialogComponent } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-selection-dialog/tracklist-tag-selection-dialog.component';
 import { TracklistTagUnlinkDialogComponent } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-unlink-dialog/tracklist-tag-unlink-dialog.component';
 import { TracklistTagAssociationService } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/services/tracklist-tag-association.service';
+import {
+    TracklistTagFormDialogComponent
+} from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 
 @Component({
     selector: 'app-season-page',
@@ -694,6 +697,29 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                     },
                     error: () => this.messageService.add(getMessageObject('error', 'Fehler beim Entfernen der Tags'))
                 });
+            }
+        });
+    }
+
+    public openCreateTagDialog(tracklist: any) {
+        if (!tracklist) return;
+        this.dialogRef = this.dialogService.open(TracklistTagFormDialogComponent, {
+            header: 'Neuen Tag erstellen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'hidden' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { prefill: { tracklistId: tracklist.id } }
+        });
+
+        this.dialogRef.onClose.subscribe((newTag: any) => {
+            if (newTag) {
+                this.messageService.add(getMessageObject('success', 'Tag erfolgreich erstellt'));
+                this.refreshPage();
             }
         });
     }
