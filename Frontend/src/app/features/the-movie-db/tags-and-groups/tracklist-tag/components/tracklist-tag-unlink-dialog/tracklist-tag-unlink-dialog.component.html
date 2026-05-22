@@ -1,0 +1,79 @@
+<div class="tracklist-tag-unlink-dialog-container">
+    <div class="tracklist-tag-unlink-dialog-header">
+        <div class="tracklist-tag-unlink-dialog-search-wrapper">
+            <i class="pi pi-search tracklist-tag-unlink-dialog-search-icon"></i>
+            <input
+                type="text"
+                pInputText
+                [formControl]="searchControl"
+                placeholder="Suche nach Tag-Namen..."
+                class="tracklist-tag-unlink-dialog-search-input"
+            />
+        </div>
+    </div>
+
+    <div class="tracklist-tag-unlink-dialog-content">
+        <p-accordion value="selected-items">
+            <p-accordion-panel value="selected-items">
+                <p-accordionheader>Ausgewählte Tags ({{ selectedTags().length }})</p-accordionheader>
+                <p-accordioncontent>
+                    @if (selectedTags().length === 0) {
+                        <div class="tracklist-tag-unlink-dialog-empty-selection">
+                            Noch keine Tags ausgewählt.
+                        </div>
+                    } @else {
+                        <div class="tracklist-tag-unlink-dialog-selected-items">
+                            @for (item of selectedTags(); track item.id) {
+                                <div class="tracklist-tag-unlink-dialog-selected-item">
+                                    <p-tag [value]="item.tagName" [style]="{'background-color': item.color}"></p-tag>
+                                    <p-button icon="pi pi-times" [text]="true" [rounded]="true" severity="secondary"
+                                              (onClick)="removeFromSelection(item.id)"></p-button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </p-accordioncontent>
+            </p-accordion-panel>
+        </p-accordion>
+
+        <p-table
+            [value]="availableTags()"
+            [(selection)]="currentSelection"
+            (selectionChange)="onSelectionChange($event)"
+            dataKey="id"
+            styleClass="p-datatable-sm tracklist-tag-unlink-dialog-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                    <th>Tag</th>
+                    <th>Type</th>
+                    <th>Beschreibung</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tag>
+                <tr>
+                    <td><p-tableCheckbox [value]="tag" /></td>
+                    <td><p-tag [value]="tag.tagName" [style]="{'background-color': tag.color}"></p-tag></td>
+                    <td>{{ (tag.tagType | tracklistTagTypeLabel) || '-' }}</td>
+                    <td>{{ tag.description || '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="3">Keine Tags zum Entfernen gefunden oder alle ausgewählt.</td></tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <div class="tracklist-tag-unlink-dialog-footer">
+        <p-button label="Abbrechen" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Auswahl aufheben" severity="warn" [disabled]="selectedTags().length === 0" (onClick)="selectedTags.set([])"></p-button>
+        <p-button label="Alle auswählen" severity="info" [disabled]="availableTags().length === 0" (onClick)="toggleSelectAll()"></p-button>
+        <p-button
+            label="Verknüpfung aufheben"
+            icon="pi pi-unlink"
+            severity="danger"
+            [disabled]="selectedTags().length === 0"
+            (onClick)="confirm()">
+        </p-button>
+    </div>
+</div>
