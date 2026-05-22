@@ -171,11 +171,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                         <ng-template #content>
                             <div class="movie-tracklist-card-tags-wrapper">
-                                @for (tag of tracklist.tags; track tag.id) {
+                                @for (tag of tracklist.tags || []; track tag.id) {
                                     <p-tag
                                         [value]="tag.tagName"
                                         [style]="{'background-color': tag.color}">
                                     </p-tag>
+                                }
+                            </div>
+
+                            <div class="film-page-tag-actions">
+                                <p-button
+                                    icon="pi pi-tags"
+                                    label="Tags verknüpfen"
+                                    (onClick)="openTagSelectionDialog(tracklist)"
+                                    size="small"
+                                    [outlined]="true"
+                                ></p-button>
+                                @if (tracklist.tags.length > 0) {
+                                    <p-button
+                                        label="Tags entfernen"
+                                        severity="danger"
+                                        (onClick)="openTagUnlinkDialog(tracklist)"
+                                        size="small" [outlined]="true">
+                                        <ng-template pTemplate="icon">
+                                            <div style="position: relative; display: inline-flex; margin-right: 0.5rem;">
+                                                <i class="pi pi-tags"></i>
+                                                <i class="pi pi-times" style="position: absolute; bottom: -0.2rem; right: -0.3rem; font-size: 0.6rem; font-weight: bold;"></i>
+                                            </div>
+                                        </ng-template>
+                                    </p-button>
                                 }
                             </div>
 

@@ -228,41 +228,80 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                         optionLabel="tracklistName"
                                                         formControlName="selectedTracklist"
                                                         placeholder="Trackliste auswählen ..."
-                                                        >
-                                                    </p-select>
-
-                                                    @if (isEditingButtonVisible) {
-                                                        <p-button label="Bearbeiten" (onClick)="setVisibility(2)" icon="pi pi-pencil" />
-                                                    }
+                                                    ></p-select>
                                                 </div>
+
+                                                @if (isEditingButtonVisible) {
+                                                    <div class="season-page-action-bar">
+                                                        <p-button
+                                                            (onClick)="setVisibility(2)"
+                                                            icon="pi pi-pencil"
+                                                            label="Trackliste bearbeiten"
+                                                            size="small"
+                                                            [outlined]="true"
+                                                        ></p-button>
+
+                                                        <p-button
+                                                            icon="pi pi-plus"
+                                                            (onClick)="openTracklistForm(season)"
+                                                            label="Trackliste anlegen"
+                                                            size="small"
+                                                            [outlined]="true"
+                                                        ></p-button>
+
+
+                                                        <p-button
+                                                            icon="pi pi-tags"
+                                                            label="Tags verknüpfen"
+                                                            (onClick)="openTagSelectionDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                            size="small" [outlined]="true"
+                                                        ></p-button>
+
+                                                        @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
+                                                            <p-button
+                                                                label="Tags entfernen"
+                                                                severity="danger"
+                                                                (onClick)="openTagUnlinkDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                                size="small" [outlined]="true"
+                                                            >
+                                                                <ng-template pTemplate="icon">
+                                                                    <div style="position: relative; display: inline-flex; margin-right: 0.5rem;">
+                                                                        <i class="pi pi-tags"></i>
+                                                                        <i class="pi pi-times season-page-tag-unlink-icon"></i>
+                                                                    </div>
+                                                                </ng-template>
+                                                            </p-button>
+                                                        }
+
+                                                        <p-button
+                                                            [icon]="applyEpisodeFilter ? 'pi pi-filter-slash' : 'pi pi-filter'"
+                                                            [label]="applyEpisodeFilter ? 'Alle Episoden anzeigen' : 'Nur Tracklist-Episoden anzeigen'"
+                                                            (onClick)="applyEpisodeFilter = !applyEpisodeFilter"
+                                                            size="small"
+                                                            [outlined]="!applyEpisodeFilter"
+                                                            [severity]="applyEpisodeFilter ? 'info' : 'secondary'"
+                                                            [disabled]="!hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                            [title]="!hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value) ? 'Keine spezifischen Episoden für diese Trackliste definiert' : 'Episodenfilter umschalten'"
+                                                        ></p-button>
+
+                                                    </div>
+                                                }
+                                            } @else {
+                                                <p-button
+                                                    label="Neue Trackliste anlegen"
+                                                    icon="pi pi-plus" (onClick)="openTracklistForm(season)"
+                                                ></p-button>
                                             }
 
                                             @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
                                                 <div
                                                     style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                                    @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value.tags; track tag.id) {
+                                                    @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value?.tags; track tag.id) {
                                                         <p-tag
                                                             [value]="tag.tagName"
-                                                            [style]="{'background-color': tag.color}">
-                                                        </p-tag>
+                                                            [style]="{'background-color': tag.color}"
+                                                        ></p-tag>
                                                     }
-                                                </div>
-                                            }
-
-                                            <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="openTracklistForm(season)" />
-
-                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value
-                                            && hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value)) {
-                                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
-                                                    <p-checkbox
-                                                        [(ngModel)]="applyEpisodeFilter"
-                                                        [binary]="true"
-                                                        inputId="filterSwitch_{{ season.id }}"
-                                                        [ngModelOptions]="{standalone: true}">
-                                                    </p-checkbox>
-                                                    <label for="filterSwitch" style="cursor: pointer; margin: 0; font-weight: bold;">
-                                                        Nur definierte Episoden dieser Trackliste anzeigen
-                                                    </label>
                                                 </div>
                                             }
                                             <app-episode-list

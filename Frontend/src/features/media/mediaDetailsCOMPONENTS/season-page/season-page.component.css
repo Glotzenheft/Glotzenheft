@@ -64,7 +64,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     .seasonWrapper .seasonMeta {
-        height: 70%;
         width: 100%;
         overflow-y: auto;
     }
@@ -75,7 +74,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .seasonWrapper .seasonPoster {
         width: 100%;
-        height: 40%;
         display: flex;
         justify-content: center;
         align-items: center;
@@ -88,10 +86,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .tracklistSelectionDIV {
         width: 100%;
-        height: 10rem;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
+        margin: 0.5rem 0;
     }
 
     .tracklistSelectionDIV div {
@@ -100,6 +98,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .episodes {
         margin-bottom: 6rem;
+    }
+
+    .season-page-action-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 0 0 0.5rem;
+        width: 100%;
+    }
+
+    .season-page-action-bar p-button,
+    .season-page-action-bar ::ng-deep .p-button {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -197,6 +209,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .tracklistSelectionDIV div {
         width: 50%;
     }
+
+    .season-page-action-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0 0 0.5rem;
+    }
 }
 
 .backButtonDIV {
@@ -221,4 +240,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     border-radius: 8px;
     overflow: hidden;
     display: inline-flex; /* Verhindert kleine Abstände unter dem Bild */
+}
+
+.season-page-tag-unlink-icon {
+    position: absolute;
+    bottom: -0.3rem;
+    right: -0.3rem;
+    font-size: 0.8rem;
+    font-weight: bold;
 }
