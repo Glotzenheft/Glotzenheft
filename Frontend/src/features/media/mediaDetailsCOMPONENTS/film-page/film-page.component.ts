@@ -43,7 +43,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Params } from '@angular/router';
+import {ActivatedRoute, Params, RouterLink} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -97,6 +97,7 @@ import { TracklistTagAssociationService } from '../../../../app/features/the-mov
 import {
     TracklistTagFormDialogComponent
 } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
+import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
 
 @Component({
     selector: 'app-film-page',
@@ -122,6 +123,7 @@ import {
         Image,
         NgOptimizedImage,
         DatetimeWithUnitFormattingPipe,
+        RouterLink,
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -175,6 +177,8 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     private readonly dialogService = inject(DialogService);
     private readonly tracklistTagAssociationService = inject(TracklistTagAssociationService);
     private dialogRef: DynamicDialogRef | undefined;
+
+    public readonly TRACKLIST_TAG_URLS = TRACKLIST_TAG_URLS;
 
     constructor(
         private titleService: Title,

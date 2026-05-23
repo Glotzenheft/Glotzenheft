@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import {ActivatedRoute, Params, RouterLink} from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { map, Observable, Subscription } from 'rxjs';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
@@ -95,6 +95,7 @@ import { TracklistTagAssociationService } from '../../../../app/features/the-mov
 import {
     TracklistTagFormDialogComponent
 } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
+import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
 
 @Component({
     selector: 'app-season-page',
@@ -125,6 +126,7 @@ import {
         Tag,
         Image,
         NgOptimizedImage,
+        RouterLink,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -192,6 +194,8 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     private readonly dialogService = inject(DialogService);
     private readonly tracklistTagAssociationService = inject(TracklistTagAssociationService);
     private dialogRef: DynamicDialogRef | undefined;
+
+    public readonly TRACKLIST_TAG_URLS = TRACKLIST_TAG_URLS;
 
     constructor(
         private titleService: Title,

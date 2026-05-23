@@ -86,4 +86,6 @@ export const TRACKLIST_TAG_URLS = {
     overview: `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}`,
     detail: (tagId: number | string) =>
         `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}/${tagId}`,
+    detailTracklist: (tagId: number | string) =>
+        `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}/${tagId}/${TRACKLIST_TAG_PATHS.tracklists}`,
 } as const;

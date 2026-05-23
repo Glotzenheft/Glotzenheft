@@ -296,10 +296,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                     </div>
                                                 }
                                             } @else {
-                                                <p-button
-                                                    label="Neue Trackliste anlegen"
-                                                    icon="pi pi-plus" (onClick)="openTracklistForm(season)"
-                                                ></p-button>
+                                                <div class="season-page-action-bar" style="margin: 0.5rem 0">
+                                                    <p-button
+                                                        icon="pi pi-plus"
+                                                        (onClick)="openTracklistForm(season)"
+                                                        label="Trackliste anlegen"
+                                                        size="small"
+                                                        [outlined]="true"
+                                                    ></p-button>
+                                                </div>
                                             }
 
                                             @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
@@ -308,7 +313,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                     @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value?.tags; track tag.id) {
                                                         <p-tag
                                                             [value]="tag.tagName"
-                                                            [style]="{'background-color': tag.color}"
+                                                            [style]="{'background-color': tag.color, 'cursor': 'pointer'}"
+                                                            [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
                                                         ></p-tag>
                                                     }
                                                 </div>
