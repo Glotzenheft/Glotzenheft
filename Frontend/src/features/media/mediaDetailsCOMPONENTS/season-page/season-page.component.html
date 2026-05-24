@@ -308,8 +308,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                             }
 
                                             @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
-                                                <div
-                                                    style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
+                                                <div class="season-page-tracklist-tag-area">
                                                     @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value?.tags; track tag.id) {
                                                         <p-tag
                                                             [value]="tag.tagName"
