@@ -79,7 +79,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 <tr>
                     <td><p-tableCheckbox [value]="tag" /></td>
                     <td><p-tag [value]="tag.tagName" [style]="{'background-color': tag.color}"></p-tag></td>
-                    <td>{{ (tag.tagType | tracklistTagTypeLabel) || '-' }}</td>
+                    <td>{{ (tag.tracklistTagType | tracklistTagTypeLabel) || '-' }}</td>
                     <td>{{ tag.description || '-' }}</td>
                 </tr>
             </ng-template>
