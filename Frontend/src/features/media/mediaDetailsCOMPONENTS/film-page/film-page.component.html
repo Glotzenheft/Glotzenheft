@@ -80,7 +80,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                 appendTo="body"
                                 loading="lazy"
                             >
-                                <ng-template #image>
+                                <ng-template pTemplate="image">
                                     <img
                                         [ngSrc]="POSTER_PATH + filmData.media.posterPath"
                                         (load)="isThumbnailLoading = false"
@@ -159,17 +159,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <p-card
                         styleClass="movie-tracklist-card"
                     >
-                        <ng-template #title>
+                        <ng-template pTemplate="title">
                             <div class="movie-tracklist-card-title" [title]="tracklist.tracklistName">
                                 {{ tracklist.tracklistName }}
                             </div>
                         </ng-template>
 
-                        <ng-template #subtitle>
+                        <ng-template pTemplate="subtitle">
                             {{ convertStatus(tracklist.status) }}
                         </ng-template>
 
-                        <ng-template #content>
+                        <ng-template pTemplate="content">
                             <div class="movie-tracklist-card-tags-wrapper">
                                 @for (tag of tracklist.tags || []; track tag.id) {
                                     <p-tag
@@ -232,7 +232,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             </span>
                         </ng-template>
 
-                        <ng-template #footer>
+                        <ng-template pTemplate="footer">
                             <div class="movie-tracklist-card-footer-wrapper">
                                 <div class="movie-tracklist-card-rating-wrapper">
                                     <p-rating
