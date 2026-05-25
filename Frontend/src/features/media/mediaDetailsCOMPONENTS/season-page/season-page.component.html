@@ -57,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <div class="headingDIV">
                 <h1>{{ seasonData.media.name }}</h1>
             </div>
-            <div class="seasonMeta">
+            <div class="season-page-media-meta">
                 <div class="seasonPictureWrapper">
                     @if (seasonData.media.posterPath && !imageError) {
                         @if (isThumbnailLoading) {
@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             appendTo="body"
                             loading="lazy"
                         >
-                            <ng-template #image>
+                            <ng-template pTemplate="image">
                                 <img
                                     [ngSrc]="POSTER_PATH + seasonData.media.posterPath"
                                     (load)="isThumbnailLoading = false"
@@ -98,7 +98,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     }
                 </div>
-                <div class="seasonMetaContent">
+                <div class="seasonMetaContent season-page-media-content-area">
                     <div>
                         <h2>Beschreibung</h2>
                         @if (seasonData.media.description) {
@@ -156,8 +156,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                         >
                                         <p-accordion-header>{{ season.name }}</p-accordion-header>
                                         <p-accordion-content>
-                                            <div class="seasonWrapper">
-                                                <div class="seasonPoster">
+                                            <div class="season-page-information-area">
+                                                <div class="season-page-season-poster">
                                                     @if (season.posterPath && !imageError) {
                                                         @if (isThumbnailLoading) {
                                                             <p-progressSpinner
@@ -175,7 +175,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                             appendTo="body"
                                                             loading="lazy"
                                                         >
-                                                            <ng-template #image>
+                                                            <ng-template pTemplate="image">
                                                                 <img
                                                                     [ngSrc]="POSTER_PATH + season.posterPath"
                                                                     (load)="isThumbnailLoading = false"
@@ -197,25 +197,117 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                         </div>
                                                     }
                                                 </div>
-                                                <div class="seasonMeta">
+                                                <div class="season-page-season-meta">
                                                     <div>
-                                                        @if (season.overview) {
-                                                            <p class="descriptionP">
-                                                                Beschreibung: <br />
-                                                                {{ season.overview }}
-                                                            </p>
-                                                        }
-                                                        @else {
-                                                            <p>Beschreibung: <i>keine Beschreibung vorhanden</i></p>
-                                                        }
+                                                        <div class="season-page-season-information-area">
+                                                            <span class="season-page-description">
+                                                                <span class="season-page-info-label">Beschreibung:</span>
+                                                                <span class="season-page-info-value"> {{ season.overview ? season.overview : 'keine Beschreibung vorhanden'}}</span>
+                                                            </span>
 
-                                                        @if (season.airDate) {
-                                                            <p>Erstausstrahlung: {{ season.airDate | dateFormatting }}</p>
-                                                        }
-                                                        @else {
-                                                            <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
-                                                        }
-                                                        <p>ID: {{season.id}}</p>
+                                                            <div>
+                                                                <span class="season-page-info-label">Erstausstrahlung:</span>
+                                                                <span> {{ season.airDate ? (season.airDate | dateFormatting) : 'kein Erstausstrahlungsdatum vorhanden'}}</span>
+                                                            </div>
+
+                                                            <div>
+                                                                <span class="season-page-info-label">Staffel Id:</span>
+                                                                <span> {{ season.id }}</span>
+                                                            </div>
+                                                        </div>
+
+                                                        <div class="season-page-tracklist-information-area">
+                                                            <h3>Tracklisten-Details</h3>
+                                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value; as selectedTracklist) {
+                                                                <div>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Startdatum:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.startDate ? (selectedTracklist.startDate | dateFormatting) : '-' }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Bewertung:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.rating != null ? selectedTracklist.rating + ' / 10' : '-' }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Sprache:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.language ? (selectedTracklist.language | languageName) : '-'}}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Erste Episode:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.startEpisodeNumber ? selectedTracklist.tracklistSeason.startEpisodeNumber : '-'}}</span>
+                                                                    </span>
+                                                                </div>
+                                                                <div>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Enddatum:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.finishDate ? (selectedTracklist.finishDate | dateFormatting) : '-' }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Status:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.status ? getGermanTracklistStatus(selectedTracklist.status) : '-' }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Untertitel:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.subtitle ? (selectedTracklist.subtitle | languageName) : '-'}}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Letzte Episode:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.endEpisodeNumber ? selectedTracklist.tracklistSeason.endEpisodeNumber : '-'}}</span>
+                                                                    </span>
+                                                                </div>
+                                                                <div>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Erstelldatum:</span>
+                                                                        <span class="season-page-info-value"
+                                                                              [pTooltip]="selectedTracklist.createdAt | dateTimeWithUnitFormatting"
+                                                                              tooltipPosition="top"
+                                                                              style="cursor: help;"
+                                                                        >
+                                                                            {{ selectedTracklist.createdAt | dateFormatting }}
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Erneut glotzen?:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.isRewatching ? 'Ja' : 'Nein'}}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Tracklist Id:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.id }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Staffelnummer:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.customSeasonNumber ? selectedTracklist.tracklistSeason.customSeasonNumber : '-' }}</span>
+                                                                    </span>
+                                                                </div>
+                                                                <div>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Zuletzt geändert:</span>
+                                                                        <span class="season-page-info-value"
+                                                                              [pTooltip]="selectedTracklist.updatedAt ? (selectedTracklist.updatedAt | dateTimeWithUnitFormatting) : '-'"
+                                                                              [tooltipDisabled]="!selectedTracklist.updatedAt"
+                                                                              tooltipPosition="top"
+                                                                              style="cursor: help;"
+                                                                        >
+                                                                            {{ selectedTracklist.updatedAt ? (selectedTracklist.updatedAt | dateFormatting) : '-'}}
+                                                                        </span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Custom AirDate:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.customAirDate ? (selectedTracklist.customAirDate | dateFormatting) : '-' }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Eigenes Poster?:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.customPosterPath ? 'Ja' : 'Nein' }}</span>
+                                                                    </span>
+                                                                    <span class="season-page-info-item">
+                                                                        <span class="season-page-info-label">Part:</span>
+                                                                        <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.customPartNumber ? selectedTracklist.tracklistSeason.customPartNumber : '-' }}</span>
+                                                                    </span>
+                                                                </div>
+                                                            } @else {
+                                                                <p style="color: #666;"><i>Aktuell ist keine Trackliste für diese Staffel ausgewählt oder angelegt.</i></p>
+                                                            }
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>

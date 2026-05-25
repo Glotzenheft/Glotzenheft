@@ -39,6 +39,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
+import { DatetimeWithUnitFormattingPipe } from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 import { EpisodeListComponent } from '../../episodesCOMPONENTS/episode-list/episode-list.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
@@ -96,6 +97,8 @@ import {
     TracklistTagFormDialogComponent
 } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
+import { LanguageNamePipe } from '../../../../app/shared/pipes/language-name/language-name.pipe';
+import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
 
 @Component({
     selector: 'app-season-page',
@@ -108,6 +111,7 @@ import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants'
         FormsModule,
         ButtonModule,
         DateFormattingPipe,
+        DatetimeWithUnitFormattingPipe,
         FloatLabelModule,
         InputTextModule,
         MessageModule,
@@ -127,6 +131,7 @@ import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants'
         Image,
         NgOptimizedImage,
         RouterLink,
+        LanguageNamePipe,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -771,5 +776,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             }
             return isValid;
         });
+    };
+
+    public getGermanTracklistStatus = (status: string): string => {
+        return convertTracklistStatusIntoGerman(status);
     };
 }
