@@ -45,12 +45,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     color: white;
 }
 
-.episodeDIV div {
-    width: 100%;
+.episode-title-container {
+    flex: 1;
+    min-width: 0;
+    margin-right: 0.25rem;
 }
 
-.episodeDIV p {
+.episodeDIV p,
+.episodeInTracklistDIV p {
     font-weight: bolder;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin: 0;
 }
 
 :host ::ng-deep .episode-details-dialog {
@@ -69,14 +76,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .episodeInTracklistDIV {
     background: rgba(5, 150, 105, 0.9);
     color: white;
-}
-
-.episodeInTracklistDIV div {
-    width: 100%;
-}
-
-.episodeInTracklistDIV p {
-    font-weight: bolder;
 }
 
 .episodePosterDIV {
