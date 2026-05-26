@@ -31,157 +31,196 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 @if (!isLoading && !serverNotAvailablePage) {
     @if (visibilityStatus === 0) {
-        <div class="filmDetailsWrapper">
+        @if (hasError) {
+            <div>
+                <p-panel header="Fehler beim Laden der Seite" class="error">
+                    <p>
+                        Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
+                        versuchen Sie es erneut durch ein erneutes Laden der Seite.
+                    </p>
+                </p-panel>
+            </div>
+        }
 
-            @if (hasError) {
-                <div>
-                    <p-panel header="Fehler beim Laden der Seite" class="error">
-                        <p>
-                            Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
-                            versuchen Sie es erneut durch ein erneutes Laden der Seite.
-                        </p>
-                    </p-panel>
+        @if (isInvalidID) {
+            <div>
+                <p-panel header="Fehler beim Laden der Seite" class="error">
+                    <p>
+                        Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
+                        erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
+                        dieser Seite.
+                    </p>
+                </p-panel>
+            </div>
+        }
+
+        <div *ngIf="filmData$ | async as filmData">
+            <div class="film-page-heading-div">
+                <h1>{{ filmData.media.name }}</h1>
+            </div>
+
+            <div class="film-page-media-meta">
+                <div class="film-page-media-poster">
+                    @if (filmData.media.posterPath && !imageError) {
+                        @if (isThumbnailLoading) {
+                            <p-progressSpinner
+                                styleClass="w-4rem h-4rem"
+                                strokeWidth="4"
+                                fill="transparent"
+                                animationDuration=".5s" />
+                        }
+
+                        <p-image
+                            [src]="POSTER_PATH + filmData.media.posterPath"
+                            [previewImageSrc]="originalPosterPath + filmData.media.posterPath"
+                            [alt]="'Poster für den Film' + filmData.media.name"
+                            [preview]="true"
+                            appendTo="body"
+                            loading="lazy"
+                        >
+                            <ng-template pTemplate="image">
+                                <img
+                                    [ngSrc]="POSTER_PATH + filmData.media.posterPath"
+                                    (load)="isThumbnailLoading = false"
+                                    (error)="handleImageError()"
+                                    [alt]="'Poster für den Film ' + filmData.media.name"
+                                    width="200"
+                                    height="300"
+                                    class="episode-dialog-img"
+                                    style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                />
+                            </ng-template>
+
+                        </p-image>
+                    }
+                    @else {
+                        <div class="image-error-fallback2">
+                            <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                            <p>Kein Poster für den Film "{{ filmData.media.name }}" vorhanden.</p>
+                        </div>
+                    }
                 </div>
-            }
-
-            @if (isInvalidID) {
-                <div>
-                    <p-panel header="Fehler beim Laden der Seite" class="error">
-                        <p>
-                            Die eingegebene ID in der URL ist ungültig. Bitte versuchen Sie es
-                            erneut durch ein Zurückgehen zur letzten Seite und ein erneutes Laden
-                            dieser Seite.
-                        </p>
-                    </p-panel>
-                </div>
-            }
-
-            <div *ngIf="filmData$ | async as filmData">
-                <div class="headingDIV">
-                    <h1>{{ filmData.media.name }}</h1>
-                </div>
-
-                <div class="seasonMeta">
-                    <div class="seasonPictureWrapper">
-                        @if (filmData.media.posterPath && !imageError) {
-                            @if (isThumbnailLoading) {
-                                <p-progressSpinner
-                                    styleClass="w-4rem h-4rem"
-                                    strokeWidth="4"
-                                    fill="transparent"
-                                    animationDuration=".5s" />
-                            }
-
-                            <p-image
-                                [src]="POSTER_PATH + filmData.media.posterPath"
-                                [previewImageSrc]="originalPosterPath + filmData.media.posterPath"
-                                [alt]="'Poster für den Film' + filmData.media.name"
-                                [preview]="true"
-                                appendTo="body"
-                                loading="lazy"
-                            >
-                                <ng-template pTemplate="image">
-                                    <img
-                                        [ngSrc]="POSTER_PATH + filmData.media.posterPath"
-                                        (load)="isThumbnailLoading = false"
-                                        (error)="handleImageError()"
-                                        [alt]="'Poster für den Film ' + filmData.media.name"
-                                        width="200"
-                                        height="300"
-                                        class="episode-dialog-img"
-                                        style="object-fit: cover; border-radius: 8px; cursor: pointer;"
-                                    />
-                                </ng-template>
-
-                            </p-image>
+                <div class="film-page-media-content-area">
+                    <div>
+                        <h2>Beschreibung</h2>
+                        @if (filmData.media.description) {
+                            <p class="film-page-description-area">{{ filmData.media.description }}</p>
                         }
                         @else {
-                            <div class="image-error-fallback2">
-                                <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
-                                <p>Kein Poster für den Film "{{ filmData.media.name }}" vorhanden.</p>
-                            </div>
+                            <p class="film-page-description-area"><i>keine Beschreibung vorhanden</i></p>
                         }
-                    </div>
-                    <div class="seasonMetaContent">
-                        <div>
-                            <h2>Beschreibung</h2>
-                            @if (filmData.media.description) {
-                                <p class="descriptionP">{{ filmData.media.description }}</p>
-                            }
-                            @else {
-                                <p class="descriptionP"><i>keine Beschreibung vorhanden</i></p>
-                            }
 
-                            <a [href]="TMDB_ROUTE + filmData.media.tmdbId"
+                        <a [href]="TMDB_ROUTE + filmData.media.tmdbId"
+                           target="_blank"
+                           rel="noopener noreferrer"
+                           class="film-page-external-link"
+                        >
+                            <i class="pi pi-link p-mr-3"></i>
+                            TMDB
+                        </a>
+
+                        @if (filmData.media.imdbId) {
+                            <br>
+                            <a [href]="'https://www.imdb.com/de/title/' + filmData.media.imdbId"
                                target="_blank"
                                rel="noopener noreferrer"
-                               class="linkA"
+                               class="film-page-external-link"
                             >
                                 <i class="pi pi-link p-mr-3"></i>
-                                TMDB
+                                IMDB
                             </a>
+                        }
 
-                            @if (filmData.media.imdbId) {
-                                <br>
-                                <a [href]="'https://www.imdb.com/de/title/' + filmData.media.imdbId"
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                   class="linkA"
-                                >
-                                    <i class="pi pi-link p-mr-3"></i>
-                                    IMDB
-                                </a>
-                            }
+                        <p class="film-page-meta-paragraph">
+                            <span>
+                                @if (filmData.media.firstAirDate) {
+                                    Erstausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}
+                                } @else {
+                                    <i>kein Erstausstrahlungsdatum vorhanden</i>
+                                }
+                            </span>
 
-                            @if (filmData.media.firstAirDate) {
-                                <p>Erstausstrahlung am {{ filmData.media.firstAirDate | dateFormatting }}</p>
-                            } @else {
-                                <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
-                            }
+                            <strong class="film-page-dash">-</strong>
 
-                            @if (filmData.media.runtime) {
-                                <p>Filmlaufzeit: {{ filmData.media.runtime }} Minuten</p>
-                            } @else {
-                                <p><i>keine Filmlaufzeit vorhanden</i></p>
-                            }
-                </div>
+                            <span>
+                                @if (filmData.media.runtime) {
+                                    Filmlaufzeit: {{ filmData.media.runtime }} Minuten
+                                } @else {
+                                    <i>keine Filmlaufzeit vorhanden</i>
+                                }
+                            </span>
+                        </p>
             </div>
         </div>
+    </div>
 
-        <app-media-tabs [inpTabList]="tabsList" (outChangeTab)="onChangeTab($event)" />
+    <app-media-tabs [inpTabList]="tabsList" (outChangeTab)="onChangeTab($event)" />
 
-        @if (currentTab === tabsList[0]) {
-            <div class="backButtonDIV">
-                <p-button label="Neue Trackliste erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
-            </div>
-            <div class="movie-tracklist-wrapper">
-                @for (tracklist of filmData.tracklists; track $index) {
-                    <p-card
-                        styleClass="movie-tracklist-card"
-                    >
-                        <ng-template pTemplate="title">
-                            <div class="movie-tracklist-card-title" [title]="tracklist.tracklistName">
-                                {{ tracklist.tracklistName }}
-                            </div>
-                        </ng-template>
+    @if (currentTab === tabsList[0]) {
+        <div class="movie-tracklist-wrapper">
+            @for (tracklist of filmData.tracklists; track $index) {
+                <p-card styleClass="movie-tracklist-card">
+                    <ng-template pTemplate="title">
+                        <div class="movie-tracklist-card-title" [title]="tracklist.tracklistName">
+                            {{ tracklist.tracklistName }}
+                        </div>
+                    </ng-template>
 
-                        <ng-template pTemplate="subtitle">
-                            {{ convertStatus(tracklist.status) }}
-                        </ng-template>
+                    <ng-template pTemplate="subtitle">
+                        {{ convertStatus(tracklist.status) }}
+                    </ng-template>
 
-                        <ng-template pTemplate="content">
-                            <div class="movie-tracklist-card-tags-wrapper">
-                                @for (tag of tracklist.tags || []; track tag.id) {
-                                    <p-tag
-                                        [value]="tag.tagName"
-                                        [style]="{'background-color': tag.color, 'cursor': 'pointer'}"
-                                        [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
-                                    >
-                                    </p-tag>
+                    <ng-template pTemplate="content">
+                        <div class="movie-tracklist-card-tags-wrapper">
+                            @for (tag of tracklist.tags || []; track tag.id) {
+                                <p-tag
+                                    [value]="tag.tagName"
+                                    [style]="{'background-color': tag.color, 'cursor': 'pointer'}"
+                                    [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
+                                >
+                                </p-tag>
+                            }
+                        </div>
+                        <span>
+                            Start:
+                            @if (tracklist.startDate) {
+                                {{ tracklist.startDate | dateTimeWithUnitFormatting }}
+                            } @else {
+                                <i>-</i>
+                            }
+                        </span>
+                        <span>
+                            Ende:
+                            @if (tracklist.finishDate) {
+                                {{ tracklist.finishDate | dateTimeWithUnitFormatting }}
+                            } @else {
+                                <i>-</i>
+                            }
+                        </span>
+                    </ng-template>
+
+                    <ng-template pTemplate="footer">
+                        <div class="movie-tracklist-card-footer-wrapper">
+                            <div class="movie-tracklist-card-rating-wrapper">
+                                <p-rating
+                                    [ngModel]="tracklist.rating"
+                                    [readonly]="true"
+                                    [stars]="10"
+                                ></p-rating>
+                                @if (tracklist.rating) {
+                                    {{ tracklist.rating + ' / 10'}}
                                 }
                             </div>
 
                             <div class="film-page-tag-actions">
+                                <p-button
+                                    label="Trackliste bearbeiten"
+                                    icon="pi pi-pencil"
+                                    (onClick)="setSelectedTracklist(tracklist)"
+                                    size="small"
+                                    [outlined]="true"
+                                ></p-button>
+
                                 <p-button
                                     icon="pi pi-plus"
                                     label="Tag erstellen"
@@ -198,77 +237,39 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                     [outlined]="true"
                                 ></p-button>
 
-                                @if (tracklist.tags.length > 0) {
-                                    <p-button
-                                        label="Tags entfernen"
-                                        severity="danger"
-                                        (onClick)="openTagUnlinkDialog(tracklist)"
-                                        size="small" [outlined]="true">
-                                        <ng-template pTemplate="icon">
-                                            <div style="position: relative; display: inline-flex; margin-right: 0.5rem;">
-                                                <i class="pi pi-tags"></i>
-                                                <i class="pi pi-times" style="position: absolute; bottom: -0.2rem; right: -0.3rem; font-size: 0.6rem; font-weight: bold;"></i>
-                                            </div>
-                                        </ng-template>
-                                    </p-button>
-                                }
-                            </div>
-
-                            <span>
-                                Start:
-                                @if (tracklist.startDate) {
-                                    {{ tracklist.startDate | dateTimeWithUnitFormatting }}
-                                } @else {
-                                    <i>-</i>
-                                }
-                            </span>
-                            <span>
-                                Ende:
-                                @if (tracklist.finishDate) {
-                                    {{ tracklist.finishDate | dateTimeWithUnitFormatting }}
-                                } @else {
-                                    <i>-</i>
-                                }
-                            </span>
-                        </ng-template>
-
-                        <ng-template pTemplate="footer">
-                            <div class="movie-tracklist-card-footer-wrapper">
-                                <div class="movie-tracklist-card-rating-wrapper">
-                                    <p-rating
-                                        [ngModel]="tracklist.rating"
-                                        [readonly]="true"
-                                        [stars]="10"
-                                    >
-                                    </p-rating>
-                                    @if (tracklist.rating) {
-                                        {{ tracklist.rating + ' / 10'}}
-                                    }
-                                </div>
-
                                 <p-button
-                                    label="Trackliste bearbeiten"
-                                    icon="pi pi-pencil"
-                                    (onClick)="setSelectedTracklist(tracklist)"
-                                />
+                                    label="Tags entfernen"
+                                    severity="danger"
+                                    (onClick)="openTagUnlinkDialog(tracklist)"
+                                    size="small"
+                                    [outlined]="true"
+                                    [disabled]="tracklist.tags.length === 0"
+                                >
+                                    <ng-template pTemplate="icon">
+                                        <div style="position: relative; display: inline-flex; margin-right: 0.5rem;">
+                                            <i class="pi pi-tags"></i>
+                                            <i class="pi pi-times film-page-tag-unlink-icon"></i>
+                                        </div>
+                                    </ng-template>
+                                </p-button>
                             </div>
+                        </div>
+                    </ng-template>
+                </p-card>
+            }
+            <p-card styleClass="movie-tracklist-card">
+                <p-button class="film-page-empty-tracklist-card" label="Neue Trackliste erstellen" icon="pi pi-plus" (onClick)="setVisibilityStatus(1)" />
+            </p-card>
 
-                        </ng-template>
-                    </p-card>
-                }
-            </div>
-        } @else if (currentTab === tabsList[1]) {
-            <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
-                [inpTmdbId]="filmData.media.tmdbId" (outSetRecommendations)="setAPIRecommendations($event)" />
-        }
-        @else {
-            <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
-        }
-
-
-    </div>
+        </div>
+    } @else if (currentTab === tabsList[1]) {
+        <app-api-recommendation [inpIsMovie]="true" [inpRecommendations]="apiRecommendations"
+            [inpTmdbId]="filmData.media.tmdbId" (outSetRecommendations)="setAPIRecommendations($event)" />
+    }
+    @else {
+        <app-media-metadata [inpIsMovie]="true" [inpFilmData]="filmData" [inpSeasonData]="null" />
+    }
 </div>
-
 }
 
     <ng-container *ngIf="visibilityStatus === 1 && (filmData$ | async) as filmData">
