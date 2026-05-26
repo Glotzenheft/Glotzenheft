@@ -651,7 +651,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             modal: true,
             width: '60vw',
             closable: true,
-            contentStyle: { overflow: 'hidden' },
+            contentStyle: { overflow: 'auto' },
             breakpoints: {
                 '1200px': '75vw',
                 '960px': '90vw'
@@ -684,7 +684,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             modal: true,
             width: '60vw',
             closable: true,
-            contentStyle: { overflow: 'hidden' },
+            contentStyle: { overflow: 'auto' },
             breakpoints: {
                 '1200px': '75vw',
                 '960px': '90vw'
@@ -717,7 +717,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             modal: true,
             width: '60vw',
             closable: true,
-            contentStyle: { overflow: 'hidden' },
+            contentStyle: { overflow: 'auto' },
             breakpoints: {
                 '1200px': '75vw',
                 '960px': '90vw'
@@ -740,14 +740,13 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     public applyEpisodeFilter: boolean = true;
 
-    // NEU: Prüft, ob die Trackliste überhaupt Grenzen (Start/Ende) definiert hat
+
     public hasCustomEpisodeBoundaries = (tracklist: SeasonTracklist | null): boolean => {
         if (!tracklist || !tracklist.tracklistSeason) return false;
         return tracklist.tracklistSeason.startEpisodeNumber !== null ||
             tracklist.tracklistSeason.endEpisodeNumber !== null;
     };
 
-    // NEU: Filtert die Episoden basierend auf dem Schalter und den eingestellten Grenzen
     public getFilteredEpisodes = (
         episodes: SeasonEpisode[],
         tracklist: SeasonTracklist | null

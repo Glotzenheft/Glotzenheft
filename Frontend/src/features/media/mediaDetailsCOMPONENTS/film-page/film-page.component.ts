@@ -491,7 +491,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             modal: true,
             width: '60vw',
             closable: true,
-            contentStyle: { overflow: 'hidden' },
+            contentStyle: { overflow: 'auto' },
             breakpoints: {
                 '1200px': '75vw',
                 '960px': '90vw'
@@ -525,7 +525,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             modal: true,
             width: '60vw',
             closable: true,
-            contentStyle: { overflow: 'hidden' },
+            contentStyle: { overflow: 'auto' },
             breakpoints: {
                 '1200px': '75vw',
                 '960px': '90vw'
@@ -558,7 +558,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             modal: true,
             width: '60vw',
             closable: true,
-            contentStyle: { overflow: 'hidden' },
+            contentStyle: { overflow: 'auto' },
             breakpoints: {
                 '1200px': '75vw',
                 '960px': '90vw'
