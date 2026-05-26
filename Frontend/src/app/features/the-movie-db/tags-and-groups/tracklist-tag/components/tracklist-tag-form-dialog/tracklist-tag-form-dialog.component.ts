@@ -94,8 +94,7 @@ export class TracklistTagFormDialogComponent implements OnInit{
                     is_spoiler: tag.isSpoiler,
                     is_adult: tag.isAdult,
                     icon: tag.icon,
-                    // PrimeNG ColorPicker braucht den Hex-Code oft OHNE '#', also entfernen wir es fürs Formular falls vorhanden
-                    color: tag.color ? tag.color.replace('#', '') : null
+                    color: tag.color ? tag.color : null
                 });
             }
 
