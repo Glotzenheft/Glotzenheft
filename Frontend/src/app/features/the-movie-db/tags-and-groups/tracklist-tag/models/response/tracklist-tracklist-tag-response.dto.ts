@@ -26,9 +26,21 @@ export interface TracklistTracklistTagResponseDto {
     mediaPosterPath: string;
     mediaFirstAirDate: string | null;
     mediaType: MediaType;
+    mediaSeasonNumber: number | null;
+    mediaSeasonAirDate: string | null;
+    mediaSeasonEpisodeCount: string | null;
+    mediaSeasonPosterPath: string | null;
     tracklistStatus: string;
     tracklistRating: number | null;
     tracklistCustomAirDate: string | null;
     tracklistStartDateTime: string | null;
     tracklistFinishDateTime: string | null;
+    tracklistCustomPosterPath: string | null;
+    tracklistLanguage: string | null;
+    tracklistSubtitle: string | null;
+    tracklistSeasonCustomSeasonNumber: number | null;
+    tracklistSeasonCustomPartNumber: number | null;
+    tracklistSeasonFirstEpisodeNumber: number | null;
+    tracklistSeasonLastEpisodeNumber: number | null;
+    watchedEpisodes: number | null;
 }
