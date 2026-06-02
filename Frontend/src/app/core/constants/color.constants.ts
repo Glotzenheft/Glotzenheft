@@ -15,6 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import {TracklistStatusEnum} from '../../features/the-movie-db/tracklists/tracklist/models/enums/tracklist-status.enum';
+
 export const RATING_COLORS_PQ: Record<string, string> = {
     '10': '#0D6AC2',
     '9': '#5861A3',
@@ -50,6 +52,15 @@ export const STATUS_COLORS: Record<string, string> = {
     'Pausiert': '#e7b715',
     'Geplant': '#8f8f8f',
     'Übersprungen': '#8B5CF6',
+};
+
+export const TRACKLIST_STATUS_COLORS: Record<TracklistStatusEnum, string> = {
+    [TracklistStatusEnum.WATCHING]: '#2db039',
+    [TracklistStatusEnum.COMPLETED]: '#26448f',
+    [TracklistStatusEnum.DROPPED]: '#a12f31',
+    [TracklistStatusEnum.PAUSING]: '#e7b715',
+    [TracklistStatusEnum.PLAN_TO_WATCH]: '#8f8f8f',
+    [TracklistStatusEnum.SKIPPING]: '#8B5CF6',
 };
 
 export const FALLBACK_COLOR = '#000000';
