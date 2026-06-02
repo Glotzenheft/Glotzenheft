@@ -49,7 +49,7 @@ class TracklistTagRepository extends ServiceEntityRepository
             ->addSelect('tracklistSeason')
             ->leftJoin('tracklists.tracklistSeason', 'tracklistSeason')
 
-            ->addSelect('partial media.{id, originalName, name, posterPath, type, firstAirDate}')
+            ->addSelect('media')
             ->leftJoin('tracklists.media', 'media')
 
             ->addSelect('season')

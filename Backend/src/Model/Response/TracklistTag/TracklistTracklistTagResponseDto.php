@@ -52,6 +52,7 @@ readonly class TracklistTracklistTagResponseDto
         public ?string $mediaSeasonAirDate,
         public ?int $mediaSeasonEpisodeCount,
         public ?string $mediaSeasonPosterPath,
+        public ?int $mediaRunTime,
         public ?int $watchedEpisodes,
     ) {}
 
@@ -94,6 +95,7 @@ readonly class TracklistTracklistTagResponseDto
             mediaSeasonAirDate: $mediaSeason?->getAirDate()?->format('Y-m-d'),
             mediaSeasonEpisodeCount: $mediaSeason?->getEpisodeCount(),
             mediaSeasonPosterPath: $mediaSeason?->getPosterPath(),
+            mediaRunTime: $media->getRuntime(),
             watchedEpisodes: $watchedEpisodes,
         );
     }

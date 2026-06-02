@@ -30,6 +30,7 @@ export interface TracklistTracklistTagResponseDto {
     mediaSeasonAirDate: string | null;
     mediaSeasonEpisodeCount: string | null;
     mediaSeasonPosterPath: string | null;
+    mediaRunTime: number | null;
     tracklistStatus: string;
     tracklistRating: number | null;
     tracklistCustomAirDate: string | null;
