@@ -15,3 +15,212 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+.tracklist-tag-detail-tracklists-tab-wrapper {
+    container-type: inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.tracklist-tag-detail-tracklist-card {
+    display: inline-block;
+    padding: 0 1rem 1rem 0;
+    position: relative;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 16.6666666667%;
+    font-size: 14px;
+    text-align: center;
+}
+
+::ng-deep .tracklist-tag-detail-tracklist-card .p-card-body {
+    padding: 0;
+    gap: 0;
+}
+
+::ng-deep .tracklist-tag-detail-tracklist-card .p-card {
+    overflow: hidden;
+}
+
+.tracklist-tag-detail-tracklist-card-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(253, 253, 253, 0.1);
+}
+
+::ng-deep .tracklist-tag-detail-tracklist-card-poster-container button{
+    border-radius: 0 0 0 12px;
+}
+.tracklist-tag-detail-tracklist-card-poster-container img {
+    width: 176px;
+    height: 250px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 0 0 0 12px;
+}
+
+.tracklist-tag-detail-tracklist-card-title {
+    z-index: 1;
+    position: relative;
+    font-size: 1.2rem;
+    line-height: 1.1;
+    min-height: 1.2em;
+    margin: 0 0.5rem;
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    white-space: initial
+}
+
+.tracklist-tag-detail-tracklist-card-title a {
+    margin: 0 auto;
+    color: var(--link--color);
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.tracklist-tag-detail-tracklist-card-title:hover {
+    text-overflow: initial;
+    white-space: normal;
+}
+
+.tracklist-tag-detail-tracklist-info-item {
+    padding: 0 0.75rem;
+    border-top: 1px solid rgba(253, 253, 253, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.tracklist-tag-detail-tracklist-info-label {
+    text-align: left;
+    opacity: 0.7;
+    flex: 1;
+}
+
+.tracklist-tag-detail-tracklist-info-value {
+    text-align: right;
+    font-weight: 500;
+    flex: 1;
+}
+
+.tracklist-tag-detail-tracklist-info-half {
+    flex: 0 0 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.tracklist-tag-detail-tracklist-card-rating-wrapper {
+    transition: opacity .15s linear;
+    left: 0;
+    position: absolute;
+    font-size: 0.95em;
+    color: #fff;
+    z-index: 5;
+    bottom: 0;
+}
+
+.tracklist-tag-detail-tracklist-card-rating {
+    padding: 0.5em 1em;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 20em;
+    margin-left: 0.75em;
+    cursor: pointer;
+    float: left;
+    clear: left;
+    margin-bottom: 1.75em;
+    display: flex;
+    gap: 0.25rem;
+    font-weight: 550;
+}
+
+.tracklist-tag-detail-tracklist-status {
+    border-radius: 20em;
+    padding: 0.25em 0.5em;
+    font-weight: 550;
+}
+
+@media print, screen and (min-width: 40em) {
+    .tracklist-tag-detail-tracklist-card-content-wrapper {
+        flex-direction: row;
+    }
+
+    .tracklist-tag-detail-tracklist-card-poster-container {
+        width: 176px;
+        height: 250px;
+        flex-shrink: 0;
+    }
+
+    .tracklist-tag-detail-tracklist-card-info-container {
+        height: 250px;
+        max-height: 250px;
+        flex-grow: 1;
+        display: grid;
+        grid-auto-rows: 1fr;
+        min-width: 0;
+    }
+
+    .tracklist-tag-detail-tracklist-card-title {
+        min-height: 2.4em;
+    }
+
+    .tracklist-tag-detail-tracklist-card-title a {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+}
+
+@media print, screen and (max-width: 39.99875em) {
+    .tracklist-tag-detail-tracklist-card-title {
+        padding: 0.5em 2em;
+    }
+
+    .tracklist-tag-detail-tracklist-card-poster-container {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+}
+
+@container (max-width: 160em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:20%
+    }
+}
+
+@container (max-width: 120em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:25%
+    }
+}
+
+@container (max-width: 92em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:33.3333333333%
+    }
+}
+
+@container (max-width: 74.99875em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:50%
+    }
+}
+
+@container (max-width: 63.99875em) {
+    .tracklist-tag-detail-tracklist-card {
+        white-space:normal
+    }
+}
+
+@container (max-width: 39.99875em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:100%;
+        display: block
+    }
+}

@@ -14,15 +14,134 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+<div class="tracklist-tag-detail-tracklists-tab-wrapper">
+    @if (tracklists().length === 0) {
+        <p>Keine Tracklisten vorhanden.</p>
+    } @else {
+        @for (tracklist of tracklists(); track tracklist.id) {
+            @let posterPath = getPosterPath(tracklist);
 
-@if (state.tagData()?.tracklists?.length === 0) {
-    <p>Keine Tracklisten vorhanden.</p>
-} @else {
-    <ul>
-        @for (tracklist of state.tagData()!.tracklists; track tracklist.id) {
-            <li>
-                <a [routerLink]="['/media', tracklist.mediaType, tracklist.mediaId]">{{ tracklist.tracklistName }}</a>
-            </li>
+            <p-card class="tracklist-tag-detail-tracklist-card">
+                <ng-template pTemplate="title">
+                    <div class="tracklist-tag-detail-tracklist-card-title">
+                        <a [routerLink]="['/media', tracklist.mediaType, tracklist.mediaId]">
+                            {{ tracklist.tracklistName }}
+                        </a>
+                    </div>
+                </ng-template>
+
+                <div class="tracklist-tag-detail-tracklist-card-content-wrapper">
+                    <div class="tracklist-tag-detail-tracklist-card-poster-container">
+                        <p-image
+                            [src]="posterPath | tmdbImage:'w500PosterUrl'"
+                            [previewImageSrc]="posterPath | tmdbImage:'originalPosterUrl'"
+                            [alt]="'Poster für ' + tracklist.mediaName"
+                            [preview]="true"
+                            appendTo="body"
+                            loading="lazy"
+                        >
+                            <ng-template pTemplate="image">
+                                <img
+                                    [ngSrc]="posterPath | tmdbImage:'w500PosterUrl'"
+                                    [alt]="'Poster für ' + tracklist.mediaName"
+                                    width="176"
+                                    height="250"
+                                    class="episode-dialog-img"
+                                />
+                            </ng-template>
+                        </p-image>
+
+                        <div class="tracklist-tag-detail-tracklist-card-rating-wrapper">
+                            <div class="tracklist-tag-detail-tracklist-card-rating">
+                                <p-rating
+                                    [stars]="1"
+                                    [(ngModel)]="star"
+                                    [disabled]="true"
+                                ></p-rating>
+                                {{ tracklist.tracklistRating ? tracklist.tracklistRating : '-' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tracklist-tag-detail-tracklist-card-info-container">
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-value tracklist-tag-detail-tracklist-info-half">
+                                {{ tracklist.mediaType | mediaType }}
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-half">
+                                @if (tracklist.mediaType === MediaType.TV_SHOW) {
+                                    {{ tracklist.watchedEpisodes }} / {{ getTotalEpisodes(tracklist) }} Ep.
+                                } @else if (tracklist.mediaType === MediaType.MOVIE) {
+                                    {{ tracklist.mediaRunTime }} Minuten
+                                }
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-label">
+                                Erstausstrahlung:
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-value">
+                                @if (tracklist.tracklistCustomAirDate !== null) {
+                                      {{ tracklist.tracklistCustomAirDate | dateFormatting }}
+                                } @else if (tracklist.mediaFirstAirDate !== null) {
+                                      {{ tracklist.mediaFirstAirDate | dateFormatting }}
+                                } @else {
+                                    -
+                                }
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-label">
+                                Start:
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-value">
+                                  {{ tracklist.tracklistStartDateTime ?  (tracklist.tracklistStartDateTime | dateTimeWithUnitFormatting) : '-' }}
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-label">
+                                Ende:
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-value">
+                                  {{ tracklist.tracklistFinishDateTime ?  (tracklist.tracklistFinishDateTime | dateTimeWithUnitFormatting) : '-' }}
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span>
+                                @if (tracklist.tracklistFinishDateTime) {
+                                    Seit {{ getDaysSinceFinish(tracklist) }} Tagen abgeschlossen.
+                                } @else if (tracklist.tracklistStartDateTime) {
+                                    Vor {{ getDaysSinceStart(tracklist) }} Tagen gestartet.
+                                } @else {
+                                    -
+                                }
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-half">
+                                <i class="pi pi-microphone"></i>
+                                <span>  {{ tracklist.tracklistLanguage | languageName }}</span>
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-half">
+                                <i class="pi pi-language"></i>
+                                <span>  {{ tracklist.tracklistSubtitle | languageName }}</span>
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-status" [style.background]="getTracklistStatusColor(tracklist)">
+                                {{ tracklist.tracklistStatus | tracklistStatus }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
         }
-    </ul>
-}
+    }
+</div>
