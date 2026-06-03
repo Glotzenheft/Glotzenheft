@@ -24,6 +24,8 @@ export const TRACKLIST_TAG_TYPE_LABELS: Record<TracklistTagType, string> = {
     [TracklistTagType.FRANCHISE]: 'Franchise',
     [TracklistTagType.STUDIO]: 'Studio',
     [TracklistTagType.PERSON]: 'Person',
+    [TracklistTagType.MUSICIAN]: 'Musiker',
+    [TracklistTagType.COMPOSER]: 'Komponist',
     [TracklistTagType.TRANSLATOR]: 'Übersetzer',
     [TracklistTagType.PRODUCTION_COMPANY]: 'Produktionsfirma',
     [TracklistTagType.MEDIA_PROVIDER]: 'Medienanbieter',
