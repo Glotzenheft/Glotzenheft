@@ -16,6 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { MediaType} from '../../../../../media/models/media-type.enum';
+import {TracklistStatusEnum} from '../../../../tracklists/tracklist/models/enums/tracklist-status.enum';
 
 export interface TracklistTracklistTagResponseDto {
     id: number;
@@ -31,7 +32,7 @@ export interface TracklistTracklistTagResponseDto {
     mediaSeasonEpisodeCount: string | null;
     mediaSeasonPosterPath: string | null;
     mediaRunTime: number | null;
-    tracklistStatus: string;
+    tracklistStatus: TracklistStatusEnum;
     tracklistRating: number | null;
     tracklistCustomAirDate: string | null;
     tracklistStartDateTime: string | null;
