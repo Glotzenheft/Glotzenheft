@@ -14,11 +14,72 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
+
+<div class="tracklist-tag-detail-tracklists-tab-toolbar">
+    <div class="toolbar-left">
+        <div class="tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper">
+            <i class="pi pi-search tracklist-tag-detail-tracklists-tab-search-icon"></i>
+            <input
+                type="text"
+                pInputText
+                [ngModel]="searchQuery()"
+                (ngModelChange)="searchQuery.set($event); updateQueryParams()"
+                placeholder="Suche nach Name..."
+                id="tracklist-tag-detail-tracklists-tab-toolbar-input"
+                class="tracklist-tag-detail-tracklists-tab-toolbar-input"
+            />
+            <p-button
+                icon="pi pi-times"
+                (onClick)="searchQuery.set(''); updateQueryParams()"
+                [disabled]="!searchQuery()"
+                [outlined]="true"
+                severity="secondary"
+                title="Suche leeren"
+            ></p-button>
+        </div>
+    </div>
+
+    <div class="toolbar-right">
+        <p-multiSelect
+            [options]="groupedFilters"
+            [ngModel]="selectedFilters()"
+            (ngModelChange)="onFilterChange($event)"
+            placeholder="Filtern..."
+            [group]="true"
+            optionGroupLabel="label"
+            optionGroupChildren="items"
+            optionLabel="label"
+            optionValue="value"
+            display="chip"
+            [maxSelectedLabels]="2"
+            [filter]="false"
+            appendTo="body"
+        ></p-multiSelect>
+
+        <p-dropdown
+            [options]="sortOptions"
+            [ngModel]="sortBy()"
+            (ngModelChange)="sortBy.set($event); updateQueryParams()"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+        ></p-dropdown>
+
+        <p-button
+            [icon]="sortOrder() === 'asc' ? 'pi pi-sort-amount-up-alt' : 'pi pi-sort-amount-down'"
+            (onClick)="toggleSortOrder()"
+            [outlined]="true"
+            severity="secondary"
+            title="Sortierreihenfolge ändern"
+        ></p-button>
+    </div>
+</div>
+
 <div class="tracklist-tag-detail-tracklists-tab-wrapper">
-    @if (tracklists().length === 0) {
-        <p>Keine Tracklisten vorhanden.</p>
+    @if (filteredAndSortedTracklists().length === 0) {
+        <p>Keine Tracklisten vorhanden oder gefunden.</p>
     } @else {
-        @for (tracklist of tracklists(); track tracklist.id) {
+        @for (tracklist of filteredAndSortedTracklists(); track tracklist.id) {
             @let posterPath = getPosterPath(tracklist);
 
             <p-card class="tracklist-tag-detail-tracklist-card">
@@ -114,7 +175,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <div class="tracklist-tag-detail-tracklist-info-item">
                             <span>
                                 @if (tracklist.tracklistFinishDateTime) {
-                                    Seit {{ getDaysSinceFinish(tracklist) }} Tagen abgeschlossen.
+                                    @if (tracklist.tracklistStatus === TracklistStatus.DROPPED) {
+                                        Seit {{ getDaysSinceFinish(tracklist) }} Tagen abgebrochen.
+                                    } @else {
+                                        Seit {{ getDaysSinceFinish(tracklist) }} Tagen abgeschlossen.
+                                    }
                                 } @else if (tracklist.tracklistStartDateTime) {
                                     Vor {{ getDaysSinceStart(tracklist) }} Tagen gestartet.
                                 } @else {
