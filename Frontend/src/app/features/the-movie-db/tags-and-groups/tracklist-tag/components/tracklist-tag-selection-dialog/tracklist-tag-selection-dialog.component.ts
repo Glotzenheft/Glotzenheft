@@ -26,6 +26,7 @@ import { TableModule } from 'primeng/table';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { AccordionModule } from 'primeng/accordion';
 import { TagModule } from 'primeng/tag';
+import { MessageService } from 'primeng/api';
 
 import { TracklistTagService } from '../../services/tracklist-tag.service';
 import { TracklistTagLightResponseDto } from '../../models/response/tracklist-tag-light-response.dto';
@@ -53,6 +54,7 @@ export class TracklistTagSelectionDialogComponent implements OnInit, OnDestroy {
     private dialogRef = inject(DynamicDialogRef);
     private dialogConfig = inject(DynamicDialogConfig);
     private destroy$ = new Subject<void>();
+    private messageService = inject(MessageService, { optional: true });
 
     public searchControl = new FormControl('');
     public searchQuery = signal('');
@@ -139,5 +141,34 @@ export class TracklistTagSelectionDialogComponent implements OnInit, OnDestroy {
 
     public cancel(): void {
         this.dialogRef.close(null);
+    }
+
+    public async pasteIdsFromClipboard(): Promise<void> {
+        try {
+            const text = await navigator.clipboard.readText();
+            if (!text) {
+                this.messageService?.add({ severity: 'info', summary: 'Info', detail: 'Zwischenablage ist leer.' });
+                return;
+            }
+
+            const matches = text.match(/\d+/g);
+            if (!matches || matches.length === 0) {
+                this.messageService?.add({ severity: 'warn', summary: 'Warnung', detail: 'Keine gültigen IDs in der Zwischenablage gefunden.' });
+                return;
+            }
+
+            const ids = matches.map(id => parseInt(id, 10));
+            const tagsToAdd = this.allTags().filter(tag => ids.includes(tag.id) && !this.existingTagIds.has(tag.id));
+
+            if (tagsToAdd.length > 0) {
+                this.onSelectionChange(tagsToAdd);
+                this.messageService?.add({ severity: 'success', summary: 'Erfolg', detail: `${tagsToAdd.length} Tags eingefügt und ausgewählt.` });
+            } else {
+                this.messageService?.add({ severity: 'info', summary: 'Info', detail: 'Keine passenden Tags zu den IDs gefunden oder Tags sind bereits ausgewählt.' });
+            }
+        } catch (err) {
+            console.error('Fehler beim Lesen der Zwischenablage:', err);
+            this.messageService?.add({ severity: 'error', summary: 'Fehler', detail: 'Konnte nicht auf die Zwischenablage zugreifen.' });
+        }
     }
 }

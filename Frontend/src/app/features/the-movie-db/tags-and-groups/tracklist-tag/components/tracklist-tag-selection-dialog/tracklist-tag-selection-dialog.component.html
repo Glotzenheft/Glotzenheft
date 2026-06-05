@@ -18,14 +18,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <div class="tracklist-tag-selection-dialog-container">
     <div class="tracklist-tag-selection-dialog-header">
         <div class="tracklist-tag-selection-dialog-search-wrapper">
-            <i class="pi pi-search tracklist-tag-selection-dialog-search-icon"></i>
-            <input
-                type="text"
-                pInputText
-                [formControl]="searchControl"
-                placeholder="Suche nach Tag-Namen..."
-                class="tracklist-tag-selection-dialog-search-input"
-            />
+            <div class="tracklist-tag-selection-dialog-search-input-container">
+                <i class="pi pi-search tracklist-tag-selection-dialog-search-icon"></i>
+                <input
+                    type="text"
+                    pInputText
+                    [formControl]="searchControl"
+                    placeholder="Suche nach Tag-Namen..."
+                    class="tracklist-tag-selection-dialog-search-input"
+                    id="tracklist-tag-selection-dialog-search-input"
+                />
+                <p-button
+                    icon="pi pi-clipboard"
+                    (onClick)="pasteIdsFromClipboard()"
+                    title="Tag-IDs aus Zwischenablage einfügen und automatisch auswählen"
+                    [outlined]="true"
+                    severity="secondary"
+                ></p-button>
+            </div>
+
         </div>
         @if (isLoading()) {
             <p-progressSpinner

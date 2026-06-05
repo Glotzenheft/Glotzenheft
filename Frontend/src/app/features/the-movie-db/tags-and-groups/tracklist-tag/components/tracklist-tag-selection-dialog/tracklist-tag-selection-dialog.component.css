@@ -31,8 +31,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .tracklist-tag-selection-dialog-search-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-grow: 1;
+}
+
+.tracklist-tag-selection-dialog-search-input-container {
     position: relative;
     flex-grow: 1;
+    align-items: stretch;
+    height: var(--input-height);
+    display: flex;
+    width: 100%;
 }
 
 .tracklist-tag-selection-dialog-search-icon {
@@ -101,6 +112,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 ::ng-deep .p-accordion .p-accordion-content {
     padding: 0.5rem;
+}
+
+::ng-deep .p-button {
+    height: 100% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+::ng-deep .tracklist-tag-selection-dialog-search-input-container input {
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 @media (max-width: 768px) {
