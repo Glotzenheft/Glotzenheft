@@ -222,7 +222,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                     <div>
                                                                         <span class="season-page-info-item">
                                                                             <span class="season-page-info-label">Startdatum:</span>
-                                                                            <span class="season-page-info-value">{{ selectedTracklist.startDate ? (selectedTracklist.startDate | dateFormatting) : '-' }}</span>
+                                                                            <span
+                                                                                class="season-page-info-value"
+                                                                                [pTooltip]="selectedTracklist.startDate | dateTimeWithUnitFormatting"
+                                                                                tooltipPosition="top"
+                                                                                style="cursor: help;"
+                                                                            >
+                                                                                {{ selectedTracklist.startDate ? (selectedTracklist.startDate | dateFormatting) : '-' }}
+                                                                            </span>
                                                                         </span>
                                                                         <span class="season-page-info-item">
                                                                             <span class="season-page-info-label">Bewertung:</span>
@@ -240,7 +247,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                     <div>
                                                                         <span class="season-page-info-item">
                                                                             <span class="season-page-info-label">Enddatum:</span>
-                                                                            <span class="season-page-info-value">{{ selectedTracklist.finishDate ? (selectedTracklist.finishDate | dateFormatting) : '-' }}</span>
+                                                                            <span
+                                                                                class="season-page-info-value"
+                                                                                [pTooltip]="selectedTracklist.finishDate | dateTimeWithUnitFormatting"
+                                                                                tooltipPosition="top"
+                                                                                style="cursor: help;"
+                                                                            >
+                                                                                {{ selectedTracklist.finishDate ? (selectedTracklist.finishDate | dateFormatting) : '-' }}
+                                                                            </span>
                                                                         </span>
                                                                         <span class="season-page-info-item">
                                                                             <span class="season-page-info-label">Status:</span>
