@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, OnDestroy, OnInit, inject } from '@angular/core';
-import {ActivatedRoute, Params, RouterLink} from '@angular/router';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {ActivatedRoute, Params, RouterLink, Router} from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { map, Observable, Subscription } from 'rxjs';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
@@ -99,6 +99,9 @@ import {
 import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
 import { LanguageNamePipe } from '../../../../app/shared/pipes/language-name/language-name.pipe';
 import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TRACKLIST_TAG_TYPE_OPTIONS } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/models/constants/tracklist-tag-type.constants';
+import {TableModule} from 'primeng/table';
 
 @Component({
     selector: 'app-season-page',
@@ -132,6 +135,7 @@ import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variabl
         NgOptimizedImage,
         RouterLink,
         LanguageNamePipe,
+        TableModule,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -180,6 +184,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public tracklistSelectionForm!: FormGroup;
     public currentTracklistSelection: SeasonTracklistType | null = null;
 
+    public tagViewMode = signal<'inline' | 'table'>('inline');
+    public tagCategories = TRACKLIST_TAG_TYPE_OPTIONS;
+
     // dialog and visibility variables --------------------------
     // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist; = 4: edit episode of current tracklist
     public isTracklistFormVisible: number = 0;
@@ -199,6 +206,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     private readonly dialogService = inject(DialogService);
     private readonly tracklistTagAssociationService = inject(TracklistTagAssociationService);
     private dialogRef: DynamicDialogRef | undefined;
+    private readonly router = inject(Router);
 
     public readonly TRACKLIST_TAG_URLS = TRACKLIST_TAG_URLS;
 
@@ -220,7 +228,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         private readonly getTracklistDELETEResponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
         private readonly triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
         private readonly triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject,
-    ) {}
+    ) {
+        this.route.queryParams.pipe(takeUntilDestroyed()).subscribe(params => {
+            if (params['tagView'] === 'table') {
+                this.tagViewMode.set('table');
+            } else {
+                this.tagViewMode.set('inline');
+            }
+        });
+    }
 
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
@@ -789,5 +805,20 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         }).catch(() => {
             this.messageService.add(getMessageObject('error', 'Konnte Tag-IDs nicht kopieren'));
         });
+    }
+
+    public toggleTagView(): void {
+        const newView = this.tagViewMode() === 'inline' ? 'table' : 'inline';
+        this.tagViewMode.set(newView);
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { tagView: newView === 'table' ? 'table' : null },
+            queryParamsHandling: 'merge'
+        });
+    }
+
+    public getTagsForCategory(tags: any[] | null | undefined, category: string): any[] {
+        if (!tags) return [];
+        return tags.filter(tag => tag.tracklistTagType === category);
     }
 }

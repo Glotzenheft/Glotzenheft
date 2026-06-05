@@ -369,10 +369,101 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     margin-bottom: 0.5rem;
 }
 
-.season-page-copy-tags-btn {
+.season-page-tag-action-buttons-inline {
     float: right;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.season-page-tracklist-tag-area-table ::ng-deep .p-button,
+.season-page-tag-action-buttons-inline ::ng-deep .p-button {
     border: 0.005rem solid var(--link--color);
     border-radius: 50px;
+}
+
+.season-page-tracklist-tag-area-table {
+    margin: 0 0 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: var(--border--radius);
+    overflow: hidden;
+    border: 0.005rem solid var(--link--color);
+}
+
+.season-page-tag-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    table-layout: fixed;
+}
+
+::ng-deep .season-page-tag-table .p-datatable-thead > tr > th,
+::ng-deep .season-page-tag-table .p-datatable-tbody > tr > td {
+    border: 0.005rem solid var(--link--color);
+    padding: 0.5rem;
+    border-left: none;
+    border-right: none;
+}
+
+::ng-deep .season-page-tag-table .p-datatable-thead > tr > th {
+    border-top: none;
+}
+
+::ng-deep .season-page-tag-table .p-datatable-tbody > tr:last-child > td {
+    border-bottom: none;
+}
+
+.season-page-tag-table-cat-col {
+    width: 150px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.season-page-tag-table-tags-col {
+    width: 100%;
+    max-width: 0;
+}
+
+.season-page-tag-table-cat-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.season-page-tag-table-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.season-page-tag-table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.season-page-tag-table-scroll-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+}
+
+.season-page-tag-table-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.season-page-tag-item-table {
+    white-space: nowrap;
+    display: inline-block;
+    flex-shrink: 0;
 }
 
 .season-page-tag-item {
