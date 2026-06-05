@@ -114,7 +114,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     padding: 0.5rem;
 }
 
-::ng-deep .p-button {
+::ng-deep .tracklist-tag-selection-dialog-search-input-container .p-button {
     height: 100% !important;
     display: flex !important;
     align-items: center;
