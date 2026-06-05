@@ -186,7 +186,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     .seasonMetaPicture {
-        /* width: 13rem; */
         width: auto;
         height: auto;
         min-height: 20rem;
@@ -216,7 +215,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .season-page-information-area {
         width: 100%;
-        height: 300px; /* Posterhöhe auf den gesamten Container anwenden */
+        height: 300px;
         display: flex;
         align-items: stretch;
     }
@@ -224,16 +223,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     .season-page-information-area .season-page-season-meta {
         margin-left: 1rem;
         max-height: 300px;
-        flex: 1; /* Nimmt den übrigen rechten Platz ein */
+        flex: 1;
     }
 
-    /* Zielt direkt auf das innere Wrapper-DIV ab, um Flexbox auf den Inhalt anzuwenden */
     .season-page-information-area .season-page-season-meta > div {
         width: 100%;
         height: 100%;
         display: flex;
         flex-direction: column;
-        justify-content: space-between; /* Drückt den oberen Block nach oben, den unteren nach unten */
+        justify-content: space-between;
     }
 
     .season-page-information-area .season-page-season-poster {
@@ -321,7 +319,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 :host ::ng-deep .p-image {
     border-radius: var(--border--radius);
     overflow: hidden;
-    display: inline-flex; /* Verhindert kleine Abstände unter dem Bild */
+    display: inline-flex;
 }
 
 .season-page-tag-unlink-icon {
@@ -333,15 +331,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .season-page-tracklist-tag-area {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 0.5rem;
+    display: block;
     margin: 0 0 0.5rem;
     border: 0.005rem solid var(--link--color);
-    padding: 0.5rem;
+    padding: 0.5rem 0.5rem 0 0.5rem;
     width: 100%;
     box-sizing: border-box;
     border-radius: var(--border--radius);
+}
+
+.season-page-tracklist-tag-area::after {
+    content: "";
+    display: table;
+    clear: both;
 }
 
 .season-page-info-item {
@@ -362,14 +364,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .season-page-description {
     display: block;
-    max-height: 85px; /* Verhindert Überlappungen und erzwingt Scrollbar */
+    max-height: 85px;
     overflow-y: auto;
     margin-bottom: 0.5rem;
 }
 
+.season-page-copy-tags-btn {
+    float: right;
+    border: 0.005rem solid var(--link--color);
+    border-radius: 50px;
+}
+
+.season-page-tag-item {
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    vertical-align: middle;
+}
+
 .season-page-season-information-area {
     width: 100%;
-    padding: 0 0.5rem; /* Oben und unten kein Padding mehr für bündige Kanten */
+    padding: 0 0.5rem;
     display: flex;
     flex-direction: column;
     gap: 0.25rem;

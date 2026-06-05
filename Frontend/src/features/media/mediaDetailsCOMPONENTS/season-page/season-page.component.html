@@ -415,11 +415,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                                                 @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
                                                     <div class="season-page-tracklist-tag-area">
+                                                        <p-button
+                                                            icon="pi pi-copy"
+                                                            [rounded]="true"
+                                                            [text]="true"
+                                                            size="small"
+                                                            (onClick)="copyTagIdsToClipboard(tracklistSelectionForm.get('selectedTracklist')?.value?.tags)"
+                                                            title="Tag-IDs kopieren"
+                                                            class="season-page-copy-tags-btn"
+                                                        ></p-button>
                                                         @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value?.tags; track tag.id) {
                                                             <p-tag
                                                                 [value]="tag.tagName"
                                                                 [style]="{'background-color': tag.color, 'cursor': 'pointer'}"
                                                                 [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
+                                                                class="season-page-tag-item"
                                                             ></p-tag>
                                                         }
                                                     </div>

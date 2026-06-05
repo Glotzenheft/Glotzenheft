@@ -780,4 +780,14 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public getGermanTracklistStatus = (status: string): string => {
         return convertTracklistStatusIntoGerman(status);
     };
+
+    public copyTagIdsToClipboard(tags: any[] | null | undefined): void {
+        if (!tags || tags.length === 0) return;
+        const ids = tags.map(tag => tag.id).join(',');
+        navigator.clipboard.writeText(ids).then(() => {
+            this.messageService.add(getMessageObject('success', 'Tag-IDs in Zwischenablage kopiert'));
+        }).catch(() => {
+            this.messageService.add(getMessageObject('error', 'Konnte Tag-IDs nicht kopieren'));
+        });
+    }
 }
