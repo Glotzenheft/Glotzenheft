@@ -34,6 +34,7 @@ import {UpdateTracklistTagRequestDto} from '../../models/request/update-tracklis
 import {TextareaModule} from 'primeng/textarea';
 import {Tooltip} from 'primeng/tooltip';
 import {TRACKLIST_TAG_TYPE_OPTIONS} from '../../models/constants/tracklist-tag-type.constants';
+import {MessageService} from 'primeng/api';
 
 @Component({
     selector: 'app-tracklist-tag-form-dialog',
@@ -58,6 +59,7 @@ export class TracklistTagFormDialogComponent implements OnInit{
     private readonly tracklistTagService = inject(TracklistTagService);
     private readonly dialogRef = inject(DynamicDialogRef);
     private readonly dialogConfig = inject(DynamicDialogConfig);
+    private readonly messageService = inject(MessageService);
 
     isSaving = signal(false);
     isUpdateMode = signal(false);
@@ -139,8 +141,14 @@ export class TracklistTagFormDialogComponent implements OnInit{
             };
 
             this.tracklistTagService.updateTag(this.tagIdToUpdate()!, updateDto).subscribe({
-                next: (updatedTag) => this.dialogRef.close(updatedTag),
-                error: () => this.isSaving.set(false)
+                next: (updatedTag) => {
+                    this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Tag erfolgreich aktualisiert.' });
+                    this.dialogRef.close(updatedTag);
+                },
+                error: (err) => {
+                    this.messageService.add({ severity: 'error', summary: 'Fehler', detail: err.error?.detail || 'Der Tag konnte nicht aktualisiert werden.' });
+                    this.isSaving.set(false);
+                }
             });
 
         } else {
@@ -151,9 +159,17 @@ export class TracklistTagFormDialogComponent implements OnInit{
             };
 
             this.tracklistTagService.createTag(createDto).subscribe({
-                next: (newTag) => this.dialogRef.close(newTag),
+                next: (newTag) => {
+                    this.messageService.add({ severity: 'success', summary: 'Erfolg', detail: 'Tag erfolgreich erstellt.' });
+                    this.dialogRef.close(newTag);
+                },
                 error: (err) => {
-                    console.error('Fehler beim Erstellen:', err);
+                    if (err.error?.status === 409) {
+                        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Dieser Tag existiert bereits für diese Kategorie.' });
+                    } else {
+                        this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Der Tag konnte nicht erstellt werden.' });
+                    }
+
                     this.isSaving.set(false);
                 }
             });

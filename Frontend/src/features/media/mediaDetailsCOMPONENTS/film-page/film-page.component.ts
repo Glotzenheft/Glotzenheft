@@ -568,7 +568,6 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
         this.dialogRef.onClose.subscribe((newTag: any) => {
             if (newTag) {
-                this.messageService.add(getMessageObject('success', 'Tag erfolgreich erstellt'));
                 this.refreshPage();
             }
         });
