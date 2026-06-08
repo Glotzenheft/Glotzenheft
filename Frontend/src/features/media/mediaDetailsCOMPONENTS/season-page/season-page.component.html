@@ -422,7 +422,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                     <p-button icon="pi pi-table" [rounded]="true" [text]="true" size="small" (onClick)="toggleTagView()" pTooltip="Zur Tabellenansicht wechseln" tooltipPosition="top" [outlined]="true"></p-button>
                                                                 </div>
                                                                 @for (tag of selectedTracklist.tags; track tag.id) {
-                                                                    <p-tag [value]="tag.tagName" [style]="{'background-color': tag.color, 'cursor': 'pointer'}" [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]" class="season-page-tag-item"></p-tag>
+                                                                    <p-tag
+                                                                        [value]="tag.tagName"
+                                                                        [style]="{'background-color': tag.color, 'color': getTextColorForBackground(tag.color), 'cursor': 'pointer'}"
+                                                                        [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
+                                                                        class="season-page-tag-item"
+                                                                    ></p-tag>
                                                                 }
                                                             </div>
                                                         } @else {
@@ -454,7 +459,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                             <td class="season-page-tag-table-tags-col">
                                                                                 <div class="season-page-tag-table-scroll-container">
                                                                                     @for (tag of catTags; track tag.id) {
-                                                                                        <p-tag [value]="tag.tagName" [style]="{'background-color': tag.color, 'cursor': 'pointer'}" [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]" class="season-page-tag-item-table"></p-tag>
+                                                                                        <p-tag
+                                                                                            [value]="tag.tagName"
+                                                                                            [style]="{'background-color': tag.color, 'color': getTextColorForBackground(tag.color), 'cursor': 'pointer'}"
+                                                                                            [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
+                                                                                            class="season-page-tag-item-table"
+                                                                                        ></p-tag>
                                                                                     }
                                                                                 </div>
                                                                             </td>

@@ -175,10 +175,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             @for (tag of tracklist.tags || []; track tag.id) {
                                 <p-tag
                                     [value]="tag.tagName"
-                                    [style]="{'background-color': tag.color, 'cursor': 'pointer'}"
+                                    [style]="{'background-color': tag.color, 'color': getTextColorForBackground(tag.color), 'cursor': 'pointer'}"
                                     [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
-                                >
-                                </p-tag>
+                                ></p-tag>
                             }
                         </div>
                         <span>
