@@ -91,6 +91,7 @@ export class TracklistTagDetailTracklistsTabComponent {
     public sortOrder = signal<'asc' | 'desc'>('asc');
     public selectedStatuses = signal<TracklistStatusEnum[]>([]);
     public selectedMediaTypes = signal<MediaType[]>([]);
+    public selectedRatings = signal<string[]>([]);
 
     public sortOptions = [
         { label: 'Name', value: 'tracklistName' },
@@ -103,6 +104,13 @@ export class TracklistTagDetailTracklistsTabComponent {
 
     public groupedFilters = [
         {
+            label: 'Status',
+            items: Object.values(TracklistStatusEnum).map(status => ({
+                label: TRACKLIST_STATUS_LABELS_DE[status],
+                value: status
+            }))
+        },
+        {
             label: 'Medientyp',
             items: [
                 { label: 'Film', value: MediaType.MOVIE },
@@ -110,16 +118,16 @@ export class TracklistTagDetailTracklistsTabComponent {
             ]
         },
         {
-            label: 'Status',
-            items: Object.values(TracklistStatusEnum).map(status => ({
-                label: TRACKLIST_STATUS_LABELS_DE[status],
-                value: status
-            }))
+            label: 'Bewertung',
+            items: [
+                { label: 'Bewertet', value: 'rated' },
+                { label: 'Nicht bewertet', value: 'unrated' },
+            ]
         }
     ];
 
     public selectedFilters = computed(() => {
-        return [...this.selectedMediaTypes(), ...this.selectedStatuses()];
+        return [...this.selectedMediaTypes(), ...this.selectedStatuses(), ...this.selectedRatings()];
     });
 
     public filteredAndSortedTracklists = computed(() => {
@@ -128,9 +136,10 @@ export class TracklistTagDetailTracklistsTabComponent {
         const search = this.searchQuery().toLowerCase();
         const statuses = this.selectedStatuses();
         const mediaTypes = this.selectedMediaTypes();
+        const ratings = this.selectedRatings();
 
         // 1. Filtern
-        if (search || statuses.length || mediaTypes.length) {
+        if (search || statuses.length || mediaTypes.length || ratings.length) {
             list = list.filter(t => {
                 const matchSearch = !search ||
                     (t.tracklistName?.toLowerCase().includes(search) ||
@@ -139,8 +148,11 @@ export class TracklistTagDetailTracklistsTabComponent {
 
                 const matchStatus = !statuses.length || (t.tracklistStatus && statuses.includes(t.tracklistStatus));
                 const matchMediaType = !mediaTypes.length || (t.mediaType && mediaTypes.includes(t.mediaType));
+                const matchRating = !ratings.length ||
+                    (ratings.includes('rated') && t.tracklistRating !== null) ||
+                    (ratings.includes('unrated') && t.tracklistRating === null);
 
-                return matchSearch && matchStatus && matchMediaType;
+                return matchSearch && matchStatus && matchMediaType && matchRating;
             });
         }
 
@@ -202,15 +214,22 @@ export class TracklistTagDetailTracklistsTabComponent {
             if (this.selectedMediaTypes().join(',') !== paramMediaType.join(',')) {
                 this.selectedMediaTypes.set(paramMediaType as MediaType[]);
             }
+
+            const paramRating = params['rating'] ? params['rating'].split(',').filter(Boolean) : [];
+            if (this.selectedRatings().join(',') !== paramRating.join(',')) {
+                this.selectedRatings.set(paramRating);
+            }
         });
     }
 
     public onFilterChange(values: string[]): void {
         const types = values.filter(v => Object.values(MediaType).includes(v as MediaType)) as MediaType[];
         const statuses = values.filter(v => Object.values(TracklistStatusEnum).includes(v as TracklistStatusEnum)) as TracklistStatusEnum[];
+        const ratings = values.filter(v => ['rated', 'unrated'].includes(v));
 
         this.selectedMediaTypes.set(types);
         this.selectedStatuses.set(statuses);
+        this.selectedRatings.set(ratings);
         this.updateQueryParams();
     }
 
@@ -223,6 +242,7 @@ export class TracklistTagDetailTracklistsTabComponent {
                 sortOrder: this.sortOrder() === 'asc' ? null : this.sortOrder(),
                 status: this.selectedStatuses().length ? this.selectedStatuses().join(',') : null,
                 mediaType: this.selectedMediaTypes().length ? this.selectedMediaTypes().join(',') : null,
+                rating: this.selectedRatings().length ? this.selectedRatings().join(',') : null,
             },
             queryParamsHandling: 'merge'
         });

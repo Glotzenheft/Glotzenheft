@@ -86,6 +86,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper input {
     width: 100%;
     max-width: 250px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
 }
 
 :host ::ng-deep .tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper .p-button {
@@ -136,6 +138,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 ::ng-deep .tracklist-tag-detail-tracklist-card-poster-container button{
     border-radius: 0 0 0 12px;
 }
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-list-container {
+    max-height: none !important;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-list {
+    column-count: 2;
+    column-gap: 1.5rem;
+    min-width: 400px;
+    display: block !important;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-list > :nth-child(8) {
+    break-before: column;
+    -webkit-column-break-before: always;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel p-multiselect-item-group,
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-option-group {
+    break-inside: avoid;
+    margin-top: 0;
+    display: block;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel p-multiselect-item {
+    break-inside: avoid;
+    display: block;
+}
+
 .tracklist-tag-detail-tracklist-card-poster-container img {
     width: 176px;
     height: 250px;
