@@ -130,7 +130,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             label="Abbrechen"
             icon="pi pi-times"
             severity="secondary"
-            size="large"
             [raised]="false"
             (onClick)="cancel()"
             type="button">
@@ -140,7 +139,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             [label]="isUpdateMode() ? 'Aktualisieren' : 'Erstellen'"
             icon="pi pi-check"
             type="submit"
-            size="large"
             [raised]="true"
             [loading]="isSaving()">
         </p-button>
