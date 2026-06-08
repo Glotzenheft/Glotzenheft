@@ -23,7 +23,7 @@ namespace App\Controller\API\Tracklist;
 use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\Tracklist\CreateTracklistDto;
-use App\Model\Request\Tracklist\TracklistIdDto;
+use App\Model\Request\Tracklist\TracklistSearchRequestDto;
 use App\Model\Request\Tracklist\UpdateTracklistDto;
 use App\Security\IsAuthenticated;
 use App\Service\Tracklist\TracklistService;
@@ -220,5 +220,26 @@ class TracklistController extends AbstractController
             data: null,
             status: Response::HTTP_NO_CONTENT
         );
+    }
+
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tracklists/search',
+        name: 'search_tracklists',
+        methods: ['GET'],
+        stateless: true
+    )]
+    public function searchTracklistsEndpoint(
+        User $user,
+        #[MapQueryString] TracklistSearchRequestDto $dto
+    ): JsonResponse
+    {
+        $results = $this->tracklistService->searchTracklists(
+            user: $user,
+            query: $dto->q,
+            page: $dto->page
+        );
+
+        return $this->json($results);
     }
 }

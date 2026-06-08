@@ -33,6 +33,9 @@ enum TracklistTagType: string
     case YEAR = 'year';
     case DECADE = 'decade';
     case PERSON = 'person';
+    case MUSICIAN = 'musician';
+    case COMPOSER = 'composer';
+    case TRANSLATOR = 'translator';
     case FORMAT = 'format';
     case PRODUCTION_COMPANY = 'production-company';
     case SOURCE_MATERIAL = 'source-material';

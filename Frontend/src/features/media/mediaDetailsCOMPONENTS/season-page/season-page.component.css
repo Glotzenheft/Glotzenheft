@@ -20,7 +20,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         height: 100%;
     }
 
-    .seasonMeta {
+    .season-page-media-meta,
+    .season-page-season-meta {
         width: 100%;
         height: auto;
         display: flex;
@@ -57,41 +58,75 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         margin-top: 2rem;
     }
 
-    .seasonWrapper {
+    .season-page-information-area {
         width: 100%;
-        height: 28rem;
+        height: auto;
+        min-height: 28rem;
         padding-top: var(--padding--top-bottom);
+        display: flex;
+        flex-direction: column;
+        gap: 1.5rem;
     }
 
-    .seasonWrapper .seasonMeta {
-        height: 70%;
-        width: 100%;
-        overflow-y: auto;
-    }
-
-    .seasonWrapper .seasonMeta div {
+    .season-page-information-area .season-page-season-meta {
         width: 100%;
     }
 
-    .seasonWrapper .seasonPoster {
+    .season-page-information-area .season-page-season-meta div {
         width: 100%;
-        height: 40%;
+    }
+
+    .season-page-information-area .season-page-season-poster {
+        width: 100%;
         display: flex;
         justify-content: center;
         align-items: center;
     }
 
-    .seasonWrapper .seasonPoster img {
-        height: 100%;
+    .season-page-information-area .season-page-season-poster ::ng-deep .p-image {
+        width: 200px;
+        height: 300px;
+        display: block;
+    }
+
+    .season-page-information-area .season-page-season-poster img {
+        width: 200px !important;
+        height: 300px !important;
+        object-fit: cover !important;
         border: 0.1rem solid black;
+    }
+
+    .season-page-tracklist-information-area {
+        border: 0.005rem solid var(--link--color);
+        padding: 0.5rem;
+        width: 100%;
+        height: auto;
+        margin-top: 1rem;
+        box-sizing: border-box;
+        border-radius: var(--border--radius);
+    }
+
+    .season-page-tracklist-information-area h3 {
+        margin: 0 0 0.5rem;
+    }
+
+    .season-page-tracklist-information-area > div {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin-bottom: 0.5rem;
+    }
+
+    .season-page-tracklist-information-area > div:last-child {
+        margin-bottom: 0;
     }
 
     .tracklistSelectionDIV {
         width: 100%;
-        height: 10rem;
         display: flex;
         flex-direction: column;
         justify-content: space-evenly;
+        margin: 0.5rem 0;
     }
 
     .tracklistSelectionDIV div {
@@ -100,6 +135,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     .episodes {
         margin-bottom: 6rem;
+    }
+
+    .season-page-action-bar {
+        display: flex;
+        flex-direction: column;
+        gap: 0.5rem;
+        margin: 0 0 0.5rem;
+        width: 100%;
+    }
+
+    .season-page-action-bar p-button,
+    .season-page-action-bar ::ng-deep .p-button {
+        width: 100%;
+        justify-content: center;
     }
 }
 
@@ -112,13 +161,21 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         height: 2vw;
     }
 
-    .seasonMeta {
+    .season-page-media-meta,
+    .season-page-season-meta {
         width: 100%;
-        height: auto;
-        min-height: 20rem;
         display: flex;
         justify-content: center;
         align-items: center;
+    }
+
+    .season-page-media-meta {
+        height: auto;
+        min-height: 20rem;
+    }
+
+    .season-page-season-meta {
+        max-height: 300px;
     }
 
     .seasonPictureWrapper {
@@ -129,7 +186,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     .seasonMetaPicture {
-        /* width: 13rem; */
         width: auto;
         height: auto;
         min-height: 20rem;
@@ -140,13 +196,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         align-items: center;
     }
 
-    .seasonMetaContent {
+    .season-page-media-content-area {
         width: calc(100% - 13rem);
 
         height: auto;
     }
 
-    .seasonMetaContent div {
+    .season-page-media-content-area div {
         border-left: 0.1rem solid white;
         padding-left: var(--padding--left-right);
         height: auto;
@@ -157,45 +213,88 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         width: 10rem;
     }
 
-    .seasonWrapper {
+    .season-page-information-area {
         width: 100%;
-        height: auto;
-        min-height: 20rem;
+        height: 300px;
         display: flex;
-        justify-content: center;
-        align-items: center;
+        align-items: stretch;
     }
 
-    .seasonWrapper .seasonMeta {
-        height: auto;
-        width: 70%;
+    .season-page-information-area .season-page-season-meta {
+        margin-left: 1rem;
+        max-height: 300px;
+        flex: 1;
     }
 
-    .seasonWrapper .seasonMeta div {
+    .season-page-information-area .season-page-season-meta > div {
         width: 100%;
-    }
-
-    .seasonWrapper .seasonPoster {
-        width: 20%;
-        height: 56%;
-    }
-
-    .seasonWrapper .seasonPoster img {
         height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+    .season-page-information-area .season-page-season-poster {
+        height: 300px;
+        width: 200px;
+        flex-shrink: 0;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .season-page-information-area .season-page-season-poster ::ng-deep .p-image {
+        height: 300px;
+        width: 200px;
+        display: block;
+    }
+
+    .season-page-information-area .season-page-season-poster img {
+        height: 300px !important;
+        width: 200px !important;
+        object-fit: cover !important;
         border: 0.1rem solid black;
     }
 
     .tracklistSelectionDIV {
         width: 100%;
-        height: 4rem;
         display: flex;
         justify-content: space-between;
         align-items: center;
         gap: 1rem;
+        margin: 1rem 0 0.5rem;
     }
 
     .tracklistSelectionDIV div {
         width: 50%;
+    }
+
+    .season-page-action-bar {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 0.5rem;
+        margin: 0 0 0.5rem;
+    }
+
+    .season-page-tracklist-information-area {
+        border: 0.005rem solid var(--link--color);
+        padding: 0.5rem;
+        width: 100%;
+        height: 138px;
+        box-sizing: border-box;
+        border-radius: var(--border--radius);
+    }
+
+    .season-page-tracklist-information-area h3 {
+        margin: 0 0 0.5rem;
+    }
+
+    .season-page-tracklist-information-area div {
+        display: grid;
+        grid-template-columns: repeat(4, 1fr);
+
+        gap: 1rem;
+
     }
 }
 
@@ -214,11 +313,180 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 :host ::ng-deep .p-image-preview-indicator {
-    border-radius: 8px;
+    border-radius: var(--border--radius);
 }
 
 :host ::ng-deep .p-image {
-    border-radius: 8px;
+    border-radius: var(--border--radius);
     overflow: hidden;
-    display: inline-flex; /* Verhindert kleine Abstände unter dem Bild */
+    display: inline-flex;
+}
+
+.season-page-tag-unlink-icon {
+    position: absolute;
+    bottom: -0.3rem;
+    right: -0.3rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+
+.season-page-tracklist-tag-area {
+    display: block;
+    margin: 0 0 0.5rem;
+    border: 0.005rem solid var(--link--color);
+    padding: 0.5rem 0.5rem 0 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: var(--border--radius);
+}
+
+.season-page-tracklist-tag-area::after {
+    content: "";
+    display: table;
+    clear: both;
+}
+
+.season-page-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.season-page-info-label {
+    opacity: 0.7;
+}
+
+.season-page-info-value {
+    text-align: right;
+    font-weight: 500;
+}
+
+.season-page-description {
+    display: block;
+    max-height: 85px;
+    overflow-y: auto;
+    margin-bottom: 0.5rem;
+}
+
+.season-page-tag-action-buttons-inline {
+    float: right;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    margin-left: 0.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.season-page-tracklist-tag-area-table ::ng-deep .p-button,
+.season-page-tag-action-buttons-inline ::ng-deep .p-button {
+    border: 0.005rem solid var(--link--color);
+    border-radius: 50px;
+}
+
+.season-page-tracklist-tag-area-table {
+    margin: 0 0 0.5rem;
+    width: 100%;
+    box-sizing: border-box;
+    border-radius: var(--border--radius);
+    overflow: hidden;
+    border: 0.005rem solid var(--link--color);
+}
+
+.season-page-tag-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: left;
+    table-layout: fixed;
+}
+
+::ng-deep .season-page-tag-table .p-datatable-thead > tr > th,
+::ng-deep .season-page-tag-table .p-datatable-tbody > tr > td {
+    border: 0.005rem solid var(--link--color);
+    padding: 0.5rem;
+    border-left: none;
+    border-right: none;
+}
+
+::ng-deep .season-page-tag-table .p-datatable-thead > tr > th {
+    border-top: none;
+}
+
+::ng-deep .season-page-tag-table .p-datatable-tbody > tr:last-child > td {
+    border-bottom: none;
+}
+
+.season-page-tag-table-cat-col {
+    width: 150px;
+    font-weight: bold;
+    white-space: nowrap;
+}
+
+.season-page-tag-table-tags-col {
+    width: 100%;
+    max-width: 0;
+}
+
+.season-page-tag-table-cat-content {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+}
+
+.season-page-tag-table-header-flex {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.season-page-tag-table-actions {
+    display: flex;
+    gap: 0.5rem;
+}
+
+.season-page-tag-table-scroll-container {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    width: 100%;
+}
+
+.season-page-tag-table-scroll-container::-webkit-scrollbar {
+    display: none;
+}
+
+.season-page-tag-item-table {
+    white-space: nowrap;
+    display: inline-block;
+    flex-shrink: 0;
+}
+
+.season-page-tag-item {
+    display: inline-block;
+    margin-right: 0.5rem;
+    margin-bottom: 0.5rem;
+    vertical-align: middle;
+}
+
+.season-page-season-information-area {
+    width: 100%;
+    padding: 0 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+}
+
+.season-page-information-area .season-page-season-poster .image-error-fallback2 {
+    width: 200px;
+    height: 300px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
 }

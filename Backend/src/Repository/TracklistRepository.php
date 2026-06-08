@@ -23,6 +23,7 @@ use App\Entity\Media;
 use App\Entity\Tracklist;
 use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
+use Doctrine\ORM\Tools\Pagination\Paginator;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
@@ -50,7 +51,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('s.tracklistEpisodes', 'e')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('s', 'e')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
             ->where('t.user = :user')
             ->andWhere('t.media = :media')
             ->setParameter('user', $user)
@@ -74,7 +75,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('s.tracklistEpisodes', 'episodes')
             ->leftJoin('t.tracklistTags', 'tags')
             ->addSelect('season', 'episodes')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
 
             ->where('tracklist.id = :tracklistId')
             ->andWhere('tracklist.user = :user')
@@ -98,7 +99,7 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('season.tracklistEpisodes', 'episodes')
             ->leftJoin('tracklist.tracklistTags', 'tags')
             ->addSelect('season', 'episodes')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
 
             ->where('tracklist.user = :user')
             ->setParameter('user', $user)
@@ -164,12 +165,83 @@ class TracklistRepository extends ServiceEntityRepository
             ->leftJoin('tracklist.tracklistTags', 'tags')
             ->leftJoin('tracklist.media', 'media')
             ->addSelect('PARTIAL media.{id, posterPath, type, createdAt, updatedAt}')
-            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, createdAt, updatedAt}')
+            ->addSelect('PARTIAL tags.{id, tagName, tracklistTagType, color, description, icon, slug, isSpoiler, isAdult, createdAt, updatedAt}')
 
             ->where('tracklist.user = :user')
             ->setParameter('user', $user)
 
             ->getQuery()
             ->getResult();
+    }
+
+
+    /**
+     *  Sucht Tracklisten eines Nutzers basierend auf dem Namen der Trackliste,
+     *  oder dem hinterlegten Media-Namen.
+     *
+     * @param User $user
+     * @param string $query
+     * @param int $page
+     * @param int $limit
+     *
+     * @return array
+     */
+    public function searchByUserAndQuery(
+        User $user,
+        string $query,
+        int $page = 1,
+        int $limit = 20
+    ): array
+    {
+        $qb = $this->createQueryBuilder('t')
+            ->addSelect('media', 'tracklistSeason', 'season')
+            ->join('t.media', 'media')
+            ->leftJoin('t.tracklistSeason', 'tracklistSeason')
+            ->leftJoin('tracklistSeason.season', 'season')
+            ->where('t.user = :user')
+            ->setParameter('user', $user);
+
+        $qb->andWhere(
+            $qb->expr()->orX(
+                $qb->expr()->like('LOWER(t.tracklistName)', ':query'),
+                $qb->expr()->like('LOWER(media.name)', ':query'),
+                $qb->expr()->like('LOWER(media.originalName)', ':query')
+            )
+        )->setParameter('query', '%' . mb_strtolower($query) . '%');
+
+        $qb->setFirstResult(($page - 1) * $limit)->setMaxResults($limit);
+
+        $paginator = new Paginator($qb);
+        return [
+            'results' => iterator_to_array($paginator),
+            'total'   => count($paginator),
+        ];
+    }
+
+    /**
+     * Finds the count of watched episodes for a given list of tracklist IDs.
+     *
+     * @param array<int> $tracklistIds
+     * @return array<int, int> An associative array mapping tracklistId to its watched episodes count.
+     */
+    public function findWatchedEpisodesCountForTracklists(array $tracklistIds): array
+    {
+        if (empty($tracklistIds)) {
+            return [];
+        }
+
+        $qb = $this->getEntityManager()->createQueryBuilder();
+        $counts = $qb
+            ->select('t.id as tracklistId', 'COUNT(te.id) as watchedEpisodesCount')
+            ->from(Tracklist::class, 't')
+            ->join('t.tracklistSeason', 'ts')
+            ->join('ts.tracklistEpisodes', 'te')
+            ->where($qb->expr()->in('t.id', ':tracklistIds'))
+            ->groupBy('t.id')
+            ->setParameter('tracklistIds', $tracklistIds)
+            ->getQuery()
+            ->getResult();
+
+        return array_column($counts, 'watchedEpisodesCount', 'tracklistId');
     }
 }

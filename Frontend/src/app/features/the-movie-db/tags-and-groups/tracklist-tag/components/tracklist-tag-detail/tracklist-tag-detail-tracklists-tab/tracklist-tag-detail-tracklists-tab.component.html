@@ -1,0 +1,214 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="tracklist-tag-detail-tracklists-tab-toolbar">
+    <div class="toolbar-left">
+        <div class="tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper">
+            <i class="pi pi-search tracklist-tag-detail-tracklists-tab-search-icon"></i>
+            <input
+                type="text"
+                pInputText
+                [ngModel]="searchQuery()"
+                (ngModelChange)="searchQuery.set($event); updateQueryParams()"
+                placeholder="Suche nach Name..."
+                id="tracklist-tag-detail-tracklists-tab-toolbar-input"
+                class="tracklist-tag-detail-tracklists-tab-toolbar-input"
+            />
+            <p-button
+                icon="pi pi-times"
+                (onClick)="searchQuery.set(''); updateQueryParams()"
+                [disabled]="!searchQuery()"
+                [outlined]="true"
+                severity="secondary"
+                title="Suche leeren"
+            ></p-button>
+        </div>
+    </div>
+
+    <div class="toolbar-right">
+        <p-multiSelect
+            [options]="groupedFilters"
+            [ngModel]="selectedFilters()"
+            (ngModelChange)="onFilterChange($event)"
+            placeholder="Filtern..."
+            [group]="true"
+            optionGroupLabel="label"
+            optionGroupChildren="items"
+            optionLabel="label"
+            optionValue="value"
+            display="chip"
+            [maxSelectedLabels]="2"
+            [filter]="false"
+            [showToggleAll]="false"
+            panelStyleClass="tracklist-tag-detail-tracklists-tab-filter-panel"
+            appendTo="body"
+        ></p-multiSelect>
+
+        <p-dropdown
+            [options]="sortOptions"
+            [ngModel]="sortBy()"
+            (ngModelChange)="sortBy.set($event); updateQueryParams()"
+            optionLabel="label"
+            optionValue="value"
+            appendTo="body"
+        ></p-dropdown>
+
+        <p-button
+            [icon]="sortOrder() === 'asc' ? 'pi pi-sort-amount-up-alt' : 'pi pi-sort-amount-down'"
+            (onClick)="toggleSortOrder()"
+            [outlined]="true"
+            severity="secondary"
+            title="Sortierreihenfolge ändern"
+        ></p-button>
+    </div>
+</div>
+
+<div class="tracklist-tag-detail-tracklists-tab-wrapper">
+    @if (filteredAndSortedTracklists().length === 0) {
+        <p>Keine Tracklisten vorhanden oder gefunden.</p>
+    } @else {
+        @for (tracklist of filteredAndSortedTracklists(); track tracklist.id) {
+            @let posterPath = getPosterPath(tracklist);
+
+            <p-card class="tracklist-tag-detail-tracklist-card">
+                <ng-template pTemplate="title">
+                    <div class="tracklist-tag-detail-tracklist-card-title">
+                        <a [routerLink]="['/media', tracklist.mediaType, tracklist.mediaId]">
+                            {{ tracklist.tracklistName }}
+                        </a>
+                    </div>
+                </ng-template>
+
+                <div class="tracklist-tag-detail-tracklist-card-content-wrapper">
+                    <div class="tracklist-tag-detail-tracklist-card-poster-container">
+                        <p-image
+                            [src]="posterPath | tmdbImage:'w500PosterUrl'"
+                            [previewImageSrc]="posterPath | tmdbImage:'originalPosterUrl'"
+                            [alt]="'Poster für ' + tracklist.mediaName"
+                            [preview]="true"
+                            appendTo="body"
+                            loading="lazy"
+                        >
+                            <ng-template pTemplate="image">
+                                <img
+                                    [ngSrc]="posterPath | tmdbImage:'w500PosterUrl'"
+                                    [alt]="'Poster für ' + tracklist.mediaName"
+                                    width="176"
+                                    height="250"
+                                    class="episode-dialog-img"
+                                />
+                            </ng-template>
+                        </p-image>
+
+                        <div class="tracklist-tag-detail-tracklist-card-rating-wrapper">
+                            <div class="tracklist-tag-detail-tracklist-card-rating">
+                                <p-rating
+                                    [stars]="1"
+                                    [(ngModel)]="star"
+                                    [disabled]="true"
+                                ></p-rating>
+                                {{ tracklist.tracklistRating ? tracklist.tracklistRating : '-' }}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="tracklist-tag-detail-tracklist-card-info-container">
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-value tracklist-tag-detail-tracklist-info-half">
+                                {{ tracklist.mediaType | mediaType }}
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-half">
+                                @if (tracklist.mediaType === MediaType.TV_SHOW) {
+                                    {{ tracklist.watchedEpisodes }} / {{ getTotalEpisodes(tracklist) }} Ep.
+                                } @else if (tracklist.mediaType === MediaType.MOVIE) {
+                                    {{ tracklist.mediaRunTime }} Minuten
+                                }
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-label">
+                                Erstausstrahlung:
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-value">
+                                @if (tracklist.tracklistCustomAirDate !== null) {
+                                      {{ tracklist.tracklistCustomAirDate | dateFormatting }}
+                                } @else if (tracklist.mediaFirstAirDate !== null) {
+                                      {{ tracklist.mediaFirstAirDate | dateFormatting }}
+                                } @else {
+                                    -
+                                }
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-label">
+                                Start:
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-value">
+                                  {{ tracklist.tracklistStartDateTime ?  (tracklist.tracklistStartDateTime | dateTimeWithUnitFormatting) : '-' }}
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-label">
+                                Ende:
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-value">
+                                  {{ tracklist.tracklistFinishDateTime ?  (tracklist.tracklistFinishDateTime | dateTimeWithUnitFormatting) : '-' }}
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span>
+                                @if (tracklist.tracklistFinishDateTime) {
+                                    @if (tracklist.tracklistStatus === TracklistStatus.DROPPED) {
+                                        Seit {{ getDaysSinceFinish(tracklist) }} Tagen abgebrochen.
+                                    } @else {
+                                        Seit {{ getDaysSinceFinish(tracklist) }} Tagen abgeschlossen.
+                                    }
+                                } @else if (tracklist.tracklistStartDateTime) {
+                                    Vor {{ getDaysSinceStart(tracklist) }} Tagen gestartet.
+                                } @else {
+                                    -
+                                }
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-info-half">
+                                <i class="pi pi-microphone"></i>
+                                <span>  {{ tracklist.tracklistLanguage | languageName }}</span>
+                            </span>
+                            <span class="tracklist-tag-detail-tracklist-info-half">
+                                <i class="pi pi-language"></i>
+                                <span>  {{ tracklist.tracklistSubtitle | languageName }}</span>
+                            </span>
+                        </div>
+
+                        <div class="tracklist-tag-detail-tracklist-info-item">
+                            <span class="tracklist-tag-detail-tracklist-status" [style.background]="getTracklistStatusColor(tracklist)">
+                                {{ tracklist.tracklistStatus | tracklistStatus }}
+                            </span>
+                        </div>
+                    </div>
+                </div>
+            </p-card>
+        }
+    }
+</div>

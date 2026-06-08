@@ -16,7 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {Routes} from "@angular/router";
-import {TMDB_SIDEBAR_PATHS} from "../../core/constants/paths.constants";
+import {
+    TMDB_SIDEBAR_PATHS,
+    TRACKLIST_TAG_PATHS,
+    TRACKLIST_TAG_FILTER_PATHS,
+    GROUPS_PATHS,
+} from "../../core/constants/paths.constants";
 
 export const TMDB_ROUTES: Routes = [
     {
@@ -74,7 +79,37 @@ export const TMDB_ROUTES: Routes = [
                 path: TMDB_SIDEBAR_PATHS.tagsAndGroups,
                 loadComponent: () => import('./tags-and-groups/tags-and-groups.component')
                     .then(m => m.TagsAndGroupsComponent),
-                title: 'Glotzentags und Glotzengruppen'
+                children: [
+                    {
+                        path: '',
+                        redirectTo: TRACKLIST_TAG_PATHS.base,
+                        pathMatch: 'full',
+                    },
+                    {
+                        path: TRACKLIST_TAG_PATHS.base,
+                        loadComponent: () => import('../the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-overview/tracklist-tag-overview.component')
+                            .then(m => m.TracklistTagOverviewComponent),
+                        title: 'Meine Tracklist Tags',
+                    },
+                    {
+                        path: `${TRACKLIST_TAG_PATHS.base}/${TRACKLIST_TAG_PATHS.detail}`,
+                        loadChildren: () => import('../the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-detail/tracklist-tag-detail.routes')
+                            .then(m => m.TRACKLIST_TAG_DETAIL_ROUTES),
+                        title: 'Tag Details',
+                    },
+                    {
+                        path: TRACKLIST_TAG_FILTER_PATHS.base,
+                        loadComponent: () => import('../the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-filter/tracklist-tag-filter.component')
+                            .then(m => m.TracklistTagFilterComponent),
+                        title: 'Tag-Filter',
+                    },
+                    {
+                        path: GROUPS_PATHS.base,
+                        loadComponent: () => import('../the-movie-db/tags-and-groups/groups/groups/groups.component')
+                            .then(m => m.GroupsComponent),
+                        title: 'Gruppen',
+                    }
+                ]
             },
             {
                 path: TMDB_SIDEBAR_PATHS.calendar,

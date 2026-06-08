@@ -23,6 +23,8 @@ import {
     AUTHENTICATION_PATHS,
     BACKUP_PATHS,
     MEDIA_PATHS,
+    TRACKLIST_TAG_PATHS,
+    TMDB_IMAGE_PATHS,
 } from "./paths.constants";
 
 export const ROOT_URLS = {
@@ -79,4 +81,21 @@ export const MEDIA_URLS = {
 
 export const EXTERNAL_URLS = {
     gitHubRepo: 'https://github.com/Glotzenheft/Glotzenheft/',
+} as const;
+
+export const TRACKLIST_TAG_URLS = {
+    overview: `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}`,
+    detail: (tagId: number | string) =>
+        `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}/${tagId}`,
+    detailTracklist: (tagId: number | string) =>
+        `${TMDB_SIDEBAR_PATHS.base}/${TMDB_SIDEBAR_PATHS.tagsAndGroups}/${TRACKLIST_TAG_PATHS.base}/${tagId}/${TRACKLIST_TAG_PATHS.tracklists}`,
+} as const;
+
+export const TMDB_IMAGE_URLS = {
+    baseUrl: TMDB_IMAGE_PATHS.base,
+    originalPosterUrl: `${TMDB_IMAGE_PATHS.base}${TMDB_IMAGE_PATHS.original}`,
+    w185PosterUrl: `${TMDB_IMAGE_PATHS.base}${TMDB_IMAGE_PATHS.w185Poster}`,
+    w342PosterUrl: `${TMDB_IMAGE_PATHS.base}${TMDB_IMAGE_PATHS.w342Poster}`,
+    w500PosterUrl: `${TMDB_IMAGE_PATHS.base}${TMDB_IMAGE_PATHS.w500Poster}`,
+    w780PosterUrl: `${TMDB_IMAGE_PATHS.base}${TMDB_IMAGE_PATHS.w780Poster}`,
 } as const;

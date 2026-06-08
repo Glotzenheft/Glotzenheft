@@ -20,7 +20,7 @@ import {
     LOCALE_ID,
     provideZoneChangeDetection,
 } from '@angular/core';
-import {provideRouter, TitleStrategy} from '@angular/router';
+import {provideRouter, TitleStrategy, withComponentInputBinding} from '@angular/router';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { providePrimeNG } from 'primeng/config';
 import Aura from '@primeng/themes/aura';
@@ -30,20 +30,21 @@ import {
     provideClientHydration,
     withEventReplay,
 } from '@angular/platform-browser';
-import {provideHttpClient, withFetch} from '@angular/common/http';
+import {provideHttpClient, withFetch, withInterceptors} from '@angular/common/http';
 import { MessageService } from 'primeng/api';
 import { ChartModule } from 'primeng/chart';
 import { provideAppConfig } from './app.providers';
 import localeDe from '@angular/common/locales/de';
 import { registerLocaleData } from '@angular/common';
 import { CustomTitleStrategy } from './core/strategies/CustomTitle/custom-title.strategy';
+import {authInterceptor} from './core/interceptors/auth.interceptor';
 
 registerLocaleData(localeDe);
 
 export const appConfig: ApplicationConfig = {
     providers: [
         provideZoneChangeDetection({ eventCoalescing: true }),
-        provideRouter(routes),
+        provideRouter(routes, withComponentInputBinding()),
         { provide: TitleStrategy, useClass: CustomTitleStrategy },
         provideClientHydration(withEventReplay()),
         provideAnimationsAsync(),
@@ -96,7 +97,10 @@ export const appConfig: ApplicationConfig = {
                 firstDayOfWeek: 1,
             },
         }),
-        provideHttpClient(withFetch()),
+        provideHttpClient(
+            withFetch(),
+            withInterceptors([authInterceptor])
+        ),
         MessageService,
         ChartModule,
         ...provideAppConfig(),

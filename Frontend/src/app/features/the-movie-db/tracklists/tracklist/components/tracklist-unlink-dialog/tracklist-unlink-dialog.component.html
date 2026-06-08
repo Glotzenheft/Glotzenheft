@@ -1,0 +1,115 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="tracklist-unlink-dialog-container">
+    <!-- Header with Search Input -->
+    <div class="tracklist-unlink-dialog-header">
+        <div class="tracklist-unlink-dialog-search-wrapper">
+            <i class="pi pi-search tracklist-unlink-dialog-search-icon"></i>
+            <input
+                type="text"
+                pInputText
+                [formControl]="searchControl"
+                placeholder="Suche nach Tracklist-Namen..."
+                class="tracklist-unlink-dialog-search-input"
+            />
+        </div>
+    </div>
+
+    <!-- Main Content Area -->
+    <div class="tracklist-unlink-dialog-content">
+        <!-- Collapsible Section for Selected Items -->
+        <p-accordion value="selected-items">
+            <p-accordion-panel value="selected-items">
+                <p-accordionheader>Ausgewählte Tracklisten ({{ selectedTracklists().length }})</p-accordionheader>
+                <p-accordioncontent>
+                    @if (selectedTracklists().length === 0) {
+                        <div class="tracklist-unlink-dialog-empty-selection">
+                            Noch keine Tracklisten ausgewählt.
+                        </div>
+                    } @else {
+                        <div class="tracklist-unlink-dialog-selected-items">
+                            @for (item of selectedTracklists(); track item.id) {
+                                <div class="tracklist-unlink-dialog-selected-item">
+                                    <span>{{ item.tracklistName }} ({{ item.mediaName }})</span>
+                                    <p-button icon="pi pi-times" [text]="true" [rounded]="true" severity="secondary"
+                                              (onClick)="removeFromSelection(item.id)"></p-button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </p-accordioncontent>
+            </p-accordion-panel>
+        </p-accordion>
+
+        <p-table
+            [value]="availableTracklists()"
+            [(selection)]="currentSelection"
+            (selectionChange)="onSelectionChange($event)"
+            dataKey="id"
+            styleClass="p-datatable-sm tracklist-unlink-dialog-table">
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                    <th>Tracklist-Name</th>
+                    <th>
+                        <div class="tracklist-unlink-dialog-media-header">
+                            <span>Medium</span>
+                            <p-button
+                                icon="pi pi-globe"
+                                [text]="true"
+                                [rounded]="true"
+                                severity="secondary"
+                                (click)="showOriginalName.set(!showOriginalName())"
+                                [pTooltip]="showOriginalName() ? 'Lokalen Namen anzeigen' : 'Originalnamen anzeigen'"
+                                tooltipPosition="top"
+                            ></p-button>
+                        </div>
+                    </th>
+                    <th>Format</th>
+                    <th>Staffel</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tracklist>
+                <tr>
+                    <td><p-tableCheckbox [value]="tracklist" /></td>
+                    <td>{{ tracklist.tracklistName }}</td>
+                    <td>{{ showOriginalName() ? tracklist.mediaOriginalName : tracklist.mediaName }}</td>
+                    <td>{{ tracklist.mediaType }}</td>
+                    <td>{{ tracklist.seasonNumber ?? '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="5">Keine Tracklisten zum Entfernen gefunden oder alle ausgewählt.</td></tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <!-- Footer with Action Buttons -->
+    <div class="tracklist-unlink-dialog-footer">
+        <p-button label="Abbrechen" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Auswahl aufheben" severity="warn" [disabled]="selectedTracklists().length === 0" (onClick)="selectedTracklists.set([])"></p-button>
+        <p-button label="Alle auswählen" severity="info" [disabled]="availableTracklists().length === 0" (onClick)="toggleSelectAll()"></p-button>
+        <p-button
+            label="Verknüpfung aufheben"
+            icon="pi pi-unlink"
+            severity="danger"
+            [disabled]="selectedTracklists().length === 0"
+            (onClick)="confirm()">
+        </p-button>
+    </div>
+</div>

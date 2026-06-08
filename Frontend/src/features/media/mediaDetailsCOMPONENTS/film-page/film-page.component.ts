@@ -23,7 +23,8 @@ import {
 import {
     Component,
     OnDestroy,
-    OnInit
+    OnInit,
+    inject
 } from '@angular/core';
 import {
     FormBuilder,
@@ -42,7 +43,7 @@ import { FloatLabelModule } from 'primeng/floatlabel';
 import { InputTextModule } from 'primeng/inputtext';
 import { MessageModule } from 'primeng/message';
 import { MessageService } from 'primeng/api';
-import { ActivatedRoute, Params } from '@angular/router';
+import {ActivatedRoute, Params, RouterLink} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
@@ -89,6 +90,14 @@ import {Image} from 'primeng/image';
 import {
     DatetimeWithUnitFormattingPipe
 } from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { TracklistTagSelectionDialogComponent } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-selection-dialog/tracklist-tag-selection-dialog.component';
+import { TracklistTagUnlinkDialogComponent } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-unlink-dialog/tracklist-tag-unlink-dialog.component';
+import { TracklistTagAssociationService } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/services/tracklist-tag-association.service';
+import {
+    TracklistTagFormDialogComponent
+} from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
+import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
 
 @Component({
     selector: 'app-film-page',
@@ -114,6 +123,7 @@ import {
         Image,
         NgOptimizedImage,
         DatetimeWithUnitFormattingPipe,
+        RouterLink,
     ],
     templateUrl: './film-page.component.html',
     styleUrl: './film-page.component.css',
@@ -129,6 +139,7 @@ import {
         UC_GetTracklistDELETEResponseSubject,
         UC_TriggerTracklistDELETESubject,
         UC_TriggerTracklistUPDATESubject,
+        DialogService,
     ],
 })
 export class FilmPageComponent implements OnInit, OnDestroy {
@@ -162,6 +173,12 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     private createSubscription: Subscription | null = null;
     private updateSubscription: Subscription | null = null;
     private deleteSubscription: Subscription | null = null;
+
+    private readonly dialogService = inject(DialogService);
+    private readonly tracklistTagAssociationService = inject(TracklistTagAssociationService);
+    private dialogRef: DynamicDialogRef | undefined;
+
+    public readonly TRACKLIST_TAG_URLS = TRACKLIST_TAG_URLS;
 
     constructor(
         private titleService: Title,
@@ -294,6 +311,9 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.createSubscription?.unsubscribe();
         this.updateSubscription?.unsubscribe();
         this.deleteSubscription?.unsubscribe();
+        if (this.dialogRef) {
+            this.dialogRef.destroy();
+        }
     }
 
     public loadData = (movieID: string | null) => {
@@ -464,8 +484,114 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.setVisibilityStatus(0);
     };
 
+    public openTagSelectionDialog(tracklist: any) {
+        const existingTagIds = tracklist.tags?.map((t: any) => t.id) || [];
+        this.dialogRef = this.dialogService.open(TracklistTagSelectionDialogComponent, {
+            header: 'Tags zu Trackliste hinzufügen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'auto' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { existingTagIds }
+        });
+
+        this.dialogRef.onClose.subscribe((selectedTags: any[]) => {
+            if (selectedTags && selectedTags.length > 0) {
+                const tagIds = selectedTags.map(t => t.id);
+                const request$ = tagIds.length === 1
+                    ? this.tracklistTagAssociationService.addTagToTracklist(tracklist.id, tagIds[0])
+                    : this.tracklistTagAssociationService.addTagsToTracklist(tracklist.id, tagIds);
+
+                request$.subscribe({
+                    next: () => {
+                        this.messageService.add(getMessageObject('success', 'Tags erfolgreich verknüpft'));
+                        this.refreshPage();
+                    },
+                    error: () => this.messageService.add(getMessageObject('error', 'Fehler beim Verknüpfen der Tags'))
+                });
+            }
+        });
+    }
+
+    public openTagUnlinkDialog(tracklist: any) {
+        const tags = tracklist.tags || [];
+
+        this.dialogRef = this.dialogService.open(TracklistTagUnlinkDialogComponent, {
+            header: 'Tags von Trackliste entfernen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'auto' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { tags }
+        });
+
+        this.dialogRef.onClose.subscribe((selectedTags: any[]) => {
+            if (selectedTags && selectedTags.length > 0) {
+                const tagIds = selectedTags.map(t => t.id);
+                const request$ = tagIds.length === 1
+                    ? this.tracklistTagAssociationService.removeTagFromTracklist(tracklist.id, tagIds[0])
+                    : this.tracklistTagAssociationService.removeTagsFromTracklist(tracklist.id, tagIds);
+
+                request$.subscribe({
+                    next: () => {
+                        this.messageService.add(getMessageObject('success', 'Tags erfolgreich entfernt'));
+                        this.refreshPage();
+                    },
+                    error: () => this.messageService.add(getMessageObject('error', 'Fehler beim Entfernen der Tags'))
+                });
+            }
+        });
+    }
+
+    public openCreateTagDialog(tracklist: any) {
+        if (!tracklist) return;
+        this.dialogRef = this.dialogService.open(TracklistTagFormDialogComponent, {
+            header: 'Neuen Tag erstellen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'auto' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { prefill: { tracklistId: tracklist.id } }
+        });
+
+        this.dialogRef.onClose.subscribe((newTag: any) => {
+            if (newTag) {
+                this.refreshPage();
+            }
+        });
+    }
+
     public handleImageError() {
         this.isThumbnailLoading = false;
         this.imageError = true;
+    }
+
+    public getTextColorForBackground(hexcolor: string | undefined | null): string | null {
+        if (!hexcolor) return null;
+
+        let hex = hexcolor.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        if (hex.length !== 6) return null;
+
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+
+        // YIQ-Formel zur Berechnung der wahrgenommenen Helligkeit
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+        return yiq >= 128 ? '#000000' : null;
     }
 }

@@ -57,7 +57,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <div class="headingDIV">
                 <h1>{{ seasonData.media.name }}</h1>
             </div>
-            <div class="seasonMeta">
+            <div class="season-page-media-meta">
                 <div class="seasonPictureWrapper">
                     @if (seasonData.media.posterPath && !imageError) {
                         @if (isThumbnailLoading) {
@@ -76,7 +76,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             appendTo="body"
                             loading="lazy"
                         >
-                            <ng-template #image>
+                            <ng-template pTemplate="image">
                                 <img
                                     [ngSrc]="POSTER_PATH + seasonData.media.posterPath"
                                     (load)="isThumbnailLoading = false"
@@ -98,7 +98,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         </div>
                     }
                 </div>
-                <div class="seasonMetaContent">
+                <div class="season-page-media-content-area">
                     <div>
                         <h2>Beschreibung</h2>
                         @if (seasonData.media.description) {
@@ -148,135 +148,345 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <form action="" [formGroup]="tracklistSelectionForm">
                             @if (tvDataWithTracklist && tvDataWithTracklist.seasons && tvDataWithTracklist.seasons.length > 0) {
                                 <p-accordion>
-                                @for (season of tvDataWithTracklist.seasons; track $index) {
-                                    <p-accordion-panel
-                                        [value]="$index"
-                                        class="panel"
-                                        (click)="setSelectedSeason(season)"
+                                    @for (season of tvDataWithTracklist.seasons; track $index) {
+                                        <p-accordion-panel
+                                            [value]="$index"
+                                            class="panel"
+                                            (click)="setSelectedSeason(season)"
                                         >
-                                        <p-accordion-header>{{ season.name }}</p-accordion-header>
-                                        <p-accordion-content>
-                                            <div class="seasonWrapper">
-                                                <div class="seasonPoster">
-                                                    @if (season.posterPath && !imageError) {
-                                                        @if (isThumbnailLoading) {
-                                                            <p-progressSpinner
-                                                                styleClass="w-4rem h-4rem"
-                                                                strokeWidth="4"
-                                                                fill="transparent"
-                                                                animationDuration=".5s" />
+                                            <p-accordion-header>{{ season.name }}</p-accordion-header>
+                                            <p-accordion-content>
+                                                <div class="season-page-information-area">
+                                                    <div class="season-page-season-poster">
+                                                        @if (season.posterPath && !imageError) {
+                                                            @if (isThumbnailLoading) {
+                                                                <p-progressSpinner
+                                                                    styleClass="w-4rem h-4rem"
+                                                                    strokeWidth="4"
+                                                                    fill="transparent"
+                                                                    animationDuration=".5s" />
+                                                            }
+
+                                                            <p-image
+                                                                [src]="POSTER_PATH + season.posterPath"
+                                                                [previewImageSrc]="originalPosterPath + season.posterPath"
+                                                                [alt]="'Poster für ' + season.name"
+                                                                [preview]="true"
+                                                                appendTo="body"
+                                                                loading="lazy"
+                                                            >
+                                                                <ng-template pTemplate="image">
+                                                                    <img
+                                                                        [ngSrc]="POSTER_PATH + season.posterPath"
+                                                                        (load)="isThumbnailLoading = false"
+                                                                        (error)="handleImageError()"
+                                                                        [alt]="'Poster für ' + season.name"
+                                                                        width="200"
+                                                                        height="300"
+                                                                        class="episode-dialog-img"
+                                                                        style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                                                                    />
+                                                                </ng-template>
+
+                                                            </p-image>
                                                         }
+                                                        @else {
+                                                            <div class="image-error-fallback2">
+                                                                <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                                                                <p>Kein Poster für die Serie "{{ seasonData.media.name }}" vorhanden.</p>
+                                                            </div>
+                                                        }
+                                                    </div>
+                                                    <div class="season-page-season-meta">
+                                                        <div>
+                                                            <div class="season-page-season-information-area">
+                                                                <span class="season-page-description">
+                                                                    <span class="season-page-info-label">Beschreibung:</span>
+                                                                    <span class="season-page-info-value"> {{ season.overview ? season.overview : 'keine Beschreibung vorhanden'}}</span>
+                                                                </span>
 
-                                                        <p-image
-                                                            [src]="POSTER_PATH + season.posterPath"
-                                                            [previewImageSrc]="originalPosterPath + season.posterPath"
-                                                            [alt]="'Poster für ' + season.name"
-                                                            [preview]="true"
-                                                            appendTo="body"
-                                                            loading="lazy"
-                                                        >
-                                                            <ng-template #image>
-                                                                <img
-                                                                    [ngSrc]="POSTER_PATH + season.posterPath"
-                                                                    (load)="isThumbnailLoading = false"
-                                                                    (error)="handleImageError()"
-                                                                    [alt]="'Poster für ' + season.name"
-                                                                    width="200"
-                                                                    height="300"
-                                                                    class="episode-dialog-img"
-                                                                    style="object-fit: cover; border-radius: 8px; cursor: pointer;"
-                                                                />
-                                                            </ng-template>
+                                                                <div>
+                                                                    <span class="season-page-info-label">Erstausstrahlung:</span>
+                                                                    <span> {{ season.airDate ? (season.airDate | dateFormatting) : 'kein Erstausstrahlungsdatum vorhanden'}}</span>
+                                                                </div>
 
-                                                        </p-image>
-                                                    }
-                                                    @else {
-                                                        <div class="image-error-fallback2">
-                                                            <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
-                                                            <p>Kein Poster für die Serie "{{ seasonData.media.name }}" vorhanden.</p>
+                                                                <div>
+                                                                    <span class="season-page-info-label">Staffel Id:</span>
+                                                                    <span> {{ season.id }}</span>
+                                                                </div>
+                                                            </div>
+
+                                                            <div class="season-page-tracklist-information-area">
+                                                                <h3>Tracklisten-Details</h3>
+                                                                @if (tracklistSelectionForm.get('selectedTracklist')?.value; as selectedTracklist) {
+                                                                    <div>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Startdatum:</span>
+                                                                            <span
+                                                                                class="season-page-info-value"
+                                                                                [pTooltip]="selectedTracklist.startDate | dateTimeWithUnitFormatting"
+                                                                                tooltipPosition="top"
+                                                                                style="cursor: help;"
+                                                                            >
+                                                                                {{ selectedTracklist.startDate ? (selectedTracklist.startDate | dateFormatting) : '-' }}
+                                                                            </span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Bewertung:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.rating != null ? selectedTracklist.rating + ' / 10' : '-' }}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Sprache:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.language ? (selectedTracklist.language | languageName) : '-'}}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Erste Episode:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.startEpisodeNumber ? selectedTracklist.tracklistSeason.startEpisodeNumber : '-'}}</span>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Enddatum:</span>
+                                                                            <span
+                                                                                class="season-page-info-value"
+                                                                                [pTooltip]="selectedTracklist.finishDate | dateTimeWithUnitFormatting"
+                                                                                tooltipPosition="top"
+                                                                                style="cursor: help;"
+                                                                            >
+                                                                                {{ selectedTracklist.finishDate ? (selectedTracklist.finishDate | dateFormatting) : '-' }}
+                                                                            </span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Status:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.status ? getGermanTracklistStatus(selectedTracklist.status) : '-' }}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Untertitel:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.subtitle ? (selectedTracklist.subtitle | languageName) : '-'}}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Letzte Episode:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.endEpisodeNumber ? selectedTracklist.tracklistSeason.endEpisodeNumber : '-'}}</span>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Erstelldatum:</span>
+                                                                            <span class="season-page-info-value"
+                                                                                  [pTooltip]="selectedTracklist.createdAt | dateTimeWithUnitFormatting"
+                                                                                  tooltipPosition="top"
+                                                                                  style="cursor: help;"
+                                                                            >
+                                                                                {{ selectedTracklist.createdAt | dateFormatting }}
+                                                                            </span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Erneut glotzen?:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.isRewatching ? 'Ja' : 'Nein'}}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Tracklist Id:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.id }}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Staffelnummer:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.customSeasonNumber ? selectedTracklist.tracklistSeason.customSeasonNumber : '-' }}</span>
+                                                                        </span>
+                                                                    </div>
+                                                                    <div>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Zuletzt geändert:</span>
+                                                                            <span class="season-page-info-value"
+                                                                                  [pTooltip]="selectedTracklist.updatedAt ? (selectedTracklist.updatedAt | dateTimeWithUnitFormatting) : '-'"
+                                                                                  [tooltipDisabled]="!selectedTracklist.updatedAt"
+                                                                                  tooltipPosition="top"
+                                                                                  style="cursor: help;"
+                                                                            >
+                                                                                {{ selectedTracklist.updatedAt ? (selectedTracklist.updatedAt | dateFormatting) : '-'}}
+                                                                            </span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Custom AirDate:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.customAirDate ? (selectedTracklist.customAirDate | dateFormatting) : '-' }}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Eigenes Poster?:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.customPosterPath ? 'Ja' : 'Nein' }}</span>
+                                                                        </span>
+                                                                        <span class="season-page-info-item">
+                                                                            <span class="season-page-info-label">Part:</span>
+                                                                            <span class="season-page-info-value">{{ selectedTracklist.tracklistSeason.customPartNumber ? selectedTracklist.tracklistSeason.customPartNumber : '-' }}</span>
+                                                                        </span>
+                                                                    </div>
+                                                                } @else {
+                                                                    <p style="color: #666;"><i>Aktuell ist keine Trackliste für diese Staffel ausgewählt oder angelegt.</i></p>
+                                                                }
+                                                            </div>
                                                         </div>
-                                                    }
-                                                </div>
-                                                <div class="seasonMeta">
-                                                    <div>
-                                                        @if (season.overview) {
-                                                            <p class="descriptionP">
-                                                                Beschreibung: <br />
-                                                                {{ season.overview }}
-                                                            </p>
-                                                        }
-                                                        @else {
-                                                            <p>Beschreibung: <i>keine Beschreibung vorhanden</i></p>
-                                                        }
-
-                                                        @if (season.airDate) {
-                                                            <p>Erstausstrahlung: {{ season.airDate | dateFormatting }}</p>
-                                                        }
-                                                        @else {
-                                                            <p><i>kein Erstausstrahlungsdatum vorhanden</i></p>
-                                                        }
-                                                        <p>ID: {{season.id}}</p>
                                                     </div>
                                                 </div>
-                                            </div>
 
 
-                                            @if (season.tracklistsForSeason && season.tracklistsForSeason.length > 0) {
-                                                <div class="tracklistSelectionDIV">
-                                                    <p-select
-                                                        [options]="season.tracklistsForSeason"
-                                                        optionLabel="tracklistName"
-                                                        formControlName="selectedTracklist"
-                                                        placeholder="Trackliste auswählen ..."
-                                                        >
-                                                    </p-select>
+                                                @if (season.tracklistsForSeason && season.tracklistsForSeason.length > 0) {
+                                                    <div class="tracklistSelectionDIV">
+                                                        <p-select
+                                                            [options]="season.tracklistsForSeason"
+                                                            optionLabel="tracklistName"
+                                                            formControlName="selectedTracklist"
+                                                            placeholder="Trackliste auswählen ..."
+                                                        ></p-select>
+                                                    </div>
 
                                                     @if (isEditingButtonVisible) {
-                                                        <p-button label="Bearbeiten" (onClick)="setVisibility(2)" icon="pi pi-pencil" />
+                                                        <div class="season-page-action-bar">
+                                                            <p-button
+                                                                (onClick)="setVisibility(2)"
+                                                                icon="pi pi-pencil"
+                                                                label="Trackliste bearbeiten"
+                                                                size="small"
+                                                                [outlined]="true"
+                                                            ></p-button>
+
+                                                            <p-button
+                                                                icon="pi pi-plus"
+                                                                (onClick)="openTracklistForm(season)"
+                                                                label="Trackliste anlegen"
+                                                                size="small"
+                                                                [outlined]="true"
+                                                            ></p-button>
+
+                                                            <p-button
+                                                                icon="pi pi-plus"
+                                                                label="Tag erstellen"
+                                                                (onClick)="openCreateTagDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                                size="small"
+                                                                [outlined]="true"
+                                                            ></p-button>
+
+                                                            <p-button
+                                                                icon="pi pi-tags"
+                                                                label="Tags verknüpfen"
+                                                                (onClick)="openTagSelectionDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                                size="small"
+                                                                [outlined]="true"
+                                                            ></p-button>
+
+                                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
+                                                                <p-button
+                                                                    label="Tags entfernen"
+                                                                    severity="danger"
+                                                                    (onClick)="openTagUnlinkDialog(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                                    size="small"
+                                                                    [outlined]="true"
+                                                                >
+                                                                    <ng-template pTemplate="icon">
+                                                                        <div style="position: relative; display: inline-flex; margin-right: 0.5rem;">
+                                                                            <i class="pi pi-tags"></i>
+                                                                            <i class="pi pi-times season-page-tag-unlink-icon"></i>
+                                                                        </div>
+                                                                    </ng-template>
+                                                                </p-button>
+                                                            }
+
+                                                            <p-button
+                                                                [icon]="applyEpisodeFilter ? 'pi pi-filter-slash' : 'pi pi-filter'"
+                                                                [label]="applyEpisodeFilter ? 'Alle Episoden anzeigen' : 'Nur Tracklist-Episoden anzeigen'"
+                                                                (onClick)="applyEpisodeFilter = !applyEpisodeFilter"
+                                                                size="small"
+                                                                [outlined]="!applyEpisodeFilter"
+                                                                [severity]="applyEpisodeFilter ? 'info' : 'secondary'"
+                                                                [disabled]="!hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                                [title]="!hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value) ? 'Keine spezifischen Episoden für diese Trackliste definiert' : 'Episodenfilter umschalten'"
+                                                            ></p-button>
+
+                                                        </div>
                                                     }
-                                                </div>
-                                            }
+                                                } @else {
+                                                    <div class="season-page-action-bar" style="margin: 0.5rem 0">
+                                                        <p-button
+                                                            icon="pi pi-plus"
+                                                            (onClick)="openTracklistForm(season)"
+                                                            label="Trackliste anlegen"
+                                                            size="small"
+                                                            [outlined]="true"
+                                                        ></p-button>
+                                                    </div>
+                                                }
 
-                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value?.tags?.length > 0) {
-                                                <div
-                                                    style="display: flex; flex-wrap: wrap; gap: 0.5rem; margin-bottom: 1rem;">
-                                                    @for (tag of tracklistSelectionForm.get('selectedTracklist')?.value.tags; track tag.id) {
-                                                        <p-tag
-                                                            [value]="tag.tagName"
-                                                            [style]="{'background-color': tag.color}">
-                                                        </p-tag>
+                                                @if (tracklistSelectionForm.get('selectedTracklist')?.value; as selectedTracklist) {
+                                                    @if (selectedTracklist.tags?.length > 0 || tagViewMode() === 'table') {
+                                                        @if (tagViewMode() === 'inline') {
+                                                            <div class="season-page-tracklist-tag-area">
+                                                                <div class="season-page-tag-action-buttons-inline">
+                                                                    <p-button icon="pi pi-copy" [rounded]="true" [text]="true" size="small" (onClick)="copyTagIdsToClipboard(selectedTracklist.tags)" pTooltip="Alle Tag-IDs kopieren" tooltipPosition="top" [outlined]="true"></p-button>
+                                                                    <p-button icon="pi pi-table" [rounded]="true" [text]="true" size="small" (onClick)="toggleTagView()" pTooltip="Zur Tabellenansicht wechseln" tooltipPosition="top" [outlined]="true"></p-button>
+                                                                </div>
+                                                                @for (tag of selectedTracklist.tags; track tag.id) {
+                                                                    <p-tag
+                                                                        [value]="tag.tagName"
+                                                                        [style]="{'background-color': tag.color, 'color': getTextColorForBackground(tag.color), 'cursor': 'pointer'}"
+                                                                        [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
+                                                                        class="season-page-tag-item"
+                                                                    ></p-tag>
+                                                                }
+                                                            </div>
+                                                        } @else {
+                                                            <div class="season-page-tracklist-tag-area-table">
+                                                                <p-table [value]="tagCategories" styleClass="season-page-tag-table">
+                                                                    <ng-template pTemplate="header">
+                                                                        <tr>
+                                                                            <th class="season-page-tag-table-cat-col">Kategorie</th>
+                                                                            <th class="season-page-tag-table-tags-col">
+                                                                                <div class="season-page-tag-table-header-flex">
+                                                                                    <span>Tags</span>
+                                                                                    <div class="season-page-tag-table-actions">
+                                                                                        <p-button icon="pi pi-copy" [rounded]="true" [text]="true" size="small" (onClick)="copyTagIdsToClipboard(selectedTracklist.tags)" pTooltip="Alle Tag-IDs kopieren" tooltipPosition="top" [outlined]="true"></p-button>
+                                                                                        <p-button icon="pi pi-list" [rounded]="true" [text]="true" size="small" (onClick)="toggleTagView()" pTooltip="Zur kompakten Ansicht wechseln" tooltipPosition="top" [outlined]="true"></p-button>
+                                                                                    </div>
+                                                                                </div>
+                                                                            </th>
+                                                                        </tr>
+                                                                    </ng-template>
+                                                                    <ng-template pTemplate="body" let-cat>
+                                                                        @let catTags = getTagsForCategory(selectedTracklist.tags, cat.value);
+                                                                        <tr>
+                                                                            <td class="season-page-tag-table-cat-col">
+                                                                                <div class="season-page-tag-table-cat-content">
+                                                                                    <span>{{ cat.label }}</span>
+                                                                                    <p-button icon="pi pi-copy" [text]="true" [rounded]="true" size="small" (onClick)="copyTagIdsToClipboard(catTags)" [disabled]="catTags.length === 0" pTooltip="Tag-IDs dieser Kategorie kopieren" tooltipPosition="top" [outlined]="true"></p-button>
+                                                                                </div>
+                                                                            </td>
+                                                                            <td class="season-page-tag-table-tags-col">
+                                                                                <div class="season-page-tag-table-scroll-container">
+                                                                                    @for (tag of catTags; track tag.id) {
+                                                                                        <p-tag
+                                                                                            [value]="tag.tagName"
+                                                                                            [style]="{'background-color': tag.color, 'color': getTextColorForBackground(tag.color), 'cursor': 'pointer'}"
+                                                                                            [routerLink]="['/' + TRACKLIST_TAG_URLS.detailTracklist(tag.id)]"
+                                                                                            class="season-page-tag-item-table"
+                                                                                        ></p-tag>
+                                                                                    }
+                                                                                </div>
+                                                                            </td>
+                                                                        </tr>
+                                                                    </ng-template>
+                                                                </p-table>
+                                                            </div>
+                                                        }
                                                     }
-                                                </div>
-                                            }
-
-                                            <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="openTracklistForm(season)" />
-
-                                            @if (tracklistSelectionForm.get('selectedTracklist')?.value
-                                            && hasCustomEpisodeBoundaries(tracklistSelectionForm.get('selectedTracklist')?.value)) {
-                                                <div style="display: flex; align-items: center; gap: 0.5rem; margin-bottom: 1rem; margin-top: 1.5rem; padding: 1rem; background: rgba(0,0,0,0.03); border-radius: 8px;">
-                                                    <p-checkbox
-                                                        [(ngModel)]="applyEpisodeFilter"
-                                                        [binary]="true"
-                                                        inputId="filterSwitch_{{ season.id }}"
-                                                        [ngModelOptions]="{standalone: true}">
-                                                    </p-checkbox>
-                                                    <label for="filterSwitch" style="cursor: pointer; margin: 0; font-weight: bold;">
-                                                        Nur definierte Episoden dieser Trackliste anzeigen
-                                                    </label>
-                                                </div>
-                                            }
-                                            <app-episode-list
-                                                [episodeList]="getFilteredEpisodes(season.episodes, tracklistSelectionForm.get('selectedTracklist')?.value)"
-                                                [tracklistSelectionForm]="tracklistSelectionForm"
-                                                [selectedSeason]="selectedSeason"
-                                                [tracklistsOfSeason]="tracklistsOfSeason"
-                                                [inpSelectedTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value || null"
-                                                [inpIsWithTracklist]="true"
-                                                (setEpisode)="setCurrentEpisode($event, false)"
-                                                (setEpisodeForEditing)="setCurrentEpisode($event, true)"
-                                            />
-                                        </p-accordion-content>
-                                    </p-accordion-panel>
+                                                }
+                                                <app-episode-list
+                                                    [episodeList]="getFilteredEpisodes(season.episodes, tracklistSelectionForm.get('selectedTracklist')?.value)"
+                                                    [tracklistSelectionForm]="tracklistSelectionForm"
+                                                    [selectedSeason]="selectedSeason"
+                                                    [tracklistsOfSeason]="tracklistsOfSeason"
+                                                    [inpSelectedTracklist]="tracklistSelectionForm.get('selectedTracklist')?.value || null"
+                                                    [inpIsWithTracklist]="true"
+                                                    (setEpisode)="setCurrentEpisode($event, false)"
+                                                    (setEpisodeForEditing)="setCurrentEpisode($event, true)"
+                                                />
+                                            </p-accordion-content>
+                                        </p-accordion-panel>
                                     }
                                 </p-accordion>
                             }

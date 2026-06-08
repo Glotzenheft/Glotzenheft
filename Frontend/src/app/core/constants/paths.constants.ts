@@ -62,3 +62,27 @@ export const MEDIA_PATHS = {
 export const BACKUP_PATHS = {
     base: 'backup',
 } as const;
+
+export const TRACKLIST_TAG_PATHS = {
+    base: 'tags',
+    detail: ':tagId',
+    tracklists: 'tracklists',
+    analytics: 'analytics',
+} as const;
+
+export const TRACKLIST_TAG_FILTER_PATHS = {
+    base: 'tag-filter',
+} as const;
+
+export const GROUPS_PATHS = {
+    base: 'groups'
+} as const;
+
+export const TMDB_IMAGE_PATHS = {
+    base: 'https://image.tmdb.org/t/p/',
+    original: 'original',
+    w185Poster: 'w185',
+    w342Poster: 'w342',
+    w500Poster: 'w500',
+    w780Poster: 'w780'
+}

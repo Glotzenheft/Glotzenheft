@@ -15,8 +15,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Params } from '@angular/router';
+import { Component, OnDestroy, OnInit, inject, signal } from '@angular/core';
+import {ActivatedRoute, Params, RouterLink, Router} from '@angular/router';
 import { Title } from '@angular/platform-browser';
 import { map, Observable, Subscription } from 'rxjs';
 import {CommonModule, NgOptimizedImage} from '@angular/common';
@@ -39,6 +39,7 @@ import {
     Validators,
 } from '@angular/forms';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
+import { DatetimeWithUnitFormattingPipe } from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 import { EpisodeListComponent } from '../../episodesCOMPONENTS/episode-list/episode-list.component';
 import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
@@ -88,7 +89,19 @@ import { UC_TriggerTracklistUPDATESubject } from '../../../../app/core/use-cases
 import { UC_TriggerTracklistDELETESubject } from '../../../../app/core/use-cases/media/trigger-tracklist-delete-subject.use-case';
 import {Tag} from 'primeng/tag';
 import {Image} from 'primeng/image';
-import {Checkbox} from 'primeng/checkbox';
+import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
+import { TracklistTagSelectionDialogComponent } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-selection-dialog/tracklist-tag-selection-dialog.component';
+import { TracklistTagUnlinkDialogComponent } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-unlink-dialog/tracklist-tag-unlink-dialog.component';
+import { TracklistTagAssociationService } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/services/tracklist-tag-association.service';
+import {
+    TracklistTagFormDialogComponent
+} from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
+import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
+import { LanguageNamePipe } from '../../../../app/shared/pipes/language-name/language-name.pipe';
+import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
+import { TRACKLIST_TAG_TYPE_OPTIONS } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/models/constants/tracklist-tag-type.constants';
+import {TableModule} from 'primeng/table';
 
 @Component({
     selector: 'app-season-page',
@@ -101,6 +114,7 @@ import {Checkbox} from 'primeng/checkbox';
         FormsModule,
         ButtonModule,
         DateFormattingPipe,
+        DatetimeWithUnitFormattingPipe,
         FloatLabelModule,
         InputTextModule,
         MessageModule,
@@ -119,7 +133,9 @@ import {Checkbox} from 'primeng/checkbox';
         Tag,
         Image,
         NgOptimizedImage,
-        Checkbox,
+        RouterLink,
+        LanguageNamePipe,
+        TableModule,
     ],
     templateUrl: './season-page.component.html',
     styleUrl: './season-page.component.css',
@@ -137,6 +153,7 @@ import {Checkbox} from 'primeng/checkbox';
         UC_GetTracklistDELETEResponseSubject,
         UC_TriggerTracklistUPDATESubject,
         UC_TriggerTracklistDELETESubject,
+        DialogService,
     ],
 })
 //todo rename to Series
@@ -167,6 +184,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public tracklistSelectionForm!: FormGroup;
     public currentTracklistSelection: SeasonTracklistType | null = null;
 
+    public tagViewMode = signal<'inline' | 'table'>('inline');
+    public tagCategories = TRACKLIST_TAG_TYPE_OPTIONS;
+
     // dialog and visibility variables --------------------------
     // = 0: media details; = 1: create tracklist; = 2: update tracklist; = 3: add new episode to current tracklist; = 4: edit episode of current tracklist
     public isTracklistFormVisible: number = 0;
@@ -182,6 +202,13 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     private updateSubscription: Subscription | null = null;
     private deleteSubscription: Subscription | null = null;
     private seasonDataSubscription: Subscription | null = null;
+
+    private readonly dialogService = inject(DialogService);
+    private readonly tracklistTagAssociationService = inject(TracklistTagAssociationService);
+    private dialogRef: DynamicDialogRef | undefined;
+    private readonly router = inject(Router);
+
+    public readonly TRACKLIST_TAG_URLS = TRACKLIST_TAG_URLS;
 
     constructor(
         private titleService: Title,
@@ -201,7 +228,15 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         private readonly getTracklistDELETEResponseSubjectUseCase: UC_GetTracklistDELETEResponseSubject,
         private readonly triggerTracklistUPDATESubjectUseCase: UC_TriggerTracklistUPDATESubject,
         private readonly triggerTracklistDELETESubjectUseCase: UC_TriggerTracklistDELETESubject,
-    ) {}
+    ) {
+        this.route.queryParams.pipe(takeUntilDestroyed()).subscribe(params => {
+            if (params['tagView'] === 'table') {
+                this.tagViewMode.set('table');
+            } else {
+                this.tagViewMode.set('inline');
+            }
+        });
+    }
 
     ngOnInit(): void {
         this.route.params.subscribe((params: Params) => {
@@ -327,6 +362,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.updateSubscription?.unsubscribe();
         this.deleteSubscription?.unsubscribe();
         this.seasonDataSubscription?.unsubscribe();
+        if (this.dialogRef) {
+            this.dialogRef.destroy();
+        }
     }
 
     // functions -----------------------------------------------------
@@ -622,6 +660,94 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.setVisibility(0);
     };
 
+    public openTagSelectionDialog(tracklist: any) {
+        const existingTagIds = tracklist.tags?.map((t: any) => t.id) || [];
+        this.dialogRef = this.dialogService.open(TracklistTagSelectionDialogComponent, {
+            header: 'Tags zu Trackliste hinzufügen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'auto' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { existingTagIds }
+        });
+
+        this.dialogRef.onClose.subscribe((selectedTags: any[]) => {
+            if (selectedTags && selectedTags.length > 0) {
+                const tagIds = selectedTags.map(t => t.id);
+                const request$ = tagIds.length === 1
+                    ? this.tracklistTagAssociationService.addTagToTracklist(tracklist.id, tagIds[0])
+                    : this.tracklistTagAssociationService.addTagsToTracklist(tracklist.id, tagIds);
+
+                request$.subscribe({
+                    next: () => {
+                        this.messageService.add(getMessageObject('success', 'Tags erfolgreich verknüpft'));
+                        this.refreshPage();
+                    },
+                    error: () => this.messageService.add(getMessageObject('error', 'Fehler beim Verknüpfen der Tags'))
+                });
+            }
+        });
+    }
+
+    public openTagUnlinkDialog(tracklist: any) {
+        const tags = tracklist.tags || [];
+        this.dialogRef = this.dialogService.open(TracklistTagUnlinkDialogComponent, {
+            header: 'Tags von Trackliste entfernen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'auto' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { tags }
+        });
+
+        this.dialogRef.onClose.subscribe((selectedTags: any[]) => {
+            if (selectedTags && selectedTags.length > 0) {
+                const tagIds = selectedTags.map(t => t.id);
+                const request$ = tagIds.length === 1
+                    ? this.tracklistTagAssociationService.removeTagFromTracklist(tracklist.id, tagIds[0])
+                    : this.tracklistTagAssociationService.removeTagsFromTracklist(tracklist.id, tagIds);
+
+                request$.subscribe({
+                    next: () => {
+                        this.messageService.add(getMessageObject('success', 'Tags erfolgreich entfernt'));
+                        this.refreshPage();
+                    },
+                    error: () => this.messageService.add(getMessageObject('error', 'Fehler beim Entfernen der Tags'))
+                });
+            }
+        });
+    }
+
+    public openCreateTagDialog(tracklist: any) {
+        if (!tracklist) return;
+        this.dialogRef = this.dialogService.open(TracklistTagFormDialogComponent, {
+            header: 'Neuen Tag erstellen',
+            modal: true,
+            width: '60vw',
+            closable: true,
+            contentStyle: { overflow: 'auto' },
+            breakpoints: {
+                '1200px': '75vw',
+                '960px': '90vw'
+            },
+            data: { prefill: { tracklistId: tracklist.id } }
+        });
+
+        this.dialogRef.onClose.subscribe((newTag: any) => {
+            if (newTag) {
+                this.refreshPage();
+            }
+        });
+    }
+
     public handleImageError() {
         this.isThumbnailLoading = false;
         this.imageError = true;
@@ -629,14 +755,13 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     public applyEpisodeFilter: boolean = true;
 
-    // NEU: Prüft, ob die Trackliste überhaupt Grenzen (Start/Ende) definiert hat
+
     public hasCustomEpisodeBoundaries = (tracklist: SeasonTracklist | null): boolean => {
         if (!tracklist || !tracklist.tracklistSeason) return false;
         return tracklist.tracklistSeason.startEpisodeNumber !== null ||
             tracklist.tracklistSeason.endEpisodeNumber !== null;
     };
 
-    // NEU: Filtert die Episoden basierend auf dem Schalter und den eingestellten Grenzen
     public getFilteredEpisodes = (
         episodes: SeasonEpisode[],
         tracklist: SeasonTracklist | null
@@ -666,4 +791,50 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             return isValid;
         });
     };
+
+    public getGermanTracklistStatus = (status: string): string => {
+        return convertTracklistStatusIntoGerman(status);
+    };
+
+    public copyTagIdsToClipboard(tags: any[] | null | undefined): void {
+        if (!tags || tags.length === 0) return;
+        const ids = tags.map(tag => tag.id).join(',');
+        navigator.clipboard.writeText(ids).then(() => {
+            this.messageService.add(getMessageObject('success', 'Tag-IDs in Zwischenablage kopiert'));
+        }).catch(() => {
+            this.messageService.add(getMessageObject('error', 'Konnte Tag-IDs nicht kopieren'));
+        });
+    }
+
+    public toggleTagView(): void {
+        const newView = this.tagViewMode() === 'inline' ? 'table' : 'inline';
+        this.tagViewMode.set(newView);
+        void this.router.navigate([], {
+            relativeTo: this.route,
+            queryParams: { tagView: newView === 'table' ? 'table' : null },
+            queryParamsHandling: 'merge'
+        });
+    }
+
+    public getTagsForCategory(tags: any[] | null | undefined, category: string): any[] {
+        if (!tags) return [];
+        return tags.filter(tag => tag.tracklistTagType === category);
+    }
+
+    public getTextColorForBackground(hexcolor: string | undefined | null): string | null {
+        if (!hexcolor) return null;
+
+        let hex = hexcolor.replace('#', '');
+        if (hex.length === 3) hex = hex.split('').map(c => c + c).join('');
+        if (hex.length !== 6) return null;
+
+        const r = parseInt(hex.substring(0, 2), 16);
+        const g = parseInt(hex.substring(2, 4), 16);
+        const b = parseInt(hex.substring(4, 6), 16);
+
+        // YIQ-Formel zur Berechnung der wahrgenommenen Helligkeit
+        const yiq = ((r * 299) + (g * 587) + (b * 114)) / 1000;
+
+        return yiq >= 128 ? '#000000' : null;
+    }
 }

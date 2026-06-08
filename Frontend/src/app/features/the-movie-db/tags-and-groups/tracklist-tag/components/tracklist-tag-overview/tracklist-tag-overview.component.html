@@ -1,0 +1,55 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="tag-overview-container">
+    @if (isLoading()) {
+        <div class="loading-state">Lade Tags...</div>
+    } @else {
+
+        @for (group of groupedTags(); track group.type) {
+            <section class="tag-group-section">
+
+                <div class="group-header">
+                    <h2 class="group-heading">{{ group.type | tracklistTagTypeLabel }}</h2>
+                    <p-button
+                        icon="pi pi-plus"
+                        [rounded]="true"
+                        [text]="true"
+                        severity="secondary"
+                        (onClick)="openCreateDialog(group.type)"
+                        pTooltip="Einen Tag für die Kategorie {{ group.type | tracklistTagTypeLabel }} erstellen">
+                    </p-button>
+                </div>
+
+                <div class="tag-grid">
+                    @for (tag of group.tags; track tag.id) {
+                        <article class="tag-card">
+                            <a [routerLink]="['/' + getTagDetailUrl(tag.id)]" class="tag-link">
+                                @if (tag.color) {
+                                    <span class="color-indicator" [style.background-color]="tag.color"></span>
+                                }
+                                <span class="tag-name">{{ tag.tagName }}</span>
+                            </a>
+                        </article>
+                    } @empty {
+                        <div class="no-tags-hint">Noch keine Tags in dieser Kategorie vorhanden.</div>
+                    }
+                </div>
+            </section>
+        }
+    }
+</div>

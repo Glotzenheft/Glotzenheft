@@ -1,0 +1,109 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="tracklist-tag-selection-dialog-container">
+    <div class="tracklist-tag-selection-dialog-header">
+        <div class="tracklist-tag-selection-dialog-search-wrapper">
+            <div class="tracklist-tag-selection-dialog-search-input-container">
+                <i class="pi pi-search tracklist-tag-selection-dialog-search-icon"></i>
+                <input
+                    type="text"
+                    pInputText
+                    [formControl]="searchControl"
+                    placeholder="Suche nach Tag-Namen..."
+                    class="tracklist-tag-selection-dialog-search-input"
+                    id="tracklist-tag-selection-dialog-search-input"
+                />
+                <p-button
+                    icon="pi pi-clipboard"
+                    (onClick)="pasteIdsFromClipboard()"
+                    title="Tag-IDs aus Zwischenablage einfügen und automatisch auswählen"
+                    [outlined]="true"
+                    severity="secondary"
+                ></p-button>
+            </div>
+
+        </div>
+        @if (isLoading()) {
+            <p-progressSpinner
+                styleClass="tracklist-tag-selection-dialog-spinner"
+                strokeWidth="6"
+                animationDuration=".5s"
+            ></p-progressSpinner>
+        }
+    </div>
+
+    <div class="tracklist-tag-selection-dialog-content">
+        <p-accordion value="selected-items">
+            <p-accordion-panel value="selected-items">
+                <p-accordionheader>Ausgewählte Tags ({{ selectedTags().length }})</p-accordionheader>
+                <p-accordioncontent>
+                    @if (selectedTags().length === 0) {
+                        <div class="tracklist-tag-selection-dialog-empty-selection">
+                            Noch keine Tags ausgewählt.
+                        </div>
+                    } @else {
+                        <div class="tracklist-tag-selection-dialog-selected-items">
+                            @for (item of selectedTags(); track item.id) {
+                                <div class="tracklist-tag-selection-dialog-selected-item">
+                                    <p-tag [value]="item.tagName" [style]="{'background-color': item.color}"></p-tag>
+                                    <p-button icon="pi pi-times" [text]="true" [rounded]="true" severity="secondary"
+                                              (onClick)="removeFromSelection(item.id)"></p-button>
+                                </div>
+                            }
+                        </div>
+                    }
+                </p-accordioncontent>
+            </p-accordion-panel>
+        </p-accordion>
+
+        <p-table
+            [value]="availableTags()"
+            [(selection)]="currentSelection"
+            (selectionChange)="onSelectionChange($event)"
+            dataKey="id"
+            styleClass="p-datatable-sm tracklist-tag-selection-dialog-table"
+        >
+            <ng-template pTemplate="header">
+                <tr>
+                    <th style="width: 4rem"><p-tableHeaderCheckbox /></th>
+                    <th>Tag</th>
+                    <th>Type</th>
+                    <th>Beschreibung</th>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="body" let-tag>
+                <tr>
+                    <td><p-tableCheckbox [value]="tag" /></td>
+                    <td><p-tag [value]="tag.tagName" [style]="{'background-color': tag.color}"></p-tag></td>
+                    <td>{{ (tag.tracklistTagType | tracklistTagTypeLabel) || '-' }}</td>
+                    <td>{{ tag.description || '-' }}</td>
+                </tr>
+            </ng-template>
+            <ng-template pTemplate="emptymessage">
+                <tr><td colspan="3">Keine Tags verfügbar oder alle wurden bereits hinzugefügt.</td></tr>
+            </ng-template>
+        </p-table>
+    </div>
+
+    <div class="tracklist-tag-selection-dialog-footer">
+        <p-button label="Abbrechen" severity="secondary" (onClick)="cancel()"></p-button>
+        <p-button label="Auswahl aufheben" severity="warn" [disabled]="selectedTags().length === 0" (onClick)="selectedTags.set([])"></p-button>
+        <p-button label="Alle auswählen" severity="info" [disabled]="availableTags().length === 0" (onClick)="toggleSelectAll()"></p-button>
+        <p-button label="Verknüpfen" icon="pi pi-link" [disabled]="selectedTags().length === 0" (onClick)="confirmSelection()"></p-button>
+    </div>
+</div>

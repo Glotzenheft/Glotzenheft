@@ -1,0 +1,342 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.tracklist-tag-detail-tracklists-tab-toolbar {
+    position: sticky;
+    top: 1rem;
+    z-index: 100;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.75rem 1.25rem;
+
+    /* iOS Liquid Glass Effect */
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    backdrop-filter: blur(24px) saturate(200%);
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.25), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+
+    margin-right: 1rem;
+    margin-top: 1rem;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.tracklist-tag-detail-tracklists-tab-toolbar::-webkit-scrollbar {
+    height: 6px;
+}
+.tracklist-tag-detail-tracklists-tab-toolbar::-webkit-scrollbar-track {
+    background: transparent;
+}
+.tracklist-tag-detail-tracklists-tab-toolbar::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+.tracklist-tag-detail-tracklists-tab-toolbar::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}
+
+.tracklist-tag-detail-tracklists-tab-search-icon {
+    position: absolute;
+    left: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #6b7280;
+}
+
+.tracklist-tag-detail-tracklists-tab-toolbar-input {
+    width: 100%;
+    padding-left: 2.75rem;
+}
+
+.toolbar-left, .toolbar-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    flex-wrap: nowrap;
+}
+
+.tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper {
+    position: relative;
+    flex-grow: 1;
+    align-items: stretch;
+    height: var(--input-height);
+    display: flex;
+    width: 100%;
+}
+
+.tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper input {
+    width: 100%;
+    max-width: 250px;
+    border-top-right-radius: 0;
+    border-bottom-right-radius: 0;
+}
+
+:host ::ng-deep .tracklist-tag-detail-tracklists-tab-toolbar-search-input-wrapper .p-button {
+    border-top-left-radius: 0;
+    border-bottom-left-radius: 0;
+}
+
+:host ::ng-deep .p-button {
+    height: 100% !important;
+    display: flex !important;
+    align-items: center;
+    justify-content: center;
+}
+
+.tracklist-tag-detail-tracklists-tab-wrapper {
+    container-type: inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+
+.tracklist-tag-detail-tracklist-card {
+    display: inline-block;
+    padding: 0 1rem 1rem 0;
+    position: relative;
+    vertical-align: top;
+    white-space: nowrap;
+    width: 16.6666666667%;
+    font-size: 14px;
+    text-align: center;
+}
+
+::ng-deep .tracklist-tag-detail-tracklist-card .p-card-body {
+    padding: 0;
+    gap: 0;
+}
+
+::ng-deep .tracklist-tag-detail-tracklist-card .p-card {
+    overflow: hidden;
+}
+
+.tracklist-tag-detail-tracklist-card-content-wrapper {
+    display: flex;
+    flex-direction: column;
+    border-top: 1px solid rgba(253, 253, 253, 0.1);
+}
+
+::ng-deep .tracklist-tag-detail-tracklist-card-poster-container button{
+    border-radius: 0 0 0 12px;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-list-container {
+    max-height: none !important;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-list {
+    column-count: 2;
+    column-gap: 1.5rem;
+    min-width: 400px;
+    display: block !important;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-list > :nth-child(8) {
+    break-before: column;
+    -webkit-column-break-before: always;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel p-multiselect-item-group,
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel .p-multiselect-option-group {
+    break-inside: avoid;
+    margin-top: 0;
+    display: block;
+}
+
+::ng-deep .tracklist-tag-detail-tracklists-tab-filter-panel p-multiselect-item {
+    break-inside: avoid;
+    display: block;
+}
+
+.tracklist-tag-detail-tracklist-card-poster-container img {
+    width: 176px;
+    height: 250px;
+    object-fit: cover;
+    cursor: pointer;
+    border-radius: 0 0 0 12px;
+}
+
+.tracklist-tag-detail-tracklist-card-title {
+    z-index: 1;
+    position: relative;
+    font-size: 1.2rem;
+    line-height: 1.1;
+    min-height: 1.2em;
+    margin: 0 0.5rem;
+    display: flex;
+    font-weight: bold;
+    align-items: center;
+    white-space: initial
+}
+
+.tracklist-tag-detail-tracklist-card-title a {
+    margin: 0 auto;
+    color: var(--link--color);
+    text-decoration: none;
+    font-weight: bolder;
+}
+
+.tracklist-tag-detail-tracklist-card-title:hover {
+    text-overflow: initial;
+    white-space: normal;
+}
+
+.tracklist-tag-detail-tracklist-info-item {
+    padding: 0 0.75rem;
+    border-top: 1px solid rgba(253, 253, 253, 0.1);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-items: center;
+}
+
+.tracklist-tag-detail-tracklist-info-label {
+    text-align: left;
+    opacity: 0.7;
+    flex: 1;
+}
+
+.tracklist-tag-detail-tracklist-info-value {
+    text-align: right;
+    font-weight: 500;
+    flex: 1;
+}
+
+.tracklist-tag-detail-tracklist-info-half {
+    flex: 0 0 50%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.35rem;
+}
+
+.tracklist-tag-detail-tracklist-card-rating-wrapper {
+    transition: opacity .15s linear;
+    left: 0;
+    position: absolute;
+    font-size: 0.95em;
+    color: #fff;
+    z-index: 5;
+    bottom: 0;
+}
+
+.tracklist-tag-detail-tracklist-card-rating {
+    padding: 0.5em 1em;
+    background: rgba(0, 0, 0, 0.75);
+    border-radius: 20em;
+    margin-left: 0.75em;
+    cursor: pointer;
+    float: left;
+    clear: left;
+    margin-bottom: 1.75em;
+    display: flex;
+    gap: 0.25rem;
+    font-weight: 550;
+}
+
+.tracklist-tag-detail-tracklist-status {
+    border-radius: 20em;
+    padding: 0.25em 0.5em;
+    font-weight: 550;
+}
+
+@media print, screen and (min-width: 40em) {
+    .tracklist-tag-detail-tracklist-card-content-wrapper {
+        flex-direction: row;
+    }
+
+    .tracklist-tag-detail-tracklist-card-poster-container {
+        width: 176px;
+        height: 250px;
+        flex-shrink: 0;
+    }
+
+    .tracklist-tag-detail-tracklist-card-info-container {
+        height: 250px;
+        max-height: 250px;
+        flex-grow: 1;
+        display: grid;
+        grid-auto-rows: 1fr;
+        min-width: 0;
+    }
+
+    .tracklist-tag-detail-tracklist-card-title {
+        min-height: 2.4em;
+    }
+
+    .tracklist-tag-detail-tracklist-card-title a {
+        text-overflow: ellipsis;
+        overflow: hidden;
+        display: -webkit-box;
+        -webkit-box-orient: vertical;
+        -webkit-line-clamp: 2;
+    }
+}
+
+@media print, screen and (max-width: 39.99875em) {
+    .tracklist-tag-detail-tracklist-card-title {
+        padding: 0.5em 2em;
+    }
+
+    .tracklist-tag-detail-tracklist-card-poster-container {
+        width: 100%;
+        max-width: 200px;
+        margin: 0 auto;
+    }
+}
+
+@container (max-width: 160em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:20%
+    }
+}
+
+@container (max-width: 120em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:25%
+    }
+}
+
+@container (max-width: 92em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:33.3333333333%
+    }
+}
+
+@container (max-width: 74.99875em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:50%
+    }
+}
+
+@container (max-width: 63.99875em) {
+    .tracklist-tag-detail-tracklist-card {
+        white-space:normal
+    }
+}
+
+@container (max-width: 39.99875em) {
+    .tracklist-tag-detail-tracklist-card {
+        width:100%;
+        display: block
+    }
+}
