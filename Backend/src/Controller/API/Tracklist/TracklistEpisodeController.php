@@ -23,6 +23,7 @@ namespace App\Controller\API\Tracklist;
 use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\TracklistEpisode\CreateTracklistEpisodeRequestDto;
+use App\Model\Request\TracklistEpisode\CreateBulkTracklistEpisodeRequestDto;
 use App\Model\Request\TracklistEpisode\UpdateTracklistEpisodeRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\Tracklist\TracklistEpisodeService;
@@ -68,6 +69,37 @@ class TracklistEpisodeController extends AbstractController
         return $this->createConditionalResponse(
             request: $request,
             data: $tracklistEpisodeResponse,
+            successStatus: Response::HTTP_CREATED,
+        );
+    }
+
+    /**
+     * @param CreateBulkTracklistEpisodeRequestDto $dto
+     * @param User $user
+     * @param Request $request
+     * @return Response
+     */
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tracklist-episodes/bulk',
+        name: 'create_tracklist_episodes',
+        methods: ['POST'],
+        stateless: true,
+    )]
+    public function createTracklistEpisodes(
+        #[MapRequestPayload] CreateBulkTracklistEpisodeRequestDto $dto,
+        User $user,
+        Request $request
+    ): Response
+    {
+        $tracklistEpisodeResponses = $this->tracklistEpisodeService->createBulkTracklistEpisodes(
+            dto: $dto,
+            user: $user
+        );
+
+        return $this->createConditionalResponse(
+            request: $request,
+            data: $tracklistEpisodeResponses,
             successStatus: Response::HTTP_CREATED,
         );
     }
