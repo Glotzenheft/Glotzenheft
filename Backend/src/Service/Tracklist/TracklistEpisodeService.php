@@ -25,6 +25,7 @@ use App\Entity\TracklistEpisode;
 use App\Entity\TracklistSeason;
 use App\Entity\User;
 use App\Model\Request\TracklistEpisode\CreateTracklistEpisodeRequestDto;
+use App\Model\Request\TracklistEpisode\CreateBulkTracklistEpisodeRequestDto;
 use App\Model\Request\TracklistEpisode\UpdateTracklistEpisodeRequestDto;
 use App\Model\Response\Tracklist\TracklistSeason\TracklistEpisode\TracklistEpisodeDetailDataDto;
 use App\Repository\EpisodeRepository;
@@ -62,17 +63,35 @@ class TracklistEpisodeService
         User $user,
     ): TracklistEpisodeDetailDataDto
     {
-        [$tracklistSeason, $episode] = $this->fetchAndValidateDependencies($dto, $user);
-
-        $tracklistEpisode = (new TracklistEpisode())
-            ->setTracklistSeason($tracklistSeason)
-            ->setEpisode($episode)
-            ->setWatchDate($dto->watchDateTime);
+        $tracklistEpisode = $this->prepareTracklistEpisode($dto, $user);
 
         $this->entityManager->persist($tracklistEpisode);
         $this->entityManager->flush();
 
         return TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
+    }
+
+    /**
+     * @param CreateBulkTracklistEpisodeRequestDto $dto
+     * @param User $user
+     * @return array<TracklistEpisodeDetailDataDto>
+     */
+    public function createBulkTracklistEpisodes(
+        CreateBulkTracklistEpisodeRequestDto $dto,
+        User $user,
+    ): array
+    {
+        $responses = [];
+
+        foreach ($dto->episodes as $episodeDto) {
+            $tracklistEpisode = $this->prepareTracklistEpisode($episodeDto, $user);
+            $this->entityManager->persist($tracklistEpisode);
+            $responses[] = TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
+        }
+
+        $this->entityManager->flush();
+
+        return $responses;
     }
 
     /**
@@ -131,6 +150,24 @@ class TracklistEpisodeService
 
         $this->entityManager->remove($tracklistEpisode);
         $this->entityManager->flush();
+    }
+
+    /**
+     * @param CreateTracklistEpisodeRequestDto $dto
+     * @param User $user
+     * @return TracklistEpisode
+     */
+    private function prepareTracklistEpisode(
+        CreateTracklistEpisodeRequestDto $dto,
+        User $user
+    ): TracklistEpisode
+    {
+        [$tracklistSeason, $episode] = $this->fetchAndValidateDependencies($dto, $user);
+
+        return (new TracklistEpisode())
+            ->setTracklistSeason($tracklistSeason)
+            ->setEpisode($episode)
+            ->setWatchDate($dto->watchDateTime);
     }
 
     /**
