@@ -189,7 +189,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         const tracklistSeasonId = tracklist.tracklistSeason?.id;
         const episodeId = episode?.id;
 
-        if (!tracklistSeasonId || !episodeId || !formattedDateTime) {
+        if (!tracklistSeasonId || !episodeId) {
             this.enableAllButtons();
             return;
         }
@@ -197,7 +197,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         const createEpisodeData: CreateTracklistEpisode = {
             tracklistId: this.inpTracklist().id,
             tracklistSeasonId: tracklistSeasonId,
-            watchDateTime: formattedDateTime || '', // Fallback, falls die API noch zwingend einen String erwartet
+            watchDateTime: formattedDateTime || null,
             episodeId: this.inpEpisode().id,
         };
 
