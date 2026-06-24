@@ -20,6 +20,7 @@ import {
     EventEmitter,
     input,
     InputSignal,
+    computed,
     Output,
 } from '@angular/core';
 import { FormGroup } from '@angular/forms';
@@ -67,6 +68,11 @@ export class EpisodeListComponent {
     // input variables
     public episodeList: InputSignal<SeasonEpisode[]> =
         input.required<SeasonEpisode[]>();
+        
+    public sortedEpisodeList = computed(() => {
+        return [...this.episodeList()].sort((a, b) => a.episodeNumber - b.episodeNumber);
+    });
+    
     public inpSelectedTracklist: InputSignal<SeasonTracklist | null> =
         input.required<SeasonTracklist | null>();
     public tracklistSelectionForm: InputSignal<FormGroup | null> =

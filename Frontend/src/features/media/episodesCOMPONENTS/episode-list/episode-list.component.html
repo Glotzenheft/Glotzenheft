@@ -16,9 +16,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 @if(inpIsWithTracklist()) {
-    @if(episodeList().length > 0) {
+    @if(sortedEpisodeList().length > 0) {
         <div class="episodeDIVWrapper">
-            @for (episode of episodeList(); track $index) {
+            @for (episode of sortedEpisodeList(); track $index) {
                 <div [class]="
                         checkEpisodeInCurrentTracklist(episode.id)
                         ? 'episodeInTracklistDIV'
@@ -53,9 +53,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 }
 @else {
-    @if (episodeList().length > 0) {
+    @if (sortedEpisodeList().length > 0) {
         <div class="episodeDIVWrapper">
-            @for ( episode of episodeList(); track $index) {
+            @for ( episode of sortedEpisodeList(); track $index) {
                 <div class="episodeDIV">
                     <div class="episode-title-container" (click)="openDialog(episode)">
                         <p [pTooltip]="episode.name">E{{ episode.episodeNumber | number: '2.0-0'}}: {{ shortenStringUseCase.execute(episode.name) }}</p>

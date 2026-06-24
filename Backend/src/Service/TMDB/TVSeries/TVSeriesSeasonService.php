@@ -97,11 +97,18 @@ readonly class TVSeriesSeasonService
             {
                 $season = (new Season())
                     ->setMedia($media)
-                    ->setTmdbSeasonID($response->getId())
-                    ->setSeasonNumber($response->getSeasonNumber());
+                    ->setTmdbSeasonID($response->getId());
             }
 
             $isSeasonChanged = $isNewSeason;
+
+            $this->setPropertyIfChanged(
+                isChanged: $isSeasonChanged,
+                setter: fn($v) => $season->setSeasonNumber($v),
+                currentValue: $season->getSeasonNumber(),
+                newValue: $response->getSeasonNumber(),
+            );
+
             $this->setPropertyIfChanged(
                 isChanged: $isSeasonChanged,
                 setter: fn($v) => $season->setName($v),
@@ -162,9 +169,15 @@ readonly class TVSeriesSeasonService
                     $season->addEpisode($episode);
                     $episode
                         ->setSeason($season)
-                        ->setTmdbEpisodeID($episodeData->getId())
-                        ->setEpisodeNumber($episodeData->getEpisodeNumber());
+                        ->setTmdbEpisodeID($episodeData->getId());
                 }
+
+                $this->setPropertyIfChanged(
+                    isChanged: $isEpisodeChanged,
+                    setter: fn($v) => $episode->setEpisodeNumber($v),
+                    currentValue: $episode->getEpisodeNumber(),
+                    newValue: $episodeData->getEpisodeNumber(),
+                );
 
                 $this->setPropertyIfChanged(
                     isChanged: $isEpisodeChanged,
@@ -172,24 +185,28 @@ readonly class TVSeriesSeasonService
                     currentValue: $episode->getName(),
                     newValue: $episodeData->getName() ?? '',
                 );
+
                 $this->setPropertyIfChanged(
                     isChanged: $isEpisodeChanged,
                     setter: fn($v) => $episode->setOverview($v),
                     currentValue: $episode->getOverview(),
                     newValue: $episodeData->getOverview() ?? '',
                 );
+
                 $this->setPropertyIfChanged(
                     isChanged: $isEpisodeChanged,
                     setter: fn($v) => $episode->setRuntime($v),
                     currentValue: $episode->getRuntime(),
                     newValue: $episodeData->getRuntime()
                 );
+
                 $this->setPropertyIfChanged(
                     isChanged: $isEpisodeChanged,
                     setter: fn($v) => $episode->setStillPath($v),
                     currentValue: $episode->getStillPath(),
                     newValue: $episodeData->getStillPath()
                 );
+
                 $this->setPropertyIfChanged(
                     isChanged: $isEpisodeChanged,
                     setter: fn($v) => $episode->setAirDate($v),
