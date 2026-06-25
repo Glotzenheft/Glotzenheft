@@ -131,8 +131,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .tracklist-tag-detail-tracklist-card-content-wrapper {
     display: flex;
-    flex-direction: column;
+    flex-direction: row;
     border-top: 1px solid rgba(253, 253, 253, 0.1);
+}
+
+.tracklist-tag-detail-tracklist-card-info-container {
+    height: 250px;
+    max-height: 250px;
+    flex-grow: 1;
+    display: grid;
+    grid-auto-rows: 1fr;
+    min-width: 0;
 }
 
 ::ng-deep .tracklist-tag-detail-tracklist-card-poster-container button{
@@ -260,23 +269,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 @media print, screen and (min-width: 40em) {
-    .tracklist-tag-detail-tracklist-card-content-wrapper {
-        flex-direction: row;
-    }
-
     .tracklist-tag-detail-tracklist-card-poster-container {
         width: 176px;
         height: 250px;
         flex-shrink: 0;
-    }
-
-    .tracklist-tag-detail-tracklist-card-info-container {
-        height: 250px;
-        max-height: 250px;
-        flex-grow: 1;
-        display: grid;
-        grid-auto-rows: 1fr;
-        min-width: 0;
     }
 
     .tracklist-tag-detail-tracklist-card-title {
@@ -298,9 +294,19 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     .tracklist-tag-detail-tracklist-card-poster-container {
-        width: 100%;
-        max-width: 200px;
-        margin: 0 auto;
+        width: 136px;
+        height: auto;
+        margin: 0;
+        float: left;
+        overflow: hidden;
+    }
+
+    .tracklist-tag-detail-tracklists-tab-toolbar {
+        margin-right: 0;
+    }
+
+    .tracklist-tag-detail-tracklist-info-value {
+        white-space: nowrap;
     }
 }
 
@@ -337,6 +343,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 @container (max-width: 39.99875em) {
     .tracklist-tag-detail-tracklist-card {
         width:100%;
-        display: block
+        display: block;
+        padding: 0 0 1rem;
     }
 }
