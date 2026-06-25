@@ -105,14 +105,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 
     .tracklist-tag-unlink-dialog-footer {
-        flex-direction: column;
         align-items: stretch;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
+
+    .tracklist-tag-unlink-dialog-footer p-button:nth-child(1) { order: 3; }
+    .tracklist-tag-unlink-dialog-footer p-button:nth-child(2) { order: 2; }
+    .tracklist-tag-unlink-dialog-footer p-button:nth-child(3) { order: 1; }
+    .tracklist-tag-unlink-dialog-footer p-button:nth-child(4) { order: 4; }
 
     .tracklist-tag-unlink-dialog-footer p-button,
     .tracklist-tag-unlink-dialog-footer ::ng-deep .p-button {
         width: 100%;
-        justify-content: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     ::ng-deep .tracklist-tag-unlink-dialog-table .p-datatable-wrapper::-webkit-scrollbar {
