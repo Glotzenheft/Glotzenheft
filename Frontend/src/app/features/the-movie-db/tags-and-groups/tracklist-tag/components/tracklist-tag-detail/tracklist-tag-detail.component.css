@@ -117,10 +117,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     gap: 0.75rem;
 }
 
-/* Responsive Anpassungen */
 @media (max-width: 1200px) {
     .tracklist-tag-detail-overview-grid {
         grid-template-columns: 1fr;
+        height: auto;
     }
 
     .tracklist-tag-detail-charts-section {

@@ -26,7 +26,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     align-items: center;
     gap: 1rem;
-    padding: 0 0 1.5rem 0;
+    padding: 0 0 0.5rem 0;
     flex-shrink: 0;
 }
 
@@ -82,7 +82,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     flex-direction: column;
     gap: 0.5rem;
-    max-height: 150px;
+    max-height: 7.5rem;
     overflow-y: auto;
     padding-right: 0.5rem;
 }
@@ -101,7 +101,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     display: flex;
     justify-content: flex-end;
     gap: 0.75rem;
-    padding: 1.5rem 0 0 0;
+    padding: 1.25rem 0 0 0;
     border-top: 1px solid #e2e8f0;
     flex-shrink: 0;
 }
@@ -134,14 +134,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         scrollbar-width: none;
     }
     .tracklist-tag-selection-dialog-footer {
-        flex-direction: column;
         align-items: stretch;
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
     }
+
+    .tracklist-tag-selection-dialog-footer p-button:nth-child(1) { order: 3; }
+    .tracklist-tag-selection-dialog-footer p-button:nth-child(2) { order: 2; }
+    .tracklist-tag-selection-dialog-footer p-button:nth-child(3) { order: 1; }
+    .tracklist-tag-selection-dialog-footer p-button:nth-child(4) { order: 4; }
 
     .tracklist-tag-selection-dialog-footer p-button,
     .tracklist-tag-selection-dialog-footer ::ng-deep .p-button {
         width: 100%;
-        justify-content: center;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
     }
 
     ::ng-deep .tracklist-tag-selection-dialog-table .p-datatable-wrapper::-webkit-scrollbar {
