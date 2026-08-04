@@ -21,10 +21,12 @@ declare(strict_types=1);
 namespace App\Model\Response\Tracklist;
 
 use App\Entity\Tracklist;
+use App\Enum\MediaType;
+use App\Enum\TracklistStatus;
 use App\Model\Response\Media\MediaLightDetailResponseDto;
 use App\Model\Response\Tracklist\TracklistSeason\TracklistSeasonDetailDataDto;
 use App\Model\Response\TracklistTag\TracklistTagLightResponseDto;
-use App\Model\Response\TracklistTag\TracklistTagResponseDto;
+use UnexpectedValueException;
 
 readonly class TracklistResponseDto
 {
@@ -33,7 +35,7 @@ readonly class TracklistResponseDto
         public string  $tracklistName,
         public string  $createdAt,
         public ?string $updatedAt,
-        public string  $status,
+        public TracklistStatus  $status,
         public ?int    $rating,
         public bool    $isRewatching,
         public ?string $startDate,
@@ -46,7 +48,7 @@ readonly class TracklistResponseDto
         public MediaLightDetailResponseDto $media,
         public ?TracklistSeasonDetailDataDto   $tracklistSeason,
         /**
-         * @var TracklistTagResponseDto[]
+         * @var array<TracklistTagLightResponseDto>
          */
         public array   $tags,
     ){}
@@ -54,7 +56,7 @@ readonly class TracklistResponseDto
     /**
      * @param Tracklist $tracklist
      * @param MediaLightDetailResponseDto|null $mediaDto
-     * @param TracklistTagLightResponseDto[]|null $tagDtos
+     * @param array<TracklistTagLightResponseDto>|null $tagDtos
      * @param TracklistSeasonDetailDataDto|null $tracklistSeasonDto
      * @return self
      */
@@ -65,9 +67,10 @@ readonly class TracklistResponseDto
         ?TracklistSeasonDetailDataDto $tracklistSeasonDto = null,
     ): self
     {
+        $media = $tracklist->getMedia() ?? throw new UnexpectedValueException('Tracklist media cannot be null');
         if ($mediaDto === null)
         {
-            $mediaDto = MediaLightDetailResponseDto::fromEntity($tracklist->getMedia());
+            $mediaDto = MediaLightDetailResponseDto::fromEntity($media);
         }
 
         if ($tagDtos === null)
@@ -79,20 +82,21 @@ readonly class TracklistResponseDto
             }
         }
 
-        $mediaType = $tracklist->getMedia()->getType()->value;
-        if ($mediaType === 'tv' && $tracklistSeasonDto === null)
+        $mediaType = $media->getType() ?? throw new UnexpectedValueException('Media Type cannot be null');
+        if ($mediaType === MediaType::TV && $tracklistSeasonDto === null)
         {
-            $tracklistSeasonDto = TracklistSeasonDetailDataDto::fromEntity($tracklist->getTracklistSeason());
+            $tracklistSeason = $tracklist->getTracklistSeason() ?? throw new UnexpectedValueException('Tracklist season cannot be null');
+            $tracklistSeasonDto = TracklistSeasonDetailDataDto::fromEntity($tracklistSeason);
         }
 
         return new self(
-            id: $tracklist->getId(),
-            tracklistName: $tracklist->getTracklistName(),
-            createdAt: $tracklist->getCreatedAt()->format('Y-m-d H:i:s'),
-            updatedAt: $tracklist->getUpdatedAt()->format('Y-m-d H:i:s'),
-            status: $tracklist->getStatus()->value,
+            id: $tracklist->getId() ?? throw new UnexpectedValueException('Tracklist Id cannot be null'),
+            tracklistName: $tracklist->getTracklistName() ?? throw new UnexpectedValueException('Tracklist name cannot be null'),
+            createdAt: $tracklist->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('Tracklist creation date cannot be null'),
+            updatedAt: $tracklist->getUpdatedAt()?->format('Y-m-d H:i:s'),
+            status: $tracklist->getStatus() ?? throw new UnexpectedValueException('Tracklist status cannot be null'),
             rating: $tracklist->getRating(),
-            isRewatching: $tracklist->isRewatching(),
+            isRewatching: $tracklist->isRewatching() ?? throw new UnexpectedValueException('Tracklist is rewatching status cannot be null'),
             startDate: $tracklist->getStartDate()?->format('Y-m-d H:i:s'),
             finishDate: $tracklist->getFinishDate()?->format('Y-m-d H:i:s'),
             comment: $tracklist->getComment(),
