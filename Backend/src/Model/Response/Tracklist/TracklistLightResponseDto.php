@@ -67,14 +67,9 @@ readonly class TracklistLightResponseDto
             $mediaDto = MediaLightDetailResponseDto::fromEntity($media);
         }
 
-        if ($tagDtos === null)
-        {
-            $tagDtos = [];
-            foreach ($tracklist->getTracklistTags() as $tag)
-            {
-                $tagDtos[] = TracklistTagLightResponseDto::fromEntity($tag);
-            }
-        }
+        $tagDtos = $tagDtos ?? $tracklist->getTracklistTags()->map(
+            fn($tag) => TracklistTagLightResponseDto::fromEntity($tag)
+        )->toArray();
 
         return new self(
             id: $tracklist->getId() ?? throw new UnexpectedValueException('Tracklist Id cannot be null'),

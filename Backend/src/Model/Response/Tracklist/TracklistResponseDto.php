@@ -73,14 +73,9 @@ readonly class TracklistResponseDto
             $mediaDto = MediaLightDetailResponseDto::fromEntity($media);
         }
 
-        if ($tagDtos === null)
-        {
-            $tagDtos = [];
-            foreach ($tracklist->getTracklistTags() as $tag)
-            {
-                $tagDtos[] = TracklistTagLightResponseDto::fromEntity($tag);
-            }
-        }
+        $tagDtos = $tagDtos ?? $tracklist->getTracklistTags()->map(
+            fn($tag) => TracklistTagLightResponseDto::fromEntity($tag)
+        )->toArray();
 
         $mediaType = $media->getType() ?? throw new UnexpectedValueException('Media Type cannot be null');
         if ($mediaType === MediaType::TV && $tracklistSeasonDto === null)
