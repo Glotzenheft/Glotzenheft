@@ -14,39 +14,6 @@ GNU General Public License for more details.
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
-
-import { SeasonTracklist } from './tracklist-interfaces';
-
-export interface TMDBGenre {
-    id: number;
-    tmdbGenreID: number;
-    name: string;
-    createdAt: string;
-    updatedAt: string | null;
-}
-
-export interface Film {
-    media: {
-        id: number; // media id from own db
-        createdAt: string;
-        updatedAt: string | null;
-        description: string;
-        firstAirDate: string;
-        tmdbId: number; // tmdb id from external api
-        imdbId: string;
-        originalName: string;
-        name: string;
-        tmdbGenres: TMDBGenre[];
-        seasons: any[];
-        type: string;
-        posterPath: string;
-        backdropPath: string;
-        runtime: number|null;
-    };
-
-    tracklists: SeasonTracklist[];
-}
-
 export interface SeasonEpisode {
     id: number;
     tmdbEpisodeID: number;
@@ -70,33 +37,6 @@ export interface SeasonWithEpisodes {
     episodeCount: number;
     posterPath: string;
     episodes: SeasonEpisode[];
-}
-
-//todo rename to series
-export interface Season {
-    media: {
-        id: number;
-        createdAt: string;
-        updatedAt: string | null;
-        description: string;
-        firstAirDate: string;
-        tmdbId: number;
-        imdbId: string;
-        originalName: string;
-        name: string;
-        tmdbGenres: TMDBGenre[];
-        seasons: SeasonWithEpisodes[];
-        type: string;
-        posterPath: string;
-        backdropPath: string;
-        mediaId: string | null;
-    };
-    tracklists: SeasonTracklist[];
-}
-
-export interface TV {
-    // tv series
-    seasons: Season[];
 }
 
 export interface MediaResult {

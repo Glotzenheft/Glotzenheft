@@ -29,10 +29,7 @@ import { ButtonModule } from 'primeng/button';
 import { TooltipModule } from 'primeng/tooltip';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
-import { SeasonEpisode } from '../../../../app/shared/interfaces/media-interfaces';
 import {
-    SeasonTracklist,
-    TracklistEpisode,
     TVSeasonWithTracklist,
 } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import {
@@ -46,6 +43,13 @@ import {
 } from "@angular/common";
 import { DatetimeWithUnitFormattingPipe } from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 import {Image} from 'primeng/image';
+import { MediaSeasonEpisodeDetailResponseDto } from "../../../../app/features/media/models/response/media-season-episode-detail-response.dto";
+import {
+    TracklistResponseDto
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
+import {
+    TracklistEpisodeDetailDataDto
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';
 
 @Component({
     selector: 'app-episode-list',
@@ -66,33 +70,33 @@ import {Image} from 'primeng/image';
 })
 export class EpisodeListComponent {
     // input variables
-    public episodeList: InputSignal<SeasonEpisode[]> =
-        input.required<SeasonEpisode[]>();
-        
+    public episodeList: InputSignal<MediaSeasonEpisodeDetailResponseDto[]> =
+        input.required<MediaSeasonEpisodeDetailResponseDto[]>();
+
     public sortedEpisodeList = computed(() => {
         return [...this.episodeList()].sort((a, b) => a.episodeNumber - b.episodeNumber);
     });
-    
-    public inpSelectedTracklist: InputSignal<SeasonTracklist | null> =
-        input.required<SeasonTracklist | null>();
+
+    public inpSelectedTracklist: InputSignal<TracklistResponseDto | null> =
+        input.required<TracklistResponseDto | null>();
     public tracklistSelectionForm: InputSignal<FormGroup | null> =
         input.required<FormGroup | null>();
     public selectedSeason: InputSignal<TVSeasonWithTracklist | null> =
         input.required<TVSeasonWithTracklist | null>();
-    public tracklistsOfSeason: InputSignal<SeasonTracklist[]> =
-        input.required<SeasonTracklist[]>();
+    public tracklistsOfSeason: InputSignal<TracklistResponseDto[]> =
+        input.required<TracklistResponseDto[]>();
     public inpIsWithTracklist: InputSignal<boolean> = input.required<boolean>();
 
     public posterPath: string = TMDB_POSTER_PATH;
     public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
 
-    public currentEpisodeForDialog: SeasonEpisode | null = null;
+    public currentEpisodeForDialog: MediaSeasonEpisodeDetailResponseDto | null = null;
     public isEpisodeDialogVisible: boolean = false;
     // output variables
-    @Output() setEpisode: EventEmitter<SeasonEpisode> =
-        new EventEmitter<SeasonEpisode>();
-    @Output() setEpisodeForEditing: EventEmitter<SeasonEpisode> =
-        new EventEmitter<SeasonEpisode>();
+    @Output() setEpisode: EventEmitter<MediaSeasonEpisodeDetailResponseDto> =
+        new EventEmitter<MediaSeasonEpisodeDetailResponseDto>();
+    @Output() setEpisodeForEditing: EventEmitter<MediaSeasonEpisodeDetailResponseDto> =
+        new EventEmitter<MediaSeasonEpisodeDetailResponseDto>();
 
     public isThumbnailLoading = true;
     public imageError = false;
@@ -101,7 +105,7 @@ export class EpisodeListComponent {
         public shortenStringUseCase: UC_ShortenString
     ) {}
 
-    public openDialog = (currenEpisode: SeasonEpisode) => {
+    public openDialog = (currenEpisode: MediaSeasonEpisodeDetailResponseDto) => {
         this.isThumbnailLoading = true;
         this.imageError = false;
         this.currentEpisodeForDialog = currenEpisode;
@@ -120,7 +124,7 @@ export class EpisodeListComponent {
 
         const episodesOfTracklist: number[] =
             selectedTracklist.tracklistSeason.tracklistEpisodes.map(
-                (epis: TracklistEpisode) => {
+                (epis: TracklistEpisodeDetailDataDto) => {
                     return epis.episode.id;
                 },
             );
@@ -129,7 +133,7 @@ export class EpisodeListComponent {
     };
 
     public selectEpisode = (
-        episode: SeasonEpisode,
+        episode: MediaSeasonEpisodeDetailResponseDto,
         isEpisodeEditing: boolean,
     ) => {
         if (!isEpisodeEditing) {
@@ -158,13 +162,13 @@ export class EpisodeListComponent {
         }
 
         const foundEntry = currentSeason.tracklistEpisodes.find(
-            (te: TracklistEpisode) => te.episode.id === episodeID,
+            (te: TracklistEpisodeDetailDataDto) => te.episode.id === episodeID,
         );
 
         return foundEntry ? foundEntry.id : null;
     };
 
-    public getEpisodeDisplayTitle = (episode: SeasonEpisode, index: number): string => {
+    public getEpisodeDisplayTitle = (episode: MediaSeasonEpisodeDetailResponseDto, index: number): string => {
         const relativeNumber = index + 1;
         const originalNumber = episode.episodeNumber;
 

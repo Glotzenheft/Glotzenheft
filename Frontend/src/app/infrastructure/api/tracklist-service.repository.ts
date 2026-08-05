@@ -21,17 +21,19 @@ import { BehaviorSubject } from 'rxjs';
 import { isPlatformBrowser } from '@angular/common';
 import { I_TracklistRepository } from '../../core/interfaces/tracklist.repository';
 import {
-    Season,
-    SeasonWithEpisodes,
-} from '../../shared/interfaces/media-interfaces';
-import {
     ExtractedTracklist,
-    SeasonTracklist,
-    TracklistEpisode,
     TVSeasonWithTracklist,
     TVWithTracklist,
 } from '../../shared/interfaces/tracklist-interfaces';
 import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/local-storage-keys';
+import {
+    TracklistResponseDto
+} from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
+import {MediaResponse} from '../../features/media/models/response/media-response.dto';
+import {MediaSeasonDetailResponseDto} from '../../features/media/models/response/media-season-detail-response.dto';
+import {
+    TracklistEpisodeDetailDataDto
+} from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';
 
 @Injectable({
     providedIn: 'root',
@@ -45,10 +47,10 @@ export class R_TracklistHttp implements I_TracklistRepository {
 
     /**
      * Function for converting a tv (with "media" and "tracklists") into a tv with the tracklists mapped to the seasons.
-     * @param data Season
+     * @param data MediaResponse
      * @returns TVWithTracklist
      */
-    public joinTVWithTracklists = (data: Season): TVWithTracklist => {
+    public joinTVWithTracklists = (data: MediaResponse): TVWithTracklist => {
         return {
             id: data.media.id,
             tmdbId: data.media.tmdbId,
@@ -59,8 +61,8 @@ export class R_TracklistHttp implements I_TracklistRepository {
             firstAirDate: data.media.firstAirDate,
             tmdbGenres: data.media.tmdbGenres,
             seasons: data.media.seasons
-                .map((seasonEntity: SeasonWithEpisodes) => {
-                    const tracklistWithSeason: SeasonTracklist[] = [];
+                .map((seasonEntity: MediaSeasonDetailResponseDto) => {
+                    const tracklistWithSeason: TracklistResponseDto[] = [];
 
                     for (const tracklist of data.tracklists) {
                         if (tracklist.tracklistSeason?.season.id === seasonEntity.id) {
@@ -79,6 +81,8 @@ export class R_TracklistHttp implements I_TracklistRepository {
                         posterPath: seasonEntity.posterPath,
                         tracklistsForSeason: tracklistWithSeason,
                         episodes: seasonEntity.episodes,
+                        createdAt: seasonEntity.createdAt,
+                        updatedAt: seasonEntity.updatedAt,
                     };
                 })
                 .sort(
@@ -90,15 +94,18 @@ export class R_TracklistHttp implements I_TracklistRepository {
             type: data.media.type,
             posterPath: data.media.posterPath,
             backdropPath: data.media.backdropPath,
-            mediaId: data.media.mediaId,
+            //mediaId: data.media.id,
+            runtime: data.media.runtime,
+            createdAt: data.media.createdAt,
+            updatedAt: data.media.updatedAt,
         };
     };
 
-    public extractTracklistsOfTV = (data: Season): ExtractedTracklist[] => {
-        return data.tracklists.map((tracklist: SeasonTracklist) => {
+    public extractTracklistsOfTV = (data: MediaResponse): ExtractedTracklist[] => {
+        return data.tracklists.map((tracklist: TracklistResponseDto) => {
             const episodes: { episodeId: number }[] =
                 tracklist.tracklistSeason?.tracklistEpisodes.map(
-                    (epi: TracklistEpisode) => {
+                    (epi: TracklistEpisodeDetailDataDto) => {
                         return {
                             episodeId: epi.episode.id,
                         };
@@ -115,15 +122,15 @@ export class R_TracklistHttp implements I_TracklistRepository {
     public isEpisodeInCurrentTracklist = (
         episodeID: number,
         selectedSeason: TVSeasonWithTracklist | null,
-        tracklistsOfSeason: SeasonTracklist[],
+        tracklistsOfSeason: TracklistResponseDto[],
         tracklistSelectionForm: FormGroup<any>,
     ): boolean => {
         if (!selectedSeason) {
             return true;
         }
 
-        const selectedTracklistFull: SeasonTracklist[] =
-            tracklistsOfSeason.filter((tracklist: SeasonTracklist) => {
+        const selectedTracklistFull: TracklistResponseDto[] =
+            tracklistsOfSeason.filter((tracklist: TracklistResponseDto) => {
                 return (
                     tracklist.id ===
                     tracklistSelectionForm.get('selectedTracklist')?.value
@@ -143,7 +150,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
 
         const trackSeasonEpisodeIDs: number[] =
             currentTracklistSeason.tracklistEpisodes.map(
-                (episode: TracklistEpisode) => {
+                (episode: TracklistEpisodeDetailDataDto) => {
                     return episode.episode.id;
                 },
             );

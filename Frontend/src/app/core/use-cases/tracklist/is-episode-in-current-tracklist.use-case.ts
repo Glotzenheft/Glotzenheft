@@ -20,11 +20,11 @@ import {
     I_TracklistRepository,
     IT_TRACKLIST_REPOSITORY,
 } from '../../interfaces/tracklist.repository';
-import {
-    SeasonTracklist,
-    TVSeasonWithTracklist,
-} from '../../../shared/interfaces/tracklist-interfaces';
+import { TVSeasonWithTracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import { Inject, Injectable } from '@angular/core';
+import {
+    TracklistResponseDto
+} from '../../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 @Injectable()
 export class UC_IsEpisodeInCurrentTracklist {
@@ -36,7 +36,7 @@ export class UC_IsEpisodeInCurrentTracklist {
     public execute = (
         episodeID: number,
         selectedSeason: TVSeasonWithTracklist | null,
-        tracklistosOfSeason: SeasonTracklist[],
+        tracklistosOfSeason: TracklistResponseDto[],
         tracklistSelectionForm: FormGroup<any>,
     ): boolean => {
         return this.tracklistRepository.isEpisodeInCurrentTracklist(

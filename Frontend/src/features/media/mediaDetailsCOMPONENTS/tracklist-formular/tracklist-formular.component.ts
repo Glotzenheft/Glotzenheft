@@ -43,14 +43,14 @@ import {
     TracklistStatusType,
 } from '../../../../app/shared/variables/tracklist';
 import { Message } from 'primeng/message';
-import {
-    I_TracklistFormOutput,
-    SeasonTracklist,
-} from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { I_TracklistFormOutput } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { DeleteDialogComponent } from '../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import {TextareaModule} from 'primeng/textarea';
 import * as isoLangs from '@cospired/i18n-iso-languages';
 import localeDe from '@cospired/i18n-iso-languages/langs/de.json';
+import {
+    TracklistResponseDto
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 @Component({
     selector: 'app-tracklist-formular',
@@ -85,8 +85,8 @@ export class TracklistFormularComponent implements OnInit {
     // input variables
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
     public inpIsUpdating: InputSignal<boolean> = input.required<boolean>();
-    public inpTracklist: InputSignal<SeasonTracklist> =
-        input.required<SeasonTracklist>();
+    public inpTracklist: InputSignal<TracklistResponseDto> =
+        input.required<TracklistResponseDto>();
 
     // output variables
     public outCancelTracklist: OutputEmitterRef<boolean> = output<boolean>();

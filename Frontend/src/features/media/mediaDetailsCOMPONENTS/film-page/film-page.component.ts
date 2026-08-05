@@ -47,12 +47,7 @@ import {ActivatedRoute, Params, RouterLink} from '@angular/router';
 import { Observable, Subscription } from 'rxjs';
 import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-formatting.pipe';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
-import { Film } from '../../../../app/shared/interfaces/media-interfaces';
-import {
-    I_TracklistFormOutput,
-    SeasonTracklist,
-    Tracklist,
-} from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { I_TracklistFormOutput } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variables/tracklist';
 import { MEDIA_ID_NOT_EXISTS } from '../../../../app/shared/variables/navigation-vars';
 import {
@@ -98,6 +93,14 @@ import {
     TracklistTagFormDialogComponent
 } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
+import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {
+    TracklistResponseDto
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
+import {
+    TracklistStatusEnum
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/enums/tracklist-status.enum';
+import {MediaType} from '../../../../app/features/media/models/enums/media-type.enum';
 
 @Component({
     selector: 'app-film-page',
@@ -151,10 +154,10 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public readonly tabsList: string[] = TABLIST;
     public movieAirDate: string | null = null;
 
-    public filmData$: Observable<Film> | null = null;
+    public filmData$: Observable<MediaResponse> | null = null;
     public trackListForm!: FormGroup;
     public visibilityStatus: number = 0;
-    public selectedTracklist: SeasonTracklist | null = null;
+    public selectedTracklist: TracklistResponseDto | null = null;
 
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
     public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
@@ -342,7 +345,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         }
 
         this.subscription = this.filmData$.subscribe({
-            next: (res: Film) => {
+            next: (res: MediaResponse) => {
                 this.titleService.setTitle(
                     `${res.media.name} - Glotzenheft`,
                 );
@@ -388,7 +391,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
         this.visibilityStatus = status;
     };
 
-    public setSelectedTracklist = (tracklist: SeasonTracklist) => {
+    public setSelectedTracklist = (tracklist: TracklistResponseDto) => {
         this.selectedTracklist = tracklist;
         this.visibilityStatus = 2;
     };
@@ -404,18 +407,13 @@ export class FilmPageComponent implements OnInit, OnDestroy {
     public setAPIRecommendations = (recs: I_APIRecommendationResponse) => {
         this.apiRecommendations = recs;
     };
-
-    public getTracklistNumber = (tracklistNumber: number): number => {
-        return tracklistNumber + 1;
-    };
-
-    public getDefaultTracklist = (tracklistName: string): Tracklist => {
+    public getDefaultTracklist = (tracklistName: string): TracklistResponseDto => {
         return {
             createdAt: '',
             updatedAt: null,
             id: 0,
             rating: null,
-            status: 'watching',
+            status: TracklistStatusEnum.WATCHING,
             startDate: new Date().toISOString(),
             finishDate: null,
             tracklistName: tracklistName,
@@ -426,8 +424,10 @@ export class FilmPageComponent implements OnInit, OnDestroy {
             customPosterPath: null,
             media: {
                 id: 0,
-                type: '',
+                type: MediaType.MOVIE,
                 posterPath: '',
+                createdAt: "",
+                updatedAt: null
             },
             tracklistSeason: null,
             isRewatching: false,
@@ -458,7 +458,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
 
     public updateTracklist = (
         event: I_TracklistFormOutput,
-        selectedTracklist: SeasonTracklist,
+        selectedTracklist: TracklistResponseDto,
     ) => {
         this.triggerTracklistUPDATESubjectUseCase.execute({
             tracklist_id: selectedTracklist.id,

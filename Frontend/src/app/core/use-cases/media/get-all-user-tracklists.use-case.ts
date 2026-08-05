@@ -20,8 +20,10 @@ import {
     I_MediaRepository,
     IT_MEDIA_REPOSITORY,
 } from '../../interfaces/media.repository';
-import { Tracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import { Inject, Injectable } from '@angular/core';
+import {
+    TracklistResponseDto
+} from '../../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 @Injectable()
 export class UC_GetAllUserTracklists {
@@ -30,7 +32,7 @@ export class UC_GetAllUserTracklists {
         private readonly mediaRepository: I_MediaRepository,
     ) {}
 
-    public execute = (): Observable<Tracklist[] | null> => {
+    public execute = (): Observable<TracklistResponseDto[] | null> => {
         return this.mediaRepository.getAllUserTracklists();
     };
 }
