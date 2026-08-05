@@ -83,15 +83,12 @@ abstract class AbstractMediaDetailService
 
         $mediaDto = MediaDetailDataDto::fromEntity($media);
 
-        $tracklistDtos = [];
-        foreach ($tracklists as $tracklist)
-        {
-            $tracklistDtos[] = TracklistResponseDto::fromEntity($tracklist);
-        }
-
         return new MediaResponseDto(
             media: $mediaDto,
-            tracklists: $tracklistDtos
+            tracklists: array_map(
+                fn($tracklist) => TracklistResponseDto::fromEntity($tracklist),
+                $tracklists
+            )
         );
     }
 
