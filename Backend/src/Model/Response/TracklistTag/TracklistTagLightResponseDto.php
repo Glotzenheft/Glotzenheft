@@ -21,13 +21,15 @@ declare(strict_types=1);
 namespace App\Model\Response\TracklistTag;
 
 use App\Entity\TracklistTag;
+use App\Enum\TracklistTagType;
+use UnexpectedValueException;
 
 class TracklistTagLightResponseDto
 {
     public function __construct(
         public int $id,
         public string $tagName,
-        public string $tracklistTagType,
+        public TracklistTagType $tracklistTagType,
         public ?string $color,
         public ?string $description,
         public ?string $icon,
@@ -38,19 +40,23 @@ class TracklistTagLightResponseDto
         public ?string $updatedAt,
     ){}
 
+    /**
+     * @param TracklistTag $tag
+     * @return self
+     */
     public static function fromEntity(TracklistTag $tag): self
     {
         return new self(
-            id: $tag->getId(),
-            tagName: $tag->getTagName(),
-            tracklistTagType: $tag->getTracklistTagType()->value,
+            id: $tag->getId() ?? throw new UnexpectedValueException('TracklistTag Id cannot be null'),
+            tagName: $tag->getTagName()  ?? throw new UnexpectedValueException('TracklistTag name cannot be null'),
+            tracklistTagType: $tag->getTracklistTagType() ?? throw new UnexpectedValueException('TracklistTag type cannot be null'),
             color: $tag->getColor(),
             description: $tag->getDescription(),
             icon: $tag->getIcon(),
-            slug: $tag->getSlug(),
-            isSpoiler: $tag->isSpoiler(),
-            isAdult: $tag->isAdult(),
-            createdAt: $tag->getCreatedAt()->format('Y-m-d H:i:s'),
+            slug: $tag->getSlug() ?? throw new UnexpectedValueException('TracklistTag slug cannot be null'),
+            isSpoiler: $tag->isSpoiler() ?? throw new UnexpectedValueException('TracklistTag spoiler value cannot be null'),
+            isAdult: $tag->isAdult() ?? throw new UnexpectedValueException('TracklistTag adult value cannot be null'),
+            createdAt: $tag->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('TracklistTag creation date cannot be null'),
             updatedAt: $tag->getUpdatedAt()?->format('Y-m-d H:i:s'),
         );
     }
