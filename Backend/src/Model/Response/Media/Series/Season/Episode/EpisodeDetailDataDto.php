@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Model\Response\Media\Series\Season\Episode;
 
 use App\Entity\Episode;
+use UnexpectedValueException;
 
 readonly class EpisodeDetailDataDto
 {
@@ -44,14 +45,14 @@ readonly class EpisodeDetailDataDto
     public static function fromEntity(Episode $episode): self
     {
         return new self(
-            id: $episode->getId(),
-            tmdbEpisodeId: $episode->getTmdbEpisodeId(),
-            createdAt: $episode->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $episode->getId() ?? throw new UnexpectedValueException('Episode Id cannot be null'),
+            tmdbEpisodeId: $episode->getTmdbEpisodeId() ?? throw new UnexpectedValueException('TMDB episode Id cannot be null'),
+            createdAt: $episode->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('Episode creation date cannot be null'),
             updatedAt: $episode->getUpdatedAt()?->format('Y-m-d H:i:s'),
-            name: $episode->getName(),
-            overview: $episode->getOverview(),
-            episodeNumber: $episode->getEpisodeNumber(),
-            runtime: $episode->getRuntime(),
+            name: $episode->getName() ?? throw new UnexpectedValueException('Episode name cannot be null'),
+            overview: $episode->getOverview() ?? throw new UnexpectedValueException('Episode overview cannot be null'),
+            episodeNumber: $episode->getEpisodeNumber() ?? throw new UnexpectedValueException('Episode number cannot be null'),
+            runtime: $episode->getRuntime() ?? throw new UnexpectedValueException('Episode runtime cannot be null'),
             stillPath: $episode->getStillPath(),
             airDate: $episode->getAirDate()?->format('Y-m-d'),
         );
