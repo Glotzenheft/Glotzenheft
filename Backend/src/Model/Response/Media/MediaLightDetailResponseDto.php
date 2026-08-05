@@ -21,6 +21,8 @@ declare(strict_types=1);
 namespace App\Model\Response\Media;
 
 use App\Entity\Media;
+use App\Enum\MediaType;
+use UnexpectedValueException;
 
 readonly class MediaLightDetailResponseDto
 {
@@ -29,7 +31,7 @@ readonly class MediaLightDetailResponseDto
         public string $createdAt,
         public ?string $updatedAt,
         public ?string $posterPath,
-        public string $type
+        public MediaType $type
     ){}
 
     /**
@@ -39,11 +41,11 @@ readonly class MediaLightDetailResponseDto
     public static function fromEntity(Media $media): self
     {
         return new self(
-            id: $media->getId(),
-            createdAt: $media->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $media->getId() ?? throw new UnexpectedValueException('Media Id cannot be null'),
+            createdAt: $media->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('Media creation date cannot be null'),
             updatedAt: $media->getUpdatedAt()?->format('Y-m-d H:i:s'),
             posterPath: $media->getPosterPath(),
-            type: $media->getType()->value,
+            type: $media->getType() ?? throw new UnexpectedValueException('Media type cannot be null'),
         );
     }
 }
