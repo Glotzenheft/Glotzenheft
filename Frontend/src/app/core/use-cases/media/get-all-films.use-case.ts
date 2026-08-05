@@ -20,8 +20,8 @@ import {
     I_MediaRepository,
     IT_MEDIA_REPOSITORY,
 } from '../../interfaces/media.repository';
-import { Film } from '../../../shared/interfaces/media-interfaces';
 import { Inject, Injectable } from '@angular/core';
+import {MediaResponse} from '../../../features/media/models/response/media-response.dto';
 
 @Injectable()
 export class UC_GetAllFilms {
@@ -30,7 +30,7 @@ export class UC_GetAllFilms {
         private readonly mediaRepository: I_MediaRepository,
     ) {}
 
-    public execute = (): Observable<Film[]> => {
+    public execute = (): Observable<MediaResponse[]> => {
         return this.mediaRepository.getAllFilms();
     };
 }

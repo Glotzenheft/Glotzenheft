@@ -18,9 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { HttpHeaders } from '@angular/common/http';
 import { Observable } from 'rxjs';
 import {
-    Film,
     MediaIDResponse,
-    Season,
     UpdateTracklistRequest,
 } from '../../shared/interfaces/media-interfaces';
 import {
@@ -31,20 +29,21 @@ import {
 import { InjectionToken } from '@angular/core';
 import {
     I_APIRecommendationResponse,
-    I_HighestRecommendations,
-    I_Recommendation,
-    I_Recommendations,
 } from '../../shared/interfaces/recommendation-interfaces';
+import {MediaResponse} from '../../features/media/models/response/media-response.dto';
+import {
+    TracklistResponseDto
+} from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 export interface I_MediaRepository {
     getHeader: () => HttpHeaders | null;
-    getAllFilms: () => Observable<Film[]>;
+    getAllFilms: () => Observable<MediaResponse[]>;
     getMediaIdForMedia: (
         tmdbId: number,
         isMovie: boolean,
     ) => Observable<MediaIDResponse>;
-    getSeasonForTV: (mediaID: string) => Observable<Season> | null;
-    getFilmDetails: (movieID: string) => Observable<Film> | null;
+    getSeasonForTV: (mediaID: string) => Observable<MediaResponse> | null;
+    getFilmDetails: (movieID: string) => Observable<MediaResponse> | null;
     getMultiSearchResults: (
         searchString: string,
         page: number,
@@ -73,7 +72,7 @@ export interface I_MediaRepository {
     triggerTracklistDELETESubject: (tracklistID: number) => void;
     getTracklistDELETEResponseSubject: () => Observable<any>;
     deleteTracklist: (tracklistID: number) => Observable<any>;
-    getAllUserTracklists: () => Observable<Tracklist[] | null>;
+    getAllUserTracklists: () => Observable<TracklistResponseDto[] | null>;
     getAPIRecommendations: (
         tmdbId: number,
         isMovie: boolean,

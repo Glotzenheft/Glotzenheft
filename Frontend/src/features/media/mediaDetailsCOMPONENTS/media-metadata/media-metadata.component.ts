@@ -13,12 +13,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, input, InputSignal, OnInit } from '@angular/core';
-import {
-    Film,
-    Season,
-    SeasonWithEpisodes,
-} from '../../../../app/shared/interfaces/media-interfaces';
 import { CommonModule } from '@angular/common';
+import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {
+    MediaSeasonDetailResponseDto
+} from '../../../../app/features/media/models/response/media-season-detail-response.dto';
 
 @Component({
     selector: 'app-media-metadata',
@@ -70,10 +69,10 @@ import { CommonModule } from '@angular/common';
 })
 export class MediaMetadataComponent implements OnInit {
     public inpIsMovie: InputSignal<boolean> = input.required<boolean>();
-    public inpFilmData: InputSignal<Film | null> =
-        input.required<Film | null>();
-    public inpSeasonData: InputSignal<Season | null> =
-        input.required<Season | null>();
+    public inpFilmData: InputSignal<MediaResponse | null> =
+        input.required<MediaResponse | null>();
+    public inpSeasonData: InputSignal<MediaResponse | null> =
+        input.required<MediaResponse | null>();
 
     public episodeNumber: number | null = null;
 
@@ -81,7 +80,7 @@ export class MediaMetadataComponent implements OnInit {
         this.episodeNumber =
             this.inpSeasonData()
                 ?.media.seasons.map(
-                    (season: SeasonWithEpisodes) => season.episodeCount,
+                    (season: MediaSeasonDetailResponseDto) => season.episodeCount,
                 )
                 .reduce(
                     (prevValue: number, currentValue: number) =>

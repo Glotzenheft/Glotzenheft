@@ -19,7 +19,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <div class="form-field">
         <label for="tag_name">Tag Name <span class="required">*</span></label>
-        <input pInputText id="tag_name" formControlName="tag_name" placeholder="z.B. Meisterwerk" class="full-width-element" />
+        <input
+            pInputText
+            id="tag_name"
+            formControlName="tag_name"
+            placeholder="z.B. Meisterwerk"
+            class="full-width-element"
+            autocomplete="off"
+        />
         @if (form.controls.tag_name.invalid && form.controls.tag_name.touched) {
             <small class="error-text">Der Name darf nicht leer sein.</small>
         }

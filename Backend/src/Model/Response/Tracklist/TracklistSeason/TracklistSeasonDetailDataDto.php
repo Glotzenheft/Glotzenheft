@@ -24,6 +24,7 @@ use App\Entity\TracklistSeason;
 use App\Model\Response\Media\Series\Season\SeasonLightDetailDataDto;
 use App\Model\Response\Tracklist\TracklistSeason\TracklistEpisode\TracklistEpisodeDetailDataDto;
 use Symfony\Component\Serializer\Attribute\SerializedName;
+use UnexpectedValueException;
 
 readonly class TracklistSeasonDetailDataDto
 {
@@ -46,7 +47,7 @@ readonly class TracklistSeasonDetailDataDto
     /**
      * @param TracklistSeason $tracklistSeason
      * @param SeasonLightDetailDataDto|null $seasonDto
-     * @param TracklistEpisodeDetailDataDto[]|null $tracklistEpisodeDtos
+     * @param array<TracklistEpisodeDetailDataDto>|null $tracklistEpisodeDtos
      * @return self
      */
     public static function fromEntity(
@@ -55,23 +56,17 @@ readonly class TracklistSeasonDetailDataDto
         ?array $tracklistEpisodeDtos = null,
     ): self
     {
-        if ($seasonDto === null)
-        {
-            $seasonDto = SeasonLightDetailDataDto::fromEntity($tracklistSeason->getSeason());
-        }
+        $season = $tracklistSeason->getSeason() ?? throw new UnexpectedValueException('Season of TracklistSeason cannot be null');
 
-        if ( $tracklistEpisodeDtos === null)
-        {
-            $tracklistEpisodeDtos = [];
-            foreach ($tracklistSeason->getTracklistEpisodes() as $tracklistEpisode)
-            {
-                $tracklistEpisodeDtos[] = TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
-            }
-        }
+        $seasonDto = $seasonDto ?? SeasonLightDetailDataDto::fromEntity($season);
+
+        $tracklistEpisodeDtos = $tracklistEpisodeDtos ?? $tracklistSeason->getTracklistEpisodes()->map(
+            fn($tracklistEpisode) => TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode)
+        )->toArray();
 
         return new self(
-            id: $tracklistSeason->getId(),
-            createdAt: $tracklistSeason->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $tracklistSeason->getId() ?? throw new UnexpectedValueException('TracklistSeason Id cannot be null'),
+            createdAt: $tracklistSeason->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('TracklistSeason creation date cannot be null'),
             updatedAt: $tracklistSeason->getUpdatedAt()?->format('Y-m-d H:i:s'),
             startEpisodeNumber: $tracklistSeason->getStartEpisodeNumber(),
             endEpisodeNumber: $tracklistSeason->getEndEpisodeNumber(),

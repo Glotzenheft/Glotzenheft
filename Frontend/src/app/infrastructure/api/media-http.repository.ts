@@ -34,9 +34,7 @@ import {
 } from '@angular/common/http';
 import { isPlatformBrowser } from '@angular/common';
 import {
-    Film,
     MediaIDResponse,
-    Season,
     UpdateTracklistRequest,
 } from '../../shared/interfaces/media-interfaces';
 import {
@@ -62,6 +60,10 @@ import { I_MediaRepository } from '../../core/interfaces/media.repository';
 import {
     I_APIRecommendationResponse,
 } from '../../shared/interfaces/recommendation-interfaces';
+import {MediaResponse} from '../../features/media/models/response/media-response.dto';
+import {
+    TracklistResponseDto
+} from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 @Injectable({
     providedIn: 'root',
@@ -156,17 +158,6 @@ export class R_MediaHttp implements I_MediaRepository {
     }
 
     // functions ---------------------------------------------------------------------------------------
-    public getUserToken = (): string | null => {
-        let userToken: string | null = null;
-
-        if (isPlatformBrowser(this.platformId)) {
-            userToken = localStorage.getItem(KEY_LOCAL_STORAGE_LAST_AUTH_TOKEN);
-        }
-        if (!userToken) return null;
-
-        return userToken;
-    };
-
     public getHeader = (): HttpHeaders | null => {
         let userToken: string = '';
 
@@ -184,8 +175,8 @@ export class R_MediaHttp implements I_MediaRepository {
         });
     };
 
-    getAllFilms = (): Observable<Film[]> => {
-        return this.http.get<Film[]>('');
+    getAllFilms = (): Observable<MediaResponse[]> => {
+        return this.http.get<MediaResponse[]>('');
     };
 
     /**
@@ -219,7 +210,7 @@ export class R_MediaHttp implements I_MediaRepository {
         );
     };
 
-    public getSeasonForTV = (mediaID: string): Observable<Season> | null => {
+    public getSeasonForTV = (mediaID: string): Observable<MediaResponse> | null => {
         const header = this.getHeader();
 
         if (!header) {
@@ -228,7 +219,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
         let url = ROUTE_MEDIA_DETAILS_SEARCH[0] + mediaID;
 
-        return this.http.get<Season>(url, { headers: header }).pipe(
+        return this.http.get<MediaResponse>(url, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
@@ -236,7 +227,7 @@ export class R_MediaHttp implements I_MediaRepository {
         );
     };
 
-    public getFilmDetails = (movieID: string): Observable<Film> | null => {
+    public getFilmDetails = (movieID: string): Observable<MediaResponse> | null => {
         const header = this.getHeader();
 
         if (!header) {
@@ -245,7 +236,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
         let url = ROUTE_MOVIE_DETAILS_SEARCH[0] + movieID;
 
-        return this.http.get<Film>(url, { headers: header }).pipe(
+        return this.http.get<MediaResponse>(url, { headers: header }).pipe(
             shareReplay(1),
             catchError((error: HttpErrorResponse) => {
                 return throwError(() => error);
@@ -410,7 +401,7 @@ export class R_MediaHttp implements I_MediaRepository {
 
     // other functions --------------------------------------------------------------------------------
 
-    public getAllUserTracklists = (): Observable<Tracklist[] | null> => {
+    public getAllUserTracklists = (): Observable<TracklistResponseDto[] | null> => {
         const header = this.getHeader();
 
         if (!header) {
@@ -418,7 +409,7 @@ export class R_MediaHttp implements I_MediaRepository {
         }
 
         return this.http
-            .get<Tracklist[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
+            .get<TracklistResponseDto[]>(ROUTE_GET_ALL_USER_TRACKLISTS, {
                 headers: header,
             })
             .pipe(

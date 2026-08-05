@@ -15,24 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Observable } from 'rxjs';
-import {
-    I_MediaRepository,
-    IT_MEDIA_REPOSITORY,
-} from '../../interfaces/media.repository';
-import { Inject, Injectable } from '@angular/core';
-import {
-    TracklistResponseDto
-} from '../../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
-
-@Injectable()
-export class UC_GetAllUserTracklists {
-    constructor(
-        @Inject(IT_MEDIA_REPOSITORY)
-        private readonly mediaRepository: I_MediaRepository,
-    ) {}
-
-    public execute = (): Observable<TracklistResponseDto[] | null> => {
-        return this.mediaRepository.getAllUserTracklists();
-    };
+export interface MediaSeasonEpisodeLightDetailResponse {
+    id: number;
+    createdAt: string;
+    updatedAt: string | null;
+    episodeNumber: number;
 }

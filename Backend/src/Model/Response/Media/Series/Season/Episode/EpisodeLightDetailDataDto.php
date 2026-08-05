@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Model\Response\Media\Series\Season\Episode;
 
 use App\Entity\Episode;
+use UnexpectedValueException;
 
 readonly class EpisodeLightDetailDataDto
 {
@@ -38,10 +39,10 @@ readonly class EpisodeLightDetailDataDto
     public static function fromEntity(Episode $episode): self
     {
         return new self(
-            id: $episode->getId(),
-            createdAt: $episode->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $episode->getId() ?? throw new UnexpectedValueException('Episode Id cannot be null'),
+            createdAt: $episode->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('Episode creation date cannot be null'),
             updatedAt: $episode->getUpdatedAt()?->format('Y-m-d H:i:s'),
-            episodeNumber: $episode->getEpisodeNumber(),
+            episodeNumber: $episode->getEpisodeNumber() ?? throw new UnexpectedValueException('EpisodeNumber cannot be null'),
         );
     }
 }

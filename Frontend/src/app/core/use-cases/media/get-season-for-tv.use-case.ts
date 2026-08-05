@@ -20,8 +20,8 @@ import {
     I_MediaRepository,
     IT_MEDIA_REPOSITORY,
 } from '../../interfaces/media.repository';
-import { Season } from '../../../shared/interfaces/media-interfaces';
 import { Inject, Injectable } from '@angular/core';
+import {MediaResponse} from '../../../features/media/models/response/media-response.dto';
 
 @Injectable()
 export class UC_GetSeasonForTV {
@@ -30,7 +30,7 @@ export class UC_GetSeasonForTV {
         private readonly mediaRepository: I_MediaRepository,
     ) {}
 
-    public execute = (mediaId: string): Observable<Season> | null => {
+    public execute = (mediaId: string): Observable<MediaResponse> | null => {
         return this.mediaRepository.getSeasonForTV(mediaId);
     };
 }

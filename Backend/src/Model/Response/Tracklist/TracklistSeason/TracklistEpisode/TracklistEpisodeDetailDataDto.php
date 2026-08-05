@@ -23,6 +23,7 @@ namespace App\Model\Response\Tracklist\TracklistSeason\TracklistEpisode;
 use App\Entity\TracklistEpisode;
 use App\Model\Response\Media\Series\Season\Episode\EpisodeLightDetailDataDto;
 use Symfony\Component\Serializer\Attribute\SerializedName;
+use UnexpectedValueException;
 
 readonly class TracklistEpisodeDetailDataDto
 {
@@ -45,14 +46,13 @@ readonly class TracklistEpisodeDetailDataDto
         ?EpisodeLightDetailDataDto $episodeDto = null,
     ): self
     {
-        if ($episodeDto === null)
-        {
-            $episodeDto = EpisodeLightDetailDataDto::fromEntity($tracklistEpisode->getEpisode());
-        }
+        $episode = $tracklistEpisode->getEpisode() ??  throw new UnexpectedValueException('Episode of TracklistEpisode  cannot be null');
+
+        $episodeDto = $episodeDto ?? EpisodeLightDetailDataDto::fromEntity($episode);
 
         return new self(
-            id: $tracklistEpisode->getId(),
-            createdAt: $tracklistEpisode->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $tracklistEpisode->getId() ?? throw new UnexpectedValueException('TracklistEpisode Id cannot be null'),
+            createdAt: $tracklistEpisode->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('TracklistEpisode creation date cannot be null'),
             updatedAt: $tracklistEpisode->getUpdatedAt()?->format('Y-m-d H:i:s'),
             watchDateTime: $tracklistEpisode->getWatchDate()?->format('Y-m-d H:i:s'),
             episodeDto: $episodeDto,

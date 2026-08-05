@@ -16,22 +16,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { FormGroup } from '@angular/forms';
-import { Season } from '../../shared/interfaces/media-interfaces';
 import {
     ExtractedTracklist,
-    SeasonTracklist,
     TVSeasonWithTracklist,
     TVWithTracklist,
 } from '../../shared/interfaces/tracklist-interfaces';
 import { InjectionToken } from '@angular/core';
+import {MediaResponse} from '../../features/media/models/response/media-response.dto';
+import {
+    TracklistResponseDto
+} from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 export interface I_TracklistRepository {
-    joinTVWithTracklists: (data: Season) => TVWithTracklist;
-    extractTracklistsOfTV: (data: Season) => ExtractedTracklist[];
+    joinTVWithTracklists: (data: MediaResponse) => TVWithTracklist;
+    extractTracklistsOfTV: (data: MediaResponse) => ExtractedTracklist[];
     isEpisodeInCurrentTracklist: (
         episodeID: number,
         selectedSeason: TVSeasonWithTracklist | null,
-        tracklistsOfSeason: SeasonTracklist[],
+        tracklistsOfSeason: TracklistResponseDto[],
         tracklistSelectionForm: FormGroup<any>,
     ) => boolean;
     refreshFilmPage: () => void;

@@ -16,12 +16,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Inject, Injectable } from '@angular/core';
-import { Season } from '../../../shared/interfaces/media-interfaces';
 import { ExtractedTracklist } from '../../../shared/interfaces/tracklist-interfaces';
 import {
     I_TracklistRepository,
     IT_TRACKLIST_REPOSITORY,
 } from '../../interfaces/tracklist.repository';
+import {MediaResponse} from '../../../features/media/models/response/media-response.dto';
 
 @Injectable()
 export class UC_ExtractTracklistsOfTV {
@@ -30,7 +30,7 @@ export class UC_ExtractTracklistsOfTV {
         private readonly tracklistRepository: I_TracklistRepository,
     ) {}
 
-    public execute = (data: Season): ExtractedTracklist[] => {
+    public execute = (data: MediaResponse): ExtractedTracklist[] => {
         return this.tracklistRepository.extractTracklistsOfTV(data);
     };
 }

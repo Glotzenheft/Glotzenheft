@@ -16,13 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TracklistStatusType } from '../variables/tracklist';
-import { SeasonEpisode, SeasonWithEpisodes } from './media-interfaces';
+import { SeasonWithEpisodes } from './media-interfaces';
 import {TracklistTags} from './tracklist-tags-interfaces';
-
-export interface TrackListCreation {
-    name: string;
-    tmdbId: number;
-}
+import {MediaSeasonDetailResponseDto} from '../../features/media/models/response/media-season-detail-response.dto';
+import {
+    TracklistResponseDto
+} from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
+import { MediaDetailDataResponseDto} from '../../features/media/models/response/media-detail-data-response.dto';
 
 export interface CreateMovieTracklistData {
     tracklist_name: string;
@@ -62,17 +62,6 @@ export interface CreateSeasonTracklistData {
 }
 
 // tracklists for season -----------------------------------------
-
-export interface TracklistSeasonEpisode {
-    id: number;
-    name: string;
-    overview: string;
-    episodeNumber: number;
-    runtime: number; // in minutes
-    airDate: string;
-    stillPath: string;
-}
-
 export interface TracklistSeason {
     id: number;
     startEpisodeNumber: number | null;
@@ -107,10 +96,6 @@ export interface Tracklist {
     updatedAt: string | null;
 }
 
-export interface SeasonTracklist extends Tracklist {
-    tracklistSeason: TracklistSeason | null;
-}
-
 export interface I_TracklistFormOutput extends Omit<Tracklist, 'media' | 'tags'> {
     customSeasonNumber: number | null;
     customPartNumber: number | null;
@@ -118,72 +103,14 @@ export interface I_TracklistFormOutput extends Omit<Tracklist, 'media' | 'tags'>
     endEpisodeNumber: number | null;
     tags: TracklistTags[];
 }
-
-export interface SeasonTracklistEpisode {
-    id: number;
-    tmdbEpisodeID: number;
-    name: string;
-    overview: string;
-    episodeNumber: number;
-    runtime: number;
-    airDate: string;
-    stillPath: string;
-}
-
 // interfaces for season together with tracklists ----------------------------------------------------
-
-export interface SeasonEpisodeWithTracklist {
-    id: number;
-    tmdbEpisodeId: number;
-    name: string;
-    overview: string;
-    episodeNumber: number;
-    runtime: number;
-    airDate: string;
-    stillPath: string;
-    isInCurrentTracklist: boolean;
+export interface TVSeasonWithTracklist extends MediaSeasonDetailResponseDto{
+    tracklistsForSeason: TracklistResponseDto[];
 }
 
-export interface TVSeasonWithTracklist {
-    id: number;
-    tmdbSeasonId: number;
-    seasonNumber: number;
-    name: string;
-    overview: string;
-    airDate: string;
-    episodeCount: number;
-    posterPath: string;
-    tracklistsForSeason: SeasonTracklist[];
-    episodes: SeasonEpisode[];
-}
-
-export interface TVWithTracklist {
-    id: number;
-    tmdbId: number;
-    imdbId: string;
-    originalName: string;
-    name: string;
-    description: string;
-    firstAirDate: string;
-    tmdbGenres: TracklistForSeasonList[];
+export interface TVWithTracklist extends Omit<MediaDetailDataResponseDto, 'seasons'>{
     seasons: TVSeasonWithTracklist[];
-    type: string;
-    posterPath: string;
-    backdropPath: string;
-    mediaId: string | null;
 }
-
-export interface SeasonTracklistType {
-    tracklistName: string;
-    tracklistId: number;
-}
-
-export interface TracklistForSeasonList {
-    id: number;
-    tmdbGenreID: number;
-    name: string;
-}
-
 export interface ExtractedTracklist {
     tracklistId: number;
     episodes: {

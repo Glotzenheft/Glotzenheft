@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Model\Response\TMDBGenre;
 
 use App\Entity\TMDBGenre;
+use UnexpectedValueException;
 
 readonly class TMDBGenreResponseDto
 {
@@ -39,10 +40,10 @@ readonly class TMDBGenreResponseDto
     public static function fromEntity(TMDBGenre $tmdbGenre): self
     {
         return new self(
-            id: $tmdbGenre->getId(),
-            tmdbGenreId: $tmdbGenre->getTmdbGenreId(),
-            name: $tmdbGenre->getName(),
-            createdAt: $tmdbGenre->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $tmdbGenre->getId() ?? throw new UnexpectedValueException('TMDBGenre Id cannot be null'),
+            tmdbGenreId: $tmdbGenre->getTmdbGenreId() ?? throw new UnexpectedValueException('External TMDBGenre Id cannot be null'),
+            name: $tmdbGenre->getName() ?? throw new UnexpectedValueException('TMDBGenre name cannot be null'),
+            createdAt: $tmdbGenre->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('TMDBGenre creation date cannot be null'),
             updatedAt: $tmdbGenre->getUpdatedAt()?->format('Y-m-d H:i:s'),
         );
     }

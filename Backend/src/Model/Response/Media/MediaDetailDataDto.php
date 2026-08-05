@@ -21,8 +21,12 @@ declare(strict_types=1);
 namespace App\Model\Response\Media;
 
 use App\Entity\Media;
+use App\Entity\Season;
+use App\Entity\TMDBGenre;
+use App\Enum\MediaType;
 use App\Model\Response\Media\Series\Season\SeasonDetailDataDto;
 use App\Model\Response\TMDBGenre\TMDBGenreResponseDto;
+use UnexpectedValueException;
 
 readonly class MediaDetailDataDto
 {
@@ -36,7 +40,7 @@ readonly class MediaDetailDataDto
         public string  $name,
         public string  $description,
         public ?string $firstAirDate,
-        public string  $type,
+        public MediaType  $type,
         public ?string $posterPath,
         public ?string $backdropPath,
         public ?int    $runtime,
@@ -62,38 +66,29 @@ readonly class MediaDetailDataDto
         ?array $tmdbGenreDtos = null
     ): self
     {
-        if ($seasonDtos === null)
-        {
-            $seasonDtos = [];
-            if ($media->getType()->value !== 'movie')
-            {
-                foreach ($media->getSeasons() as $season)
-                {
-                    $seasonDtos[] = SeasonDetailDataDto::fromEntity($season);
-                }
-            }
-        }
+        $mediaType = $media->getType() ?? throw new UnexpectedValueException('Media type cannot be null');
+        $seasonDtos = $seasonDtos ?? ($mediaType === MediaType::TV
+            ? $media->getSeasons()->map(
+                fn(Season $season) => SeasonDetailDataDto::fromEntity($season)
+            )->toArray()
+            : []
+        );
 
-        if ($tmdbGenreDtos === null)
-        {
-            $tmdbGenreDtos = [];
-            foreach ($media->getTmdbGenres() as $tmdbGenre)
-            {
-                $tmdbGenreDtos[] = TMDBGenreResponseDto::fromEntity($tmdbGenre);
-            }
-        }
+        $tmdbGenreDtos = $tmdbGenreDtos ?? $media->getTmdbGenres()->map(
+            fn(TMDBGenre $tmdbGenre) => TMDBGenreResponseDto::fromEntity($tmdbGenre)
+        )->toArray();
 
         return new self(
-            id: $media->getId(),
-            createdAt: $media->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $media->getId() ?? throw new UnexpectedValueException('Media Id cannot be null'),
+            createdAt: $media->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('Media creation date cannot be null'),
             updatedAt: $media->getUpdatedAt()?->format('Y-m-d H:i:s'),
-            tmdbId: $media->getTmdbId(),
+            tmdbId: $media->getTmdbId() ?? throw new UnexpectedValueException('TMDB Id cannot be null'),
             imdbId: $media->getImdbId(),
-            originalName: $media->getOriginalName(),
-            name: $media->getName(),
-            description: $media->getDescription(),
+            originalName: $media->getOriginalName() ?? throw new UnexpectedValueException('Media original name cannot be null'),
+            name: $media->getName() ?? throw new UnexpectedValueException('Media name cannot be null'),
+            description: $media->getDescription() ?? throw new UnexpectedValueException('Media description cannot be null'),
             firstAirDate: $media->getFirstAirDate()?->format('Y-m-d'),
-            type: $media->getType()->value,
+            type: $mediaType,
             posterPath: $media->getPosterPath(),
             backdropPath: $media->getBackdropPath(),
             runtime: $media->getRuntime(),

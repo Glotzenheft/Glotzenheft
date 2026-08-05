@@ -22,6 +22,7 @@ namespace App\Model\Response\Tracklist\Search;
 
 use App\Entity\Media;
 use App\Entity\Tracklist;
+use App\Enum\MediaType;
 use UnexpectedValueException;
 
 readonly class TracklistSearchResponseDto
@@ -31,11 +32,15 @@ readonly class TracklistSearchResponseDto
         public string $tracklistName,
         public string $mediaName,
         public string $mediaOriginalName,
-        public string $mediaType,
+        public MediaType $mediaType,
         public ?int $seasonNumber,
         public ?int $customSeasonNumber,
     ) {}
 
+    /**
+     * @param Tracklist $tracklist
+     * @return self
+     */
     public static function fromEntity(
         Tracklist $tracklist
     ): self
@@ -47,11 +52,11 @@ readonly class TracklistSearchResponseDto
         }
 
         return new self(
-            id: $tracklist->getId(),
-            tracklistName: $tracklist->getTracklistName(),
-            mediaName: $tracklist->getMedia()->getName(),
-            mediaOriginalName: $tracklist->getMedia()->getOriginalName(),
-            mediaType: $media->getType()?->value ?? 'unknown',
+            id: $tracklist->getId() ?? throw new UnexpectedValueException('Tracklist Id cannot be null'),
+            tracklistName: $tracklist->getTracklistName() ?? throw new UnexpectedValueException('Tracklist name cannot be null'),
+            mediaName: $media->getName() ?? throw new UnexpectedValueException('Media name cannot be null'),
+            mediaOriginalName: $media->getOriginalName() ?? throw new UnexpectedValueException('Media original name cannot be null'),
+            mediaType: $media->getType() ?? throw new UnexpectedValueException('Media type cannot be null'),
             seasonNumber: $tracklist->getTracklistSeason()?->getSeason()?->getSeasonNumber(),
             customSeasonNumber: $tracklist->getTracklistSeason()?->getCustomSeasonNumber()
         );

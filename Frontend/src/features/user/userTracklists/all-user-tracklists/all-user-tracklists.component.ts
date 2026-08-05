@@ -16,8 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { Component, OnInit } from '@angular/core';
-import { Observable } from 'rxjs';
-import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { CardModule } from 'primeng/card';
 import { DialogModule } from 'primeng/dialog';
@@ -36,14 +34,10 @@ import { DateFormattingPipe } from '../../../../pipes/date-formatting/date-forma
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { SelectModule } from 'primeng/select';
 import { FloatLabelModule } from 'primeng/floatlabel';
-import {
-    I_TracklistFormOutput,
-    Tracklist,
-} from '../../../../app/shared/interfaces/tracklist-interfaces';
+import { I_TracklistFormOutput } from '../../../../app/shared/interfaces/tracklist-interfaces';
 import {
     convertTracklistStatusIntoGerman,
     TRACK_LIST_STATUS_LIST_AS_OBJECT,
-    TracklistStatusType,
 } from '../../../../app/shared/variables/tracklist';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
@@ -60,6 +54,9 @@ import {
     getMessageObject,
 } from '../../../../app/shared/variables/message-vars';
 import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-of-account.use-case';
+import {
+    TracklistResponseDto
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 @Component({
     selector: 'app-all-user-tracklists',
@@ -93,15 +90,13 @@ import { UC_LogoutOfAccount } from '../../../../app/core/use-cases/user/log-out-
     ],
 })
 export class AllUserTracklistsComponent implements OnInit {
-    public allTracklists: Tracklist[] | null = null;
-    public sortedUserTracklists: Tracklist[] | null = null;
+    public allTracklists: TracklistResponseDto[] | null = null;
+    public sortedUserTracklists: TracklistResponseDto[] | null = null;
 
     public currentFilterForm!: FormGroup;
 
     public tracklistStatusFilterList: { german: string; value: string }[] =
         TRACK_LIST_STATUS_LIST_AS_OBJECT;
-    public currentFilterStatus: TracklistStatusType = 'watching';
-
     public tracklistMediaTypeFilterList: { german: string; value: string }[] = [
         {
             german: 'Alle Medien',
@@ -116,11 +111,8 @@ export class AllUserTracklistsComponent implements OnInit {
             value: 'tv',
         },
     ];
-    public currentFilterMediaType: 'all' | 'movie' | 'tv' = 'all';
-
     public posterPath: string = TMDB_POSTER_PATH;
-    public isDialogVisible: boolean = false;
-    public currentTracklist: Tracklist | null = null;
+    public currentTracklist: TracklistResponseDto | null = null;
     public tracklistStatusClass: string | null = null;
     public tmdbPosterPath: string = TMDB_POSTER_PATH;
     public visibility: number = 0;
@@ -216,21 +208,21 @@ export class AllUserTracklistsComponent implements OnInit {
         this.isLoading = true;
 
         this.getAllUserTracklistsUseCase.execute().subscribe({
-            next: (res: Tracklist[] | null) => {
+            next: (res: TracklistResponseDto[] | null) => {
                 if (!res) {
                     return;
                 }
 
                 this.isLoading = false;
                 this.sortedUserTracklists = res
-                    .filter((tracklist: Tracklist) => {
+                    .filter((tracklist: TracklistResponseDto) => {
                         return (
                             tracklist.status ===
                             this.currentFilterForm.get('statusFilter')?.value
                                 .value
                         );
                     })
-                    .filter((tracklist: Tracklist) => {
+                    .filter((tracklist: TracklistResponseDto) => {
                         if (
                             this.currentFilterForm.get('mediaFilter')?.value
                                 .value === 'all'
@@ -306,11 +298,11 @@ export class AllUserTracklistsComponent implements OnInit {
 
     /**
      * Function for switching them visible component to the editing tracklist interface.
-     * @param tracklist Tracklist
+     * @param tracklist TracklistResponseDto
      * @param isMovie boolean
      * @returns void
      */
-    public editTracklist = (tracklist: Tracklist, isMovie: boolean) => {
+    public editTracklist = (tracklist: TracklistResponseDto, isMovie: boolean) => {
         this.currentTracklist = tracklist;
         this.visibility = isMovie ? 1 : 2;
     };
@@ -337,13 +329,13 @@ export class AllUserTracklistsComponent implements OnInit {
         }
 
         this.sortedUserTracklists = this.allTracklists
-            .filter((tracklist: Tracklist) => {
+            .filter((tracklist: TracklistResponseDto) => {
                 return (
                     tracklist.status ===
                     this.currentFilterForm.get('statusFilter')?.value.value
                 );
             })
-            .filter((tracklist: Tracklist) => {
+            .filter((tracklist: TracklistResponseDto) => {
                 if (
                     this.currentFilterForm.get('mediaFilter')?.value.value ===
                     'all'

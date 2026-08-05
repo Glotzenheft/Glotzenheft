@@ -45,14 +45,7 @@ import { MenuModule } from 'primeng/menu';
 import { CreateTracklistEpisodeFormComponent } from '../../episodesCOMPONENTS/tracklist-episodes/create-tracklist-episode-form/create-tracklist-episode-form.component';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import {
-    Season,
-    SeasonEpisode,
-    SeasonWithEpisodes,
-} from '../../../../app/shared/interfaces/media-interfaces';
-import {
     I_TracklistFormOutput,
-    SeasonTracklist,
-    SeasonTracklistType,
     Tracklist,
     TVSeasonWithTracklist,
     TVWithTracklist,
@@ -102,6 +95,17 @@ import { convertTracklistStatusIntoGerman } from '../../../../app/shared/variabl
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { TRACKLIST_TAG_TYPE_OPTIONS } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/models/constants/tracklist-tag-type.constants';
 import {TableModule} from 'primeng/table';
+import {
+    TracklistResponseDto
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
+import {
+    TracklistStatusEnum
+} from '../../../../app/features/the-movie-db/tracklists/tracklist/models/enums/tracklist-status.enum';
+import {MediaType} from '../../../../app/features/media/models/enums/media-type.enum';
+import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {
+    MediaSeasonEpisodeDetailResponseDto
+} from '../../../../app/features/media/models/response/media-season-episode-detail-response.dto';
 
 @Component({
     selector: 'app-season-page',
@@ -159,11 +163,10 @@ import {TableModule} from 'primeng/table';
 //todo rename to Series
 export class SeasonPageComponent implements OnInit, OnDestroy {
     public tvSeriesId: string | null = null;
-    public seasonData$: Observable<Season> | null = null;
+    public seasonData$: Observable<MediaResponse> | null = null;
     public numberOfEpisodes$: Observable<number> | null = null;
     public tvDataWithTracklist: TVWithTracklist | null = null;
 
-    public episodeRating: number = 0;
     public readonly POSTER_PATH: string = TMDB_POSTER_PATH;
     public originalPosterPath: string = TMDB_ORIGINAL_IMAGE_PATH;
     public isThumbnailLoading = true;
@@ -176,14 +179,10 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public hasError: boolean = false;
     public serverNotAvailablePage: boolean = false;
     public isInvalidID: boolean = false;
-    public visibleSeason: SeasonWithEpisodes | null = null;
     public selectedSeason: TVSeasonWithTracklist | null = null;
-    public tracklistsOfSeason: SeasonTracklist[] = [];
+    public tracklistsOfSeason: TracklistResponseDto[] = [];
     public trackListForm!: FormGroup;
-    public isTracklistSubmitted: boolean = false;
     public tracklistSelectionForm!: FormGroup;
-    public currentTracklistSelection: SeasonTracklistType | null = null;
-
     public tagViewMode = signal<'inline' | 'table'>('inline');
     public tagCategories = TRACKLIST_TAG_TYPE_OPTIONS;
 
@@ -193,8 +192,8 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     // variables for current object values
     public currentSeason: TVSeasonWithTracklist | null = null;
-    public currentTracklist: SeasonTracklist | null = null;
-    public currentEpisode: SeasonEpisode | null = null;
+    public currentTracklist: TracklistResponseDto | null = null;
+    public currentEpisode: MediaSeasonEpisodeDetailResponseDto | null = null;
 
     public isEditingButtonVisible: boolean = true;
     public isLoading: boolean = false;
@@ -390,7 +389,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.numberOfEpisodes$ =
             this.seasonData$ &&
             this.seasonData$?.pipe(
-                map((season: Season) => {
+                map((season: MediaResponse) => {
                     let counter: number = 0;
                     for (const seasonAtt of season.media.seasons) {
                         counter += seasonAtt.episodeCount;
@@ -405,7 +404,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         }
 
         this.seasonDataSubscription = this.seasonData$.subscribe({
-            next: (res: Season) => {
+            next: (res: MediaResponse) => {
                 this.titleService.setTitle(
                     `${res.media.name} - Glotzenheft`,
                 );
@@ -444,13 +443,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         });
     };
 
-    public getTracklistNumberOfSeason = (tracklistNumber: number): number => {
-        return tracklistNumber + 1;
-    };
-
     public getDefaultTracklist = (
         tracklistName: string
-    ): Tracklist => {
+    ): TracklistResponseDto => {
         let airDateToUse = null;
         let startEp = null;
         let customSeason = null;
@@ -479,7 +474,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             updatedAt: null,
             id: 0,
             rating: null,
-            status: 'watching',
+            status: TracklistStatusEnum.WATCHING,
             startDate: new Date().toISOString(),
             finishDate: null,
             tracklistName: tracklistName,
@@ -490,8 +485,10 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             customPosterPath: null,
             media: {
                 id: 0,
-                type: '',
+                type: MediaType.TV_SHOW,
                 posterPath: '',
+                createdAt: "",
+                updatedAt: null
             },
             tracklistSeason: season ? {
                 id: 0,
@@ -500,7 +497,9 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                 customSeasonNumber: customSeason,
                 customPartNumber: null,
                 season: season as any,
-                tracklistEpisodes: []
+                tracklistEpisodes: [],
+                createdAt: '',
+                updatedAt: null,
             } : null,
             isRewatching: false,
             tags: []
@@ -511,23 +510,11 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.currentSeason = season;
         this.isTracklistFormVisible = 1;
     };
-
-    public hasErrorField = (field: string) => {
-        const fieldControl = this.trackListForm.get(field);
-
-        return (
-            fieldControl! &&
-            (fieldControl!.dirty ||
-                fieldControl!.touched ||
-                this.isTracklistSubmitted)
-        );
-    };
-
     public setSelectedSeason = (season: TVSeasonWithTracklist) => {
         if (season.id !== this.currentSeason?.id) {
             // set form to the first tracklist value of all tracklists that belong to this season
             // do not set form if the current selected season is equal to the parameter "season" -> otherwise the selection won't work anymore!
-            let currentTracklistInLocalStorage: SeasonTracklist | null = null;
+            let currentTracklistInLocalStorage: TracklistResponseDto | null = null;
 
             const currentTracklistInLocalStorageID: number | null =
                 this.getSelectedTracklistsInLocalStorageUseCase.execute()
@@ -540,12 +527,12 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
                 // checking if current tracklist in local storage is in this season
                 currentTracklistInLocalStorageID &&
                 season.tracklistsForSeason
-                    .map((tracklist: SeasonTracklist) => tracklist.id)
+                    .map((tracklist: TracklistResponseDto) => tracklist.id)
                     .includes(currentTracklistInLocalStorageID)
             ) {
                 currentTracklistInLocalStorage =
                     season.tracklistsForSeason.filter(
-                        (tracklist: SeasonTracklist) =>
+                        (tracklist: TracklistResponseDto) =>
                             tracklist.id === currentTracklistInLocalStorageID,
                     )[0];
             }
@@ -569,7 +556,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     };
 
     public setCurrentEpisode = (
-        episode: SeasonEpisode,
+        episode: MediaSeasonEpisodeDetailResponseDto,
         isEpisodeForEditing: boolean,
     ) => {
         this.currentEpisode = episode;
@@ -585,11 +572,6 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
         this.currentSeason = null;
         this.setVisibility(0);
         this.loadData(this.tvSeriesId);
-    };
-
-    public setSelectedTrackilst = (tracklist: SeasonTracklistType) => {
-        this.currentTracklistSelection = tracklist;
-        this.setVisibility(3);
     };
 
     public onChangeTab = (newTab: string) => {
@@ -630,7 +612,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
 
     public updateTracklist = (
         event: I_TracklistFormOutput,
-        selectedTracklist: SeasonTracklist,
+        selectedTracklist: TracklistResponseDto,
     ) => {
         this.triggerTracklistUPDATESubjectUseCase.execute({
             tracklist_id: selectedTracklist.id,
@@ -756,16 +738,16 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
     public applyEpisodeFilter: boolean = true;
 
 
-    public hasCustomEpisodeBoundaries = (tracklist: SeasonTracklist | null): boolean => {
+    public hasCustomEpisodeBoundaries = (tracklist: TracklistResponseDto | null): boolean => {
         if (!tracklist || !tracklist.tracklistSeason) return false;
         return tracklist.tracklistSeason.startEpisodeNumber !== null ||
             tracklist.tracklistSeason.endEpisodeNumber !== null;
     };
 
     public getFilteredEpisodes = (
-        episodes: SeasonEpisode[],
-        tracklist: SeasonTracklist | null
-    ): SeasonEpisode[] => {
+        episodes: MediaSeasonEpisodeDetailResponseDto[],
+        tracklist: TracklistResponseDto | null
+    ): MediaSeasonEpisodeDetailResponseDto[] => {
         // Wenn der Schalter aus ist oder keine Trackliste/Season existiert -> alle anzeigen
         if (!this.applyEpisodeFilter || !tracklist || !tracklist.tracklistSeason) {
             return episodes;
@@ -778,7 +760,7 @@ export class SeasonPageComponent implements OnInit, OnDestroy {
             return episodes; // Keine Grenzen definiert -> alle anzeigen
         }
 
-        return episodes.filter((epi: SeasonEpisode) => {
+        return episodes.filter((epi: MediaSeasonEpisodeDetailResponseDto) => {
             let isValid = true;
             // Wenn eine Start-Episode definiert ist und die aktuelle davor liegt -> wegfiltern
             if (start !== null && epi.episodeNumber < start) {

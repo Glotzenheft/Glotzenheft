@@ -36,11 +36,6 @@ import { TooltipModule } from 'primeng/tooltip';
 import { Router } from '@angular/router';
 import { DeleteDialogComponent } from '../../../../sharedCOMPONENTS/delete-dialog/delete-dialog.component';
 import {
-    SeasonTracklist,
-    TracklistEpisode,
-} from '../../../../../app/shared/interfaces/tracklist-interfaces';
-import { SeasonEpisode } from '../../../../../app/shared/interfaces/media-interfaces';
-import {
     CreateTracklistEpisode,
     UpdateTracklistEpisode
 } from '../../../../../app/shared/interfaces/tracklist-episode-interfaces';
@@ -61,6 +56,15 @@ import {
     TMDB_ORIGINAL_IMAGE_PATH,
 } from '../../../../../app/shared/variables/tmdb-vars';
 import {ProgressSpinner} from 'primeng/progressspinner';
+import {
+    MediaSeasonEpisodeDetailResponseDto
+} from '../../../../../app/features/media/models/response/media-season-episode-detail-response.dto';
+import {
+    TracklistEpisodeDetailDataDto
+} from '../../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';
+import {
+    TracklistResponseDto
+} from '../../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 
 @Component({
     selector: 'app-create-tracklist-episode-form',
@@ -91,10 +95,10 @@ import {ProgressSpinner} from 'primeng/progressspinner';
 })
 export class CreateTracklistEpisodeFormComponent implements OnInit {
     // input variables
-    public inpTracklist: InputSignal<SeasonTracklist> =
-        input.required<SeasonTracklist>();
-    public inpEpisode: InputSignal<SeasonEpisode> =
-        input.required<SeasonEpisode>();
+    public inpTracklist: InputSignal<TracklistResponseDto> =
+        input.required<TracklistResponseDto>();
+    public inpEpisode: InputSignal<MediaSeasonEpisodeDetailResponseDto> =
+        input.required<MediaSeasonEpisodeDetailResponseDto>();
     public inpSeasonID: InputSignal<number> = input.required<number>();
     public inpIsEpisodeEditing: InputSignal<boolean> =
         input.required<boolean>();
@@ -210,7 +214,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         const formattedDateTime = this.getFormattedWatchDateTime();
 
         const episodeInTracklist = this.inpTracklist().tracklistSeason?.tracklistEpisodes.find(
-            (epis: TracklistEpisode) => epis.episode.id === this.inpEpisode().id
+            (epis: TracklistEpisodeDetailDataDto) => epis.episode.id === this.inpEpisode().id
         );
 
         if (!episodeInTracklist) {
@@ -238,7 +242,7 @@ export class CreateTracklistEpisodeFormComponent implements OnInit {
         this.setDeletionDialogVisibilityStatus(false);
 
         const episodeInTracklist = this.inpTracklist().tracklistSeason?.tracklistEpisodes.find(
-            (epis: TracklistEpisode) => epis.episode.id === this.inpEpisode().id
+            (epis: TracklistEpisodeDetailDataDto) => epis.episode.id === this.inpEpisode().id
         );
 
         if (!episodeInTracklist) {

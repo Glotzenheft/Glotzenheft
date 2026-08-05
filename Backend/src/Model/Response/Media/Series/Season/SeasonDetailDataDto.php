@@ -20,8 +20,10 @@ declare(strict_types=1);
 
 namespace App\Model\Response\Media\Series\Season;
 
+use App\Entity\Episode;
 use App\Entity\Season;
 use App\Model\Response\Media\Series\Season\Episode\EpisodeDetailDataDto;
+use UnexpectedValueException;
 
 readonly class SeasonDetailDataDto
 {
@@ -52,25 +54,20 @@ readonly class SeasonDetailDataDto
         ?array $episodeDtos = null
     ): self
     {
-        if ( $episodeDtos === null)
-        {
-            $episodeDtos = [];
-            foreach ($season->getEpisodes() as $episode)
-            {
-                $episodeDtos[] = EpisodeDetailDataDto::fromEntity($episode);
-            }
-        }
+        $episodeDtos = $episodeDtos ?? $season->getEpisodes()->map(
+            fn(Episode $episode) => EpisodeDetailDataDto::fromEntity($episode)
+        )->toArray();
 
         return new self(
-            id: $season->getId(),
-            createdAt: $season->getCreatedAt()->format('Y-m-d H:i:s'),
+            id: $season->getId() ?? throw new UnexpectedValueException('Season Id cannot be null'),
+            createdAt: $season->getCreatedAt()?->format('Y-m-d H:i:s') ?? throw new UnexpectedValueException('Season creaton date Id cannot be null'),
             updatedAt: $season->getUpdatedAt()?->format('Y-m-d H:i:s'),
-            seasonNumber: $season->getSeasonNumber(),
-            tmdbSeasonId: $season->getTmdbSeasonId(),
-            name: $season->getName(),
-            overview: $season->getOverview(),
+            seasonNumber: $season->getSeasonNumber() ?? throw new UnexpectedValueException('Season number cannot be null'),
+            tmdbSeasonId: $season->getTmdbSeasonId() ?? throw new UnexpectedValueException('TMDB season Id cannot be null'),
+            name: $season->getName() ?? throw new UnexpectedValueException('Season name cannot be null'),
+            overview: $season->getOverview() ?? throw new UnexpectedValueException('Season overview cannot be null'),
             airDate: $season->getAirDate()?->format('Y-m-d'),
-            episodeCount: $season->getEpisodeCount(),
+            episodeCount: $season->getEpisodeCount() ?? throw new UnexpectedValueException('Season episode count cannot be null'),
             posterPath: $season->getPosterPath(),
             episodes: $episodeDtos,
         );
