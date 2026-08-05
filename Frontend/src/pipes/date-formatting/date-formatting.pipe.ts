@@ -21,7 +21,9 @@ import { Pipe, PipeTransform } from '@angular/core';
     name: 'dateFormatting',
 })
 export class DateFormattingPipe implements PipeTransform {
-    transform(date: string): string {
+    transform(date: string | null): string {
+        if (!date) return '';
+
         return new Date(date).toLocaleDateString('de-DE', {
             day: '2-digit',
             month: '2-digit',
