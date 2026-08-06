@@ -27,7 +27,7 @@ import {DateFormattingPipe} from '../../../../../../../../pipes/date-formatting/
 import {MediaTypePipe} from '../../../../../../../shared/pipes/media-type/media-type.pipe';
 import {TracklistStatusPipe} from '../../../../../../../shared/pipes/tracklist-status/tracklist-status.pipe';
 import {TracklistTracklistTagResponseDto} from '../../../models/response/tracklist-tracklist-tag-response.dto';
-import {MediaType} from '../../../../../../media/models/enums/media-type.enum';
+import {MediaType} from '../../../../../media/models/enums/media-type.enum';
 import {LanguageNamePipe} from '../../../../../../../shared/pipes/language-name/language-name.pipe';
 import {
     DatetimeWithUnitFormattingPipe

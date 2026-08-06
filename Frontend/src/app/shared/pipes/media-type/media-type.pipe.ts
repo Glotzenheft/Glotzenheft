@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {Pipe, PipeTransform} from '@angular/core';
-import {MediaType} from '../../../features/media/models/enums/media-type.enum';
+import {MediaType} from '../../../features/the-movie-db/media/models/enums/media-type.enum';
 
 @Pipe({
     name: 'mediaType'

@@ -93,14 +93,14 @@ import {
     TracklistTagFormDialogComponent
 } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
-import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {MediaResponse} from '../../../../app/features/the-movie-db/media/models/response/media-response.dto';
 import {
     TracklistResponseDto
 } from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 import {
     TracklistStatusEnum
 } from '../../../../app/features/the-movie-db/tracklists/tracklist/models/enums/tracklist-status.enum';
-import {MediaType} from '../../../../app/features/media/models/enums/media-type.enum';
+import {MediaType} from '../../../../app/features/the-movie-db/media/models/enums/media-type.enum';
 
 @Component({
     selector: 'app-film-page',

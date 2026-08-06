@@ -21,7 +21,7 @@ import {
     I_TracklistRepository,
     IT_TRACKLIST_REPOSITORY,
 } from '../../interfaces/tracklist.repository';
-import {MediaResponse} from '../../../features/media/models/response/media-response.dto';
+import {MediaResponse} from '../../../features/the-movie-db/media/models/response/media-response.dto';
 
 @Injectable()
 export class UC_ExtractTracklistsOfTV {

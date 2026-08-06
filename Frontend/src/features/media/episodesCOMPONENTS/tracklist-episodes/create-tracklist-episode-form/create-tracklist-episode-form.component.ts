@@ -58,7 +58,7 @@ import {
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {
     MediaSeasonEpisodeDetailResponseDto
-} from '../../../../../app/features/media/models/response/media-season-episode-detail-response.dto';
+} from '../../../../../app/features/the-movie-db/media/models/response/media-season-episode-detail-response.dto';
 import {
     TracklistEpisodeDetailDataDto
 } from '../../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';

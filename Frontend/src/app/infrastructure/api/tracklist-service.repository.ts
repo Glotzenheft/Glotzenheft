@@ -29,8 +29,8 @@ import { KEY_LOCAL_STORAGE_SELECTED_TRACKLIST } from '../../shared/variables/loc
 import {
     TracklistResponseDto
 } from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
-import {MediaResponse} from '../../features/media/models/response/media-response.dto';
-import {MediaSeasonDetailResponseDto} from '../../features/media/models/response/media-season-detail-response.dto';
+import {MediaResponse} from '../../features/the-movie-db/media/models/response/media-response.dto';
+import {MediaSeasonDetailResponseDto} from '../../features/the-movie-db/media/models/response/media-season-detail-response.dto';
 import {
     TracklistEpisodeDetailDataDto
 } from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';

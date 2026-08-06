@@ -21,7 +21,7 @@ import {
     IT_MEDIA_REPOSITORY,
 } from '../../interfaces/media.repository';
 import { Inject, Injectable } from '@angular/core';
-import {MediaResponse} from '../../../features/media/models/response/media-response.dto';
+import {MediaResponse} from '../../../features/the-movie-db/media/models/response/media-response.dto';
 
 @Injectable()
 export class UC_GetFilmDetails {

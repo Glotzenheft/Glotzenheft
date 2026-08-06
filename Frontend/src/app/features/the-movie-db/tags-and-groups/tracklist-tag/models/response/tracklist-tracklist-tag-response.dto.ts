@@ -15,7 +15,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { MediaType } from '../../../../../media/models/enums/media-type.enum';
+import { MediaType } from '../../../../media/models/enums/media-type.enum';
 import {TracklistStatusEnum} from '../../../../tracklists/tracklist/models/enums/tracklist-status.enum';
 
 export interface TracklistTracklistTagResponseDto {

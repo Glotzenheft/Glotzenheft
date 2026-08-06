@@ -18,11 +18,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { TracklistStatusType } from '../variables/tracklist';
 import { SeasonWithEpisodes } from './media-interfaces';
 import {TracklistTags} from './tracklist-tags-interfaces';
-import {MediaSeasonDetailResponseDto} from '../../features/media/models/response/media-season-detail-response.dto';
+import {MediaSeasonDetailResponseDto} from '../../features/the-movie-db/media/models/response/media-season-detail-response.dto';
 import {
     TracklistResponseDto
 } from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
-import { MediaDetailDataResponseDto} from '../../features/media/models/response/media-detail-data-response.dto';
+import { MediaDetailDataResponseDto} from '../../features/the-movie-db/media/models/response/media-detail-data-response.dto';
 
 export interface CreateMovieTracklistData {
     tracklist_name: string;

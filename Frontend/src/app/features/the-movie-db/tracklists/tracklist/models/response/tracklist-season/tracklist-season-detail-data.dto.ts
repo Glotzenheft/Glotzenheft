@@ -17,7 +17,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
     MediaSeasonLightDetailResponseDto
-} from '../../../../../../media/models/response/media-season-light-detail-response.dto';
+} from '../../../../../media/models/response/media-season-light-detail-response.dto';
 import {TracklistEpisodeDetailDataDto} from './tracklist-episode/tracklist-episode-detail-data.dto';
 
 export interface TracklistSeasonDetailDataDto {
