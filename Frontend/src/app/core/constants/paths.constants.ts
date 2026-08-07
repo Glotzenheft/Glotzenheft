@@ -86,3 +86,16 @@ export const TMDB_IMAGE_PATHS = {
     w500Poster: 'w500',
     w780Poster: 'w780'
 }
+
+export const MEDIA_DETAILS_PATHS = {
+    base: 'media',
+    movie: 'movie',
+    tv: 'tv',
+    mediaType: ':mediaType',
+    mediaId: ':mediaId',
+    tracklists: 'tracklists',
+    analytics: 'analytics',
+    recommendations: 'recommendations',
+    persons: 'persons',
+    activities: 'activities',
+}
