@@ -15,14 +15,16 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component } from '@angular/core';
+import {Component, Input} from '@angular/core';
+import {MediaResponse} from '../../../../../../models/response/media-response.dto';
 
 @Component({
-  selector: 'app-media-detail-tv-series-tracklists-tab',
-  imports: [],
-  templateUrl: './media-detail-tv-series-tracklists-tab.component.html',
-  styleUrl: './media-detail-tv-series-tracklists-tab.component.css'
+    selector: 'app-media-detail-tv-series-tracklists-tab',
+    imports: [],
+    standalone: true,
+    templateUrl: './media-detail-tv-series-tracklists-tab.component.html',
+    styleUrl: './media-detail-tv-series-tracklists-tab.component.css'
 })
 export class MediaDetailTvSeriesTracklistsTabComponent {
-
+    @Input() mediaData!: MediaResponse;
 }
