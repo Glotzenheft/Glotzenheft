@@ -21,6 +21,7 @@ import {
     TRACKLIST_TAG_PATHS,
     TRACKLIST_TAG_FILTER_PATHS,
     GROUPS_PATHS,
+    MEDIA_DETAILS_PATHS,
 } from "../../core/constants/paths.constants";
 
 export const TMDB_ROUTES: Routes = [
@@ -123,7 +124,13 @@ export const TMDB_ROUTES: Routes = [
                     .then(m => m.CustomMediaComponent),
                 title: 'Eigene Medien'
 
-            }
+            },
+            {
+                path: `${MEDIA_DETAILS_PATHS.base}/${MEDIA_DETAILS_PATHS.mediaType}/${MEDIA_DETAILS_PATHS.mediaId}`,
+                loadChildren: () => import('./media/components/media-detail/media-detail.routes')
+                    .then(m => m.MEDIA_DETAIL_ROUTES),
+                title: 'Medien'
+            },
         ]
     }
 ]
