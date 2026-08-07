@@ -1,0 +1,25 @@
+<div class="media-detail-container">
+    @if (state.isLoading()) {
+        <div class="loading-state">Lade Medien Details...</div>
+    } @else if (state.mediaData()) {
+        <header>
+            <h1>
+                {{state.mediaData()!.media.name}}
+            </h1>
+        </header>
+        <main>
+        </main>
+
+        <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
+            <p-tablist>
+                <p-tab [value]="paths.tracklists">Tracklisten</p-tab>
+                <p-tab [value]="paths.recommendations">Ähnliches</p-tab>
+                <p-tab [value]="paths.analytics">Analyse</p-tab>
+                <p-tab [value]="paths.activities">Aktivitäten</p-tab>
+                <p-tab [value]="paths.persons">Personen</p-tab>
+            </p-tablist>
+        </p-tabs>
+
+        <router-outlet></router-outlet>
+    }
+</div>
