@@ -15,3 +15,39 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+.media-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.media-detail-title {
+    margin: 0;
+    word-break: break-word;
+}
+
+.media-detail-title-toggle-button {
+    flex-shrink: 0;
+}
+
+.media-detail-meta-container {
+
+}
+
+@media (min-width: 850px) {
+    .media-detail-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        flex: 1;
+        min-width: 0;
+
+    }
+}
+
+@media (min-width: 1200px) {
+}

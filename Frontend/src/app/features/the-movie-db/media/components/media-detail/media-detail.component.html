@@ -16,16 +16,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
 <div class="media-detail-container">
-    @if (state.isLoading()) {
+    @let viewState = state.viewState();
+    @if (viewState.loading) {
         <div class="loading-state">Lade Medien Details...</div>
-    } @else if (state.mediaData()) {
-        <header>
-            <h1>
-                {{state.mediaData()!.media.name}}
+    } @else if (viewState.data) {
+        @let data = viewState.data;
+        @let mediaData = data.media;
+        @let tracklistsData = data.tracklists;
+        <header class="media-detail-header">
+            <h1 #mediaTitleElement
+                class="media-detail-title"
+                [pTooltip]="showOriginalTitle() ? data.media.originalName : data.media.name"
+                [tooltipDisabled]="isTooltipDisabled()"
+                tooltipPosition="bottom">
+                {{ showOriginalTitle() ? mediaData.originalName : mediaData.name }}
             </h1>
+
+            <p-button
+                class="media-detail-title-toggle-button"
+                [icon]="showOriginalTitle() ? 'pi pi-language' : 'pi pi-globe'"
+                [rounded]="true"
+                [text]="true"
+                severity="secondary"
+                [pTooltip]="showOriginalTitle() ? 'Deutschen Titel anzeigen' : 'Originaltitel anzeigen'"
+                (onClick)="toggleTitle()"
+            ></p-button>
         </header>
-        <main>
-        </main>
+        <div class="media-detail-meta-container">
+
+        </div>
 
         <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
             <p-tablist>

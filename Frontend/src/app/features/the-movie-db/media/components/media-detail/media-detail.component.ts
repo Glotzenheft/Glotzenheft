@@ -15,13 +15,26 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Component, inject, Input, OnInit, signal, WritableSignal} from '@angular/core';
+import {
+    Component,
+    effect,
+    ElementRef,
+    HostListener,
+    inject,
+    Input,
+    OnInit,
+    signal,
+    viewChild,
+    WritableSignal
+} from '@angular/core';
 import {MediaDetailService} from '../../services/media-detail.service';
 import {MediaDetailStateService} from '../../services/media-detail-state.service';
 import {MediaResponse} from '../../models/response/media-response.dto';
 import {MEDIA_DETAILS_PATHS} from '../../../../../core/constants/paths.constants';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
+import {Tooltip} from 'primeng/tooltip';
+import {Button} from 'primeng/button';
 
 @Component({
     selector: 'app-media-detail',
@@ -29,7 +42,9 @@ import {Tab, TabList, Tabs} from 'primeng/tabs';
         RouterOutlet,
         Tab,
         TabList,
-        Tabs
+        Tabs,
+        Tooltip,
+        Button
     ],
     providers: [MediaDetailStateService],
     standalone: true,
@@ -49,6 +64,18 @@ export class MediaDetailComponent implements OnInit{
 
     activeTab: WritableSignal<string> = signal<string>('tracklists');
     paths = MEDIA_DETAILS_PATHS;
+
+    showOriginalTitle = signal<boolean>(false);
+    mediaTitleElement = viewChild<ElementRef<HTMLHeadingElement>>('mediaTitleElement');
+    isTooltipDisabled = signal<boolean>(true);
+
+    constructor() {
+        effect(() => {
+            if (this.mediaTitleElement()) {
+                setTimeout(() => this.checkTruncation())
+            }
+        })
+    }
 
     ngOnInit(): void {
         this.loadMedia();
@@ -72,5 +99,23 @@ export class MediaDetailComponent implements OnInit{
         const routeStr = newRoute.toString();
         this.activeTab.set(routeStr);
         void this.router.navigate([routeStr], { relativeTo: this.route });
+    }
+
+    toggleTitle(): void {
+        this.showOriginalTitle.update(current => !current);
+        setTimeout(() => this.checkTruncation())
+    }
+
+    checkTruncation(): void {
+        const element = this.mediaTitleElement()?.nativeElement;
+        if (element) {
+            const isTruncated = element.scrollWidth > element.clientWidth;
+            this.isTooltipDisabled.set(!isTruncated);
+        }
+    }
+
+    @HostListener('window:resize')
+    onResize(): void {
+        this.checkTruncation();
     }
 }
