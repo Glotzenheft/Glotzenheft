@@ -15,11 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Injectable, signal} from '@angular/core';
+import {computed, Injectable, signal} from '@angular/core';
 import {MediaResponse} from '../models/response/media-response.dto';
 
 @Injectable()
 export class MediaDetailStateService {
     mediaData = signal<MediaResponse | null>(null);
     isLoading = signal<boolean>(true);
+
+    viewState = computed(() => {
+        return {
+            loading: this.isLoading(),
+            data: this.mediaData()
+        };
+    });
 }
