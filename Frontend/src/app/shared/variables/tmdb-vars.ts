@@ -18,3 +18,5 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 export const TMDB_POSTER_PATH: string = 'https://image.tmdb.org/t/p/w500';
 
 export const TMDB_ORIGINAL_IMAGE_PATH: string = 'https://image.tmdb.org/t/p/original';
+
+export const TMDB_BACKDROP_PATH: string = 'https://image.tmdb.org/t/p/w1280'
