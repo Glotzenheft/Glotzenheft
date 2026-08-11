@@ -18,11 +18,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 <div class="media-detail-container">
     @let viewState = state.viewState();
     @if (viewState.loading) {
-        <div class="loading-state">Lade Medien Details...</div>
+        <div class="loadingWrapper">
+            <h1>Laden ...</h1>
+            <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+        </div>
     } @else if (viewState.data) {
         @let data = viewState.data;
         @let mediaData = data.media;
         @let tracklistsData = data.tracklists;
+        <div class="media-detail-backdrop"
+             [style.--bg-image]="'url(' + backdropPath + mediaData.backdropPath + ')'">
+        </div>
         <header class="media-detail-header">
             <h1 #mediaTitleElement
                 class="media-detail-title"
@@ -43,19 +49,159 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             ></p-button>
         </header>
         <div class="media-detail-meta-container">
+            <div class="media-detail-meta-poster">
+                @if (mediaData.posterPath && !imageError()) {
+                    @if (isThumbnailLoading()) {
+                        <p-progressSpinner
+                            styleClass="w-4rem h-4rem"
+                            strokeWidth="4"
+                            fill="transparent"
+                            animationDuration="0.5s" />
+                    }
 
+                    <p-image
+                        [src]="posterPath + mediaData.posterPath"
+                        [previewImageSrc]="originalPosterPath + mediaData.posterPath"
+                        [alt]="'Poster für die Serie' + mediaData.name"
+                        [preview]="true"
+                        appendTo="body">
+                        <ng-template pTemplate="image">
+                            <img
+                                [ngSrc]="posterPath + mediaData.posterPath"
+                                (load)="isThumbnailLoading.set(false)"
+                                (error)="handleImageError()"
+                                alt="Poster für {{ mediaData.type === mediaTypes.MOVIE ? 'den Film ' : 'die Serie '}} {{ mediaData.name }}"
+                                width="267"
+                                height="400"
+                                class="episode-dialog-img"
+                                style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                            />
+                        </ng-template>
+                    </p-image>
+                }
+                @else {
+                    <div class="image-error-fallback2">
+                        <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                        <p> Kein Poster für {{ mediaData.type === mediaTypes.MOVIE ? 'den Film' : 'die Serie' }} "{{ mediaData.name }}" vorhanden. </p>
+                    </div>
+                }
+            </div>
+
+            <div class="media-detail-meta-content-container">
+                <div class="media-detail-description">
+                    <h2>Handlung</h2>
+                    {{mediaData.description ? mediaData.description : "Keine Beschreibung vorhanden"}}!
+                </div>
+                <div class="media-detail-bottom-area">
+                    <div class="media-detail-box">
+                        <div class="media-detail-box-left">
+                        <span class="media-detail-info-item">
+                            <span class="media-detail-info-label">Benutzerbewertung</span>
+                            <span class="media-detail-info-value">??.?? - ?? Bewertungen</span>
+                        </span>
+                            <span class="media-detail-info-item">
+                            <span class="media-detail-info-label">Popularität</span>
+                            <span class="media-detail-info-value">-</span>
+                        </span>
+                            <span class="media-detail-info-item">
+                            @if (mediaData.type === mediaTypes.MOVIE) {
+                                <span class="media-detail-info-label">Laufzeit:</span>
+                                <span class="media-detail-info-value">??h ??min - ??? min</span>
+
+                            } @else if (mediaData.type === mediaTypes.TV_SHOW) {
+                                <span class="media-detail-info-label">Anzahl der Staffeln:</span>
+                                <span class="media-detail-info-value">??</span>
+                                <span class="media-detail-info-label">Anzahl der Episoden:</span>
+                                <span class="media-detail-info-value">??</span>
+                            }
+                        </span>
+                            <span class="media-detail-info-item">
+                            <span class="media-detail-info-label">Ursprungsland</span>
+                            <span class="media-detail-info-value">-</span>
+                        </span>
+                        </div>
+                        <div class="media-detail-box-right">
+                        <span class="media-detail-info-item">
+                            <span class="media-detail-info-label">TMDB Id:</span>
+                            <span class="media-detail-info-value">{{ mediaData.tmdbId }}</span>
+                        </span>
+                        </div>
+                    </div>
+
+                    <div class="media-detail-bar-container">
+                        <div class="media-detail-genre-bar">
+                            @let genres = mediaData.tmdbGenres;
+                            @for (genre of genres; track genre) {
+                                <p-tag>
+                                    {{ genre.name }}
+                                </p-tag>
+                            }
+                        </div>
+                        <div class="media-detail-link-bar">
+                            <p-tag>
+                                <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
+                                   target="_blank"
+                                   rel="noopener noreferrer"
+                                >
+                                    <i class="pi pi-link"></i>
+                                    TMDB
+                                </a>
+                            </p-tag>
+
+                            @if (mediaData.imdbId) {
+                                <p-tag>
+                                    <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
+                                       target="_blank"
+                                       rel="noopener noreferrer"
+                                    >
+                                        <i class="pi pi-link"></i>
+                                        IMDB
+                                    </a>
+                                </p-tag>
+                            }
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
 
-        <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
-            <p-tablist>
-                <p-tab [value]="paths.tracklists">Tracklisten</p-tab>
-                <p-tab [value]="paths.recommendations">Ähnliches</p-tab>
-                <p-tab [value]="paths.analytics">Analyse</p-tab>
-                <p-tab [value]="paths.activities">Aktivitäten</p-tab>
-                <p-tab [value]="paths.persons">Personen</p-tab>
-            </p-tablist>
-        </p-tabs>
+
+        <div class="media-detail-tabs-scroll-wrapper">
+            <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
+                <p-tablist>
+                    <p-tab [value]="paths.tracklists">
+                        <i [class]="'pi pi-list'"></i>
+                        <span>Tracklisten</span>
+                    </p-tab>
+                    <p-tab [value]="paths.recommendations">
+                        <i [class]="'pi pi-sparkles'"></i>
+                        <span>Ähnliches</span>
+                    </p-tab>
+                    <p-tab [value]="paths.analytics">
+                        <i [class]="'pi pi-chart-pie'"></i>
+                        <span>Analyse</span>
+                    </p-tab>
+                    <p-tab [value]="paths.activities">
+                        <i [class]="'pi pi-arrow-right-arrow-left'"></i>
+                        <span>Aktivitäten</span>
+                    </p-tab>
+                    <p-tab [value]="paths.persons">
+                        <i [class]="'pi pi-user'"></i>
+                        <span>Personen</span>
+                    </p-tab>
+                </p-tablist>
+            </p-tabs>
+        </div>
 
         <router-outlet></router-outlet>
+    } @else if(!viewState.loading && !viewState.data) {
+        <div>
+            <p-panel header="Fehler beim Laden der Seite" class="error">
+                <p>
+                    Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
+                    versuchen Sie es erneut durch ein erneutes Laden der Seite.
+                </p>
+            </p-panel>
+        </div>
     }
 </div>

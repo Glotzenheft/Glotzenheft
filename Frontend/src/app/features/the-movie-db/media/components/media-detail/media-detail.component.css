@@ -34,7 +34,175 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .media-detail-meta-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
 
+.media-detail-meta-poster {
+    flex: 0 0 267px;
+    aspect-ratio: 2 / 3;
+}
+
+.media-detail-meta-content-container {
+    width: 100%;
+}
+
+.media-detail-description {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    height: 50%;
+}
+
+.media-detail-bottom-area {
+    margin-top: auto;
+    display: grid;
+    align-content: space-between;
+    gap: 1rem;
+}
+.media-detail-box {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    height: 25%;
+}
+
+.media-detail-box-left,
+.media-detail-box-right {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #9ca3af;
+    border-radius: 50px;
+    padding: 1.5rem;
+
+}
+
+.media-detail-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.media-detail-info-label {
+    opacity: 0.7;
+}
+
+.media-detail-info-value {
+    text-align: right;
+    font-weight: 500;
+}
+
+.media-detail-bar-container {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+}
+.media-detail-link-bar,
+.media-detail-genre-bar {
+    border: 1px solid #9ca3af;
+    border-radius: 100px;
+    width: 100%;
+    padding: 0.7rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.media-detail-link-bar a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+:host ::ng-deep .media-detail-link-bar p-tag{
+    border-radius: 100px !important;
+}
+
+:host ::ng-deep .media-detail-genre-bar p-tag {
+    border-radius: 100px !important;
+}
+
+.media-detail-tabs-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.2rem;
+    margin: 1rem 0;
+}
+
+.media-detail-tabs-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+:host ::ng-deep .p-image {
+    border-radius: var(--border--radius);
+    overflow: hidden;
+    display: inline-flex;
+}
+
+:host ::ng-deep .p-tablist-tab-list {
+    display: flex;
+    gap: 0.25rem;
+
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #9ca3af !important;
+
+    border-radius: 100px !important;
+    padding: 0.3rem !important;
+}
+
+:host ::ng-deep .p-tablist-tab-list::-webkit-scrollbar {
+    display: none;
+}
+
+:host ::ng-deep .p-tablist-ink-bar {
+    display: none !important;
+}
+
+:host ::ng-deep .p-tab {
+    border: none !important;
+    background: transparent !important;
+    border-radius: 25px !important;
+    padding: 0.6rem 1.2rem !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    transition: all 0.3s ease;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+:host ::ng-deep .p-tab:not(.p-tab-active):hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+:host ::ng-deep .p-tab-active {
+    background-color: var(--link--color) !important;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+:host ::ng-deep .p-tablist-active-bar,
+:host ::ng-deep .p-tablist-ink-bar {
+    display: none !important;
 }
 
 @media (min-width: 850px) {
@@ -45,9 +213,51 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
         flex: 1;
         min-width: 0;
+    }
 
+    .media-detail-meta-content-container {
+        height: auto;
     }
 }
 
 @media (min-width: 1200px) {
+    .media-detail-container {
+        height: 525px;
+    }
+    .media-detail-backdrop {
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 720px;
+
+        background-image: var(--bg-image);
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+
+        opacity: 0.4;
+        filter: blur(1px);
+
+        mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
+        -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
+
+        pointer-events: none;
+    }
+    .media-detail-meta-container {
+        height: 415px;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .media-detail-meta-content-container {
+        height: 400px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .media-detail-meta-content-container h2 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
 }

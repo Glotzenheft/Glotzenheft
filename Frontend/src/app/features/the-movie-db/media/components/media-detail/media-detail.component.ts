@@ -35,6 +35,19 @@ import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
 import {Tooltip} from 'primeng/tooltip';
 import {Button} from 'primeng/button';
+import {Image} from 'primeng/image';
+import {NgOptimizedImage} from '@angular/common';
+import {PrimeTemplate} from 'primeng/api';
+import {ProgressSpinner} from 'primeng/progressspinner';
+import {
+    TMDB_BACKDROP_PATH,
+    TMDB_ORIGINAL_IMAGE_PATH,
+    TMDB_POSTER_PATH
+} from '../../../../../shared/variables/tmdb-vars';
+import {MediaType} from '../../models/enums/media-type.enum';
+import {Panel} from 'primeng/panel';
+import {TMDB_MAIN_ROUTE} from '../../../../../shared/variables/tmdb-route';
+import {Tag} from 'primeng/tag';
 
 @Component({
     selector: 'app-media-detail',
@@ -44,7 +57,13 @@ import {Button} from 'primeng/button';
         TabList,
         Tabs,
         Tooltip,
-        Button
+        Button,
+        Image,
+        NgOptimizedImage,
+        PrimeTemplate,
+        ProgressSpinner,
+        Panel,
+        Tag
     ],
     providers: [MediaDetailStateService],
     standalone: true,
@@ -56,8 +75,14 @@ export class MediaDetailComponent implements OnInit{
     private router = inject(Router);
     private route = inject(ActivatedRoute);
 
+    protected readonly originalPosterPath = TMDB_ORIGINAL_IMAGE_PATH;
+    protected readonly posterPath = TMDB_POSTER_PATH;
+    protected readonly backdropPath = TMDB_BACKDROP_PATH;
+    protected readonly tmdbMediaUrl: string = TMDB_MAIN_ROUTE;
+    protected readonly mediaTypes = MediaType;
+
     @Input() mediaId!: string;
-    @Input() mediaType!: string;
+    @Input() mediaTypeUrlParam!: string;
 
 
     public state = inject(MediaDetailStateService);
@@ -68,6 +93,8 @@ export class MediaDetailComponent implements OnInit{
     showOriginalTitle = signal<boolean>(false);
     mediaTitleElement = viewChild<ElementRef<HTMLHeadingElement>>('mediaTitleElement');
     isTooltipDisabled = signal<boolean>(true);
+    imageError = signal<boolean>(false);
+    isThumbnailLoading = signal<boolean>(true);
 
     constructor() {
         effect(() => {
@@ -83,7 +110,7 @@ export class MediaDetailComponent implements OnInit{
 
     private loadMedia(): void {
         this.state.isLoading.set(true);
-        this.mediaDetailService.getMedia(this.mediaType, Number(this.mediaId)).subscribe({
+        this.mediaDetailService.getMedia(this.mediaTypeUrlParam, Number(this.mediaId)).subscribe({
             next: (media: MediaResponse) => {
                 this.state.mediaData.set(media);
                 this.state.isLoading.set(false);
@@ -117,5 +144,10 @@ export class MediaDetailComponent implements OnInit{
     @HostListener('window:resize')
     onResize(): void {
         this.checkTruncation();
+    }
+
+    public handleImageError() {
+        this.isThumbnailLoading.set(false);
+        this.imageError.set(true);
     }
 }
