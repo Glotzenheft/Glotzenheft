@@ -106,6 +106,57 @@ class Media
     #[ORM\Column(nullable: true)]
     private ?int $runtime = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private bool $adult = false;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $numberOfEpisodes = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $numberOfSeasons = null;
+
+    #[ORM\Column(length: 10)]
+    private ?string $originalLanguage = null;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private float $popularity = 0.0;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $status = null;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private float $voteAverage = 0.0;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private int $voteCount = 0;
+
+    #[ORM\Column(length: 2048, nullable: true)]
+    private ?string $homepage = null;
+
+    #[ORM\Column(nullable: true)]
+    private ?int $tvdbId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $wikidataId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $facebookId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $instagramId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $twitterId = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $tagline = null;
+
+    #[ORM\Column(type: Types::BIGINT, options: ['default' => 0])]
+    private string $budget = '0';
+
+    #[ORM\Column(type: Types::BIGINT, options: ['default' => 0])]
+    private string $revenue = '0';
+
     public function __construct()
     {
         $this->tmdbGenres = new ArrayCollection();
@@ -309,6 +360,210 @@ class Media
     public function setRuntime(?int $runtime): static
     {
         $this->runtime = $runtime;
+
+        return $this;
+    }
+
+    public function isAdult(): bool
+    {
+        return $this->adult;
+    }
+
+    public function setAdult(bool $adult): static
+    {
+        $this->adult = $adult;
+
+        return $this;
+    }
+
+    public function getNumberOfEpisodes(): ?int
+    {
+        return $this->numberOfEpisodes;
+    }
+
+    public function setNumberOfEpisodes(?int $numberOfEpisodes): static
+    {
+        $this->numberOfEpisodes = $numberOfEpisodes;
+
+        return $this;
+    }
+
+    public function getNumberOfSeasons(): ?int
+    {
+        return $this->numberOfSeasons;
+    }
+
+    public function setNumberOfSeasons(?int $numberOfSeasons): static
+    {
+        $this->numberOfSeasons = $numberOfSeasons;
+
+        return $this;
+    }
+
+    public function getOriginalLanguage(): ?string
+    {
+        return $this->originalLanguage;
+    }
+
+    public function setOriginalLanguage(string $originalLanguage): static
+    {
+        $this->originalLanguage = $originalLanguage;
+
+        return $this;
+    }
+
+    public function getPopularity(): float
+    {
+        return $this->popularity;
+    }
+
+    public function setPopularity(float $popularity): static
+    {
+        $this->popularity = $popularity;
+
+        return $this;
+    }
+
+    public function getStatus(): ?string
+    {
+        return $this->status;
+    }
+
+    public function setStatus(string $status): static
+    {
+        $this->status = $status;
+
+        return $this;
+    }
+
+    public function getVoteAverage(): float
+    {
+        return $this->voteAverage;
+    }
+
+    public function setVoteAverage(float $voteAverage): static
+    {
+        $this->voteAverage = $voteAverage;
+
+        return $this;
+    }
+
+    public function getVoteCount(): int
+    {
+        return $this->voteCount;
+    }
+
+    public function setVoteCount(int $voteCount): static
+    {
+        $this->voteCount = $voteCount;
+
+        return $this;
+    }
+
+    public function getHomepage(): ?string
+    {
+        return $this->homepage;
+    }
+
+    public function setHomepage(?string $homepage): static
+    {
+        $this->homepage = $homepage;
+
+        return $this;
+    }
+
+    public function getTvdbId(): ?int
+    {
+        return $this->tvdbId;
+    }
+
+    public function setTvdbId(?int $tvdbId): static
+    {
+        $this->tvdbId = $tvdbId;
+
+        return $this;
+    }
+
+    public function getWikidataId(): ?string
+    {
+        return $this->wikidataId;
+    }
+
+    public function setWikidataId(?string $wikidataId): static
+    {
+        $this->wikidataId = $wikidataId;
+
+        return $this;
+    }
+
+    public function getFacebookId(): ?string
+    {
+        return $this->facebookId;
+    }
+
+    public function setFacebookId(?string $facebookId): static
+    {
+        $this->facebookId = $facebookId;
+
+        return $this;
+    }
+
+    public function getInstagramId(): ?string
+    {
+        return $this->instagramId;
+    }
+
+    public function setInstagramId(?string $instagramId): static
+    {
+        $this->instagramId = $instagramId;
+
+        return $this;
+    }
+
+    public function getTwitterId(): ?string
+    {
+        return $this->twitterId;
+    }
+
+    public function setTwitterId(?string $twitterId): static
+    {
+        $this->twitterId = $twitterId;
+
+        return $this;
+    }
+
+    public function getTagline(): ?string
+    {
+        return $this->tagline;
+    }
+
+    public function setTagline(?string $tagline): static
+    {
+        $this->tagline = $tagline;
+
+        return $this;
+    }
+
+    public function getBudget(): string
+    {
+        return $this->budget;
+    }
+
+    public function setBudget(string $budget): static
+    {
+        $this->budget = $budget;
+
+        return $this;
+    }
+
+    public function getRevenue(): string
+    {
+        return $this->revenue;
+    }
+
+    public function setRevenue(string $revenue): static
+    {
+        $this->revenue = $revenue;
 
         return $this;
     }
