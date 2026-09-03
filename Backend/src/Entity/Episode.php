@@ -78,6 +78,12 @@ class Episode
     #[ORM\JoinColumn(nullable: false)]
     private ?Season $season = null;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private float $voteAverage = 0.0;
+
+    #[ORM\Column(options: ['default' => 0])]
+    private int $voteCount = 0;
+
     public function __construct()
     {
         $this->tracklistEpisodes = new ArrayCollection();
@@ -206,6 +212,30 @@ class Episode
     public function setSeason(?Season $season): static
     {
         $this->season = $season;
+
+        return $this;
+    }
+
+    public function getVoteAverage(): float
+    {
+        return $this->voteAverage;
+    }
+
+    public function setVoteAverage(float $voteAverage): static
+    {
+        $this->voteAverage = $voteAverage;
+
+        return $this;
+    }
+
+    public function getVoteCount(): int
+    {
+        return $this->voteCount;
+    }
+
+    public function setVoteCount(int $voteCount): static
+    {
+        $this->voteCount = $voteCount;
 
         return $this;
     }
