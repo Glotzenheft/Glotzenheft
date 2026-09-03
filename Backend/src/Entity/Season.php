@@ -88,6 +88,9 @@ class Season
     #[ORM\OneToMany(targetEntity: TracklistSeason::class, mappedBy: 'season', orphanRemoval: true)]
     private Collection $tracklistSeasons;
 
+    #[ORM\Column(options: ['default' => 0])]
+    private float $voteAverage = 0.0;
+
     public function __construct()
     {
         $this->episodes = new ArrayCollection();
@@ -254,6 +257,18 @@ class Season
                 $tracklistSeason->setSeason(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getVoteAverage(): float
+    {
+        return $this->voteAverage;
+    }
+
+    public function setVoteAverage(float $voteAverage): static
+    {
+        $this->voteAverage = $voteAverage;
 
         return $this;
     }
