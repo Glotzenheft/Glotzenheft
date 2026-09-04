@@ -47,9 +47,6 @@ class Media
     #[Groups(['media_details'])]
     private ?int $tmdbID = null;
 
-    #[ORM\Column(nullable: true)]
-    private ?int $malID = null;
-
     #[ORM\Column(length: 255, nullable: true)]
     #[Groups(['media_details'])]
     private ?string $imdbID = null;
@@ -115,8 +112,8 @@ class Media
     #[ORM\Column(nullable: true)]
     private ?int $numberOfSeasons = null;
 
-    #[ORM\Column(length: 10)]
-    private ?string $originalLanguage = null;
+    #[ORM\Column(length: 10, options: ['default' => ''])]
+    private string $originalLanguage = '';
 
     #[ORM\Column(options: ['default' => 0])]
     private float $popularity = 0.0;
@@ -177,18 +174,6 @@ class Media
     public function setTmdbID(?int $tmdbID): static
     {
         $this->tmdbID = $tmdbID;
-
-        return $this;
-    }
-
-    public function getMalID(): ?int
-    {
-        return $this->malID;
-    }
-
-    public function setMalID(?int $malID): static
-    {
-        $this->malID = $malID;
 
         return $this;
     }
@@ -400,7 +385,7 @@ class Media
         return $this;
     }
 
-    public function getOriginalLanguage(): ?string
+    public function getOriginalLanguage(): string
     {
         return $this->originalLanguage;
     }
