@@ -219,6 +219,22 @@ readonly class MediaService
             ? $tmdbData->getReleaseDate()
             : $tmdbData->getFirstAirDate();
 
+        $numberOfEpisodes = ($type === MediaType::Movie)
+            ? null
+            : $tmdbData->getNumberOfEpisodes();
+
+        $numberOfSeasons = ($type === MediaType::Movie)
+            ? null
+            : $tmdbData->getNumberOfSeasons();
+
+        $budget = ($type === MediaType::Movie)
+            ? (string) $tmdbData->getBudget()
+            : '0';
+
+        $revenue = ($type === MediaType::Movie)
+            ? (string) $tmdbData->getRevenue()
+            : '0';
+
         $this->setPropertyIfChanged(
             isChanged: $isChanged,
             setter: fn($v) => $media->setName($v),
@@ -277,6 +293,130 @@ readonly class MediaService
             newValue: !empty($firstAirDateStr)
                 ? DateTime::createFromFormat('!Y-m-d', $firstAirDateStr)
                 : null
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setAdult($v),
+            currentValue: $media->isAdult(),
+            newValue: $tmdbData->getAdult() ?? false
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setNumberOfEpisodes($v),
+            currentValue: $media->getNumberOfEpisodes(),
+            newValue: $numberOfEpisodes
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setNumberOfSeasons($v),
+            currentValue: $media->getNumberOfSeasons(),
+            newValue: $numberOfSeasons
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setOriginalLanguage($v),
+            currentValue: $media->getOriginalLanguage(),
+            newValue: $tmdbData->getOriginalLanguage() ?? null
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setPopularity($v),
+            currentValue: $media->getPopularity(),
+            newValue: $tmdbData->getPopularity() ?? 0.0
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setStatus($v),
+            currentValue: $media->getStatus(),
+            newValue: $tmdbData->getStatus()
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setVoteAverage($v),
+            currentValue: $media->getVoteAverage(),
+            newValue: $tmdbData->getVoteAverage() ?? 0.0
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setVoteCount($v),
+            currentValue: $media->getVoteCount(),
+            newValue: $tmdbData->getVoteCount() ?? 0.0
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setHomepage($v),
+            currentValue: $media->getHomepage(),
+            newValue: $tmdbData->getHomepage()
+        );
+
+        //todo remove, when TMDB API client is fixed
+        if ($type === MediaType::TV)
+        {
+            $this->setPropertyIfChanged(
+                isChanged: $isChanged,
+                setter: fn($v) => $media->setTvdbId($v),
+                currentValue: $media->getTvdbId(),
+                newValue: $tmdbData->getExternalIds()?->getTvdbId()
+            );
+
+            $this->setPropertyIfChanged(
+                isChanged: $isChanged,
+                setter: fn($v) => $media->setWikidataId($v),
+                currentValue: $media->getWikidataId(),
+                newValue: $tmdbData->getExternalIds()?->getWikidataId()
+            );
+
+            $this->setPropertyIfChanged(
+                isChanged: $isChanged,
+                setter: fn($v) => $media->setFacebookId($v),
+                currentValue: $media->getFacebookId(),
+                newValue: $tmdbData->getExternalIds()?->getFacebookId()
+            );
+
+            $this->setPropertyIfChanged(
+                isChanged: $isChanged,
+                setter: fn($v) => $media->setInstagramId($v),
+                currentValue: $media->getInstagramId(),
+                newValue: $tmdbData->getExternalIds()?->getInstagramId()
+            );
+
+            $this->setPropertyIfChanged(
+                isChanged: $isChanged,
+                setter: fn($v) => $media->setTwitterId($v),
+                currentValue: $media->getTwitterId(),
+                newValue: $tmdbData->getExternalIds()?->getTwitterId()
+            );
+        }
+
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setTagline($v),
+            currentValue: $media->getTagline(),
+            newValue: $tmdbData->getTagline()
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setBudget($v),
+            currentValue: $media->getBudget(),
+            newValue: $budget
+        );
+
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setRevenue($v),
+            currentValue: $media->getRevenue(),
+            newValue: $revenue
         );
 
         $currentGenreIds = $media->getTmdbGenres()
