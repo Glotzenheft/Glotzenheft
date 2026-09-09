@@ -274,7 +274,7 @@ readonly class MediaService
             isChanged: $isChanged,
             setter: fn($v) => $media->setImdbID($v),
             currentValue: $media->getImdbID(),
-            newValue: $tmdbData->getImdbId()
+            newValue: $tmdbData->getExternalIds()->getImdbId()
         );
 
         $this->setPropertyIfChanged(
@@ -358,45 +358,40 @@ readonly class MediaService
             newValue: $tmdbData->getHomepage()
         );
 
-        //todo remove, when TMDB API client is fixed
-        if ($type === MediaType::TV)
-        {
-            $this->setPropertyIfChanged(
-                isChanged: $isChanged,
-                setter: fn($v) => $media->setTvdbId($v),
-                currentValue: $media->getTvdbId(),
-                newValue: $tmdbData->getExternalIds()?->getTvdbId()
-            );
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setTvdbId($v),
+            currentValue: $media->getTvdbId(),
+            newValue: $tmdbData->getExternalIds()?->getTvdbId()
+        );
 
-            $this->setPropertyIfChanged(
-                isChanged: $isChanged,
-                setter: fn($v) => $media->setWikidataId($v),
-                currentValue: $media->getWikidataId(),
-                newValue: $tmdbData->getExternalIds()?->getWikidataId()
-            );
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setWikidataId($v),
+            currentValue: $media->getWikidataId(),
+            newValue: $tmdbData->getExternalIds()?->getWikidataId()
+        );
 
-            $this->setPropertyIfChanged(
-                isChanged: $isChanged,
-                setter: fn($v) => $media->setFacebookId($v),
-                currentValue: $media->getFacebookId(),
-                newValue: $tmdbData->getExternalIds()?->getFacebookId()
-            );
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setFacebookId($v),
+            currentValue: $media->getFacebookId(),
+            newValue: $tmdbData->getExternalIds()?->getFacebookId()
+        );
 
-            $this->setPropertyIfChanged(
-                isChanged: $isChanged,
-                setter: fn($v) => $media->setInstagramId($v),
-                currentValue: $media->getInstagramId(),
-                newValue: $tmdbData->getExternalIds()?->getInstagramId()
-            );
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setInstagramId($v),
+            currentValue: $media->getInstagramId(),
+            newValue: $tmdbData->getExternalIds()?->getInstagramId()
+        );
 
-            $this->setPropertyIfChanged(
-                isChanged: $isChanged,
-                setter: fn($v) => $media->setTwitterId($v),
-                currentValue: $media->getTwitterId(),
-                newValue: $tmdbData->getExternalIds()?->getTwitterId()
-            );
-        }
-
+        $this->setPropertyIfChanged(
+            isChanged: $isChanged,
+            setter: fn($v) => $media->setTwitterId($v),
+            currentValue: $media->getTwitterId(),
+            newValue: $tmdbData->getExternalIds()?->getTwitterId()
+        );
 
         $this->setPropertyIfChanged(
             isChanged: $isChanged,
