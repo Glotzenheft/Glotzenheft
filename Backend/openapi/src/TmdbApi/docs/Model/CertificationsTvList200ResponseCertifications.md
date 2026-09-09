@@ -1,0 +1,48 @@
+# CertificationsTvList200ResponseCertifications
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**au** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsAUInner[]**](CertificationsTvList200ResponseCertificationsAUInner.md) |  | [optional]
+**br** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsBRInner[]**](CertificationsTvList200ResponseCertificationsBRInner.md) |  | [optional]
+**ca** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsCAInner[]**](CertificationsTvList200ResponseCertificationsCAInner.md) |  | [optional]
+**ca_qc** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsCAQCInner[]**](CertificationsTvList200ResponseCertificationsCAQCInner.md) |  | [optional]
+**de** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsDEInner[]**](CertificationsTvList200ResponseCertificationsDEInner.md) |  | [optional]
+**es** | [**\App\TmdbApi\Model\CertificationMovieList200ResponseCertificationsCAQCInner[]**](CertificationMovieList200ResponseCertificationsCAQCInner.md) |  | [optional]
+**fr** | [**\App\TmdbApi\Model\CertificationMovieList200ResponseCertificationsCAQCInner[]**](CertificationMovieList200ResponseCertificationsCAQCInner.md) |  | [optional]
+**gb** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsGBInner[]**](CertificationsTvList200ResponseCertificationsGBInner.md) |  | [optional]
+**hu** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsHUInner[]**](CertificationsTvList200ResponseCertificationsHUInner.md) |  | [optional]
+**kr** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsKRInner[]**](CertificationsTvList200ResponseCertificationsKRInner.md) |  | [optional]
+**lt** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsLTInner[]**](CertificationsTvList200ResponseCertificationsLTInner.md) |  | [optional]
+**nl** | [**\App\TmdbApi\Model\CertificationMovieList200ResponseCertificationsCAQCInner[]**](CertificationMovieList200ResponseCertificationsCAQCInner.md) |  | [optional]
+**ph** | [**\App\TmdbApi\Model\CertificationMovieList200ResponseCertificationsCAQCInner[]**](CertificationMovieList200ResponseCertificationsCAQCInner.md) |  | [optional]
+**pt** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsPTInner[]**](CertificationsTvList200ResponseCertificationsPTInner.md) |  | [optional]
+**ru** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsRUInner[]**](CertificationsTvList200ResponseCertificationsRUInner.md) |  | [optional]
+**sk** | [**\App\TmdbApi\Model\CertificationMovieList200ResponseCertificationsCAQCInner[]**](CertificationMovieList200ResponseCertificationsCAQCInner.md) |  | [optional]
+**th** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsTHInner[]**](CertificationsTvList200ResponseCertificationsTHInner.md) |  | [optional]
+**us** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsUSInner[]**](CertificationsTvList200ResponseCertificationsUSInner.md) |  | [optional]
+**it** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsITInner[]**](CertificationsTvList200ResponseCertificationsITInner.md) |  | [optional]
+**fi** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsFIInner[]**](CertificationsTvList200ResponseCertificationsFIInner.md) |  | [optional]
+**my** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsMYInner[]**](CertificationsTvList200ResponseCertificationsMYInner.md) |  | [optional]
+**nz** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsNZInner[]**](CertificationsTvList200ResponseCertificationsNZInner.md) |  | [optional]
+**no** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsNOInner[]**](CertificationsTvList200ResponseCertificationsNOInner.md) |  | [optional]
+**bg** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsBGInner[]**](CertificationsTvList200ResponseCertificationsBGInner.md) |  | [optional]
+**mx** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsMXInner[]**](CertificationsTvList200ResponseCertificationsMXInner.md) |  | [optional]
+**in** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsINInner[]**](CertificationsTvList200ResponseCertificationsINInner.md) |  | [optional]
+**dk** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsDKInner[]**](CertificationsTvList200ResponseCertificationsDKInner.md) |  | [optional]
+**se** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsSEInner[]**](CertificationsTvList200ResponseCertificationsSEInner.md) |  | [optional]
+**id** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsIDInner[]**](CertificationsTvList200ResponseCertificationsIDInner.md) |  | [optional]
+**tr** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsTRInner[]**](CertificationsTvList200ResponseCertificationsTRInner.md) |  | [optional]
+**ar** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsARInner[]**](CertificationsTvList200ResponseCertificationsARInner.md) |  | [optional]
+**pl** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsPLInner[]**](CertificationsTvList200ResponseCertificationsPLInner.md) |  | [optional]
+**ma** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsMAInner[]**](CertificationsTvList200ResponseCertificationsMAInner.md) |  | [optional]
+**gr** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsGRInner[]**](CertificationsTvList200ResponseCertificationsGRInner.md) |  | [optional]
+**il** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsILInner[]**](CertificationsTvList200ResponseCertificationsILInner.md) |  | [optional]
+**tw** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsTWInner[]**](CertificationsTvList200ResponseCertificationsTWInner.md) |  | [optional]
+**za** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsZAInner[]**](CertificationsTvList200ResponseCertificationsZAInner.md) |  | [optional]
+**sg** | [**\App\TmdbApi\Model\CertificationMovieList200ResponseCertificationsPRInner[]**](CertificationMovieList200ResponseCertificationsPRInner.md) |  | [optional]
+**pr** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsPRInner[]**](CertificationsTvList200ResponseCertificationsPRInner.md) |  | [optional]
+**vi** | [**\App\TmdbApi\Model\CertificationsTvList200ResponseCertificationsPRInner[]**](CertificationsTvList200ResponseCertificationsPRInner.md) |  | [optional]
+
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

@@ -1,4 +1,4 @@
-# # SearchMovie200ResponseResultsInner
+# SearchMovie200ResponseResultsInner
 
 ## Properties
 

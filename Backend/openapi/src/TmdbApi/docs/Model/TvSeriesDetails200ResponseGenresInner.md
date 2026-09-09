@@ -1,4 +1,4 @@
-# # TvSeriesDetails200ResponseGenresInner
+# TvSeriesDetails200ResponseGenresInner
 
 ## Properties
 

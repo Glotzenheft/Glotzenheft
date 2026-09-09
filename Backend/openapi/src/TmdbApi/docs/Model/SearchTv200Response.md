@@ -1,4 +1,4 @@
-# # SearchTv200Response
+# SearchTv200Response
 
 ## Properties
 

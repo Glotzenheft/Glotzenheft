@@ -1,4 +1,4 @@
-# # TrendingTv200ResponseResultsInner
+# TrendingTv200ResponseResultsInner
 
 ## Properties
 

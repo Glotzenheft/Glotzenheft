@@ -1,4 +1,4 @@
-# # TvSeriesDetails200ResponseLastEpisodeToAir
+# TvSeriesDetails200ResponseLastEpisodeToAir
 
 ## Properties
 

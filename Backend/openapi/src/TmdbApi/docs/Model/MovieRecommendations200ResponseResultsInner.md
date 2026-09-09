@@ -1,12 +1,12 @@
-# # MovieRecommendations200ResponseResultsInner
+# MovieRecommendations200ResponseResultsInner
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**adult** | **bool** |  | [optional]
+**adult** | **bool** |  | [optional] [default to false]
 **backdrop_path** | **string** |  | [optional]
-**id** | **int** |  | [optional]
+**id** | **int** |  | [optional] [default to 0]
 **title** | **string** |  | [optional]
 **original_language** | **string** |  | [optional]
 **original_title** | **string** |  | [optional]
@@ -14,10 +14,10 @@ Name | Type | Description | Notes
 **poster_path** | **string** |  | [optional]
 **media_type** | **string** |  | [optional]
 **genre_ids** | **int[]** |  | [optional]
-**popularity** | **float** |  | [optional]
+**popularity** | **float** |  | [optional] [default to 0]
 **release_date** | **string** |  | [optional]
-**video** | **bool** |  | [optional]
-**vote_average** | **float** |  | [optional]
-**vote_count** | **int** |  | [optional]
+**video** | **bool** |  | [optional] [default to false]
+**vote_average** | **float** |  | [optional] [default to 0]
+**vote_count** | **int** |  | [optional] [default to 0]
 
-[[Back to Model list]](../../../TmdbApi3/README.md#models) [[Back to API list]](../../../TmdbApi3/README.md#endpoints) [[Back to README]](../../../TmdbApi3/README.md)
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

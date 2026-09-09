@@ -1,13 +1,217 @@
 # App\TmdbApi\SearchApi
 
+
+
 All URIs are relative to https://api.themoviedb.org, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
+| [**searchCollection()**](SearchApi.md#searchCollection) | **GET** /3/search/collection | Collection |
+| [**searchCompany()**](SearchApi.md#searchCompany) | **GET** /3/search/company | Company |
+| [**searchKeyword()**](SearchApi.md#searchKeyword) | **GET** /3/search/keyword | Keyword |
 | [**searchMovie()**](SearchApi.md#searchMovie) | **GET** /3/search/movie | Movie |
 | [**searchMulti()**](SearchApi.md#searchMulti) | **GET** /3/search/multi | Multi |
+| [**searchPerson()**](SearchApi.md#searchPerson) | **GET** /3/search/person | Person |
 | [**searchTv()**](SearchApi.md#searchTv) | **GET** /3/search/tv | TV |
 
+
+## `searchCollection()`
+
+```php
+searchCollection($query, $include_adult, $language, $page, $region): \App\TmdbApi\Model\SearchCollection200Response
+```
+
+Collection
+
+Search for collections by their original, translated and alternative names.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: sec0
+$config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+
+$apiInstance = new App\TmdbApi\Api\SearchApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$query = 'query_example'; // string
+$include_adult = false; // bool
+$language = 'en-US'; // string
+$page = 1; // int
+$region = 'region_example'; // string
+
+try {
+    $result = $apiInstance->searchCollection($query, $include_adult, $language, $page, $region);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SearchApi->searchCollection: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **query** | **string**|  | |
+| **include_adult** | **bool**|  | [optional] [default to false] |
+| **language** | **string**|  | [optional] [default to &#39;en-US&#39;] |
+| **page** | **int**|  | [optional] [default to 1] |
+| **region** | **string**|  | [optional] |
+
+### Return type
+
+[**\App\TmdbApi\Model\SearchCollection200Response**](../Model/SearchCollection200Response.md)
+
+### Authorization
+
+[sec0](../../README.md#sec0)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `searchCompany()`
+
+```php
+searchCompany($query, $page): \App\TmdbApi\Model\SearchCompany200Response
+```
+
+Company
+
+Search for companies by their original and alternative names.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: sec0
+$config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+
+$apiInstance = new App\TmdbApi\Api\SearchApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$query = 'query_example'; // string
+$page = 1; // int
+
+try {
+    $result = $apiInstance->searchCompany($query, $page);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SearchApi->searchCompany: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **query** | **string**|  | |
+| **page** | **int**|  | [optional] [default to 1] |
+
+### Return type
+
+[**\App\TmdbApi\Model\SearchCompany200Response**](../Model/SearchCompany200Response.md)
+
+### Authorization
+
+[sec0](../../README.md#sec0)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `searchKeyword()`
+
+```php
+searchKeyword($query, $page): \App\TmdbApi\Model\SearchKeyword200Response
+```
+
+Keyword
+
+Search for keywords by their name.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: sec0
+$config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+
+$apiInstance = new App\TmdbApi\Api\SearchApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$query = 'query_example'; // string
+$page = 1; // int
+
+try {
+    $result = $apiInstance->searchKeyword($query, $page);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SearchApi->searchKeyword: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **query** | **string**|  | |
+| **page** | **int**|  | [optional] [default to 1] |
+
+### Return type
+
+[**\App\TmdbApi\Model\SearchKeyword200Response**](../Model/SearchKeyword200Response.md)
+
+### Authorization
+
+[sec0](../../README.md#sec0)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
 
 ## `searchMovie()`
 
@@ -137,6 +341,74 @@ try {
 ### Return type
 
 [**\App\TmdbApi\Model\SearchMulti200Response**](../Model/SearchMulti200Response.md)
+
+### Authorization
+
+[sec0](../../README.md#sec0)
+
+### HTTP request headers
+
+- **Content-Type**: Not defined
+- **Accept**: `application/json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `searchPerson()`
+
+```php
+searchPerson($query, $include_adult, $language, $page): \App\TmdbApi\Model\SearchPerson200Response
+```
+
+Person
+
+Search for people by their name and also known as names.
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure API key authorization: sec0
+$config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKey('Authorization', 'YOUR_API_KEY');
+// Uncomment below to setup prefix (e.g. Bearer) for API key, if needed
+// $config = App\TmdbApi\Configuration::getDefaultConfiguration()->setApiKeyPrefix('Authorization', 'Bearer');
+
+
+$apiInstance = new App\TmdbApi\Api\SearchApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$query = 'query_example'; // string
+$include_adult = false; // bool
+$language = 'en-US'; // string
+$page = 1; // int
+
+try {
+    $result = $apiInstance->searchPerson($query, $include_adult, $language, $page);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling SearchApi->searchPerson: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **query** | **string**|  | |
+| **include_adult** | **bool**|  | [optional] [default to false] |
+| **language** | **string**|  | [optional] [default to &#39;en-US&#39;] |
+| **page** | **int**|  | [optional] [default to 1] |
+
+### Return type
+
+[**\App\TmdbApi\Model\SearchPerson200Response**](../Model/SearchPerson200Response.md)
 
 ### Authorization
 
