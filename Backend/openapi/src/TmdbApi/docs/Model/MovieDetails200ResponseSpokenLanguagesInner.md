@@ -1,4 +1,4 @@
-# # MovieDetails200ResponseSpokenLanguagesInner
+# MovieDetails200ResponseSpokenLanguagesInner
 
 ## Properties
 

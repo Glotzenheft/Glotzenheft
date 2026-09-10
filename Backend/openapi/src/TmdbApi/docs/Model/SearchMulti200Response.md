@@ -1,4 +1,4 @@
-# # SearchMulti200Response
+# SearchMulti200Response
 
 ## Properties
 

@@ -1,4 +1,4 @@
-# # MovieDetails200ResponseProductionCountriesInner
+# MovieDetails200ResponseProductionCountriesInner
 
 ## Properties
 

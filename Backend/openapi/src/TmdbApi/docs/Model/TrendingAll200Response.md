@@ -1,4 +1,4 @@
-# # TrendingAll200Response
+# TrendingAll200Response
 
 ## Properties
 

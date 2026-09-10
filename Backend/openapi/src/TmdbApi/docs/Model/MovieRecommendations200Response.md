@@ -1,12 +1,12 @@
-# # MovieRecommendations200Response
+# MovieRecommendations200Response
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**page** | **int** |  | [optional]
+**page** | **int** |  | [optional] [default to 0]
 **results** | [**\App\TmdbApi\Model\MovieRecommendations200ResponseResultsInner[]**](MovieRecommendations200ResponseResultsInner.md) |  | [optional]
-**total_pages** | **int** |  | [optional]
-**total_results** | **int** |  | [optional]
+**total_pages** | **int** |  | [optional] [default to 0]
+**total_results** | **int** |  | [optional] [default to 0]
 
-[[Back to Model list]](../../../TmdbApi3/README.md#models) [[Back to API list]](../../../TmdbApi3/README.md#endpoints) [[Back to README]](../../../TmdbApi3/README.md)
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

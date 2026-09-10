@@ -1,4 +1,4 @@
-# # TvSeriesDetails200ResponseProductionCompaniesInner
+# TvSeriesDetails200ResponseProductionCompaniesInner
 
 ## Properties
 

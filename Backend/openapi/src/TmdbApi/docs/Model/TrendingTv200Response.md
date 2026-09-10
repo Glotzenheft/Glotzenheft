@@ -1,4 +1,4 @@
-# # TrendingTv200Response
+# TrendingTv200Response
 
 ## Properties
 

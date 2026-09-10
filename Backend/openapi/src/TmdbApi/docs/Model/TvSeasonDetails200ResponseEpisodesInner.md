@@ -1,4 +1,4 @@
-# # TvSeasonDetails200ResponseEpisodesInner
+# TvSeasonDetails200ResponseEpisodesInner
 
 ## Properties
 
@@ -6,6 +6,7 @@ Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **air_date** | **string** |  | [optional]
 **episode_number** | **int** |  | [optional] [default to 0]
+**episode_type** | **string** |  | [optional]
 **id** | **int** |  | [optional] [default to 0]
 **name** | **string** |  | [optional]
 **overview** | **string** |  | [optional]

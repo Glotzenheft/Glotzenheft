@@ -1,4 +1,4 @@
-# # TvEpisodeDetails200ResponseCrewInner
+# TvEpisodeDetails200ResponseCrewInner
 
 ## Properties
 

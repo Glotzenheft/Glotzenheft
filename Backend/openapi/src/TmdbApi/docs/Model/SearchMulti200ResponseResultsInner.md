@@ -1,4 +1,4 @@
-# # SearchMulti200ResponseResultsInner
+# SearchMulti200ResponseResultsInner
 
 ## Properties
 
@@ -21,7 +21,5 @@ Name | Type | Description | Notes
 **vote_count** | **int** |  | [optional] [default to 0]
 **name** | **string** |  | [optional]
 **original_name** | **string** |  | [optional]
-**first_air_date** | **string** |  | [optional]
-**origin_country** | **string[]** |  | [optional]
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

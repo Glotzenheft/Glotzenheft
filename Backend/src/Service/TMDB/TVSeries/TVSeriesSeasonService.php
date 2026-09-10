@@ -76,6 +76,7 @@ readonly class TVSeriesSeasonService
     {
         try
         {
+            // TMDB API-Call
             $response = $this->tvApi->tvSeasonDetails(
                 series_id: $media->getTmdbID(),
                 season_number: $seasonNumber,
@@ -146,6 +147,13 @@ readonly class TVSeriesSeasonService
                     : null
             );
 
+            $this->setPropertyIfChanged(
+                isChanged: $isSeasonChanged,
+                setter: fn($v) => $season->setVoteAverage($v),
+                currentValue: $season->getVoteAverage(),
+                newValue: $response->getVoteAverage() ?? 0.0
+            );
+
             if ($isSeasonChanged)
             {
                 $season->setUpdatedAt(new DateTimeImmutable());
@@ -214,6 +222,20 @@ readonly class TVSeriesSeasonService
                     newValue: $episodeData->getAirDate()
                         ? DateTime::createFromFormat('!Y-m-d', $episodeData->getAirDate())
                         : null
+                );
+
+                $this->setPropertyIfChanged(
+                    isChanged: $isEpisodeChanged,
+                    setter: fn($v) => $episode->setVoteAverage($v),
+                    currentValue: $episode->getVoteAverage(),
+                    newValue: $episodeData->getVoteAverage() ?? 0.0
+                );
+
+                $this->setPropertyIfChanged(
+                    isChanged: $isEpisodeChanged,
+                    setter: fn($v) => $episode->setVoteCount($v),
+                    currentValue: $episode->getVoteCount(),
+                    newValue: $episodeData->getVoteCount() ?? 0.0
                 );
 
                 if ($isEpisodeChanged)

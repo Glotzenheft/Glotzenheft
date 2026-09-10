@@ -1,4 +1,4 @@
-# # TvSeriesDetails200ResponseProductionCountriesInner
+# TvSeriesDetails200ResponseProductionCountriesInner
 
 ## Properties
 
