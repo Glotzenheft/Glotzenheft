@@ -1,0 +1,10 @@
+# TvSeasonWatchProviders200ResponseResultsCM
+
+## Properties
+
+Name | Type | Description | Notes
+------------ | ------------- | ------------- | -------------
+**link** | **string** |  | [optional]
+**flatrate** | [**\App\TmdbApi\Model\TvSeasonWatchProviders200ResponseResultsCMFlatrateInner[]**](TvSeasonWatchProviders200ResponseResultsCMFlatrateInner.md) |  | [optional]
+
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

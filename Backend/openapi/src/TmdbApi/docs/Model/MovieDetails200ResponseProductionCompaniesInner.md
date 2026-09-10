@@ -1,4 +1,4 @@
-# # MovieDetails200ResponseProductionCompaniesInner
+# MovieDetails200ResponseProductionCompaniesInner
 
 ## Properties
 

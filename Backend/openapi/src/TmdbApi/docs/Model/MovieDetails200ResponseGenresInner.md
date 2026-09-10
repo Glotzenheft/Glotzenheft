@@ -1,4 +1,4 @@
-# # MovieDetails200ResponseGenresInner
+# MovieDetails200ResponseGenresInner
 
 ## Properties
 

@@ -1,13 +1,14 @@
-# # TvSeasonDetails200Response
+# TvSeasonDetails200Response
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**_id** | **string** |  | [optional]
+**string_id** | **string** |  | [optional]
 **air_date** | **string** |  | [optional]
 **episodes** | [**\App\TmdbApi\Model\TvSeasonDetails200ResponseEpisodesInner[]**](TvSeasonDetails200ResponseEpisodesInner.md) |  | [optional]
 **name** | **string** |  | [optional]
+**networks** | [**\App\TmdbApi\Model\TvSeriesDetails200ResponseNetworksInner[]**](TvSeriesDetails200ResponseNetworksInner.md) |  | [optional]
 **overview** | **string** |  | [optional]
 **id** | **int** |  | [optional] [default to 0]
 **poster_path** | **string** |  | [optional]

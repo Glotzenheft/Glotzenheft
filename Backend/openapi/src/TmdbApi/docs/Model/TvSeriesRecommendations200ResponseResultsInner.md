@@ -1,4 +1,4 @@
-# # TvSeriesRecommendations200ResponseResultsInner
+# TvSeriesRecommendations200ResponseResultsInner
 
 ## Properties
 
@@ -20,4 +20,4 @@ Name | Type | Description | Notes
 **vote_count** | **int** |  | [optional] [default to 0]
 **origin_country** | **string[]** |  | [optional]
 
-[[Back to Model list]](../../../TmdbApi3/README.md#models) [[Back to API list]](../../../TmdbApi3/README.md#endpoints) [[Back to README]](../../../TmdbApi3/README.md)
+[[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

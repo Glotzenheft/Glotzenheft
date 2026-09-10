@@ -1,4 +1,4 @@
-# # TrendingAll200ResponseResultsInner
+# TrendingAll200ResponseResultsInner
 
 ## Properties
 

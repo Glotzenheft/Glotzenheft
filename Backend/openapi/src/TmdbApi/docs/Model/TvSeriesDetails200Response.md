@@ -1,4 +1,4 @@
-# # TvSeriesDetails200Response
+# TvSeriesDetails200Response
 
 ## Properties
 
@@ -36,5 +36,6 @@ Name | Type | Description | Notes
 **type** | **string** |  | [optional]
 **vote_average** | **float** |  | [optional] [default to 0]
 **vote_count** | **int** |  | [optional] [default to 0]
+**external_ids** | [**\App\TmdbApi\Model\ExternalIdsModel**](ExternalIdsModel.md) |  | [optional]
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)
