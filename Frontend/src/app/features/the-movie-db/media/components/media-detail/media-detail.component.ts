@@ -36,7 +36,8 @@ import {Tab, TabList, Tabs} from 'primeng/tabs';
 import {Tooltip} from 'primeng/tooltip';
 import {Button} from 'primeng/button';
 import {Image} from 'primeng/image';
-import {NgOptimizedImage} from '@angular/common';
+import { Carousel } from 'primeng/carousel';
+import {DecimalPipe, NgOptimizedImage} from '@angular/common';
 import {PrimeTemplate} from 'primeng/api';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {
@@ -48,6 +49,9 @@ import {MediaType} from '../../models/enums/media-type.enum';
 import {Panel} from 'primeng/panel';
 import {TMDB_MAIN_ROUTE} from '../../../../../shared/variables/tmdb-route';
 import {Tag} from 'primeng/tag';
+import {LanguageNamePipe} from '../../../../../shared/pipes/language-name/language-name.pipe';
+import {RuntimePipe} from '../../../../../shared/pipes/runtime/runtime.pipe';
+import {DollarCurrencyPipe} from '../../../../../shared/pipes/dollar-currency/dollar-currency.pipe';
 
 @Component({
     selector: 'app-media-detail',
@@ -60,10 +64,15 @@ import {Tag} from 'primeng/tag';
         Button,
         Image,
         NgOptimizedImage,
+        DecimalPipe,
         PrimeTemplate,
         ProgressSpinner,
         Panel,
-        Tag
+        Tag,
+        LanguageNamePipe,
+        RuntimePipe,
+        DollarCurrencyPipe,
+        Carousel
     ],
     providers: [MediaDetailStateService],
     standalone: true,
@@ -80,9 +89,11 @@ export class MediaDetailComponent implements OnInit{
     protected readonly backdropPath = TMDB_BACKDROP_PATH;
     protected readonly tmdbMediaUrl: string = TMDB_MAIN_ROUTE;
     protected readonly mediaTypes = MediaType;
+    protected readonly boxPages = ['info', 'ids'];
+    protected readonly barPages = ['genres', 'links'];
 
     @Input() mediaId!: string;
-    @Input() mediaTypeUrlParam!: string;
+    @Input({alias: 'mediaType'}) mediaTypeUrlParam!: string;
 
 
     public state = inject(MediaDetailStateService);
@@ -144,6 +155,19 @@ export class MediaDetailComponent implements OnInit{
     @HostListener('window:resize')
     onResize(): void {
         this.checkTruncation();
+    }
+
+    protected getPopularityLabel(popularity: number): string {
+        if (popularity >= 500) {
+            return 'Im Trend';
+        }
+        if (popularity >= 100) {
+            return 'Sehr beliebt';
+        }
+        if (popularity >= 30) {
+            return 'Beliebt';
+        }
+        return 'Eher unbekannt';
     }
 
     public handleImageError() {

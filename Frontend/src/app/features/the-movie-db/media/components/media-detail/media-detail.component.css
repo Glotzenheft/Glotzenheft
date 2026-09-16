@@ -43,8 +43,62 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .media-detail-meta-poster {
+    position: relative;
     flex: 0 0 267px;
     aspect-ratio: 2 / 3;
+}
+
+.media-detail-poster-rating-wrapper {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.media-detail-poster-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20em;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    white-space: nowrap;
+    margin: 0 0.5rem 0.5rem;
+}
+
+.media-detail-poster-rating-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.media-detail-poster-rating-value {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 550;
+}
+
+.media-detail-poster-rating-value .pi {
+    color: #facc15;
+}
+
+.media-detail-poster-rating-count {
+    font-size: 0.7rem;
+}
+
+.media-detail-poster-popularity {
+    font-size: 0.75rem;
+}
+
+.media-detail-poster-popularity .pi {
+    margin-right: 0.25rem;
 }
 
 .media-detail-meta-content-container {
@@ -61,13 +115,36 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     margin-top: auto;
     display: grid;
     align-content: space-between;
-    gap: 1rem;
+    gap: 0.25rem;
 }
+.media-detail-box,
+.media-detail-bar-container {
+    display: block;
+    min-width: 0;
+}
+
 .media-detail-box {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-    height: 25%;
+    height: auto;
+}
+
+.media-detail-link-bar,
+.media-detail-genre-bar {
+    box-sizing: border-box;
+}
+
+/* The item list has the height of its tallest slide. Stretch each box into
+   that space so the short ID slide stays as tall as the information slide. */
+:host ::ng-deep .media-detail-box .p-carousel-item {
+    display: flex;
+}
+
+:host ::ng-deep .media-detail-box .p-carousel-item > div {
+    width: 100%;
+    height: 100%;
+}
+
+:host ::ng-deep .p-carousel-indicator-list {
+    padding: 3px 0 0 0;
 }
 
 .media-detail-box-left,
@@ -96,11 +173,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     font-weight: 500;
 }
 
-.media-detail-bar-container {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 1rem;
-}
 .media-detail-link-bar,
 .media-detail-genre-bar {
     border: 1px solid #9ca3af;

@@ -78,6 +78,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             />
                         </ng-template>
                     </p-image>
+                    <div class="media-detail-poster-rating-wrapper">
+                        <div class="media-detail-poster-rating">
+                            <div class="media-detail-poster-rating-summary">
+                                <span class="media-detail-poster-rating-value">
+                                    <i class="pi pi-star-fill" aria-hidden="true"></i>
+                                    <span aria-label="Benutzerbewertung">{{ mediaData.voteAverage | number:'1.2-2':'en-US' }}</span>
+                                </span>
+                                <span class="media-detail-poster-rating-count">
+                                    {{ mediaData.voteCount | number:'1.0-0' }} Bewertungen
+                                </span>
+                            </div>
+                            <span class="media-detail-poster-popularity">
+                                <i class="pi pi-chart-line" aria-hidden="true"></i>
+                                {{ getPopularityLabel(mediaData.popularity) }} {{ mediaData.popularity | number:'1.1-1' }}
+                            </span>
+                        </div>
+                    </div>
                 }
                 @else {
                     <div class="image-error-fallback2">
@@ -94,72 +111,118 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </div>
                 <div class="media-detail-bottom-area">
                     <div class="media-detail-box">
-                        <div class="media-detail-box-left">
-                        <span class="media-detail-info-item">
-                            <span class="media-detail-info-label">Benutzerbewertung</span>
-                            <span class="media-detail-info-value">??.?? - ?? Bewertungen</span>
-                        </span>
-                            <span class="media-detail-info-item">
-                            <span class="media-detail-info-label">Popularität</span>
-                            <span class="media-detail-info-value">-</span>
-                        </span>
-                            <span class="media-detail-info-item">
-                            @if (mediaData.type === mediaTypes.MOVIE) {
-                                <span class="media-detail-info-label">Laufzeit:</span>
-                                <span class="media-detail-info-value">??h ??min - ??? min</span>
+                        <p-carousel
+                            [value]="boxPages"
+                            [numVisible]="1"
+                            [numScroll]="1"
+                            [circular]="true"
+                            [showNavigators]="false"
+                            [showIndicators]="true"
+                        >
+                            <ng-template #item let-page>
+                                @if (page === 'info') {
+                                    <div class="media-detail-box-left">
+                                        @if (mediaData.type === mediaTypes.MOVIE) {
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Laufzeit:</span>
+                                                <span class="media-detail-info-value"> {{ mediaData.runtime | runtime }} </span>
+                                            </span>
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Budget und Umsatz:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.budget | dollarCurrency }} → {{ mediaData.revenue | dollarCurrency }}</span>
+                                            </span>
+                                        } @else if (mediaData.type === mediaTypes.TV_SHOW) {
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Staffeln:</span>
+                                                <span class="media-detail-info-value"> {{ mediaData.numberOfSeasons }}</span>
+                                            </span>
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Episoden:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.numberOfEpisodes }}</span>
+                                            </span>
+                                        }
 
-                            } @else if (mediaData.type === mediaTypes.TV_SHOW) {
-                                <span class="media-detail-info-label">Anzahl der Staffeln:</span>
-                                <span class="media-detail-info-value">??</span>
-                                <span class="media-detail-info-label">Anzahl der Episoden:</span>
-                                <span class="media-detail-info-value">??</span>
-                            }
-                        </span>
-                            <span class="media-detail-info-item">
-                            <span class="media-detail-info-label">Ursprungsland</span>
-                            <span class="media-detail-info-value">-</span>
-                        </span>
-                        </div>
-                        <div class="media-detail-box-right">
-                        <span class="media-detail-info-item">
-                            <span class="media-detail-info-label">TMDB Id:</span>
-                            <span class="media-detail-info-value">{{ mediaData.tmdbId }}</span>
-                        </span>
-                        </div>
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Ursprungssprache</span>
+                                            <span
+                                                class="media-detail-info-value"> {{ mediaData.originalLanguage | languageName }} </span>
+                                        </span>
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Tagline</span>
+                                            <span
+                                                class="media-detail-info-value"> {{ mediaData.tagline }} </span>
+                                        </span>
+                                    </div>
+                                } @else {
+                                    <div class="media-detail-box-right">
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">TMDB Id:</span>
+                                            <span class="media-detail-info-value">{{ mediaData.tmdbId }}</span>
+                                        </span>
+                                    </div>
+                                }
+                            </ng-template>
+                        </p-carousel>
                     </div>
 
                     <div class="media-detail-bar-container">
-                        <div class="media-detail-genre-bar">
-                            @let genres = mediaData.tmdbGenres;
-                            @for (genre of genres; track genre) {
-                                <p-tag>
-                                    {{ genre.name }}
-                                </p-tag>
-                            }
-                        </div>
-                        <div class="media-detail-link-bar">
-                            <p-tag>
-                                <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
-                                   target="_blank"
-                                   rel="noopener noreferrer"
-                                >
-                                    <i class="pi pi-link"></i>
-                                    TMDB
-                                </a>
-                            </p-tag>
+                        <p-carousel
+                            [value]="barPages"
+                            [numVisible]="1"
+                            [numScroll]="1"
+                            [circular]="true"
+                            [showNavigators]="false"
+                            [showIndicators]="true"
+                        >
+                            <ng-template #item let-page>
+                                @if (page === 'genres') {
+                                    <div class="media-detail-genre-bar">
+                                        @let genres = mediaData.tmdbGenres;
+                                        @for (genre of genres; track genre) {
+                                            <p-tag>
+                                                {{ genre.name }}
+                                            </p-tag>
+                                        }
+                                    </div>
+                                } @else {
+                                    <div class="media-detail-link-bar">
+                                        <p-tag>
+                                            <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
+                                               target="_blank"
+                                               rel="noopener noreferrer"
+                                            >
+                                                <i class="pi pi-link"></i>
+                                                TMDB
+                                            </a>
+                                        </p-tag>
 
-                            @if (mediaData.imdbId) {
-                                <p-tag>
-                                    <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
-                                       target="_blank"
-                                       rel="noopener noreferrer"
-                                    >
-                                        <i class="pi pi-link"></i>
-                                        IMDB
-                                    </a>
-                                </p-tag>
-                            }
-                        </div>
+                                        @if (mediaData.imdbId) {
+                                            <p-tag>
+                                                <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer"
+                                                >
+                                                    <i class="pi pi-link"></i>
+                                                    IMDB
+                                                </a>
+                                            </p-tag>
+                                        }
+
+                                        @if (mediaData.tvdbId) {
+                                            <p-tag>
+                                                <a [href]="'https://www.thetvdb.com/dereferrer/series/' + mediaData.tvdbId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer"
+                                                >
+                                                    <i class="pi pi-link"></i>
+                                                    TVDB
+                                                </a>
+                                            </p-tag>
+                                        }
+                                    </div>
+                                }
+                            </ng-template>
+                        </p-carousel>
                     </div>
                 </div>
             </div>
@@ -177,17 +240,25 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         <i [class]="'pi pi-sparkles'"></i>
                         <span>Ähnliches</span>
                     </p-tab>
-                    <p-tab [value]="paths.analytics">
+                    <p-tab [value]="paths.analytics" disabled>
                         <i [class]="'pi pi-chart-pie'"></i>
                         <span>Analyse</span>
                     </p-tab>
-                    <p-tab [value]="paths.activities">
+                    <p-tab [value]="paths.activities" disabled>
                         <i [class]="'pi pi-arrow-right-arrow-left'"></i>
                         <span>Aktivitäten</span>
                     </p-tab>
-                    <p-tab [value]="paths.persons">
+                    <p-tab [value]="paths.persons" disabled>
                         <i [class]="'pi pi-user'"></i>
                         <span>Personen</span>
+                    </p-tab>
+                    <p-tab [value]="paths.persons" disabled>
+                        <i [class]="'pi pi-play-circle'"></i>
+                        <span>Anbieter</span>
+                    </p-tab>
+                    <p-tab [value]="paths.persons" disabled>
+                        <i [class]="'pi pi-comments'"></i>
+                        <span>Kommentare</span>
                     </p-tab>
                 </p-tablist>
             </p-tabs>
