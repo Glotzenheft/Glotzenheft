@@ -52,6 +52,22 @@ export class R_TracklistHttp implements I_TracklistRepository {
      */
     public joinTVWithTracklists = (data: MediaResponse): TVWithTracklist => {
         return {
+            adult: false,
+            budget: "",
+            homepage: null,
+            instagramId: null,
+            numberOfEpisodes: null,
+            numberOfSeasons: null,
+            originalLanguage: "",
+            popularity: 0,
+            revenue: "",
+            status: null,
+            tagline: null,
+            tvdbId: null,
+            twitterId: null,
+            voteAverage: 0,
+            voteCount: 0,
+            wikidataId: null,
             id: data.media.id,
             tmdbId: data.media.tmdbId,
             imdbId: data.media.imdbId,
@@ -97,7 +113,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
             //mediaId: data.media.id,
             runtime: data.media.runtime,
             createdAt: data.media.createdAt,
-            updatedAt: data.media.updatedAt,
+            updatedAt: data.media.updatedAt
         };
     };
 

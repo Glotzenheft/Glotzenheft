@@ -22,12 +22,28 @@ import {TmdbGenreResponseDto} from '../../../genre/models/response/tmdb-genre-re
 export interface MediaDetailDataResponseDto extends MediaLightDetailResponseDto {
     tmdbId: number;
     imdbId: string | null;
+    tvdbId: number | null;
+    wikidataId: string | null;
+    instagramId: string | null;
+    twitterId: string | null;
     originalName: string;
     name: string;
     description: string;
     firstAirDate: string | null;
     backdropPath: string | null;
     runtime: number | null;
+    adult: boolean;
+    numberOfEpisodes: number | null;
+    numberOfSeasons: number | null;
+    originalLanguage: string;
+    popularity: number;
+    status: string | null;
+    voteAverage: number;
+    voteCount: number;
+    homepage: string | null;
+    tagline: string | null;
+    budget: string;
+    revenue: string;
     seasons: MediaSeasonDetailResponseDto[];
     tmdbGenres: TmdbGenreResponseDto[];
 }
