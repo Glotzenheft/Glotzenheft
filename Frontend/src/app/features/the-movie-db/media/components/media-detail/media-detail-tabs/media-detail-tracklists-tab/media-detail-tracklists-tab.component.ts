@@ -36,6 +36,6 @@ import {
     styleUrl: './media-detail-tracklists-tab.component.css'
 })
 export class MediaDetailTracklistsTabComponent {
-    public state: MediaDetailStateService = inject(MediaDetailStateService)
+    public state: MediaDetailStateService = inject(MediaDetailStateService);
     public MediaType: typeof MediaType = MediaType;
 }

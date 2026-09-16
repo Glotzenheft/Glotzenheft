@@ -27,7 +27,7 @@ import {MediaType} from '../models/enums/media-type.enum';
 export class MediaDetailService {
     private readonly http: HttpClient = inject(HttpClient);
 
-    getMedia(mediaType: string,mediaId: number):Observable<MediaResponse> {
+    getMedia(mediaType: string, mediaId: number):Observable<MediaResponse> {
         const endpoint = mediaType === MediaType.MOVIE
             ? '/api/movie'
             : '/api/tv';
