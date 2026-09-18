@@ -68,6 +68,7 @@ export class R_TracklistHttp implements I_TracklistRepository {
             voteAverage: 0,
             voteCount: 0,
             wikidataId: null,
+            facebookId: null,
             id: data.media.id,
             tmdbId: data.media.tmdbId,
             imdbId: data.media.imdbId,

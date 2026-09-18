@@ -24,6 +24,7 @@ export interface MediaDetailDataResponseDto extends MediaLightDetailResponseDto 
     imdbId: string | null;
     tvdbId: number | null;
     wikidataId: string | null;
+    facebookId: string | null;
     instagramId: string | null;
     twitterId: string | null;
     originalName: string;
