@@ -52,6 +52,9 @@ import {Tag} from 'primeng/tag';
 import {LanguageNamePipe} from '../../../../../shared/pipes/language-name/language-name.pipe';
 import {RuntimePipe} from '../../../../../shared/pipes/runtime/runtime.pipe';
 import {DollarCurrencyPipe} from '../../../../../shared/pipes/dollar-currency/dollar-currency.pipe';
+import {
+    DatetimeWithUnitFormattingPipe
+} from '../../../../../shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 
 @Component({
     selector: 'app-media-detail',
@@ -72,7 +75,8 @@ import {DollarCurrencyPipe} from '../../../../../shared/pipes/dollar-currency/do
         LanguageNamePipe,
         RuntimePipe,
         DollarCurrencyPipe,
-        Carousel
+        Carousel,
+        DatetimeWithUnitFormattingPipe
     ],
     providers: [MediaDetailStateService],
     standalone: true,
@@ -89,7 +93,7 @@ export class MediaDetailComponent implements OnInit{
     protected readonly backdropPath = TMDB_BACKDROP_PATH;
     protected readonly tmdbMediaUrl: string = TMDB_MAIN_ROUTE;
     protected readonly mediaTypes = MediaType;
-    protected readonly boxPages = ['info', 'ids'];
+    protected readonly boxPages = ['info', 'meta'];
     protected readonly barPages = ['genres', 'links'];
 
     @Input() mediaId!: string;

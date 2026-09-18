@@ -105,6 +105,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     width: 100%;
 }
 
+:host ::ng-deep .media-detail-meta-content-container .p-panel {
+    margin: 0;
+    background: none;
+    border: 2px solid #ffffff;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
 .media-detail-description {
     overflow-y: auto;
     scrollbar-width: thin;
@@ -132,8 +140,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     box-sizing: border-box;
 }
 
-/* The item list has the height of its tallest slide. Stretch each box into
-   that space so the short ID slide stays as tall as the information slide. */
 :host ::ng-deep .media-detail-box .p-carousel-item {
     display: flex;
 }
@@ -144,7 +150,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 :host ::ng-deep .p-carousel-indicator-list {
-    padding: 3px 0 0 0;
+    padding: 0.3rem 0;
+    height: auto;
+    min-height: 0;
 }
 
 .media-detail-box-left,
@@ -317,13 +325,67 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         pointer-events: none;
     }
     .media-detail-meta-container {
-        height: 415px;
+        height: 405px;
         flex-direction: row;
         gap: 1rem;
     }
 
     .media-detail-meta-content-container {
-        height: 400px;
+        height: 405px;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .media-detail-panel-carousel {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+    }
+
+    .media-detail-panel-carousel > p-carousel {
+        height: 100%;
+        min-height: 0;
+        display: block;
+    }
+
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-content-container,
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-item-list,
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-item {
+        height: 100%;
+        min-height: 0;
+        display: flex;
+    }
+
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-viewport {
+        height: 100% !important;
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    .media-detail-panel-slide,
+    .media-detail-panel-slide > p-panel {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+    }
+
+    :host ::ng-deep .media-detail-panel-slide .p-panel,
+    :host ::ng-deep .media-detail-panel-slide .p-panel-content-container,
+    :host ::ng-deep .media-detail-panel-slide .p-panel-content {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    :host ::ng-deep .media-detail-panel-slide .p-panel {
         display: flex;
         flex-direction: column;
     }

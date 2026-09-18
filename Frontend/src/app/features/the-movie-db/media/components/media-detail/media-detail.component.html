@@ -25,7 +25,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     } @else if (viewState.data) {
         @let data = viewState.data;
         @let mediaData = data.media;
-        @let tracklistsData = data.tracklists;
+<!--        @let tracklistsData = data.tracklists;-->
         <div class="media-detail-backdrop"
              [style.--bg-image]="'url(' + backdropPath + mediaData.backdropPath + ')'">
         </div>
@@ -35,7 +35,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 [pTooltip]="showOriginalTitle() ? data.media.originalName : data.media.name"
                 [tooltipDisabled]="isTooltipDisabled()"
                 tooltipPosition="bottom">
-                {{ showOriginalTitle() ? mediaData.originalName : mediaData.name }}
+                {{ showOriginalTitle() ? mediaData.originalName : mediaData.name }} {{ mediaData.tagline ? " - " + mediaData.tagline : ""}}
             </h1>
 
             <p-button
@@ -105,31 +105,46 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             </div>
 
             <div class="media-detail-meta-content-container">
-                <div class="media-detail-description">
-                    <h2>Handlung</h2>
-                    {{mediaData.description ? mediaData.description : "Keine Beschreibung vorhanden"}}!
-                </div>
-                <div class="media-detail-bottom-area">
-                    <div class="media-detail-box">
-                        <p-carousel
-                            [value]="boxPages"
-                            [numVisible]="1"
-                            [numScroll]="1"
-                            [circular]="true"
-                            [showNavigators]="false"
-                            [showIndicators]="true"
-                        >
-                            <ng-template #item let-page>
+                <div class="media-detail-panel-carousel">
+                    <p-carousel
+                        [value]="boxPages"
+                        [numVisible]="1"
+                        [numScroll]="1"
+                        [circular]="true"
+                        [showNavigators]="false"
+                        [showIndicators]="true"
+                        [style]="{ height: '100%', position: 'relative' }"
+                        [indicatorsContentStyle]="{
+                            position: 'absolute',
+                            top: 'calc(100% + 0.5rem)',
+                            right: '0',
+                            left: '0',
+                            zIndex: '1',
+                            transform: 'translateY(-50%)'
+                        }"
+                    >
+                        <ng-template #item let-page>
+                            <div class="media-detail-panel-slide">
                                 @if (page === 'info') {
-                                    <div class="media-detail-box-left">
+                                    <p-panel header="Handlung">
+                                        <div class="media-detail-description">
+                                            {{mediaData.description ? mediaData.description : "Keine Beschreibung vorhanden"}}
+                                        </div>
+                                    </p-panel>
+                                } @else {
+                                    <p-panel header="Weitere Informationen">
                                         @if (mediaData.type === mediaTypes.MOVIE) {
                                             <span class="media-detail-info-item">
                                                 <span class="media-detail-info-label">Laufzeit:</span>
                                                 <span class="media-detail-info-value"> {{ mediaData.runtime | runtime }} </span>
                                             </span>
                                             <span class="media-detail-info-item">
-                                                <span class="media-detail-info-label">Budget und Umsatz:</span>
-                                                <span class="media-detail-info-value">{{ mediaData.budget | dollarCurrency }} → {{ mediaData.revenue | dollarCurrency }}</span>
+                                                <span class="media-detail-info-label">Budget:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.budget | dollarCurrency }}</span>
+                                            </span>
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Umsatz:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.revenue | dollarCurrency }}</span>
                                             </span>
                                         } @else if (mediaData.type === mediaTypes.TV_SHOW) {
                                             <span class="media-detail-info-item">
@@ -144,27 +159,57 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                                         <span class="media-detail-info-item">
                                             <span class="media-detail-info-label">Ursprungssprache</span>
-                                            <span
-                                                class="media-detail-info-value"> {{ mediaData.originalLanguage | languageName }} </span>
+                                            <span class="media-detail-info-value"> {{ mediaData.originalLanguage | languageName }} </span>
                                         </span>
-                                        <span class="media-detail-info-item">
-                                            <span class="media-detail-info-label">Tagline</span>
-                                            <span
-                                                class="media-detail-info-value"> {{ mediaData.tagline }} </span>
-                                        </span>
-                                    </div>
-                                } @else {
-                                    <div class="media-detail-box-right">
+
                                         <span class="media-detail-info-item">
                                             <span class="media-detail-info-label">TMDB Id:</span>
                                             <span class="media-detail-info-value">{{ mediaData.tmdbId }}</span>
                                         </span>
-                                    </div>
-                                }
-                            </ng-template>
-                        </p-carousel>
-                    </div>
 
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">IMDB Id:</span>
+                                            <span class="media-detail-info-value">{{ mediaData.imdbId ? mediaData.imdbId : "-"}}</span>
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">TVDB Id:</span>
+                                            <span class="media-detail-info-value">{{ mediaData.tvdbId ? mediaData.tvdbId : "-" }}</span>
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Erstellt:</span>
+                                            @if (mediaData.createdAt) {
+                                                @let createDate = mediaData.createdAt | dateTimeWithUnitFormatting;
+                                                <span class="media-detail-info-value">
+                                                    {{ createDate }}
+                                                    <i class="pi pi-info-circle" [pTooltip]="'Dieses Medium wurde erstmalig am ' + createDate + ' im Glotzenheft erstellt.'"></i>
+                                                </span>
+                                            } @else {
+                                                <span class="media-detail-info-value">---</span>
+                                            }
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Aktualisiert:</span>
+                                            @if (mediaData.updatedAt) {
+                                                @let updateDate = mediaData.updatedAt | dateTimeWithUnitFormatting;
+                                                <span class="media-detail-info-value">
+                                                    {{ updateDate }}
+                                                    <i class="pi pi-info-circle" [pTooltip]="'Die Metadaten aus TMDB wurde zuletzt am ' + updateDate + ' aktualisiert.'"></i>
+                                                </span>
+                                            } @else {
+                                                <span class="media-detail-info-value">---</span>
+                                            }
+                                        </span>
+                                    </p-panel>
+                                }
+                            </div>
+                        </ng-template>
+                    </p-carousel>
+                </div>
+
+                <div class="media-detail-bottom-area">
                     <div class="media-detail-bar-container">
                         <p-carousel
                             [value]="barPages"
@@ -189,8 +234,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                         <p-tag>
                                             <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
                                                target="_blank"
-                                               rel="noopener noreferrer"
-                                            >
+                                               rel="noopener noreferrer">
                                                 <i class="pi pi-link"></i>
                                                 TMDB
                                             </a>
@@ -200,10 +244,20 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                             <p-tag>
                                                 <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
                                                    target="_blank"
-                                                   rel="noopener noreferrer"
-                                                >
+                                                   rel="noopener noreferrer">
                                                     <i class="pi pi-link"></i>
                                                     IMDB
+                                                </a>
+                                            </p-tag>
+                                        }
+
+                                        @if (mediaData.homepage) {
+                                            <p-tag>
+                                                <a [href]="mediaData.homepage"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="pi pi-link"></i>
+                                                    Offizielle Homepage
                                                 </a>
                                             </p-tag>
                                         }
@@ -212,10 +266,53 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                             <p-tag>
                                                 <a [href]="'https://www.thetvdb.com/dereferrer/series/' + mediaData.tvdbId"
                                                    target="_blank"
-                                                   rel="noopener noreferrer"
-                                                >
+                                                   rel="noopener noreferrer">
                                                     <i class="pi pi-link"></i>
                                                     TVDB
+                                                </a>
+                                            </p-tag>
+                                        }
+
+                                        @if (mediaData.twitterId) {
+                                            <p-tag>
+                                                <a [href]="'https://www.x.com/' + mediaData.twitterId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="pi pi-twitter"></i>
+                                                    X
+                                                </a>
+                                            </p-tag>
+                                        }
+
+                                        @if (mediaData.facebookId) {
+                                            <p-tag>
+                                                <a [href]="'https://www.facebook.com/' + mediaData.facebookId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="pi pi-facebook"></i>
+                                                    Facebook
+                                                </a>
+                                            </p-tag>
+                                        }
+
+                                        @if (mediaData.instagramId) {
+                                            <p-tag>
+                                                <a [href]="'https://www.instagram.com/' + mediaData.instagramId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="pi pi-instagram"></i>
+                                                    Instagram
+                                                </a>
+                                            </p-tag>
+                                        }
+
+                                        @if (mediaData.wikidataId) {
+                                            <p-tag>
+                                                <a [href]="'https://www.wikidata.org/wiki/' + mediaData.wikidataId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="pi pi-link"></i>
+                                                    Wikidata
                                                 </a>
                                             </p-tag>
                                         }
@@ -227,7 +324,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 </div>
             </div>
         </div>
-
 
         <div class="media-detail-tabs-scroll-wrapper">
             <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
