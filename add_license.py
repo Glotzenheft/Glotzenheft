@@ -1,7 +1,8 @@
+import argparse
 import os
 import re
 
-ROOT_DIR = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
+ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
 LICENSE_MARKER = "This file is part of Glotzenheft."
 
@@ -62,9 +63,23 @@ def process_file(filepath: str, ext: str) -> bool:
     return True
 
 def main():
+    parser = argparse.ArgumentParser(description="Lizenzheader einfügen")
+    parser.add_argument(
+        "--exclude", action="append", default=[],
+        help="Verzeichnis relativ zum Projektverzeichnis ausschließen (wiederholbar)",
+    )
+    args = parser.parse_args()
+    excluded_dirs = {
+        os.path.abspath(os.path.join(ROOT_DIR, path)) for path in args.exclude
+    }
+
     updated_files = 0
     print(f"Suche in Verzeichnis: {ROOT_DIR}")
-    for root, _, files in os.walk(ROOT_DIR):
+    for root, dirs, files in os.walk(ROOT_DIR):
+        dirs[:] = [
+            directory for directory in dirs
+            if os.path.join(root, directory) not in excluded_dirs
+        ]
         for filename in files:
             _, ext = os.path.splitext(filename)
             if ext in TARGET_EXTENSIONS:

@@ -28,7 +28,7 @@ jobs:
       - name: Lizenzheader einfügen
         run: |
           echo "Starte Lizenzheader-Prüfung..."
-          python add_license.py
+          python add_license.py --exclude Backend/openapi
 
       - name: Änderungen committen und pushen
         run: |
