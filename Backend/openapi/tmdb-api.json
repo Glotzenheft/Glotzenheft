@@ -19524,6 +19524,10 @@
                             "type": "string",
                             "example": "1977-05-25"
                           },
+                          "first_air_date": {
+                            "type": "string",
+                            "example": "2022-09-21"
+                          },
                           "video": {
                             "type": "boolean",
                             "example": false,

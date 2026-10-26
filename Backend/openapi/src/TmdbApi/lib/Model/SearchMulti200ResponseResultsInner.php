@@ -1,21 +1,4 @@
 <?php
-/*
-This file is part of Glotzenheft.
-
-Glotzenheft is free software: you can redistribute it and/or modify
-it under the terms of the GNU General Public License as published by
-the Free Software Foundation, either version 3 of the License, or
-(at your option) any later version.
-
-Glotzenheft is distributed in the hope that it will be useful,
-but WITHOUT ANY WARRANTY; without even the implied warranty of
-MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-GNU General Public License for more details.
-
-You should have received a copy of the GNU General Public License
-along with this program.  If not, see <http://www.gnu.org/licenses/>.
-*/
-
 /**
  * SearchMulti200ResponseResultsInner
  *
@@ -86,6 +69,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'genre_ids' => 'int[]',
         'popularity' => 'float',
         'release_date' => 'string',
+        'first_air_date' => 'string',
         'video' => 'bool',
         'vote_average' => 'float',
         'vote_count' => 'int',
@@ -113,6 +97,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'genre_ids' => null,
         'popularity' => null,
         'release_date' => null,
+        'first_air_date' => null,
         'video' => null,
         'vote_average' => null,
         'vote_count' => null,
@@ -138,6 +123,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'genre_ids' => false,
         'popularity' => false,
         'release_date' => false,
+        'first_air_date' => false,
         'video' => false,
         'vote_average' => false,
         'vote_count' => false,
@@ -243,6 +229,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'genre_ids' => 'genre_ids',
         'popularity' => 'popularity',
         'release_date' => 'release_date',
+        'first_air_date' => 'first_air_date',
         'video' => 'video',
         'vote_average' => 'vote_average',
         'vote_count' => 'vote_count',
@@ -268,6 +255,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'genre_ids' => 'setGenreIds',
         'popularity' => 'setPopularity',
         'release_date' => 'setReleaseDate',
+        'first_air_date' => 'setFirstAirDate',
         'video' => 'setVideo',
         'vote_average' => 'setVoteAverage',
         'vote_count' => 'setVoteCount',
@@ -293,6 +281,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         'genre_ids' => 'getGenreIds',
         'popularity' => 'getPopularity',
         'release_date' => 'getReleaseDate',
+        'first_air_date' => 'getFirstAirDate',
         'video' => 'getVideo',
         'vote_average' => 'getVoteAverage',
         'vote_count' => 'getVoteCount',
@@ -369,6 +358,7 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
         $this->setIfExists('genre_ids', $data ?? [], null);
         $this->setIfExists('popularity', $data ?? [], 0);
         $this->setIfExists('release_date', $data ?? [], null);
+        $this->setIfExists('first_air_date', $data ?? [], null);
         $this->setIfExists('video', $data ?? [], true);
         $this->setIfExists('vote_average', $data ?? [], 0);
         $this->setIfExists('vote_count', $data ?? [], 0);
@@ -738,6 +728,33 @@ class SearchMulti200ResponseResultsInner implements ModelInterface, ArrayAccess,
             throw new \InvalidArgumentException('non-nullable release_date cannot be null');
         }
         $this->container['release_date'] = $release_date;
+
+        return $this;
+    }
+
+    /**
+     * Gets first_air_date
+     *
+     * @return string|null
+     */
+    public function getFirstAirDate()
+    {
+        return $this->container['first_air_date'];
+    }
+
+    /**
+     * Sets first_air_date
+     *
+     * @param string|null $first_air_date first_air_date
+     *
+     * @return self
+     */
+    public function setFirstAirDate($first_air_date)
+    {
+        if (is_null($first_air_date)) {
+            throw new \InvalidArgumentException('non-nullable first_air_date cannot be null');
+        }
+        $this->container['first_air_date'] = $first_air_date;
 
         return $this;
     }

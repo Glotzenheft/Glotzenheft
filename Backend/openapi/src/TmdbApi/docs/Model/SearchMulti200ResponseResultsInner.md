@@ -16,6 +16,7 @@ Name | Type | Description | Notes
 **genre_ids** | **int[]** |  | [optional]
 **popularity** | **float** |  | [optional] [default to 0]
 **release_date** | **string** |  | [optional]
+**first_air_date** | **string** |  | [optional]
 **video** | **bool** |  | [optional] [default to true]
 **vote_average** | **float** |  | [optional] [default to 0]
 **vote_count** | **int** |  | [optional] [default to 0]
