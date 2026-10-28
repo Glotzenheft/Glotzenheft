@@ -99,7 +99,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     <td><p-tableCheckbox [value]="tracklist" /></td>
                     <td>{{ tracklist.tracklistName }}</td>
                     <td>{{ showOriginalName() ? tracklist.mediaOriginalName : tracklist.mediaName }}</td>
-                    <td>{{ tracklist.mediaType }}</td>
+                    <td>{{ tracklist.mediaType | mediaType }}</td>
                     <td>{{ tracklist.seasonNumber ?? '-' }}</td>
                 </tr>
             </ng-template>
