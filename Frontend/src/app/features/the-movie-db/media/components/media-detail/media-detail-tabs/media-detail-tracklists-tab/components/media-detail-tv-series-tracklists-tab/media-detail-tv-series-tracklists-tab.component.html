@@ -95,23 +95,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                         [style]="{ height: '100%', position: 'relative' }"
                                     >
                                         <ng-template #item let-page>
-                                            <div class="season-panel-slide">
+                                            <div
+                                                class="season-panel-slide"
+                                                (touchstart)="$event.stopPropagation()"
+                                                (touchmove)="$event.stopPropagation()"
+                                                (touchend)="$event.stopPropagation()"
+                                            >
                                                 @if (page === 'info') {
                                                     <p-panel header="Tracklisten-Details">
                                                         <div class="season-page-season-information-area">
                                                             <p class="season-page-description">
-                                                                <span class="season-page-info-label"
-                                                                    >Beschreibung:</span
-                                                                >
+                                                                <span class="season-page-info-label">
+                                                                    Beschreibung:
+                                                                </span>
                                                                 {{
-                                                                    panel.season.overview ||
-                                                                        'Keine Beschreibung vorhanden.'
+                                                                    panel.season.overview || 'Keine Beschreibung vorhanden.'
                                                                 }}
                                                             </p>
                                                             <span>
-                                                                <span class="season-page-info-label"
-                                                                    >Erstausstrahlung:</span
-                                                                >
+                                                                <span class="season-page-info-label">
+                                                                    Erstausstrahlung:
+                                                                </span>
                                                                 {{ formatDate(panel.season.airDate) }}
                                                             </span>
                                                         </div>

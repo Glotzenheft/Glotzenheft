@@ -120,6 +120,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     flex-direction: column;
     flex: 1 1 auto;
     min-height: 0;
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-content {
     overflow: hidden;
 }
 :host ::ng-deep .season-panel-carousel .p-carousel-viewport {
@@ -169,9 +171,24 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     scrollbar-width: thin;
 }
 :host ::ng-deep .season-panel-carousel .p-carousel-indicator-list {
-    flex-shrink: 0;
-    padding: 0.5rem 0 0;
-    min-height: 1.25rem;
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    z-index: 1;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    min-height: 0;
+    padding: 0.4rem 0.5rem;
+    transform: translate(-50%, 50%);
+    flex-wrap: nowrap;
+    justify-content: safe center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: var(--p-accordion-content-background, var(--p-content-background));
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-indicator-list::-webkit-scrollbar {
+    display: none;
 }
 .season-page-season-information-area {
     display: flex;

@@ -178,10 +178,10 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
                     showAll: all.has(season.id),
                     details: tracklist ? this.tracklistDetails(tracklist) : [],
                     identifiers: [
-                        { label: 'Tracklist ID', value: String(tracklist?.id ?? '–') },
-                        { label: 'Tracklist-Staffel ID', value: String(range?.id ?? '–') },
-                        { label: 'Staffel ID', value: String(season.id) },
-                        { label: 'TMDB-Staffel ID', value: String(season.tmdbSeasonId) },
+                        { label: 'Tracklist Id', value: String(tracklist?.id ?? '–') },
+                        { label: 'Tracklist-Staffel Id', value: String(range?.id ?? '–') },
+                        { label: 'Glotzenheft Staffel Id', value: String(season.id) },
+                        { label: 'TMDB-Staffel Id', value: String(season.tmdbSeasonId) },
                     ],
                     categories: TRACKLIST_TAG_TYPE_OPTIONS.map((category) => ({
                         ...category,
