@@ -18,6 +18,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import {inject, Injectable} from '@angular/core';
 import {HttpClient, HttpParams} from '@angular/common/http';
 import {Observable} from 'rxjs';
+import {CreateTracklistRequestDto} from '../models/request/create-tracklist-request.dto';
+import {UpdateTracklistRequestDto} from '../models/request/update-tracklist-request.dto';
+import {TracklistLightResponseDto} from '../models/response/tracklist-light-response.dto';
 import {TracklistSearchPaginatedResponseDto} from '../models/response/tracklist-search-paginated-response.dto';
 
 @Injectable({
@@ -26,6 +29,27 @@ import {TracklistSearchPaginatedResponseDto} from '../models/response/tracklist-
 export class TracklistService {
     private readonly http = inject(HttpClient);
     private readonly baseUrl = '/api/tracklists';
+
+    getAllTracklists(): Observable<TracklistLightResponseDto[]> {
+        return this.http.get<TracklistLightResponseDto[]>(this.baseUrl);
+    }
+
+    /** The response contains neither comment nor tracklistSeason. */
+    createTracklist(dto: CreateTracklistRequestDto): Observable<TracklistLightResponseDto> {
+        return this.http.post<TracklistLightResponseDto>(this.baseUrl, dto);
+    }
+
+    /** The response contains neither comment nor tracklistSeason. */
+    updateTracklist(
+        tracklistId: number,
+        dto: UpdateTracklistRequestDto,
+    ): Observable<TracklistLightResponseDto> {
+        return this.http.patch<TracklistLightResponseDto>(`${this.baseUrl}/${tracklistId}`, dto);
+    }
+
+    deleteTracklist(tracklistId: number): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/${tracklistId}`);
+    }
 
     search(query: string, page: number = 1): Observable<TracklistSearchPaginatedResponseDto> {
         const params = new HttpParams()
