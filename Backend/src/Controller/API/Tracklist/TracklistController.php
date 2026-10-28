@@ -84,9 +84,7 @@ class TracklistController extends AbstractController
             tracklistId: $tracklistId,
             user: $user
         );
-        return $this->json(
-            data: $tracklist,
-            context: ['groups' => ['tracklist_details', 'tracklist_episodes']]);
+        return $this->json(data: $tracklist);
     }
 
     /**

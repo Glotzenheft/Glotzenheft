@@ -21,6 +21,7 @@ import {Observable} from 'rxjs';
 import {CreateTracklistRequestDto} from '../models/request/create-tracklist-request.dto';
 import {UpdateTracklistRequestDto} from '../models/request/update-tracklist-request.dto';
 import {TracklistLightResponseDto} from '../models/response/tracklist-light-response.dto';
+import {TracklistResponseDto} from '../models/response/tracklist-response.dto';
 import {TracklistSearchPaginatedResponseDto} from '../models/response/tracklist-search-paginated-response.dto';
 
 @Injectable({
@@ -34,17 +35,19 @@ export class TracklistService {
         return this.http.get<TracklistLightResponseDto[]>(this.baseUrl);
     }
 
-    /** The response contains neither comment nor tracklistSeason. */
-    createTracklist(dto: CreateTracklistRequestDto): Observable<TracklistLightResponseDto> {
-        return this.http.post<TracklistLightResponseDto>(this.baseUrl, dto);
+    getTracklist(tracklistId: number): Observable<TracklistResponseDto> {
+        return this.http.get<TracklistResponseDto>(`${this.baseUrl}/${tracklistId}`);
     }
 
-    /** The response contains neither comment nor tracklistSeason. */
+    createTracklist(dto: CreateTracklistRequestDto): Observable<TracklistResponseDto> {
+        return this.http.post<TracklistResponseDto>(this.baseUrl, dto);
+    }
+
     updateTracklist(
         tracklistId: number,
         dto: UpdateTracklistRequestDto,
-    ): Observable<TracklistLightResponseDto> {
-        return this.http.patch<TracklistLightResponseDto>(`${this.baseUrl}/${tracklistId}`, dto);
+    ): Observable<TracklistResponseDto> {
+        return this.http.patch<TracklistResponseDto>(`${this.baseUrl}/${tracklistId}`, dto);
     }
 
     deleteTracklist(tracklistId: number): Observable<void> {

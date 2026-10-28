@@ -23,6 +23,7 @@ import {TracklistStatusEnum} from '../models/enums/tracklist-status.enum';
 import {CreateTracklistRequestDto} from '../models/request/create-tracklist-request.dto';
 import {UpdateTracklistRequestDto} from '../models/request/update-tracklist-request.dto';
 import {TracklistLightResponseDto} from '../models/response/tracklist-light-response.dto';
+import {TracklistResponseDto} from '../models/response/tracklist-response.dto';
 import {TracklistService} from './tracklist.service';
 
 describe('TracklistService API contract', () => {
@@ -36,8 +37,9 @@ describe('TracklistService API contract', () => {
         tracklist_status: TracklistStatusEnum.WATCHING,
         is_rewatching: true,
         tracklist_start_date: '2026-10-28 20:15:00',
+        comment: 'Movie notes',
     };
-    const response: TracklistLightResponseDto = {
+    const lightResponse: TracklistLightResponseDto = {
         id: 42,
         tracklistName: 'Movie rewatch',
         status: TracklistStatusEnum.WATCHING,
@@ -60,6 +62,36 @@ describe('TracklistService API contract', () => {
             updatedAt: null,
         },
     };
+    const response: TracklistResponseDto = {
+        ...lightResponse,
+        comment: 'Movie notes',
+        tracklistSeason: null,
+    };
+    const seriesResponse: TracklistResponseDto = {
+        ...response,
+        id: 43,
+        tracklistName: 'Series specials',
+        status: TracklistStatusEnum.PLAN_TO_WATCH,
+        isRewatching: false,
+        startDate: null,
+        comment: 'Watch these separately',
+        customAirDate: '2026-10-28',
+        language: 'ja',
+        subtitle: 'de',
+        customPosterPath: '/custom.jpg',
+        media: {...response.media, id: 11, type: MediaType.TV_SHOW},
+        tracklistSeason: {
+            id: 50,
+            createdAt: '2026-10-28 20:15:00',
+            updatedAt: null,
+            startEpisodeNumber: 2,
+            endEpisodeNumber: 4,
+            customSeasonNumber: 0,
+            customPartNumber: null,
+            season: {id: 20, seasonNumber: 0, createdAt: '2026-10-28 19:00:00', updatedAt: null},
+            tracklistEpisodes: [],
+        },
+    };
 
     beforeEach(() => {
         TestBed.configureTestingModule({
@@ -77,12 +109,36 @@ describe('TracklistService API contract', () => {
 
         const request = http.expectOne('/api/tracklists');
         expect(request.request.method).toBe('GET');
-        request.flush([response]);
+        request.flush([lightResponse]);
 
-        expect(received).toHaveBeenCalledOnceWith([response]);
+        expect(received).toHaveBeenCalledOnceWith([lightResponse]);
     });
 
-    it('creates a movie without a season and returns the lightweight response', () => {
+    it('loads complete series details including tracked episodes without a media request', () => {
+        const received = jasmine.createSpy('received');
+        const details: TracklistResponseDto = {
+            ...seriesResponse,
+            tracklistSeason: {
+                ...seriesResponse.tracklistSeason!,
+                tracklistEpisodes: [{
+                    id: 70,
+                    createdAt: '2026-10-28 20:15:00',
+                    updatedAt: null,
+                    watchDateTime: null,
+                    episode: {id: 60, episodeNumber: 2, createdAt: '2026-10-28 19:00:00', updatedAt: null},
+                }],
+            },
+        };
+        service.getTracklist(43).subscribe(received);
+
+        const request = http.expectOne('/api/tracklists/43');
+        expect(request.request.method).toBe('GET');
+        request.flush(details);
+
+        expect(received).toHaveBeenCalledOnceWith(details);
+    });
+
+    it('creates a movie and returns its comment and null season', () => {
         const received = jasmine.createSpy('received');
         service.createTracklist(movieRequest).subscribe(received);
 
@@ -115,12 +171,15 @@ describe('TracklistService API contract', () => {
             custom_season_number: 0,
             custom_part_number: null,
         };
-        service.createTracklist(dto).subscribe();
+        const received = jasmine.createSpy('received');
+        service.createTracklist(dto).subscribe(received);
 
         const request = http.expectOne('/api/tracklists');
         expect(request.request.method).toBe('POST');
         expect(JSON.parse(request.request.serializeBody() as string)).toEqual(dto);
-        request.flush({...response, id: 43, media: {...response.media, id: 11, type: MediaType.TV_SHOW}});
+        request.flush(seriesResponse, {status: 201, statusText: 'Created'});
+
+        expect(received).toHaveBeenCalledOnceWith(seriesResponse);
     });
 
     it('preserves explicit null, false and zero in PATCH without adding omitted fields', () => {
@@ -131,14 +190,14 @@ describe('TracklistService API contract', () => {
             custom_season_number: 0,
         };
         const received = jasmine.createSpy('received');
-        service.updateTracklist(42, patch).subscribe(received);
+        service.updateTracklist(43, patch).subscribe(received);
 
-        const request = http.expectOne('/api/tracklists/42');
+        const request = http.expectOne('/api/tracklists/43');
         expect(request.request.method).toBe('PATCH');
         expect(JSON.parse(request.request.serializeBody() as string)).toEqual(patch);
-        request.flush({...response, isRewatching: false});
+        request.flush({...seriesResponse, comment: null});
 
-        expect(received).toHaveBeenCalledOnceWith({...response, isRewatching: false});
+        expect(received).toHaveBeenCalledOnceWith({...seriesResponse, comment: null});
     });
 
     it('completes deletion with an empty 204 response', () => {
