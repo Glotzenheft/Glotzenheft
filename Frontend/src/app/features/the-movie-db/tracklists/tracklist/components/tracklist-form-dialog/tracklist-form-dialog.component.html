@@ -1,0 +1,347 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<form [formGroup]="form" (ngSubmit)="save()" class="tracklist-form" [attr.aria-busy]="isBusy()">
+    <div class="form-field">
+        <p-float-label variant="in">
+            <input
+                pInputText
+                id="tracklist-name"
+                formControlName="tracklistName"
+                maxlength="255"
+                autocomplete="off"
+                required
+                [attr.aria-invalid]="hasError('tracklistName')"
+                [attr.aria-describedby]="hasError('tracklistName') ? 'tracklist-name-error' : null"
+            />
+            <label for="tracklist-name">Name der Trackliste (Pflichtfeld)</label>
+        </p-float-label>
+        @if (hasError('tracklistName')) {
+            <p-message id="tracklist-name-error" severity="error" size="small">
+                Bitte gib einen Namen mit höchstens 255 Zeichen ein.
+            </p-message>
+        }
+    </div>
+
+    <div class="form-field">
+        <p-float-label variant="in">
+            <p-select
+                inputId="tracklist-status"
+                formControlName="status"
+                [options]="statusOptions"
+                optionLabel="label"
+                optionValue="value"
+                [checkmark]="true"
+                [fluid]="true"
+                placeholder="Status auswählen …"
+                appendTo="body"
+            />
+            <label for="tracklist-status">Status der Trackliste (Pflichtfeld)</label>
+        </p-float-label>
+        @if (hasError('status')) {
+            <p-message severity="error" size="small">Bitte wähle einen Status aus.</p-message>
+        }
+    </div>
+
+    <div class="field-grid date-grid">
+        <div class="form-field">
+            <p-float-label variant="in">
+                <p-date-picker
+                    inputId="tracklist-startDate"
+                    formControlName="startDate"
+                    dateFormat="dd.mm.yy"
+                    [showIcon]="true"
+                    [showOnFocus]="false"
+                    [showButtonBar]="true"
+                    [keepInvalid]="true"
+                    [fluid]="true"
+                    [showTime]="true"
+                    hourFormat="24"
+                    [maxDate]="dateBoundary('finishDate')"
+                    appendTo="body"
+                />
+                <label for="tracklist-startDate">Startdatum (optional)</label>
+            </p-float-label>
+            @if (hasError('startDate')) {
+                <p-message severity="error" size="small">Bitte gib ein gültiges Datum ein.</p-message>
+            }
+        </div>
+        <div class="form-field">
+            <p-float-label variant="in">
+                <p-date-picker
+                    inputId="tracklist-customAirDate"
+                    formControlName="customAirDate"
+                    dateFormat="dd.mm.yy"
+                    [showIcon]="true"
+                    [showOnFocus]="false"
+                    [showButtonBar]="true"
+                    [keepInvalid]="true"
+                    [fluid]="true"
+                    appendTo="body"
+                />
+                <label for="tracklist-customAirDate">Erscheinungsdatum (optional)</label>
+            </p-float-label>
+            @if (hasError('customAirDate')) {
+                <p-message severity="error" size="small">Bitte gib ein gültiges Datum ein.</p-message>
+            }
+        </div>
+        <div class="form-field">
+            <p-float-label variant="in">
+                <p-date-picker
+                    inputId="tracklist-finishDate"
+                    formControlName="finishDate"
+                    dateFormat="dd.mm.yy"
+                    [showIcon]="true"
+                    [showOnFocus]="false"
+                    [showButtonBar]="true"
+                    [keepInvalid]="true"
+                    [fluid]="true"
+                    [showTime]="true"
+                    hourFormat="24"
+                    [minDate]="dateBoundary('startDate')"
+                    appendTo="body"
+                />
+                <label for="tracklist-finishDate">Enddatum (optional)</label>
+            </p-float-label>
+            @if (hasError('finishDate')) {
+                <p-message severity="error" size="small">Bitte gib ein gültiges Datum ein.</p-message>
+            }
+        </div>
+    </div>
+    @if (form.hasError('dateRange') && (form.dirty || submitted())) {
+        <p-message severity="error" size="small"
+            >Das Enddatum darf nicht vor dem Startdatum liegen.</p-message
+        >
+    }
+
+    <div class="field-grid language-grid">
+        <div class="form-field">
+            <p-float-label variant="in">
+                <p-select
+                    inputId="tracklist-language"
+                    formControlName="language"
+                    [options]="languageOptions"
+                    [group]="true"
+                    optionGroupLabel="groupName"
+                    optionGroupChildren="items"
+                    optionLabel="name"
+                    optionValue="code"
+                    [filter]="true"
+                    filterBy="name"
+                    [showClear]="true"
+                    [fluid]="true"
+                    appendTo="body"
+                />
+                <label for="tracklist-language">Sprache</label>
+            </p-float-label>
+        </div>
+        <div class="form-field">
+            <p-float-label variant="in">
+                <p-select
+                    inputId="tracklist-subtitle"
+                    formControlName="subtitle"
+                    [options]="languageOptions"
+                    [group]="true"
+                    optionGroupLabel="groupName"
+                    optionGroupChildren="items"
+                    optionLabel="name"
+                    optionValue="code"
+                    [filter]="true"
+                    filterBy="name"
+                    [showClear]="true"
+                    [fluid]="true"
+                    appendTo="body"
+                />
+                <label for="tracklist-subtitle">Untertitel</label>
+            </p-float-label>
+        </div>
+    </div>
+
+    @if (!isMovie) {
+        <fieldset class="season-fields">
+            <legend>Staffel- &amp; Episodenkorrektur</legend>
+            <div class="field-grid correction-grid">
+                <div class="form-field">
+                    <p-float-label variant="in">
+                        <input
+                            pInputText
+                            type="number"
+                            inputmode="numeric"
+                            id="tracklist-customSeasonNumber"
+                            formControlName="customSeasonNumber"
+                            min="0"
+                            step="1"
+                            [attr.aria-invalid]="hasError('customSeasonNumber')"
+                        />
+                        <label for="tracklist-customSeasonNumber">Logische Staffel Nr.</label>
+                    </p-float-label>
+                    @if (hasError('customSeasonNumber')) {
+                        <p-message severity="error" size="small"
+                            >Bitte gib eine ganze Zahl ab 0 ein.</p-message
+                        >
+                    }
+                </div>
+                <div class="form-field">
+                    <p-float-label variant="in">
+                        <input
+                            pInputText
+                            type="number"
+                            inputmode="numeric"
+                            id="tracklist-customPartNumber"
+                            formControlName="customPartNumber"
+                            min="1"
+                            step="1"
+                            [attr.aria-invalid]="hasError('customPartNumber')"
+                        />
+                        <label for="tracklist-customPartNumber">Part / Cour</label>
+                    </p-float-label>
+                    @if (hasError('customPartNumber')) {
+                        <p-message severity="error" size="small"
+                            >Bitte gib eine ganze Zahl ab 1 ein.</p-message
+                        >
+                    }
+                </div>
+                <div class="form-field">
+                    <p-float-label variant="in">
+                        <input
+                            pInputText
+                            type="number"
+                            inputmode="numeric"
+                            id="tracklist-startEpisodeNumber"
+                            formControlName="startEpisodeNumber"
+                            min="1"
+                            step="1"
+                            [attr.aria-invalid]="hasError('startEpisodeNumber')"
+                        />
+                        <label for="tracklist-startEpisodeNumber">Erste Episode (Nr.)</label>
+                    </p-float-label>
+                    @if (hasError('startEpisodeNumber')) {
+                        <p-message severity="error" size="small"
+                            >Bitte gib eine ganze Zahl ab 1 ein.</p-message
+                        >
+                    }
+                </div>
+                <div class="form-field">
+                    <p-float-label variant="in">
+                        <input
+                            pInputText
+                            type="number"
+                            inputmode="numeric"
+                            id="tracklist-endEpisodeNumber"
+                            formControlName="endEpisodeNumber"
+                            min="1"
+                            step="1"
+                            [attr.aria-invalid]="hasError('endEpisodeNumber')"
+                        />
+                        <label for="tracklist-endEpisodeNumber">Letzte Episode (Nr.)</label>
+                    </p-float-label>
+                    @if (hasError('endEpisodeNumber')) {
+                        <p-message severity="error" size="small"
+                            >Bitte gib eine ganze Zahl ab 1 ein.</p-message
+                        >
+                    }
+                </div>
+            </div>
+            @if (form.hasError('episodeRange') && (form.dirty || submitted())) {
+                <p-message severity="error" size="small"
+                    >Die letzte Episode darf nicht vor der ersten Episode liegen.</p-message
+                >
+            }
+        </fieldset>
+    }
+
+    <div class="form-field">
+        <p-float-label variant="in">
+            <textarea pTextarea id="tracklist-comment" formControlName="comment" rows="3"></textarea>
+            <label for="tracklist-comment">Dein Kommentar / Notizen</label>
+        </p-float-label>
+    </div>
+
+    <div class="rewatching-area">
+        <p-checkbox formControlName="isRewatching" inputId="tracklist-rewatching" [binary]="true" />
+        <label for="tracklist-rewatching">Erneut glotzen?</label>
+    </div>
+
+    <div class="form-field">
+        <div class="rating-area">
+            <span id="tracklist-rating-label">Bewertung</span>
+            <div class="rating-controls" role="group" aria-labelledby="tracklist-rating-label">
+                <p-rating formControlName="rating" [stars]="10" />
+                <span class="rating-value" aria-live="polite">{{
+                    form.controls.rating.value === null ? 'Keine' : form.controls.rating.value + ' / 10'
+                }}</span>
+                <p-button
+                    type="button"
+                    icon="pi pi-times"
+                    severity="secondary"
+                    [text]="true"
+                    [rounded]="true"
+                    ariaLabel="Bewertung entfernen"
+                    [disabled]="isBusy() || form.controls.rating.value === null"
+                    (onClick)="form.controls.rating.setValue(null)"
+                />
+            </div>
+        </div>
+        @if (hasError('rating')) {
+            <p-message severity="error" size="small">Die Bewertung muss zwischen 1 und 10 liegen.</p-message>
+        }
+    </div>
+
+    <footer class="form-footer">
+        @if (errorMessage(); as error) {
+            <p-message severity="error" role="alert">{{ error }}</p-message>
+        }
+        <div class="form-actions">
+            <p-button
+                type="submit"
+                icon="pi pi-save"
+                [label]="isEditing ? 'Speichern' : 'Anlegen'"
+                [loading]="pendingAction() === 'save'"
+                [disabled]="isBusy()"
+            />
+            @if (isEditing) {
+                <p-button
+                    type="button"
+                    icon="pi pi-trash"
+                    label="Löschen"
+                    severity="danger"
+                    [loading]="pendingAction() === 'delete'"
+                    [disabled]="isBusy()"
+                    (onClick)="confirmDelete()"
+                />
+            }
+            <p-button
+                type="button"
+                icon="pi pi-times"
+                label="Abbrechen"
+                severity="secondary"
+                [outlined]="true"
+                [disabled]="isBusy()"
+                (onClick)="cancel()"
+            />
+        </div>
+    </footer>
+</form>
+
+<p-confirm-dialog
+    key="tracklist-delete"
+    [style]="{ width: 'min(28rem, calc(100vw - 2rem))' }"
+    [blockScroll]="true"
+    [closable]="!isBusy()"
+    [closeOnEscape]="!isBusy()"
+    appendTo="body"
+/>
