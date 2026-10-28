@@ -15,4 +15,106 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<p>media-detail-movie-tracklists-tab works!</p>
+<section class="movie-tracklists" aria-labelledby="movie-tracklists-heading">
+    <header class="movie-tracklists-header">
+        <h2 id="movie-tracklists-heading">
+            Tracklisten <span class="tracklist-count">({{ mediaData.tracklists.length }})</span>
+        </h2>
+        <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="createTracklist()" />
+    </header>
+
+    @if (mediaData.tracklists.length === 0) {
+        <div class="empty-tracklists" role="status">
+            <i class="pi pi-list" aria-hidden="true"></i>
+            <p>Für diesen Film hast du noch keine Trackliste angelegt.</p>
+            <span>Lege eine Trackliste an, um deine Sichtung zu erfassen.</span>
+        </div>
+    } @else {
+        <div class="movie-tracklist-grid">
+            @for (tracklist of mediaData.tracklists; track tracklist.id) {
+                <p-card styleClass="movie-tracklist-card">
+                    <ng-template #title>
+                        <span class="tracklist-title">{{ tracklist.tracklistName }}</span>
+                    </ng-template>
+                    <ng-template #subtitle>
+                        <div class="tracklist-status">
+                            <span>{{ tracklist.status | tracklistStatus }}</span>
+                            @if (tracklist.isRewatching) {
+                                <p-tag value="Rewatch" severity="info" />
+                            }
+                        </div>
+                    </ng-template>
+
+                    <dl class="tracklist-details">
+                        <div>
+                            <dt>Start</dt>
+                            <dd>
+                                {{ (parseDate(tracklist.startDate) | date: "dd.MM.yyyy HH:mm 'Uhr'") || '–' }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Ende</dt>
+                            <dd>
+                                {{
+                                    (parseDate(tracklist.finishDate) | date: "dd.MM.yyyy HH:mm 'Uhr'") || '–'
+                                }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Erscheinungsdatum</dt>
+                            <dd>
+                                {{
+                                    (parseDate(tracklist.customAirDate ?? mediaData.media.firstAirDate)
+                                        | date: 'dd.MM.yyyy') || '–'
+                                }}
+                            </dd>
+                        </div>
+                        <div>
+                            <dt>Sprache</dt>
+                            <dd>{{ tracklist.language | languageName }}</dd>
+                        </div>
+                        <div>
+                            <dt>Untertitel</dt>
+                            <dd>{{ tracklist.subtitle | languageName }}</dd>
+                        </div>
+                    </dl>
+
+                    <div class="tracklist-rating" role="group" aria-label="Bewertung">
+                        <p-rating [ngModel]="tracklist.rating" [stars]="10" [readonly]="true" />
+                        <span>{{
+                            tracklist.rating !== null ? tracklist.rating + ' / 10' : 'Keine Bewertung'
+                        }}</span>
+                    </div>
+
+                    @if (tracklist.comment) {
+                        <p class="tracklist-comment">{{ tracklist.comment }}</p>
+                    }
+
+                    @if (tracklist.tags.length) {
+                        <nav class="tracklist-tags" aria-label="Tags der Trackliste">
+                            @for (tag of tracklist.tags; track tag.id) {
+                                <a [routerLink]="['/' + tagUrls.detailTracklist(tag.id)]">
+                                    <p-tag
+                                        [value]="tag.tagName"
+                                        [style.background-color]="tag.color"
+                                        [style.color]="tagTextColor(tag.color)"
+                                    />
+                                </a>
+                            }
+                        </nav>
+                    }
+
+                    <ng-template #footer>
+                        <p-button
+                            label="Bearbeiten"
+                            icon="pi pi-pencil"
+                            [outlined]="true"
+                            [ariaLabel]="'Trackliste ' + tracklist.tracklistName + ' bearbeiten'"
+                            (onClick)="editTracklist(tracklist)"
+                        />
+                    </ng-template>
+                </p-card>
+            }
+        </div>
+    }
+</section>
