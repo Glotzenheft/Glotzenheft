@@ -411,71 +411,74 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     <p-dialog
         [visible]="true"
         (visibleChange)="onEpisodeDetailsVisibilityChange($event)"
-        [header]="
-            'E' + details.episode.episodeNumber.toString().padStart(2, '0') + ': ' + details.episode.name
-        "
+        [header]="'E' + details.episode.episodeNumber.toString().padStart(2, '0') + ': ' + details.episode.name"
         [modal]="true"
         [maximizable]="true"
         [dismissableMask]="true"
-        [draggable]="false"
+        [draggable]="true"
         [blockScroll]="true"
         [style]="{ width: '75vw', maxWidth: '100rem', maxHeight: 'calc(100dvh - 1rem)' }"
         [breakpoints]="{ '960px': '90vw', '640px': '96vw' }"
         appendTo="body"
     >
         <div class="episode-details-content">
-            @if (details.episode.stillPath && !episodeImageError()) {
-                <p-image
-                    [src]="imageUrl(details.episode.stillPath)"
-                    [previewImageSrc]="imageUrl(details.episode.stillPath, true)"
-                    [alt]="details.episode.name"
-                    [preview]="true"
-                    appendTo="body"
-                >
-                    <ng-template #image
-                        ><img
-                            [src]="imageUrl(details.episode.stillPath)"
-                            [alt]="details.episode.name"
-                            width="640"
-                            height="360"
-                            (error)="episodeImageError.set(true)"
-                    /></ng-template>
-                </p-image>
-            } @else {
-                <div class="episode-image-fallback">
-                    <i class="pi pi-image" aria-hidden="true"></i>
-                    <p>Kein Bild verfügbar.</p>
-                </div>
-            }
-            <p class="episode-overview">{{ details.episode.overview || 'Keine Beschreibung vorhanden.' }}</p>
-            <dl class="episode-metadata">
-                <div>
-                    <dt>Erstausstrahlung</dt>
-                    <dd>{{ formatDate(details.episode.airDate) }}</dd>
-                </div>
-                <div>
-                    <dt>Laufzeit</dt>
-                    <dd>
-                        {{ details.episode.runtime !== null ? details.episode.runtime + ' Minuten' : '–' }}
-                    </dd>
-                </div>
-                <div>
-                    <dt>Episoden ID</dt>
-                    <dd>{{ details.episode.id }}</dd>
-                </div>
-                <div>
-                    <dt>Erstellt</dt>
-                    <dd>{{ formatDate(details.episode.createdAt, true) }}</dd>
-                </div>
-                <div>
-                    <dt>Aktualisiert</dt>
-                    <dd>{{ formatDate(details.episode.updatedAt, true) }}</dd>
-                </div>
-                <div>
-                    <dt>Tracklist-Episoden ID</dt>
-                    <dd>{{ details.sightingId ?? '–' }}</dd>
-                </div>
-            </dl>
+            <div class="episode-details-image">
+                @if (details.episode.stillPath && !episodeImageError()) {
+                    <p-image
+                        [src]="imageUrl(details.episode.stillPath)"
+                        [previewImageSrc]="imageUrl(details.episode.stillPath, true)"
+                        [alt]="details.episode.name"
+                        [preview]="true"
+                        [style]="{ width: '100%', height: '100%' }"
+                        appendTo="body"
+                    >
+                        <ng-template #image
+                            ><img
+                                [src]="imageUrl(details.episode.stillPath)"
+                                [alt]="details.episode.name"
+                                width="300"
+                                height="169"
+                                (error)="episodeImageError.set(true)"
+                        /></ng-template>
+                    </p-image>
+                } @else {
+                    <div class="episode-image-fallback">
+                        <i class="pi pi-image" aria-hidden="true"></i>
+                        <p>Kein Bild für „{{ details.episode.name }}“ verfügbar.</p>
+                    </div>
+                }
+            </div>
+            <div class="episode-details-info">
+                <p class="episode-overview">{{ details.episode.overview }}</p>
+                <dl class="episode-metadata">
+                    <p>
+                        <dt>Erstausstrahlung am:</dt>
+                        <dd>{{ formatDate(details.episode.airDate) }}</dd>
+                    </p>
+                    <p>
+                        <dt>Laufzeit:</dt>
+                        <dd>
+                            {{ details.episode.runtime !== null ? details.episode.runtime + ' Minuten' : '–' }}
+                        </dd>
+                    </p>
+                    <p>
+                        <dt>Episoden Id:</dt>
+                        <dd>{{ details.episode.id }}</dd>
+                    </p>
+                    <p>
+                        <dt>Erstellt:</dt>
+                        <dd>{{ formatDate(details.episode.createdAt, true) }}</dd>
+                    </p>
+                    <p>
+                        <dt>Aktualisiert:</dt>
+                        <dd>{{ formatDate(details.episode.updatedAt, true) }}</dd>
+                    </p>
+                    <p>
+                        <dt>Tracklist-Episoden Id:</dt>
+                        <dd>{{ details.sightingId ?? '–' }}</dd>
+                    </p>
+                </dl>
+            </div>
         </div>
     </p-dialog>
 }
