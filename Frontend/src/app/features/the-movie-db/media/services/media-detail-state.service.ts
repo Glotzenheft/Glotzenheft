@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { computed, Injectable, signal } from '@angular/core';
 import { TracklistResponseDto } from '../../tracklists/tracklist/models/response/tracklist-response.dto';
 import { MediaResponse } from '../models/response/media-response.dto';
+import { TracklistEpisodeDetailDataDto } from '../../tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';
 
 @Injectable()
 export class MediaDetailStateService {
@@ -68,6 +69,34 @@ export class MediaDetailStateService {
                     : [...current.tracklists, tracklist],
             };
         });
+    }
+
+    upsertTracklistEpisode(tracklistId: number, episode: TracklistEpisodeDetailDataDto): void {
+        this.updateEpisodes(tracklistId, (episodes) =>
+            episodes.some((item) => item.episode.id === episode.episode.id)
+                ? episodes.map((item) => (item.episode.id === episode.episode.id ? episode : item))
+                : [...episodes, episode],
+        );
+    }
+
+    removeTracklistEpisode(tracklistId: number, tracklistEpisodeId: number): void {
+        this.updateEpisodes(tracklistId, (episodes) =>
+            episodes.some((item) => item.id === tracklistEpisodeId)
+                ? episodes.filter((item) => item.id !== tracklistEpisodeId)
+                : episodes,
+        );
+    }
+
+    private updateEpisodes(
+        tracklistId: number,
+        update: (episodes: TracklistEpisodeDetailDataDto[]) => TracklistEpisodeDetailDataDto[],
+    ): void {
+        const tracklist = this.data()?.tracklists.find((item) => item.id === tracklistId);
+        const season = tracklist?.tracklistSeason;
+        if (!tracklist || !season) return;
+        const episodes = update(season.tracklistEpisodes);
+        if (episodes === season.tracklistEpisodes) return;
+        this.upsertTracklist({ ...tracklist, tracklistSeason: { ...season, tracklistEpisodes: episodes } });
     }
 
     removeTracklist(tracklistId: number): void {

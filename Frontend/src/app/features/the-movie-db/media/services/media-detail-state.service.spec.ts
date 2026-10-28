@@ -16,7 +16,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { MediaType } from '../models/enums/media-type.enum';
-import { createMediaDetailResponse, createTracklistResponse } from '../testing/media-detail.fixtures';
+import {
+    createMediaDetailResponse,
+    createTracklistResponse,
+    createSeriesMedia,
+    createSeriesTracklist,
+    createEpisodeSighting,
+} from '../testing/media-detail.fixtures';
 import { MediaDetailStateService } from './media-detail-state.service';
 
 describe('MediaDetailStateService', () => {
@@ -126,5 +132,57 @@ describe('MediaDetailStateService', () => {
         expect(afterError).toEqual({ data: null, loading: false, error: 'Loading failed' });
         expect(retrying).toEqual({ data: null, loading: true, error: null });
         expect(state.viewState()).toEqual({ data: next, loading: false, error: null });
+    });
+    it('adds a sighting locally without mutating the old tracklist or changing loading state', () => {
+        // Arrange
+        const state = new MediaDetailStateService();
+        const tracklist = createSeriesTracklist();
+        Object.freeze(tracklist.tracklistSeason!.tracklistEpisodes);
+        Object.freeze(tracklist.tracklistSeason);
+        state.setMedia(createSeriesMedia([tracklist]));
+        const sighting = createEpisodeSighting();
+
+        // Act
+        state.upsertTracklistEpisode(42, sighting);
+
+        // Assert
+        expect(state.mediaData()?.tracklists[0].tracklistSeason?.tracklistEpisodes).toEqual([sighting]);
+        expect(tracklist.tracklistSeason?.tracklistEpisodes).toEqual([]);
+        expect(state.isLoading()).toBeFalse();
+    });
+
+    it('updates a sighting in place and deletes using the sighting ID', () => {
+        // Arrange
+        const state = new MediaDetailStateService();
+        const sighting = createEpisodeSighting();
+        const other = createEpisodeSighting({ id: 71, episode: { ...sighting.episode, id: 61 } });
+        state.setMedia(
+            createSeriesMedia([createSeriesTracklist({}, { tracklistEpisodes: [sighting, other] })]),
+        );
+        const changed = { ...sighting, watchDateTime: '2026-10-28 23:00:00' };
+
+        // Act
+        state.upsertTracklistEpisode(42, changed);
+        const updated = state.mediaData()?.tracklists[0].tracklistSeason?.tracklistEpisodes;
+        state.removeTracklistEpisode(42, 70);
+
+        // Assert
+        expect(updated).toEqual([changed, other]);
+        expect(state.mediaData()?.tracklists[0].tracklistSeason?.tracklistEpisodes).toEqual([other]);
+    });
+
+    it('ignores changes for unknown tracklists or sightings and for movies', () => {
+        // Arrange
+        const state = new MediaDetailStateService();
+        const data = createMediaDetailResponse([createTracklistResponse()]);
+        state.setMedia(data);
+
+        // Act
+        state.upsertTracklistEpisode(42, createEpisodeSighting());
+        state.upsertTracklistEpisode(999, createEpisodeSighting());
+        state.removeTracklistEpisode(999, 70);
+
+        // Assert
+        expect(state.mediaData()).toBe(data);
     });
 });
