@@ -15,4 +15,463 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<p>media-detail-tv-series-tracklists-tab works!</p>
+<section class="series-tracklists" aria-labelledby="series-seasons-heading">
+    <h2 id="series-seasons-heading">Staffeln</h2>
+    @if (tagError(); as error) {
+        <div class="tag-error" role="alert">
+            <p-message severity="error">{{ error }}</p-message>
+            @if (retryTracklistId(); as id) {
+                <p-button
+                    label="Trackliste aktualisieren"
+                    icon="pi pi-refresh"
+                    [disabled]="tagBusy()"
+                    (onClick)="refreshTracklist(id)"
+                />
+            }
+        </div>
+    }
+    @if (panels().length) {
+        <p-accordion [value]="activeSeasonId()" (valueChange)="onSeasonChange($event)">
+            @for (panel of panels(); track panel.season.id) {
+                <p-accordion-panel [value]="panel.season.id">
+                    <p-accordion-header>{{
+                        panel.season.name || 'Staffel ' + panel.season.seasonNumber
+                    }}</p-accordion-header>
+                    <p-accordion-content>
+                        <div class="season-page-information-area">
+                            <div class="season-page-season-poster">
+                                @if (panel.season.posterPath && !posterErrors().has(panel.season.id)) {
+                                    <p-image
+                                        [src]="imageUrl(panel.season.posterPath)"
+                                        [previewImageSrc]="imageUrl(panel.season.posterPath, true)"
+                                        [alt]="'Poster für ' + panel.season.name"
+                                        [preview]="true"
+                                        appendTo="body"
+                                    >
+                                        <ng-template #image>
+                                            <img
+                                                [src]="imageUrl(panel.season.posterPath)"
+                                                [alt]="'Poster für ' + panel.season.name"
+                                                width="200"
+                                                height="300"
+                                                loading="lazy"
+                                                (error)="markPosterError(panel.season.id)"
+                                            />
+                                        </ng-template>
+                                    </p-image>
+                                } @else {
+                                    <div class="season-poster-fallback">
+                                        <i class="pi pi-image" aria-hidden="true"></i>
+                                        <p>Kein Poster für diese Staffel vorhanden.</p>
+                                    </div>
+                                }
+                                @if (panel.tracklist; as tracklist) {
+                                    <div class="season-poster-tracklist-wrapper">
+                                        <div class="season-poster-tracklist">
+                                            <span class="season-poster-rating">
+                                                <i class="pi pi-star-fill" aria-hidden="true"></i>
+                                                <span aria-label="Tracklistenbewertung">{{
+                                                    tracklist.rating ?? '-'
+                                                }}</span>
+                                            </span>
+                                            <span
+                                                class="season-poster-status"
+                                                [style.color]="statusColors[statusLabels[tracklist.status]]"
+                                                >{{ statusLabels[tracklist.status] }}</span
+                                            >
+                                        </div>
+                                    </div>
+                                }
+                            </div>
+                            <div class="season-page-season-meta">
+                                <div class="season-panel-carousel">
+                                    <p-carousel
+                                        [value]="metadataPages"
+                                        [numVisible]="1"
+                                        [numScroll]="1"
+                                        [circular]="true"
+                                        [showNavigators]="false"
+                                        [showIndicators]="true"
+                                        [style]="{ height: '100%', position: 'relative' }"
+                                    >
+                                        <ng-template #item let-page>
+                                            <div class="season-panel-slide">
+                                                @if (page === 'info') {
+                                                    <p-panel header="Tracklisten-Details">
+                                                        <div class="season-page-season-information-area">
+                                                            <p class="season-page-description">
+                                                                <span class="season-page-info-label"
+                                                                    >Beschreibung:</span
+                                                                >
+                                                                {{
+                                                                    panel.season.overview ||
+                                                                        'Keine Beschreibung vorhanden.'
+                                                                }}
+                                                            </p>
+                                                            <span>
+                                                                <span class="season-page-info-label"
+                                                                    >Erstausstrahlung:</span
+                                                                >
+                                                                {{ formatDate(panel.season.airDate) }}
+                                                            </span>
+                                                        </div>
+                                                        @if (panel.tracklist) {
+                                                            <dl class="tracklist-detail-grid">
+                                                                @for (
+                                                                    detail of panel.details;
+                                                                    track detail.label
+                                                                ) {
+                                                                    <div class="season-page-info-item">
+                                                                        <dt class="season-page-info-label">
+                                                                            {{ detail.label }}:
+                                                                        </dt>
+                                                                        <dd
+                                                                            class="season-page-info-value"
+                                                                            [title]="detail.title || ''"
+                                                                        >
+                                                                            {{ detail.value }}
+                                                                        </dd>
+                                                                    </div>
+                                                                }
+                                                            </dl>
+                                                        } @else {
+                                                            <p>
+                                                                Aktuell ist keine Trackliste für diese Staffel
+                                                                angelegt.
+                                                            </p>
+                                                        }
+                                                    </p-panel>
+                                                } @else {
+                                                    <p-panel header="IDs">
+                                                        <dl class="season-identifier-grid">
+                                                            @for (
+                                                                identifier of panel.identifiers;
+                                                                track identifier.label
+                                                            ) {
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">
+                                                                        {{ identifier.label }}:
+                                                                    </dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ identifier.value }}
+                                                                    </dd>
+                                                                </div>
+                                                            }
+                                                        </dl>
+                                                    </p-panel>
+                                                }
+                                            </div>
+                                        </ng-template>
+                                    </p-carousel>
+                                </div>
+                            </div>
+                        </div>
+
+                        @if (panel.options.length) {
+                            <div class="tracklistSelectionDIV">
+                                <label [for]="'tracklist-selection-' + panel.season.id"></label>
+                                <p-select
+                                    [inputId]="'tracklist-selection-' + panel.season.id"
+                                    [options]="panel.options"
+                                    optionLabel="tracklistName"
+                                    optionValue="id"
+                                    [fluid]="true"
+                                    appendTo="body"
+                                    [ngModel]="panel.tracklist?.id"
+                                    (ngModelChange)="selectTracklist(panel.season.id, $event)"
+                                />
+                            </div>
+                        }
+                        <div class="season-page-action-bar">
+                            @if (panel.tracklist; as tracklist) {
+                                <p-button
+                                    icon="pi pi-pencil"
+                                    label="Trackliste bearbeiten"
+                                    size="small"
+                                    [outlined]="true"
+                                    [disabled]="tagBusy()"
+                                    (onClick)="editTracklist(tracklist)"
+                                />
+                            }
+                            <p-button
+                                icon="pi pi-plus"
+                                label="Trackliste anlegen"
+                                size="small"
+                                [outlined]="true"
+                                [disabled]="tagBusy()"
+                                (onClick)="createTracklist(panel.season.id)"
+                            />
+                            @if (panel.tracklist; as tracklist) {
+                                <p-button
+                                    icon="pi pi-plus"
+                                    label="Tag erstellen"
+                                    size="small"
+                                    [outlined]="true"
+                                    [disabled]="tagBusy()"
+                                    (onClick)="createTag(tracklist)"
+                                />
+                                <p-button
+                                    icon="pi pi-tags"
+                                    label="Tags verknüpfen"
+                                    size="small"
+                                    [outlined]="true"
+                                    [disabled]="tagBusy()"
+                                    (onClick)="linkTags(tracklist)"
+                                />
+                                @if (tracklist.tags.length) {
+                                    <p-button
+                                        label="Tags entfernen"
+                                        severity="danger"
+                                        size="small"
+                                        [outlined]="true"
+                                        [disabled]="tagBusy()"
+                                        (onClick)="unlinkTags(tracklist)"
+                                    >
+                                        <ng-template #icon
+                                            ><span class="unlink-icon"
+                                                ><i class="pi pi-tags"></i><i class="pi pi-times"></i></span
+                                        ></ng-template>
+                                    </p-button>
+                                }
+                                <p-button
+                                    [icon]="panel.showAll ? 'pi pi-filter' : 'pi pi-filter-slash'"
+                                    [label]="
+                                        panel.showAll
+                                            ? 'Nur Tracklist-Episoden anzeigen'
+                                            : 'Alle Episoden anzeigen'
+                                    "
+                                    [severity]="panel.showAll ? 'secondary' : 'info'"
+                                    [outlined]="panel.showAll"
+                                    size="small"
+                                    [disabled]="!panel.hasBoundaries"
+                                    (onClick)="toggleEpisodeFilter(panel.season.id)"
+                                    [title]="
+                                        panel.hasBoundaries
+                                            ? 'Episodenfilter umschalten'
+                                            : 'Keine spezifischen Episoden für diese Trackliste definiert'
+                                    "
+                                />
+                            }
+                        </div>
+
+                        @if (panel.tracklist; as tracklist) {
+                            @if (tracklist.tags.length || tagView() === 'table') {
+                                <div class="season-page-tracklist-tag-area">
+                                    <div class="tag-toolbar">
+                                        <p-button
+                                            icon="pi pi-copy"
+                                            [rounded]="true"
+                                            [text]="true"
+                                            [outlined]="true"
+                                            size="small"
+                                            ariaLabel="Alle Tag-IDs kopieren"
+                                            pTooltip="Alle Tag-IDs kopieren"
+                                            [disabled]="!tracklist.tags.length"
+                                            (onClick)="copyTagIds(tracklist.tags)"
+                                        />
+                                        <p-button
+                                            [icon]="tagView() === 'inline' ? 'pi pi-table' : 'pi pi-list'"
+                                            [rounded]="true"
+                                            [text]="true"
+                                            [outlined]="true"
+                                            size="small"
+                                            [ariaLabel]="
+                                                tagView() === 'inline'
+                                                    ? 'Zur Tabellenansicht wechseln'
+                                                    : 'Zur kompakten Ansicht wechseln'
+                                            "
+                                            (onClick)="toggleTagView()"
+                                        />
+                                    </div>
+                                    @if (tagView() === 'inline') {
+                                        <div class="inline-tags">
+                                            @for (tag of tracklist.tags; track tag.id) {
+                                                <a [routerLink]="['/' + tagUrls.detailTracklist(tag.id)]"
+                                                    ><p-tag
+                                                        [value]="tag.tagName"
+                                                        [style.background-color]="tag.color"
+                                                        [style.color]="tagTextColor(tag.color)"
+                                                /></a>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <div class="tag-table-wrapper">
+                                            <table class="season-page-tag-table">
+                                                <thead>
+                                                    <tr>
+                                                        <th scope="col">Kategorie</th>
+                                                        <th scope="col">Tags</th>
+                                                    </tr>
+                                                </thead>
+                                                <tbody>
+                                                    @for (
+                                                        category of panel.categories;
+                                                        track category.value
+                                                    ) {
+                                                        <tr>
+                                                            <th scope="row">
+                                                                <span>{{ category.label }}</span>
+                                                                <p-button
+                                                                    icon="pi pi-copy"
+                                                                    [text]="true"
+                                                                    [rounded]="true"
+                                                                    size="small"
+                                                                    [disabled]="!category.tags.length"
+                                                                    [ariaLabel]="
+                                                                        'Tag-IDs der Kategorie ' +
+                                                                        category.label +
+                                                                        ' kopieren'
+                                                                    "
+                                                                    (onClick)="copyTagIds(category.tags)"
+                                                                />
+                                                            </th>
+                                                            <td>
+                                                                <div class="category-tags">
+                                                                    @for (
+                                                                        tag of category.tags;
+                                                                        track tag.id
+                                                                    ) {
+                                                                        <a
+                                                                            [routerLink]="[
+                                                                                '/' +
+                                                                                    tagUrls.detailTracklist(
+                                                                                        tag.id
+                                                                                    ),
+                                                                            ]"
+                                                                            ><p-tag
+                                                                                [value]="tag.tagName"
+                                                                                [style.background-color]="
+                                                                                    tag.color
+                                                                                "
+                                                                                [style.color]="
+                                                                                    tagTextColor(tag.color)
+                                                                                "
+                                                                        /></a>
+                                                                    }
+                                                                </div>
+                                                            </td>
+                                                        </tr>
+                                                    }
+                                                </tbody>
+                                            </table>
+                                        </div>
+                                    }
+                                </div>
+                            }
+                        }
+
+                        <div class="episodeDIVWrapper">
+                            @for (row of panel.episodes; track row.episode.id) {
+                                <div class="episodeDIV" [class.episodeInTracklistDIV]="!!row.sighting">
+                                    <button
+                                        type="button"
+                                        class="episode-title-container"
+                                        [title]="row.title"
+                                        (click)="showEpisodeDetails(row.episode, row.sighting?.id)"
+                                    >
+                                        {{ row.title }}
+                                    </button>
+                                    @if (panel.tracklist; as tracklist) {
+                                        <p-button
+                                            [icon]="row.sighting ? 'pi pi-pencil' : 'pi pi-plus'"
+                                            severity="secondary"
+                                            [ariaLabel]="
+                                                row.sighting
+                                                    ? 'Episode ' + row.episode.episodeNumber + ' bearbeiten'
+                                                    : 'Episode ' + row.episode.episodeNumber + ' tracken'
+                                            "
+                                            [pTooltip]="
+                                                row.sighting
+                                                    ? 'Episode bearbeiten'
+                                                    : 'Episode zur Trackliste hinzufügen'
+                                            "
+                                            [disabled]="tagBusy()"
+                                            (onClick)="trackEpisode(tracklist, row.episode)"
+                                        />
+                                    }
+                                </div>
+                            } @empty {
+                                <p class="empty-episodes">Keine Episoden für diese Auswahl vorhanden.</p>
+                            }
+                        </div>
+                    </p-accordion-content>
+                </p-accordion-panel>
+            }
+        </p-accordion>
+    } @else {
+        <p role="status">Für diese Serie sind noch keine Staffeln vorhanden.</p>
+    }
+</section>
+
+@if (episodeDetails(); as details) {
+    <p-dialog
+        [visible]="true"
+        (visibleChange)="onEpisodeDetailsVisibilityChange($event)"
+        [header]="
+            'E' + details.episode.episodeNumber.toString().padStart(2, '0') + ': ' + details.episode.name
+        "
+        [modal]="true"
+        [maximizable]="true"
+        [dismissableMask]="true"
+        [draggable]="false"
+        [blockScroll]="true"
+        [style]="{ width: '75vw', maxWidth: '100rem', maxHeight: 'calc(100dvh - 1rem)' }"
+        [breakpoints]="{ '960px': '90vw', '640px': '96vw' }"
+        appendTo="body"
+    >
+        <div class="episode-details-content">
+            @if (details.episode.stillPath && !episodeImageError()) {
+                <p-image
+                    [src]="imageUrl(details.episode.stillPath)"
+                    [previewImageSrc]="imageUrl(details.episode.stillPath, true)"
+                    [alt]="details.episode.name"
+                    [preview]="true"
+                    appendTo="body"
+                >
+                    <ng-template #image
+                        ><img
+                            [src]="imageUrl(details.episode.stillPath)"
+                            [alt]="details.episode.name"
+                            width="640"
+                            height="360"
+                            (error)="episodeImageError.set(true)"
+                    /></ng-template>
+                </p-image>
+            } @else {
+                <div class="episode-image-fallback">
+                    <i class="pi pi-image" aria-hidden="true"></i>
+                    <p>Kein Bild verfügbar.</p>
+                </div>
+            }
+            <p class="episode-overview">{{ details.episode.overview || 'Keine Beschreibung vorhanden.' }}</p>
+            <dl class="episode-metadata">
+                <div>
+                    <dt>Erstausstrahlung</dt>
+                    <dd>{{ formatDate(details.episode.airDate) }}</dd>
+                </div>
+                <div>
+                    <dt>Laufzeit</dt>
+                    <dd>
+                        {{ details.episode.runtime !== null ? details.episode.runtime + ' Minuten' : '–' }}
+                    </dd>
+                </div>
+                <div>
+                    <dt>Episoden ID</dt>
+                    <dd>{{ details.episode.id }}</dd>
+                </div>
+                <div>
+                    <dt>Erstellt</dt>
+                    <dd>{{ formatDate(details.episode.createdAt, true) }}</dd>
+                </div>
+                <div>
+                    <dt>Aktualisiert</dt>
+                    <dd>{{ formatDate(details.episode.updatedAt, true) }}</dd>
+                </div>
+                <div>
+                    <dt>Tracklist-Episoden ID</dt>
+                    <dd>{{ details.sightingId ?? '–' }}</dd>
+                </div>
+            </dl>
+        </div>
+    </p-dialog>
+}
