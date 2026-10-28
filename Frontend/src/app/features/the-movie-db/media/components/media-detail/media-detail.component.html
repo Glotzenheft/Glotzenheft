@@ -22,6 +22,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <h1>Laden ...</h1>
             <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
         </div>
+    } @else if (viewState.error) {
+        <div class="media-detail-load-error" role="alert">
+            <p>{{ viewState.error }}</p>
+            <p-button label="Erneut versuchen" icon="pi pi-refresh" (onClick)="loadMedia()" />
+        </div>
     } @else if (viewState.data) {
         @let data = viewState.data;
         @let mediaData = data.media;

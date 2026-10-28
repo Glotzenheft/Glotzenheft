@@ -17,12 +17,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import {
     Component,
+    DestroyRef,
     effect,
     ElementRef,
     HostListener,
     inject,
     Input,
-    OnInit,
+    OnChanges,
     signal,
     viewChild,
     WritableSignal
@@ -30,6 +31,9 @@ import {
 import {MediaDetailService} from '../../services/media-detail.service';
 import {MediaDetailStateService} from '../../services/media-detail-state.service';
 import {MediaResponse} from '../../models/response/media-response.dto';
+import {HttpErrorResponse} from '@angular/common/http';
+import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
+import {Subscription} from 'rxjs';
 import {MEDIA_DETAILS_PATHS} from '../../../../../core/constants/paths.constants';
 import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
@@ -83,9 +87,11 @@ import {
     templateUrl: './media-detail.component.html',
     styleUrl: './media-detail.component.css'
 })
-export class MediaDetailComponent implements OnInit{
+export class MediaDetailComponent implements OnChanges{
     private mediaDetailService: MediaDetailService = inject(MediaDetailService);
     private router = inject(Router);
+    private readonly destroyRef = inject(DestroyRef);
+    private mediaSubscription?: Subscription;
     private route = inject(ActivatedRoute);
 
     protected readonly originalPosterPath = TMDB_ORIGINAL_IMAGE_PATH;
@@ -119,22 +125,42 @@ export class MediaDetailComponent implements OnInit{
         })
     }
 
-    ngOnInit(): void {
+    ngOnChanges(): void {
         this.loadMedia();
     }
 
-    private loadMedia(): void {
-        this.state.isLoading.set(true);
-        this.mediaDetailService.getMedia(this.mediaTypeUrlParam, Number(this.mediaId)).subscribe({
-            next: (media: MediaResponse) => {
-                this.state.mediaData.set(media);
-                this.state.isLoading.set(false);
-            },
-            error: (err) => {
-                console.error('Fehler beim Laden der Medien!', err);
-                this.state.isLoading.set(false);
-            }
-        })
+    loadMedia(): void {
+        this.mediaSubscription?.unsubscribe();
+        this.state.startLoading();
+        this.imageError.set(false);
+        this.isThumbnailLoading.set(true);
+        this.showOriginalTitle.set(false);
+
+        const id = Number(this.mediaId);
+        if (
+            !Number.isSafeInteger(id) ||
+            id <= 0 ||
+            (this.mediaTypeUrlParam !== MediaType.MOVIE && this.mediaTypeUrlParam !== MediaType.TV_SHOW)
+        ) {
+            this.state.setLoadError('Die Medienadresse ist ungültig.');
+            return;
+        }
+
+        this.mediaSubscription = this.mediaDetailService
+            .getMedia(this.mediaTypeUrlParam, id)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (media: MediaResponse) => this.state.setMedia(media),
+                error: (error: unknown) => {
+                    const message =
+                        error instanceof HttpErrorResponse && error.status === 401
+                            ? 'Deine Sitzung ist abgelaufen. Bitte melde dich erneut an.'
+                            : error instanceof HttpErrorResponse && error.status === 404
+                              ? 'Das Medium wurde nicht gefunden.'
+                              : 'Das Medium konnte nicht geladen werden. Bitte versuche es erneut.';
+                    this.state.setLoadError(message);
+                },
+            });
     }
 
     onTabChange(newRoute: string | number): void {
