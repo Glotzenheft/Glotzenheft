@@ -119,17 +119,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                         [showNavigators]="false"
                         [showIndicators]="true"
                         [style]="{ height: '100%', position: 'relative' }"
-                        [indicatorsContentStyle]="{
-                            position: 'absolute',
-                            top: 'calc(100% + 0.5rem)',
-                            right: '0',
-                            left: '0',
-                            zIndex: '1',
-                            transform: 'translateY(-50%)'
-                        }"
                     >
                         <ng-template #item let-page>
-                            <div class="media-detail-panel-slide">
+                            <div
+                                class="media-detail-panel-slide"
+                                (touchstart)="$event.stopPropagation()"
+                                (touchmove)="$event.stopPropagation()"
+                                (touchend)="$event.stopPropagation()"
+                            >
                                 @if (page === 'info') {
                                     <p-panel header="Handlung">
                                         <div class="media-detail-description">
@@ -225,104 +222,111 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             [showIndicators]="true"
                         >
                             <ng-template #item let-page>
-                                @if (page === 'genres') {
-                                    <div class="media-detail-genre-bar">
-                                        @let genres = mediaData.tmdbGenres;
-                                        @for (genre of genres; track genre) {
+                                <div
+                                    class="media-detail-bar-slide"
+                                    (touchstart)="$event.stopPropagation()"
+                                    (touchmove)="$event.stopPropagation()"
+                                    (touchend)="$event.stopPropagation()"
+                                >
+                                    @if (page === 'genres') {
+                                        <div class="media-detail-genre-bar">
+                                            @let genres = mediaData.tmdbGenres;
+                                            @for (genre of genres; track genre) {
+                                                <p-tag>
+                                                    {{ genre.name }}
+                                                </p-tag>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <div class="media-detail-link-bar">
                                             <p-tag>
-                                                {{ genre.name }}
-                                            </p-tag>
-                                        }
-                                    </div>
-                                } @else {
-                                    <div class="media-detail-link-bar">
-                                        <p-tag>
-                                            <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
-                                               target="_blank"
-                                               rel="noopener noreferrer">
-                                                <i class="pi pi-link"></i>
-                                                TMDB
-                                            </a>
-                                        </p-tag>
-
-                                        @if (mediaData.imdbId) {
-                                            <p-tag>
-                                                <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
+                                                <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
                                                    target="_blank"
                                                    rel="noopener noreferrer">
                                                     <i class="pi pi-link"></i>
-                                                    IMDB
+                                                    TMDB
                                                 </a>
                                             </p-tag>
-                                        }
 
-                                        @if (mediaData.homepage) {
-                                            <p-tag>
-                                                <a [href]="mediaData.homepage"
-                                                   target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    <i class="pi pi-link"></i>
-                                                    Offizielle Homepage
-                                                </a>
-                                            </p-tag>
-                                        }
+                                            @if (mediaData.imdbId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        IMDB
+                                                    </a>
+                                                </p-tag>
+                                            }
 
-                                        @if (mediaData.tvdbId) {
-                                            <p-tag>
-                                                <a [href]="'https://www.thetvdb.com/dereferrer/series/' + mediaData.tvdbId"
-                                                   target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    <i class="pi pi-link"></i>
-                                                    TVDB
-                                                </a>
-                                            </p-tag>
-                                        }
+                                            @if (mediaData.homepage) {
+                                                <p-tag>
+                                                    <a [href]="mediaData.homepage"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        Offizielle Homepage
+                                                    </a>
+                                                </p-tag>
+                                            }
 
-                                        @if (mediaData.twitterId) {
-                                            <p-tag>
-                                                <a [href]="'https://www.x.com/' + mediaData.twitterId"
-                                                   target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    <i class="pi pi-twitter"></i>
-                                                    X
-                                                </a>
-                                            </p-tag>
-                                        }
+                                            @if (mediaData.tvdbId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.thetvdb.com/dereferrer/series/' + mediaData.tvdbId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        TVDB
+                                                    </a>
+                                                </p-tag>
+                                            }
 
-                                        @if (mediaData.facebookId) {
-                                            <p-tag>
-                                                <a [href]="'https://www.facebook.com/' + mediaData.facebookId"
-                                                   target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    <i class="pi pi-facebook"></i>
-                                                    Facebook
-                                                </a>
-                                            </p-tag>
-                                        }
+                                            @if (mediaData.twitterId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.x.com/' + mediaData.twitterId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-twitter"></i>
+                                                        X
+                                                    </a>
+                                                </p-tag>
+                                            }
 
-                                        @if (mediaData.instagramId) {
-                                            <p-tag>
-                                                <a [href]="'https://www.instagram.com/' + mediaData.instagramId"
-                                                   target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    <i class="pi pi-instagram"></i>
-                                                    Instagram
-                                                </a>
-                                            </p-tag>
-                                        }
+                                            @if (mediaData.facebookId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.facebook.com/' + mediaData.facebookId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-facebook"></i>
+                                                        Facebook
+                                                    </a>
+                                                </p-tag>
+                                            }
 
-                                        @if (mediaData.wikidataId) {
-                                            <p-tag>
-                                                <a [href]="'https://www.wikidata.org/wiki/' + mediaData.wikidataId"
-                                                   target="_blank"
-                                                   rel="noopener noreferrer">
-                                                    <i class="pi pi-link"></i>
-                                                    Wikidata
-                                                </a>
-                                            </p-tag>
-                                        }
-                                    </div>
-                                }
+                                            @if (mediaData.instagramId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.instagram.com/' + mediaData.instagramId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-instagram"></i>
+                                                        Instagram
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.wikidataId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.wikidata.org/wiki/' + mediaData.wikidataId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        Wikidata
+                                                    </a>
+                                                </p-tag>
+                                            }
+                                        </div>
+                                    }
+                                </div>
                             </ng-template>
                         </p-carousel>
                     </div>
