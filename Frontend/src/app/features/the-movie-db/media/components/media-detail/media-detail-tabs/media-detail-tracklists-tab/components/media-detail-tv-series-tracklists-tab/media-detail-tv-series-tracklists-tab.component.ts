@@ -18,7 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { Component, computed, DestroyRef, inject, Input, signal, Type } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { RouterLink } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { AccordionModule } from 'primeng/accordion';
 import { Button } from 'primeng/button';
@@ -46,9 +46,10 @@ import { TracklistEpisodeDialogResult } from '../../../../../../../tracklists/tr
 import { TracklistTagSelectionDialogComponent } from '../../../../../../../tags-and-groups/tracklist-tag/components/tracklist-tag-selection-dialog/tracklist-tag-selection-dialog.component';
 import { TracklistTagUnlinkDialogComponent } from '../../../../../../../tags-and-groups/tracklist-tag/components/tracklist-tag-unlink-dialog/tracklist-tag-unlink-dialog.component';
 import { TracklistTagFormDialogComponent } from '../../../../../../../tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
+import { TracklistTagTableDialogComponent } from '../../../../../../../tags-and-groups/tracklist-tag/components/tracklist-tag-table-dialog/tracklist-tag-table-dialog.component';
 import { TracklistTagAssociationService } from '../../../../../../../tags-and-groups/tracklist-tag/services/tracklist-tag-association.service';
 import { TracklistTagLightResponseDto } from '../../../../../../../tags-and-groups/tracklist-tag/models/response/tracklist-tag-light-response.dto';
-import { TRACKLIST_TAG_TYPE_OPTIONS } from '../../../../../../../tags-and-groups/tracklist-tag/models/constants/tracklist-tag-type.constants';
+import { getTagTextColor } from '../../../../../../../tags-and-groups/tracklist-tag/utils/tracklist-tag.utils';
 import { TRACKLIST_STATUS_LABELS_DE } from '../../../../../../../tracklists/tracklist/models/constants/tracklist-status.constants';
 import { parseTracklistDate } from '../../../../../../../tracklists/tracklist/utils/tracklist-form.utils';
 import { LanguageNamePipe } from '../../../../../../../../../shared/pipes/language-name/language-name.pipe';
@@ -88,8 +89,6 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     private readonly tracklists = inject(TracklistService);
     private readonly associations = inject(TracklistTagAssociationService);
     private readonly messages = inject(MessageService);
-    private readonly router = inject(Router);
-    private readonly route = inject(ActivatedRoute);
     private readonly destroyRef = inject(DestroyRef);
     private readonly media = signal<MediaResponse | null>(null);
     private readonly selectedIds = signal<Record<number, number>>({});
@@ -105,7 +104,13 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
 
     readonly data = this.media.asReadonly();
     readonly activeSeasonId = signal<string | number>('');
-    readonly tagView = signal<'inline' | 'table'>('inline');
+    readonly tagToolbarButtonTokens = {
+        outlined: {
+            primary: {
+                borderColor: '{button.text.primary.color}',
+            },
+        },
+    };
     readonly tagBusy = signal(false);
     readonly tagError = signal<string | null>(null);
     readonly retryTracklistId = signal<number | null>(null);
@@ -183,10 +188,6 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
                         { label: 'Glotzenheft Staffel Id', value: String(season.id) },
                         { label: 'TMDB-Staffel Id', value: String(season.tmdbSeasonId) },
                     ],
-                    categories: TRACKLIST_TAG_TYPE_OPTIONS.map((category) => ({
-                        ...category,
-                        tags: tracklist?.tags.filter((tag) => tag.tracklistTagType === category.value) ?? [],
-                    })),
                     episodes: episodes.map((episode, index) => ({
                         episode,
                         sighting: sightings.get(episode.id),
@@ -197,9 +198,6 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     });
 
     constructor() {
-        this.route.queryParamMap.pipe(takeUntilDestroyed(this.destroyRef)).subscribe((params) => {
-            this.tagView.set(params.get('tagView') === 'table' ? 'table' : 'inline');
-        });
         this.destroyRef.onDestroy(() => {
             for (const ref of this.openRefs) ref.destroy();
             this.openRefs.clear();
@@ -389,16 +387,6 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
             });
     }
 
-    toggleTagView(): void {
-        const view = this.tagView() === 'inline' ? 'table' : 'inline';
-        this.tagView.set(view);
-        void this.router.navigate([], {
-            relativeTo: this.route,
-            queryParams: { tagView: view === 'table' ? 'table' : null },
-            queryParamsHandling: 'merge',
-        });
-    }
-
     async copyTagIds(tags: TracklistTagLightResponseDto[]): Promise<void> {
         if (!tags.length) return;
         try {
@@ -415,6 +403,14 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
                 detail: 'Die Tag-IDs konnten nicht kopiert werden.',
             });
         }
+    }
+
+    openTagTable(tracklist: TracklistResponseDto): void {
+        this.openAuxiliary<void>(
+            TracklistTagTableDialogComponent,
+            { tags: tracklist.tags },
+            'Tracklisten-Tags',
+        ).subscribe();
     }
 
     markPosterError(seasonId: number): void {
@@ -436,11 +432,7 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     }
 
     tagTextColor(color: string | null): string | undefined {
-        if (!color || !/^#(?:[a-f\d]{3}|[a-f\d]{6})$/i.test(color)) return undefined;
-        let hex = color.slice(1);
-        if (hex.length === 3) hex = [...hex].map((char) => char + char).join('');
-        const [r, g, b] = [0, 2, 4].map((offset) => parseInt(hex.slice(offset, offset + 2), 16));
-        return (r * 299 + g * 587 + b * 114) / 1000 >= 128 ? '#111827' : '#ffffff';
+        return getTagTextColor(color);
     }
 
     private rememberSelection(seasonId: number, tracklistId: number | null): void {

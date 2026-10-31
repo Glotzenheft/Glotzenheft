@@ -150,7 +150,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     min-height: 0;
     margin: 0;
     background: none;
-    border: 2px solid #fff;
+    border: 1px solid var(--p-primary-color);
     border-radius: 8px;
     box-shadow: none;
 }
@@ -168,7 +168,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     min-width: 0;
     min-height: 0;
     overflow-y: auto;
-    scrollbar-width: thin;
+    scrollbar-width: none;
 }
 :host ::ng-deep .season-panel-carousel .p-carousel-indicator-list {
     position: absolute;
@@ -261,59 +261,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .season-page-tracklist-tag-area {
     margin-bottom: 0.5rem;
 }
+.tracklist-tag-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
 .tag-toolbar {
     display: flex;
-    justify-content: flex-end;
     gap: 0.5rem;
-    margin-bottom: 0.5rem;
+    flex: 0 0 auto;
+    margin-left: auto;
 }
-.inline-tags,
-.category-tags {
+.inline-tags {
     display: flex;
     align-items: center;
     gap: 0.5rem;
 }
 .inline-tags {
-    flex-wrap: wrap;
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
 }
 .inline-tags a {
-    max-width: 100%;
+    flex: 0 0 auto;
 }
 :host ::ng-deep .inline-tags .p-tag-label {
-    white-space: normal;
-    overflow-wrap: anywhere;
-}
-.tag-table-wrapper {
-    overflow: auto;
-}
-.season-page-tag-table {
-    width: 100%;
-    border-collapse: collapse;
-    table-layout: fixed;
-    text-align: left;
-}
-.season-page-tag-table th,
-.season-page-tag-table td {
-    border-bottom: 1px solid var(--link--color, var(--p-primary-color));
-    padding: 0.5rem;
-}
-.season-page-tag-table th:first-child {
-    width: 10rem;
-}
-.season-page-tag-table tbody th span {
-    display: inline-block;
-    max-width: calc(100% - 2.5rem);
-    overflow-wrap: anywhere;
-}
-.season-page-tag-table tbody th p-button {
-    float: right;
-}
-.category-tags {
-    overflow-x: auto;
-    min-width: 0;
-}
-.category-tags a {
-    flex-shrink: 0;
+    white-space: nowrap;
 }
 .episodeDIV {
     display: flex;
@@ -457,11 +433,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         width: 100%;
         min-height: 2.75rem;
         justify-content: center;
-    }
-}
-@media (max-width: 500px) {
-    .season-page-tag-table th:first-child {
-        width: 7rem;
     }
 }
 @media (max-width: 560px) {

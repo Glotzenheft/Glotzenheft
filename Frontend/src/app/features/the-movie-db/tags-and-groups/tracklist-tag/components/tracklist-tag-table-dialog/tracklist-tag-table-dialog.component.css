@@ -1,0 +1,70 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.tracklist-tag-table-dialog {
+    min-width: 0;
+}
+
+.tracklist-tag-table-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-bottom: 0.5rem;
+}
+
+.tag-table-wrapper {
+    max-height: min(65vh, 40rem);
+    overflow: auto;
+}
+
+.tracklist-tag-table {
+    width: 100%;
+    border-collapse: collapse;
+    table-layout: fixed;
+    text-align: left;
+}
+
+.tracklist-tag-table th,
+.tracklist-tag-table td {
+    border-bottom: 1px solid var(--link--color, var(--p-primary-color));
+    padding: 0.5rem;
+}
+
+.tracklist-tag-table th:first-child {
+    width: 10rem;
+}
+
+.tracklist-tag-table tbody th span {
+    display: inline-block;
+    max-width: calc(100% - 2.5rem);
+    overflow-wrap: anywhere;
+}
+
+.tracklist-tag-table tbody th p-button {
+    float: right;
+}
+
+.category-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    overflow-x: auto;
+}
+
+.category-tags a {
+    flex-shrink: 0;
+}

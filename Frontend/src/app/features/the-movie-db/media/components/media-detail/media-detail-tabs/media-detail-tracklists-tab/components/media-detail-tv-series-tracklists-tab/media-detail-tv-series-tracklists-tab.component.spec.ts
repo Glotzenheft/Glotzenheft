@@ -16,7 +16,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TestBed } from '@angular/core/testing';
-import { ActivatedRoute, convertToParamMap, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { of, Subject, throwError } from 'rxjs';
@@ -46,7 +45,6 @@ describe('MediaDetailTvSeriesTracklistsTabComponent', () => {
     let tracklists: jasmine.SpyObj<TracklistService>;
     let associations: jasmine.SpyObj<TracklistTagAssociationService>;
     let mediaApi: jasmine.SpyObj<MediaDetailService>;
-    let router: jasmine.SpyObj<Router>;
     let closed: Subject<unknown>;
     let ref: jasmine.SpyObj<DynamicDialogRef<unknown>>;
 
@@ -78,8 +76,6 @@ describe('MediaDetailTvSeriesTracklistsTabComponent', () => {
             ['addTagsToTracklist', 'removeTagsFromTracklist'],
         );
         mediaApi = jasmine.createSpyObj<MediaDetailService>('MediaDetailService', ['getMedia']);
-        router = jasmine.createSpyObj<Router>('Router', ['navigate']);
-        router.navigate.and.resolveTo(true);
         closed = new Subject();
         ref = jasmine.createSpyObj('DynamicDialogRef', ['destroy'], { onClose: closed.asObservable() });
         dialogs.open.and.returnValue(ref);
@@ -93,11 +89,6 @@ describe('MediaDetailTvSeriesTracklistsTabComponent', () => {
                 { provide: TracklistTagAssociationService, useValue: associations },
                 { provide: MediaDetailService, useValue: mediaApi },
                 { provide: MessageService, useValue: jasmine.createSpyObj('MessageService', ['add']) },
-                { provide: Router, useValue: router },
-                {
-                    provide: ActivatedRoute,
-                    useValue: { queryParamMap: of(convertToParamMap({ tagView: 'table' })) },
-                },
             ],
         });
         state = TestBed.inject(MediaDetailStateService);
@@ -409,19 +400,20 @@ describe('MediaDetailTvSeriesTracklistsTabComponent', () => {
         expect(tracklists.getTracklist).toHaveBeenCalledTimes(2);
     });
 
-    it('reads and updates the tagView query parameter while preserving other parameters', () => {
+    it('opens the reusable tag table dialog with the selected tracklist tags', () => {
         // Arrange
-        const initial = component.tagView();
+        const tracklist = createSeriesTracklist({ tags: [tag(1), tag(2)] });
 
         // Act
-        component.toggleTagView();
+        component.openTagTable(tracklist);
 
         // Assert
-        expect(initial).toBe('table');
-        expect(component.tagView()).toBe('inline');
-        expect(router.navigate).toHaveBeenCalledWith(
-            [],
-            jasmine.objectContaining({ queryParams: { tagView: null }, queryParamsHandling: 'merge' }),
+        expect(dialogs.open).toHaveBeenCalledWith(
+            jasmine.any(Function),
+            jasmine.objectContaining({
+                data: { tags: tracklist.tags },
+                header: 'Tracklisten-Tags',
+            }),
         );
     });
 
