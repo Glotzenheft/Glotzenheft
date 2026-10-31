@@ -24,6 +24,7 @@ import {
     inject,
     Input,
     OnChanges,
+    PLATFORM_ID,
     signal,
     viewChild,
     WritableSignal
@@ -41,8 +42,8 @@ import {Tooltip} from 'primeng/tooltip';
 import {Button} from 'primeng/button';
 import {Image} from 'primeng/image';
 import { Carousel } from 'primeng/carousel';
-import {DecimalPipe, NgOptimizedImage} from '@angular/common';
-import {PrimeTemplate} from 'primeng/api';
+import {DecimalPipe, DOCUMENT, isPlatformBrowser, NgOptimizedImage} from '@angular/common';
+import {MessageService, PrimeTemplate} from 'primeng/api';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {
     TMDB_BACKDROP_PATH,
@@ -93,6 +94,10 @@ export class MediaDetailComponent implements OnChanges{
     private readonly destroyRef = inject(DestroyRef);
     private mediaSubscription?: Subscription;
     private route = inject(ActivatedRoute);
+    private readonly document = inject(DOCUMENT);
+    private readonly platformId = inject(PLATFORM_ID);
+    private readonly messageService = inject(MessageService);
+    private copyResetTimeout?: ReturnType<typeof setTimeout>;
 
     protected readonly originalPosterPath = TMDB_ORIGINAL_IMAGE_PATH;
     protected readonly posterPath = TMDB_POSTER_PATH;
@@ -116,6 +121,7 @@ export class MediaDetailComponent implements OnChanges{
     isTooltipDisabled = signal<boolean>(true);
     imageError = signal<boolean>(false);
     isThumbnailLoading = signal<boolean>(true);
+    isTitleCopied = signal<boolean>(false);
 
     constructor() {
         effect(() => {
@@ -123,6 +129,8 @@ export class MediaDetailComponent implements OnChanges{
                 setTimeout(() => this.checkTruncation())
             }
         })
+
+        this.destroyRef.onDestroy(() => clearTimeout(this.copyResetTimeout));
     }
 
     ngOnChanges(): void {
@@ -172,6 +180,64 @@ export class MediaDetailComponent implements OnChanges{
     toggleTitle(): void {
         this.showOriginalTitle.update(current => !current);
         setTimeout(() => this.checkTruncation())
+    }
+
+    async copyTitle(title: string | null | undefined): Promise<void> {
+        const text = title?.trim();
+        if (!text || !isPlatformBrowser(this.platformId)) {
+            return;
+        }
+
+        const success = await this.writeToClipboard(text);
+
+        if (success) {
+            this.isTitleCopied.set(true);
+            clearTimeout(this.copyResetTimeout);
+            this.copyResetTimeout = setTimeout(() => this.isTitleCopied.set(false), 2000);
+            this.messageService.add({ severity: 'success', summary: 'Kopiert', detail: `"${text}" wurde in die Zwischenablage kopiert.` });
+        } else {
+            this.messageService.add({ severity: 'error', summary: 'Fehler', detail: 'Der Titel konnte nicht in die Zwischenablage kopiert werden.' });
+        }
+    }
+
+    private async writeToClipboard(text: string): Promise<boolean> {
+        const clipboard = this.document.defaultView?.navigator?.clipboard;
+        if (clipboard?.writeText && this.document.defaultView?.isSecureContext) {
+            try {
+                await clipboard.writeText(text);
+                return true;
+            } catch {}
+        }
+        return this.legacyCopyToClipboard(text);
+    }
+
+    private legacyCopyToClipboard(text: string): boolean {
+        const textarea = this.document.createElement('textarea');
+        textarea.value = text;
+        textarea.setAttribute('readonly', '');
+        textarea.style.position = 'fixed';
+        textarea.style.top = '0';
+        textarea.style.left = '0';
+        textarea.style.opacity = '0';
+        textarea.style.pointerEvents = 'none';
+        this.document.body.appendChild(textarea);
+
+        const activeElement = this.document.activeElement as HTMLElement | null;
+        textarea.focus();
+        textarea.select();
+        textarea.setSelectionRange(0, text.length);
+
+        let success = false;
+        try {
+            success = this.document.execCommand('copy');
+        } catch {
+            success = false;
+        } finally {
+            this.document.body.removeChild(textarea);
+            activeElement?.focus();
+        }
+
+        return success;
     }
 
     checkTruncation(): void {

@@ -29,7 +29,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     word-break: break-word;
 }
 
-.media-detail-title-toggle-button {
+.media-detail-title-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.media-detail-title-toggle-button,
+.media-detail-title-copy-button {
     flex-shrink: 0;
 }
 

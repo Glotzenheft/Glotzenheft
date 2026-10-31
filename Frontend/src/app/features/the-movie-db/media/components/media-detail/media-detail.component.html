@@ -30,7 +30,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     } @else if (viewState.data) {
         @let data = viewState.data;
         @let mediaData = data.media;
-<!--        @let tracklistsData = data.tracklists;-->
         <div class="media-detail-backdrop"
              [style.--bg-image]="'url(' + backdropPath + mediaData.backdropPath + ')'">
         </div>
@@ -43,15 +42,28 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 {{ showOriginalTitle() ? mediaData.originalName : mediaData.name }} {{ mediaData.tagline ? " - " + mediaData.tagline : ""}}
             </h1>
 
-            <p-button
-                class="media-detail-title-toggle-button"
-                [icon]="showOriginalTitle() ? 'pi pi-language' : 'pi pi-globe'"
-                [rounded]="true"
-                [text]="true"
-                severity="secondary"
-                [pTooltip]="showOriginalTitle() ? 'Deutschen Titel anzeigen' : 'Originaltitel anzeigen'"
-                (onClick)="toggleTitle()"
-            ></p-button>
+            <div class="media-detail-title-actions">
+                <p-button
+                    class="media-detail-title-copy-button"
+                    [icon]="isTitleCopied() ? 'pi pi-check' : 'pi pi-copy'"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="secondary"
+                    pTooltip="Titel in die Zwischenablage kopieren"
+                    [ariaLabel]="'Titel in die Zwischenablage kopieren'"
+                    (onClick)="copyTitle(showOriginalTitle() ? mediaData.originalName : mediaData.name)"
+                ></p-button>
+
+                <p-button
+                    class="media-detail-title-toggle-button"
+                    [icon]="showOriginalTitle() ? 'pi pi-language' : 'pi pi-globe'"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="secondary"
+                    [pTooltip]="showOriginalTitle() ? 'Deutschen Titel anzeigen' : 'Originaltitel anzeigen'"
+                    (onClick)="toggleTitle()"
+                ></p-button>
+            </div>
         </header>
         <div class="media-detail-meta-container">
             <div class="media-detail-meta-poster">
