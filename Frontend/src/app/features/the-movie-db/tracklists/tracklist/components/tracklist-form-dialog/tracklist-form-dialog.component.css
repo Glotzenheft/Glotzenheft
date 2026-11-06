@@ -51,12 +51,29 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 p-float-label,
 input[pInputText],
 textarea[pTextarea],
-p-date-picker,
-p-select {
+p-date-picker {
     display: block;
     width: 100%;
     min-width: 0;
     box-sizing: border-box;
+}
+
+p-select {
+    display: inline-flex;
+    width: 100%;
+    min-width: 0;
+    box-sizing: border-box;
+}
+
+.select-field {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.select-field-label {
+    font-weight: 500;
 }
 
 p-float-label label {
@@ -136,7 +153,7 @@ textarea {
     display: flex;
     flex-direction: column;
     gap: 0.75rem;
-    padding: 1rem 0 0.25rem;
+    padding: 1rem 0;
     border-top: 1px solid var(--p-content-border-color);
     background: var(--p-dialog-background, var(--p-content-background));
     z-index: 1;

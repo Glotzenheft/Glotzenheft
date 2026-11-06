@@ -49,7 +49,7 @@ export class TracklistFormDialogService {
             resizable: false,
             width: '60vw',
             style: { maxWidth: '64rem', maxHeight: 'calc(100dvh - 1rem)' },
-            contentStyle: { overflow: 'auto', minWidth: '0' },
+            contentStyle: { overflow: 'auto', minWidth: '0', paddingBottom: '0' },
             breakpoints: { '1200px': '75vw', '960px': '90vw', '640px': '96vw' },
             styleClass: 'tracklist-form-dialog',
             closeAriaLabel: 'Dialog schließen',

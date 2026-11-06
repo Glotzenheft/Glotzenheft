@@ -38,9 +38,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
 
     <div class="form-field">
-        <p-float-label variant="in">
+        <div class="select-field">
+            <span id="tracklist-status-label" class="select-field-label">
+                Status der Trackliste (Pflichtfeld)
+            </span>
             <p-select
                 inputId="tracklist-status"
+                ariaLabelledBy="tracklist-status-label"
                 formControlName="status"
                 [options]="statusOptions"
                 optionLabel="label"
@@ -50,8 +54,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 placeholder="Status auswählen …"
                 appendTo="body"
             />
-            <label for="tracklist-status">Status der Trackliste (Pflichtfeld)</label>
-        </p-float-label>
+        </div>
         @if (hasError('status')) {
             <p-message severity="error" size="small">Bitte wähle einen Status aus.</p-message>
         }
@@ -130,9 +133,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
     <div class="field-grid language-grid">
         <div class="form-field">
-            <p-float-label variant="in">
+            <div class="select-field">
+                <span id="tracklist-language-label" class="select-field-label">Sprache</span>
                 <p-select
                     inputId="tracklist-language"
+                    ariaLabelledBy="tracklist-language-label"
                     formControlName="language"
                     [options]="languageOptions"
                     [group]="true"
@@ -146,13 +151,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     [fluid]="true"
                     appendTo="body"
                 />
-                <label for="tracklist-language">Sprache</label>
-            </p-float-label>
+            </div>
         </div>
         <div class="form-field">
-            <p-float-label variant="in">
+            <div class="select-field">
+                <span id="tracklist-subtitle-label" class="select-field-label">Untertitel</span>
                 <p-select
                     inputId="tracklist-subtitle"
+                    ariaLabelledBy="tracklist-subtitle-label"
                     formControlName="subtitle"
                     [options]="languageOptions"
                     [group]="true"
@@ -166,8 +172,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     [fluid]="true"
                     appendTo="body"
                 />
-                <label for="tracklist-subtitle">Untertitel</label>
-            </p-float-label>
+            </div>
         </div>
     </div>
 
