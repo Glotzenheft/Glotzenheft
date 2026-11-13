@@ -263,7 +263,14 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
 }
 
-/* PrimeNG's mobile tiered menu uses relative positioning even for body overlays. */
+/* Body overlays use document coordinates; override PrimeNG's relative mobile menu. */
 ::ng-deep .tracklist-tag-action-menu.p-tieredmenu-overlay {
-    position: absolute;
+    position: absolute !important;
+    top: var(--tracklist-menu-top, 8px) !important;
+    left: var(--tracklist-menu-left, 8px) !important;
+    max-height: var(--tracklist-menu-max-height, calc(100dvh - 16px));
+    max-width: var(--tracklist-menu-max-width, calc(100vw - 16px));
+    min-width: 0;
+    margin: 0 !important;
+    overflow-y: auto;
 }

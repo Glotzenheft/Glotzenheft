@@ -1,3 +1,4 @@
+import { SplitButton } from 'primeng/splitbutton';
 /*
 This file is part of Glotzenheft.
 
@@ -15,7 +16,7 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { TestBed } from '@angular/core/testing';
+import { fakeAsync, flushMicrotasks, TestBed } from '@angular/core/testing';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { of, Subject, throwError } from 'rxjs';
 import {
@@ -100,6 +101,111 @@ describe('TracklistCardComponent', () => {
             }),
         );
     });
+
+    it('places the menu above the button when there is no room below', fakeAsync(() => {
+        const viewport = window.visualViewport;
+        const bottom =
+            (viewport?.offsetTop ?? 0) +
+            (viewport?.height ?? window.innerHeight);
+        const top = bottom - 50;
+        const menu = document.createElement('div');
+        document.body.appendChild(menu);
+        Object.defineProperties(menu, {
+            scrollHeight: { value: 90 },
+            offsetWidth: { value: 180 },
+        });
+        const button = {
+            menu: { container: menu },
+            containerViewChild: {
+                nativeElement: {
+                    getBoundingClientRect: () => ({
+                        top,
+                        bottom: bottom - 10,
+                        left: 20,
+                    }),
+                },
+            },
+        } as unknown as SplitButton;
+        component.positionTagMenu(button);
+        flushMicrotasks();
+        menu.remove();
+        expect(
+            parseFloat(menu.style.getPropertyValue('--tracklist-menu-top')),
+        ).toBe(top - 4 - 90 + window.scrollY);
+    }));
+
+    it('places the menu below the button when there is enough room', fakeAsync(() => {
+        const top = (window.visualViewport?.offsetTop ?? 0) + 10;
+        const menu = document.createElement('div');
+        document.body.appendChild(menu);
+        Object.defineProperties(menu, {
+            scrollHeight: { value: 50 },
+            offsetWidth: { value: 180 },
+        });
+        const button = {
+            menu: { container: menu },
+            containerViewChild: {
+                nativeElement: {
+                    getBoundingClientRect: () => ({
+                        top,
+                        bottom: top + 40,
+                        left: 20,
+                    }),
+                },
+            },
+        } as unknown as SplitButton;
+        component.positionTagMenu(button);
+        flushMicrotasks();
+        menu.remove();
+        expect(
+            parseFloat(menu.style.getPropertyValue('--tracklist-menu-top')),
+        ).toBe(top + 40 + 4 + window.scrollY);
+    }));
+
+    it('positions a body overlay in document coordinates on a scrolled page without scrolling its focus target', fakeAsync(() => {
+        spyOnProperty(window, 'scrollY', 'get').and.returnValue(1200);
+        spyOnProperty(window, 'scrollX', 'get').and.returnValue(25);
+        const viewport = window.visualViewport;
+        const bottom =
+            (viewport?.offsetTop ?? 0) +
+            (viewport?.height ?? window.innerHeight);
+        const top = bottom - 50;
+        const menu = document.createElement('div');
+        const list = document.createElement('ul');
+        list.setAttribute('role', 'menu');
+        list.tabIndex = 0;
+        menu.appendChild(list);
+        document.body.appendChild(menu);
+        const focus = spyOn(list, 'focus');
+        Object.defineProperties(menu, {
+            scrollHeight: { value: 90 },
+            offsetWidth: { value: 180 },
+        });
+        const button = {
+            menu: { container: menu },
+            containerViewChild: {
+                nativeElement: {
+                    getBoundingClientRect: () => ({
+                        top,
+                        bottom: bottom - 10,
+                        left: 20,
+                    }),
+                },
+            },
+        } as unknown as SplitButton;
+        component.positionTagMenu(button);
+        expect(menu.style.visibility).toBe('hidden');
+        flushMicrotasks();
+        menu.remove();
+        expect(
+            parseFloat(menu.style.getPropertyValue('--tracklist-menu-top')),
+        ).toBe(top - 4 - 90 + 1200);
+        expect(
+            parseFloat(menu.style.getPropertyValue('--tracklist-menu-left')),
+        ).toBeGreaterThanOrEqual(25 + 8);
+        expect(menu.style.visibility).toBe('visible');
+        expect(focus).toHaveBeenCalledOnceWith({ preventScroll: true });
+    }));
 
     it('prefers the custom poster and falls back to the media poster', () => {
         component.tracklist.customPosterPath = '/custom.jpg';

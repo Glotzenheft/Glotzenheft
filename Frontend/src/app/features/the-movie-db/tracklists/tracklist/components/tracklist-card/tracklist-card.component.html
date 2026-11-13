@@ -55,7 +55,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     </div>
     <div class="action-row">
         <p-button class="edit-action" icon="pi pi-pencil" label="Bearbeiten" size="small" [outlined]="true" [ariaLabel]="'Trackliste ' + tracklist.tracklistName + ' bearbeiten'" [disabled]="busy()" (onClick)="edit.emit(tracklist)" />
-        <p-splitbutton class="tag-action" menuStyleClass="tracklist-tag-action-menu" label="Tags hinzufügen" icon="pi pi-tags" size="small" [outlined]="true" [model]="tagActions" [disabled]="busy()" appendTo="body" (onClick)="linkTags()" />
+        <p-splitbutton #tagButton class="tag-action" menuStyleClass="tracklist-tag-action-menu" label="Tags hinzufügen" icon="pi pi-tags" size="small" [outlined]="true" [model]="tagActions" [disabled]="busy()" appendTo="body" (onMenuShow)="positionTagMenu(tagButton)" (onClick)="linkTags()" />
         <span class="poster-action" pTooltip="Eigenes Poster setzen – noch nicht verfügbar" tooltipPosition="top"><p-button icon="pi pi-image" size="small" [outlined]="true" [disabled]="true" ariaLabel="Eigenes Poster setzen (noch nicht verfügbar)" /></span>
     </div>
     @if (error()) {
