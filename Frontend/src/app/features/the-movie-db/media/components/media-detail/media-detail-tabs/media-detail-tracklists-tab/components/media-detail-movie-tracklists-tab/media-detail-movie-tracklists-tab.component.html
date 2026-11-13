@@ -32,88 +32,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     } @else {
         <div class="movie-tracklist-grid">
             @for (tracklist of mediaData.tracklists; track tracklist.id) {
-                <p-card styleClass="movie-tracklist-card">
-                    <ng-template #title>
-                        <span class="tracklist-title">{{ tracklist.tracklistName }}</span>
-                    </ng-template>
-                    <ng-template #subtitle>
-                        <div class="tracklist-status">
-                            <span>{{ tracklist.status | tracklistStatus }}</span>
-                            @if (tracklist.isRewatching) {
-                                <p-tag value="Rewatch" severity="info" />
-                            }
-                        </div>
-                    </ng-template>
-
-                    <dl class="tracklist-details">
-                        <div>
-                            <dt>Start</dt>
-                            <dd>
-                                {{ (parseDate(tracklist.startDate) | date: "dd.MM.yyyy HH:mm 'Uhr'") || '–' }}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Ende</dt>
-                            <dd>
-                                {{
-                                    (parseDate(tracklist.finishDate) | date: "dd.MM.yyyy HH:mm 'Uhr'") || '–'
-                                }}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Erscheinungsdatum</dt>
-                            <dd>
-                                {{
-                                    (parseDate(tracklist.customAirDate ?? mediaData.media.firstAirDate)
-                                        | date: 'dd.MM.yyyy') || '–'
-                                }}
-                            </dd>
-                        </div>
-                        <div>
-                            <dt>Sprache</dt>
-                            <dd>{{ tracklist.language | languageName }}</dd>
-                        </div>
-                        <div>
-                            <dt>Untertitel</dt>
-                            <dd>{{ tracklist.subtitle | languageName }}</dd>
-                        </div>
-                    </dl>
-
-                    <div class="tracklist-rating" role="group" aria-label="Bewertung">
-                        <p-rating [ngModel]="tracklist.rating" [stars]="10" [readonly]="true" />
-                        <span>{{
-                            tracklist.rating !== null ? tracklist.rating + ' / 10' : 'Keine Bewertung'
-                        }}</span>
-                    </div>
-
-                    @if (tracklist.comment) {
-                        <p class="tracklist-comment">{{ tracklist.comment }}</p>
-                    }
-
-                    @if (tracklist.tags.length) {
-                        <nav class="tracklist-tags" aria-label="Tags der Trackliste">
-                            @for (tag of tracklist.tags; track tag.id) {
-                                <a [routerLink]="['/' + tagUrls.detailTracklist(tag.id)]">
-                                    <p-tag
-                                        [value]="tag.tagName"
-                                        [style.background-color]="tag.color"
-                                        [style.color]="tagTextColor(tag.color)"
-                                    />
-                                </a>
-                            }
-                        </nav>
-                    }
-
-                    <ng-template #footer>
-                        <p-button
-                            label="Bearbeiten"
-                            icon="pi pi-pencil"
-                            [outlined]="true"
-                            [ariaLabel]="'Trackliste ' + tracklist.tracklistName + ' bearbeiten'"
-                            (onClick)="editTracklist(tracklist)"
-                        />
-                    </ng-template>
-                </p-card>
+                <app-tracklist-card
+                    [tracklist]="tracklist"
+                    [media]="mediaData.media"
+                    (edit)="editTracklist($event)"
+                    (updated)="updateTracklist($event)"
+                />
             }
         </div>
     }
