@@ -39,6 +39,7 @@ import {
     getMessageObject,
 } from '../../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../../app/shared/variables/routes-list';
+import { MEDIA_DETAILS_URLS } from '../../../../../app/core/constants/urls.constants';
 import { UC_GetUserActivites } from '../../../../../app/core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../../../app/core/use-cases/user/log-out-of-account.use-case';
 
@@ -288,11 +289,11 @@ export class WatchedComponent implements OnInit {
     public onClickActivity = (activity: UserActivityWithDaySplitt) => {
         if (activity.type === 'movie') {
             void this.navigateToSpecificPageUseCase.execute(
-                `${ROUTES_LIST[5].fullUrl}/${activity.mediaID}`
+                `${MEDIA_DETAILS_URLS.movieUrl}/${activity.mediaID}`
             );
         } else {
             void this.navigateToSpecificPageUseCase.execute(
-                `${ROUTES_LIST[6].fullUrl}/${activity.mediaID}`
+                `${MEDIA_DETAILS_URLS.tvUrl}/${activity.mediaID}`
             );
         }
     };

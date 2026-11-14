@@ -23,6 +23,7 @@ import {
     AUTHENTICATION_PATHS,
     BACKUP_PATHS,
     MEDIA_PATHS,
+    MEDIA_DETAILS_PATHS,
     TRACKLIST_TAG_PATHS,
     TMDB_IMAGE_PATHS,
 } from "./paths.constants";
@@ -73,10 +74,19 @@ export const SIDEBAR_GUEST_OPTION_URLS = {
     register: `${AUTHENTICATION_PATHS.base}/${AUTHENTICATION_PATHS.register}`,
 } as const;
 
+// Legacy media pages remain available for direct navigation.
 export const MEDIA_URLS = {
     baseUrl: `${MEDIA_PATHS.base}`,
     movieUrl: `${MEDIA_PATHS.base}/${MEDIA_PATHS.movie}`,
     tvUrl: `${MEDIA_PATHS.base}/${MEDIA_PATHS.tv}`,
+} as const;
+
+export const MEDIA_DETAILS_URLS = {
+    baseUrl: `${TMDB_SIDEBAR_PATHS.base}/${MEDIA_DETAILS_PATHS.base}`,
+    movieUrl: `${TMDB_SIDEBAR_PATHS.base}/${MEDIA_DETAILS_PATHS.base}/${MEDIA_DETAILS_PATHS.movie}`,
+    tvUrl: `${TMDB_SIDEBAR_PATHS.base}/${MEDIA_DETAILS_PATHS.base}/${MEDIA_DETAILS_PATHS.tv}`,
+    detail: (mediaType: string, mediaId: number | string) =>
+        `${TMDB_SIDEBAR_PATHS.base}/${MEDIA_DETAILS_PATHS.base}/${mediaType}/${mediaId}`,
 } as const;
 
 export const EXTERNAL_URLS = {

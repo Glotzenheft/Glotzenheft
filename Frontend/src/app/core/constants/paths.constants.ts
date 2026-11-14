@@ -55,6 +55,7 @@ export const AUTHENTICATION_PATHS = {
 
 export const MEDIA_PATHS = {
     base: 'media',
+    multiSearch: 'multi-search',
     movie: 'movie',
     tv: 'tv',
 } as const;

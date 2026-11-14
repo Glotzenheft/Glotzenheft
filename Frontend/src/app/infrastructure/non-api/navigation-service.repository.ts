@@ -18,6 +18,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { ROUTES_LIST } from '../../shared/variables/routes-list';
+import { MEDIA_DETAILS_URLS } from '../../core/constants/urls.constants';
 import { I_NavigationRepository } from '../../core/interfaces/navigation.repository';
 
 @Injectable({
@@ -27,24 +28,24 @@ export class R_Navigation implements I_NavigationRepository {
     constructor(private router: Router) {}
 
     public navigateToStartPage = () => {
-        this.router.navigateByUrl('');
+        void this.router.navigateByUrl('');
     };
 
     public navigateToUserStart = () => {
-        this.router.navigateByUrl('user');
+        void this.router.navigateByUrl('user');
     };
 
     public navigateToMultiSearch = () => {
-        this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
+        void this.router.navigateByUrl(ROUTES_LIST[4].fullUrl);
     };
 
     public navigateToPage = (tmdbId: string, isMovie: boolean) => {
-        this.router.navigateByUrl(
-            `${isMovie ? ROUTES_LIST[5].fullUrl : ROUTES_LIST[6].fullUrl}/${tmdbId}`,
+        void this.router.navigateByUrl(
+            `${isMovie ? MEDIA_DETAILS_URLS.movieUrl : MEDIA_DETAILS_URLS.tvUrl}/${tmdbId}`,
         );
     };
 
     public navigateToSpecificPage = (url: string) => {
-        this.router.navigateByUrl(url);
+        void this.router.navigateByUrl(url);
     };
 }

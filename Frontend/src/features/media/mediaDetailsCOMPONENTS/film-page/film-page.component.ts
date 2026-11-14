@@ -55,6 +55,7 @@ import {
     getMessageObject,
 } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { MEDIA_URLS } from '../../../../app/core/constants/urls.constants';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
 import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film-details.use-case';
@@ -359,7 +360,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
                     res.media.id
                 ) {
                     // replacing the url with "media_id" if necessary
-                    this.location.replaceState(`/media/movie/${res.media.id}`);
+                    this.location.replaceState(`/${MEDIA_URLS.movieUrl}/${res.media.id}`);
                 }
 
                 if (res.media.firstAirDate) {

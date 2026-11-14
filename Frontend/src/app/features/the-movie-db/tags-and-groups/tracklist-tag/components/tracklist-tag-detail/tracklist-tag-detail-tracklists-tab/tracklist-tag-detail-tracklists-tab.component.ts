@@ -45,6 +45,7 @@ import {Button} from 'primeng/button';
 import {DropdownModule} from 'primeng/dropdown';
 import {MultiSelect} from 'primeng/multiselect';
 import {InputText} from 'primeng/inputtext';
+import {MEDIA_DETAILS_URLS} from '../../../../../../../core/constants/urls.constants';
 
 @Component({
     selector: 'app-tracklist-tag-detail-tracklists-tab',
@@ -73,6 +74,7 @@ import {InputText} from 'primeng/inputtext';
     styleUrl: './tracklist-tag-detail-tracklists-tab.component.css'
 })
 export class TracklistTagDetailTracklistsTabComponent {
+    readonly mediaUrls = MEDIA_DETAILS_URLS;
     public state = inject(TracklistTagDetailStateService);
     private route = inject(ActivatedRoute);
     private router = inject(Router);
