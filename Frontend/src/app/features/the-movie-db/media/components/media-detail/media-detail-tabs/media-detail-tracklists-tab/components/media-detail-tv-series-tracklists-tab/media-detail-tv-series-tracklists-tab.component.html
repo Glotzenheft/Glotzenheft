@@ -76,9 +76,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                             </span>
                                             <span
                                                 class="season-poster-status"
-                                                [style.color]="statusColors[statusLabels[tracklist.status]]"
-                                                >{{ statusLabels[tracklist.status] }}</span
+                                                [style.background-color]="statusColors[tracklist.status]"
                                             >
+                                                <span class="season-poster-status-label">{{ statusLabels[tracklist.status] }}</span>
+                                                @if (tracklist.isRewatching) {
+                                                    <i class="pi pi-replay" role="img" aria-label="Rewatch"></i>
+                                                }
+                                            </span>
                                         </div>
                                     </div>
                                 }
@@ -106,7 +110,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                         <div class="season-page-season-information-area">
                                                             <p class="season-page-description">
                                                                 <span class="season-page-info-label">
-                                                                    Beschreibung:
+                                                                    Beschreibung:!
                                                                 </span>
                                                                 {{
                                                                     panel.season.overview || 'Keine Beschreibung vorhanden.'

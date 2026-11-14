@@ -54,7 +54,7 @@ import { TRACKLIST_STATUS_LABELS_DE } from '../../../../../../../tracklists/trac
 import { parseTracklistDate } from '../../../../../../../tracklists/tracklist/utils/tracklist-form.utils';
 import { LanguageNamePipe } from '../../../../../../../../../shared/pipes/language-name/language-name.pipe';
 import { TRACKLIST_TAG_URLS } from '../../../../../../../../../core/constants/urls.constants';
-import { STATUS_COLORS } from '../../../../../../../../../core/constants/color.constants';
+import { TRACKLIST_STATUS_COLORS } from '../../../../../../../../../core/constants/color.constants';
 import {
     TMDB_POSTER_PATH,
     TMDB_ORIGINAL_IMAGE_PATH,
@@ -122,7 +122,7 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     readonly episodeImageError = signal(false);
     readonly tagUrls = TRACKLIST_TAG_URLS;
     readonly statusLabels = TRACKLIST_STATUS_LABELS_DE;
-    readonly statusColors = STATUS_COLORS;
+    readonly statusColors = TRACKLIST_STATUS_COLORS;
     readonly metadataPages = ['info', 'ids'];
 
     @Input({ required: true }) set mediaData(value: MediaResponse) {
