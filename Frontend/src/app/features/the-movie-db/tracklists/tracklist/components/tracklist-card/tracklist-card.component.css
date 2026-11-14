@@ -1,0 +1,276 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+:host {
+    display: block;
+    min-width: 0;
+    height: 100%;
+    font-size: 14px;
+}
+:host ::ng-deep .tracklist-card {
+    height: 100%;
+    overflow: hidden;
+}
+:host ::ng-deep .tracklist-card .p-card-body {
+    padding: 0;
+    gap: 0;
+    height: 100%;
+}
+:host ::ng-deep .tracklist-card .p-card-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    min-width: 0;
+}
+.tracklist-title {
+    margin: 0;
+    min-height: 2.4em;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    line-height: 1.1;
+    text-align: center;
+    overflow-wrap: anywhere;
+    color: var(--link--color);
+}
+.tracklist-content {
+    display: flex;
+    border-top: 1px solid var(--p-content-border-color);
+}
+.poster-container {
+    position: relative;
+    width: 176px;
+    height: 250px;
+    flex-shrink: 0;
+}
+.poster-container img {
+    width: 100%;
+    height: 250px;
+    object-fit: cover;
+    border-radius: 0;
+}
+:host ::ng-deep .poster-container .p-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 0;
+}
+.poster-fallback {
+    display: grid;
+    place-items: center;
+    height: 100%;
+    background: var(--p-content-hover-background);
+    font-size: 2rem;
+}
+.rating {
+    position: absolute;
+    bottom: 0.75rem;
+    left: 0.75rem;
+    display: flex;
+    gap: 0.35rem;
+    align-items: center;
+    background: rgba(0, 0, 0, 0.75);
+    color: white;
+    border-radius: 20em;
+    padding: 0.5em 0.75em;
+    pointer-events: none;
+}
+.rating .pi {
+    color: var(--p-yellow-400);
+}
+.tracklist-info {
+    min-height: 250px;
+    flex: 1;
+    display: grid;
+    grid-auto-rows: 1fr;
+    min-width: 0;
+}
+.info-item {
+    padding: 0.2rem 0.75rem;
+    border-top: 1px solid var(--p-content-border-color);
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.25rem;
+    overflow-wrap: anywhere;
+}
+.info-item:first-child {
+    border-top: 0;
+}
+.info-label {
+    opacity: 0.7;
+}
+.info-item > span:last-child {
+    text-align: right;
+}
+.centered {
+    justify-content: center;
+    text-align: center;
+}
+.languages > span {
+    flex: 1;
+    text-align: center !important;
+}
+.status {
+    border-radius: 20em;
+    padding: 0.25em 0.5em;
+    font-weight: 550;
+}
+.tag-row {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-top: 1px solid var(--p-content-border-color);
+    margin-top: auto;
+    min-width: 0;
+}
+.tag-scroll {
+    display: flex;
+    flex: 1;
+    min-width: 0;
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    -webkit-overflow-scrolling: touch;
+    touch-action: pan-x pan-y;
+    overscroll-behavior-x: contain;
+}
+.tag-scroll::-webkit-scrollbar {
+    display: none;
+}
+.tag-scroll a {
+    flex: 0 0 auto;
+    white-space: nowrap;
+}
+.no-tags {
+    color: var(--p-text-muted-color);
+    white-space: nowrap;
+}
+.tag-toolbar {
+    display: flex;
+    flex-shrink: 0;
+    gap: 0.35rem;
+}
+.action-row {
+    --tracklist-action-height: 2.5rem;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: stretch;
+    justify-content: center;
+    gap: 0.5rem;
+    padding: 0.5rem;
+    border-top: 1px solid var(--p-content-border-color);
+}
+.tag-error {
+    padding: 0.5rem;
+    color: var(--p-red-400);
+}
+@media (max-width: 39.99875em) {
+    .poster-container {
+        width: 136px;
+    }
+    .info-item {
+        padding: 0.2rem 0.4rem;
+    }
+}
+
+.status-row {
+    flex-wrap: nowrap;
+}
+.status-row .status {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+.rewatch-icon {
+    flex-shrink: 0;
+    color: #fff;
+}
+.action-row .edit-action,
+.action-row .tag-action {
+    display: flex;
+    flex: 1 0 auto;
+}
+.action-row .poster-action {
+    display: flex;
+    flex: 0 0 auto;
+}
+:host ::ng-deep .action-row .edit-action > .p-button,
+:host ::ng-deep .action-row .tag-action > .p-splitbutton {
+    width: 100%;
+    height: var(--tracklist-action-height);
+}
+:host ::ng-deep .action-row .p-splitbutton-button {
+    flex: 1;
+}
+:host ::ng-deep .action-row .poster-action > p-button {
+    display: flex;
+}
+:host ::ng-deep .action-row .poster-action .p-button {
+    height: var(--tracklist-action-height);
+}
+
+.elapsed-row {
+    padding-inline: 0.15rem;
+    flex-wrap: nowrap;
+    min-width: 0;
+}
+.elapsed-row > span {
+    white-space: nowrap;
+    overflow-wrap: normal;
+    flex-shrink: 0;
+    font-size: inherit;
+    text-align: center;
+}
+.status-row .status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+}
+@media (max-width: 39.99875em) {
+    .action-row {
+        flex-direction: column;
+    }
+    .action-row .edit-action,
+    .action-row .tag-action,
+    .action-row .poster-action {
+        flex: 0 0 auto;
+        width: 100%;
+    }
+    :host ::ng-deep .action-row .poster-action > p-button,
+    :host ::ng-deep .action-row .poster-action .p-button {
+        width: 100%;
+    }
+}
+
+/* Body overlays use document coordinates; override PrimeNG's relative mobile menu. */
+::ng-deep .tracklist-tag-action-menu.p-tieredmenu-overlay {
+    position: absolute !important;
+    top: var(--tracklist-menu-top, 8px) !important;
+    left: var(--tracklist-menu-left, 8px) !important;
+    max-height: var(--tracklist-menu-max-height, calc(100dvh - 16px));
+    max-width: var(--tracklist-menu-max-width, calc(100vw - 16px));
+    min-width: 0;
+    margin: 0 !important;
+    overflow-y: auto;
+}

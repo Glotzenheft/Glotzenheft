@@ -1,0 +1,70 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="tracklist-tag-table-dialog">
+    <div class="tracklist-tag-table-actions">
+        <p-button
+            label="Alle Tag-IDs kopieren"
+            icon="pi pi-copy"
+            [outlined]="true"
+            [disabled]="!tags.length"
+            (onClick)="copyTagIds(tags)"
+        />
+    </div>
+    <div class="tag-table-wrapper">
+        <table class="tracklist-tag-table">
+            <thead>
+                <tr>
+                    <th scope="col">Kategorie</th>
+                    <th scope="col">Tags</th>
+                </tr>
+            </thead>
+            <tbody>
+                @for (category of categories(); track category.value) {
+                    <tr>
+                        <th scope="row">
+                            <span>{{ category.label }}</span>
+                            <p-button
+                                icon="pi pi-copy"
+                                [text]="true"
+                                [rounded]="true"
+                                size="small"
+                                [disabled]="!category.tags.length"
+                                [ariaLabel]="'Tag-IDs der Kategorie ' + category.label + ' kopieren'"
+                                (onClick)="copyTagIds(category.tags)"
+                            />
+                        </th>
+                        <td>
+                            <div class="category-tags">
+                                @for (tag of category.tags; track tag.id) {
+                                    <a
+                                        [routerLink]="['/' + tagUrls.detailTracklist(tag.id)]"
+                                        (click)="close()"
+                                        ><p-tag
+                                            [value]="tag.tagName"
+                                            [style.background-color]="tag.color"
+                                            [style.color]="tagTextColor(tag.color)"
+                                    /></a>
+                                }
+                            </div>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

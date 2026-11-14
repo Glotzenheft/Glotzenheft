@@ -1,0 +1,116 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<form [formGroup]="form" (ngSubmit)="save()" class="episode-form" [attr.aria-busy]="!!pending()">
+    <h2>{{ data.tracklistName }}</h2>
+    <div class="episode-form-content">
+        <div class="episode-form-fields">
+            <p><strong>Episodenname:</strong> {{ data.episode.name }}</p>
+            <p>
+                <strong>Laufzeit:</strong>
+                {{ data.episode.runtime !== null ? data.episode.runtime + ' min' : 'Nicht vorhanden' }}
+            </p>
+            <p>
+                <strong>Erscheinungsdatum:</strong>
+                {{ (parseDate(data.episode.airDate) | date: 'dd.MM.yyyy') || 'Nicht vorhanden' }}
+            </p>
+            <p><strong>Episodennummer:</strong> {{ data.episode.episodeNumber }}</p>
+            <p-float-label variant="in">
+                <p-date-picker
+                    inputId="episode-watch-date"
+                    formControlName="watchDateTime"
+                    dateFormat="dd.mm.yy"
+                    hourFormat="24"
+                    [showTime]="true"
+                    [showIcon]="true"
+                    [showOnFocus]="false"
+                    [showButtonBar]="true"
+                    [keepInvalid]="true"
+                    [fluid]="true"
+                    appendTo="body"
+                />
+                <label for="episode-watch-date">Wann geschaut? (optional)</label>
+            </p-float-label>
+            @if (form.controls.watchDateTime.invalid && form.controls.watchDateTime.touched) {
+                <p-message severity="error" size="small">Bitte gib ein gültiges Datum ein.</p-message>
+            }
+        </div>
+        @if (data.episode.stillPath && !imageError()) {
+            <p-image
+                [src]="poster"
+                [previewImageSrc]="originalPoster"
+                [alt]="data.episode.name"
+                [preview]="true"
+                appendTo="body"
+            >
+                <ng-template #image
+                    ><img
+                        [src]="poster"
+                        [alt]="data.episode.name"
+                        width="480"
+                        height="270"
+                        (error)="imageError.set(true)"
+                /></ng-template>
+            </p-image>
+        } @else {
+            <div class="episode-image-fallback">
+                <i class="pi pi-image" aria-hidden="true"></i>
+                <p>Kein Bild verfügbar.</p>
+            </div>
+        }
+    </div>
+    <footer>
+        @if (error(); as message) {
+            <p-message severity="error" role="alert">{{ message }}</p-message>
+        }
+        <div class="episode-form-actions">
+            <p-button
+                type="submit"
+                [label]="data.sighting ? 'Speichern' : 'Hinzufügen'"
+                [icon]="data.sighting ? 'pi pi-save' : 'pi pi-plus'"
+                [loading]="pending() === 'save'"
+                [disabled]="!!pending()"
+            />
+            @if (data.sighting) {
+                <p-button
+                    type="button"
+                    label="Löschen"
+                    icon="pi pi-trash"
+                    severity="danger"
+                    [loading]="pending() === 'delete'"
+                    [disabled]="!!pending()"
+                    (onClick)="confirmDelete()"
+                />
+            }
+            <p-button
+                type="button"
+                label="Abbrechen"
+                icon="pi pi-times"
+                severity="secondary"
+                [outlined]="true"
+                [disabled]="!!pending()"
+                (onClick)="cancel()"
+            />
+        </div>
+    </footer>
+</form>
+<p-confirm-dialog
+    key="episode-delete"
+    [style]="{ width: 'min(28rem, calc(100vw - 2rem))' }"
+    [blockScroll]="true"
+    appendTo="body"
+/>

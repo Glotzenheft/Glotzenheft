@@ -16,7 +16,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import {TracklistStatusEnum} from '../enums/tracklist-status.enum';
-import {MediaLightDetailResponseDto} from '../../../../../media/models/response/media-light-detail-response.dto';
+import {MediaLightDetailResponseDto} from '../../../../media/models/response/media-light-detail-response.dto';
 import {
     TracklistTagLightResponseDto
 } from '../../../../tags-and-groups/tracklist-tag/models/response/tracklist-tag-light-response.dto';

@@ -36,6 +36,7 @@ services:
         factory: [ 'App\TmdbApi\Configuration', 'getDefaultConfiguration' ]
         calls:
             - [ 'setApiKey', ['Authorization', 'Bearer %env(TMDB_TOKEN)%'] ]
+            - [ 'setBooleanFormatForQueryString', ['string'] ]
 
     # add more service definitions when explicit configuration is needed
     # please note that last definitions always *replace* previous ones

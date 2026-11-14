@@ -30,6 +30,7 @@ import {AccordionModule} from 'primeng/accordion';
 import {TracklistService} from '../../services/tracklist.service';
 import {TracklistSearchResponseDto} from '../../models/response/tracklist-search-response.dto';
 import {TracklistSearchPaginatedResponseDto} from '../../models/response/tracklist-search-paginated-response.dto';
+import {MediaTypePipe} from '../../../../../../shared/pipes/media-type/media-type.pipe';
 
 @Component({
     selector: 'app-tracklist-selection-dialog',
@@ -41,7 +42,8 @@ import {TracklistSearchPaginatedResponseDto} from '../../models/response/trackli
         TableModule,
         ProgressSpinnerModule,
         TooltipModule,
-        AccordionModule
+        AccordionModule,
+        MediaTypePipe
     ],
     standalone: true,
     templateUrl: './tracklist-selection-dialog.component.html',

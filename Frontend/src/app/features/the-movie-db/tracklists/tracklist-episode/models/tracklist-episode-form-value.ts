@@ -15,19 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {MediaLightDetailResponseDto} from './media-light-detail-response.dto';
-import {MediaSeasonDetailResponseDto} from './media-season-detail-response.dto';
-import {TmdbGenreResponseDto} from '../../../the-movie-db/genre/models/response/tmdb-genre-response.dto';
-
-export interface MediaDetailDataResponseDto extends MediaLightDetailResponseDto {
-    tmdbId: number;
-    imdbId: string | null;
-    originalName: string;
-    name: string;
-    description: string;
-    firstAirDate: string | null;
-    backdropPath: string | null;
-    runtime: number | null;
-    seasons: MediaSeasonDetailResponseDto[];
-    tmdbGenres: TmdbGenreResponseDto[];
+export interface TracklistEpisodeFormValue {
+    watchDateTime: Date | null;
 }

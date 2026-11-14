@@ -39,6 +39,7 @@ import {
     MultiSearchResponse,
 } from '../../../../app/shared/interfaces/media-interfaces';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { MEDIA_DETAILS_URLS } from '../../../../app/core/constants/urls.constants';
 import { getMessageObject } from '../../../../app/shared/variables/message-vars';
 import { UC_GetMultiSearchResults } from '../../../../app/core/use-cases/media/get-multisearch-results.use-case';
 import { UC_GetMediaIdForMedia } from '../../../../app/core/use-cases/media/get-media-id-for-media.use-case';
@@ -260,8 +261,6 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
             .execute(id, mediaGenre === 'movie')
             .subscribe({
                 next: (res: MediaIDResponse) => {
-                    let url: string = '';
-
                     if (res.media_id === undefined || res.media_id === null) {
                         // if no media_id exists in the db -> because media is not already saved
                         const summaryMessage: string = `Fehler beim Weiterleiten ${
@@ -279,10 +278,7 @@ export class MultiSearchComponent implements OnInit, OnDestroy {
                     }
 
                     // media_id already exists
-                    url =
-                        mediaGenre === 'movie'
-                            ? ROUTES_LIST[5].fullUrl + `/${res.media_id}`
-                            : ROUTES_LIST[6].fullUrl + `/${res.media_id}`;
+                    const url = MEDIA_DETAILS_URLS.detail(mediaGenre, res.media_id);
 
                     void this.navigateToSpecificPageUseCase.execute(url);
                 },

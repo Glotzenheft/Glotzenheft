@@ -1,0 +1,100 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+:host {
+    display: block;
+    min-width: 0;
+}
+.episode-form,
+.episode-form-fields {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    min-width: 0;
+}
+.episode-form h2 {
+    font-size: 1.1rem;
+    overflow-wrap: anywhere;
+    margin: 0.5rem 0;
+}
+.episode-form-content {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+    gap: 1.5rem;
+    align-items: start;
+}
+.episode-form-fields p {
+    margin: 0;
+    text-align: left;
+    overflow-wrap: anywhere;
+}
+p-image img {
+    width: 100%;
+    height: auto;
+    border-radius: var(--border--radius, 0.6rem);
+}
+p-float-label,
+p-date-picker {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+footer {
+    position: sticky;
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--p-content-border-color);
+    background: var(--p-dialog-background);
+}
+.episode-form-actions {
+    display: flex;
+    justify-content: flex-end;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+@media (max-width: 950px) {
+    .episode-form-content {
+        grid-template-columns: minmax(0, 1fr);
+    }
+}
+@media (max-width: 640px) {
+    .episode-form-actions {
+        flex-direction: column;
+    }
+    :host ::ng-deep .episode-form-actions .p-button {
+        width: 100%;
+        min-height: 2.75rem;
+        justify-content: center;
+    }
+}
+
+.episode-image-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    min-height: 180px;
+    gap: 1rem;
+    border: 1px solid var(--p-content-border-color);
+    border-radius: var(--border--radius, 0.6rem);
+}
+.episode-image-fallback .pi {
+    font-size: 2.5rem;
+}

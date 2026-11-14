@@ -43,7 +43,7 @@ import {
 } from "@angular/common";
 import { DatetimeWithUnitFormattingPipe } from '../../../../app/shared/pipes/datetime-with-unit-formatting/datetime-with-unit-formatting.pipe';
 import {Image} from 'primeng/image';
-import { MediaSeasonEpisodeDetailResponseDto } from "../../../../app/features/media/models/response/media-season-episode-detail-response.dto";
+import { MediaSeasonEpisodeDetailResponseDto } from "../../../../app/features/the-movie-db/media/models/response/media-season-episode-detail-response.dto";
 import {
     TracklistResponseDto
 } from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';

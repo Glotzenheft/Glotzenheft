@@ -43,7 +43,6 @@ import { UC_IsSearchBarVisible } from '../../../../app/core/use-cases/user/get-i
 export class SearchBarComponent implements OnInit {
     searchQuery: string = '';
     public isVisible: boolean = isUserLoggedIn();
-    public isBackButtonVisible: boolean = false;
 
     @Output() emitSearchQuery: EventEmitter<string> =
         new EventEmitter<string>();
@@ -60,13 +59,6 @@ export class SearchBarComponent implements OnInit {
             .subscribe((status: boolean) => {
                 this.isVisible = status;
             });
-
-        this.router.events.subscribe(() => {
-            // checking url and if url is movie or tv details page make back button visible; otherwise invisible
-            this.isBackButtonVisible =
-                this.router.url.startsWith(`/${ROUTES_LIST[5].fullUrl}`) ||
-                this.router.url.startsWith(`/${ROUTES_LIST[6].fullUrl}`);
-        });
     }
 
     navigateToSearch = () => {

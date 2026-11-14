@@ -84,6 +84,9 @@ p {
     /* Farbe des Scrollbalkens beim Hover */
     cursor: pointer;
 }
+.content {
+    position: relative;
+}
 
 /* media query for smart phones and tablets */
 @media (max-width: 500px) {

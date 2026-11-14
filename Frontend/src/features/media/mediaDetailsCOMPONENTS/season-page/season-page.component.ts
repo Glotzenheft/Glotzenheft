@@ -101,11 +101,11 @@ import {
 import {
     TracklistStatusEnum
 } from '../../../../app/features/the-movie-db/tracklists/tracklist/models/enums/tracklist-status.enum';
-import {MediaType} from '../../../../app/features/media/models/enums/media-type.enum';
-import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {MediaType} from '../../../../app/features/the-movie-db/media/models/enums/media-type.enum';
+import {MediaResponse} from '../../../../app/features/the-movie-db/media/models/response/media-response.dto';
 import {
     MediaSeasonEpisodeDetailResponseDto
-} from '../../../../app/features/media/models/response/media-season-episode-detail-response.dto';
+} from '../../../../app/features/the-movie-db/media/models/response/media-season-episode-detail-response.dto';
 
 @Component({
     selector: 'app-season-page',

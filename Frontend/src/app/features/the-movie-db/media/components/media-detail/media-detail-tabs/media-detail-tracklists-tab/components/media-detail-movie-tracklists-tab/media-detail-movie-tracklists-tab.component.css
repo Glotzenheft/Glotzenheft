@@ -1,0 +1,98 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+:host {
+    display: block;
+    min-width: 0;
+}
+.movie-tracklists {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    min-width: 0;
+}
+.movie-tracklists-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.movie-tracklists-header h2 {
+    margin: 0;
+}
+.tracklist-count {
+    font-size: 0.85em;
+    font-weight: normal;
+}
+.movie-tracklist-grid {
+    container-type: inline-size;
+    display: flex;
+    flex-wrap: wrap;
+    margin: 1rem 0;
+}
+.movie-tracklist-grid app-tracklist-card {
+    width: 16.6666666667%;
+    padding: 0 1rem 1rem 0;
+    height: auto;
+}
+.empty-tracklists {
+    padding: 2rem 1rem;
+    border: 1px dashed var(--p-content-border-color);
+    border-radius: var(--border--radius, 0.6rem);
+    text-align: center;
+}
+.empty-tracklists .pi {
+    font-size: 2rem;
+}
+.empty-tracklists p {
+    text-align: center;
+}
+@container (max-width: 160em) {
+    .movie-tracklist-grid app-tracklist-card {
+        width: 20%;
+    }
+}
+@container (max-width: 120em) {
+    .movie-tracklist-grid app-tracklist-card {
+        width: 25%;
+    }
+}
+@container (max-width: 92em) {
+    .movie-tracklist-grid app-tracklist-card {
+        width: 33.3333333333%;
+    }
+}
+@container (max-width: 74.99875em) {
+    .movie-tracklist-grid app-tracklist-card {
+        width: 50%;
+    }
+}
+@container (max-width: 39.99875em) {
+    .movie-tracklist-grid app-tracklist-card {
+        width: 100%;
+        padding: 0 0 1rem;
+    }
+}
+@media (max-width: 640px) {
+    .movie-tracklist-grid {
+        margin-bottom: 10rem;
+    }
+    .movie-tracklists-header {
+        align-items: stretch;
+    }
+}

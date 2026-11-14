@@ -1,0 +1,536 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+.media-detail-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.media-detail-title {
+    margin: 0;
+    word-break: break-word;
+}
+
+.media-detail-title-actions {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    flex-shrink: 0;
+}
+
+.media-detail-title-toggle-button,
+.media-detail-title-copy-button {
+    flex-shrink: 0;
+}
+
+.media-detail-meta-container {
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.media-detail-meta-poster {
+    position: relative;
+    flex: 0 0 267px;
+    aspect-ratio: 2 / 3;
+}
+
+.media-detail-poster-rating-wrapper {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+
+.media-detail-poster-rating {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 20em;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+    white-space: nowrap;
+    margin: 0 0.5rem 0.5rem;
+}
+
+.media-detail-poster-rating-summary {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+.media-detail-poster-rating-value {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 550;
+}
+
+.media-detail-poster-rating-value .pi {
+    color: #facc15;
+}
+
+.media-detail-poster-rating-count {
+    font-size: 0.7rem;
+}
+
+.media-detail-poster-popularity {
+    font-size: 0.75rem;
+}
+
+.media-detail-poster-popularity .pi {
+    margin-right: 0.25rem;
+}
+
+.media-detail-meta-content-container {
+    width: 100%;
+    min-width: 0;
+}
+
+.media-detail-panel-carousel,
+.media-detail-bar-container {
+    /* Two indicators, their gap and the list's horizontal padding. */
+    --carousel-frame-gap: calc(
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-list-gap, 0.5rem) + 1rem
+    );
+}
+
+:host ::ng-deep .media-detail-panel-slide .p-panel::after,
+.media-detail-bar-slide::after {
+    content: '';
+    position: absolute;
+    inset: var(--carousel-frame-inset);
+    border: var(--carousel-frame-width) solid var(--carousel-frame-color);
+    border-radius: inherit;
+    pointer-events: none;
+    /* Cut only the frame, leaving the backdrop visible beneath the indicators. */
+    clip-path: polygon(
+        0 0, 100% 0, 100% 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        0 100%
+    );
+}
+
+:host ::ng-deep .media-detail-meta-content-container .p-panel {
+    display: flex;
+    flex: 1 1 auto;
+    flex-direction: column;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    background: none;
+    position: relative;
+    --carousel-frame-width: 2px;
+    --carousel-frame-color: #fff;
+    --carousel-frame-inset: -2px;
+    border: 2px solid transparent;
+    border-radius: 8px;
+    box-shadow: none;
+}
+
+.media-detail-description {
+    overflow-y: auto;
+    scrollbar-width: thin;
+    height: 50%;
+}
+
+.media-detail-bottom-area {
+    margin-top: 1rem;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    align-content: space-between;
+    gap: 0.25rem;
+}
+.media-detail-box,
+.media-detail-bar-container {
+    display: block;
+    min-width: 0;
+}
+
+.media-detail-box {
+    height: auto;
+}
+
+.media-detail-link-bar,
+.media-detail-genre-bar {
+    box-sizing: border-box;
+}
+
+:host ::ng-deep .media-detail-panel-carousel .p-carousel-item,
+:host ::ng-deep .media-detail-bar-container .p-carousel-item {
+    display: flex;
+}
+
+.media-detail-panel-slide,
+.media-detail-panel-slide > p-panel {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+}
+
+.media-detail-bar-slide {
+    position: relative;
+    --carousel-frame-width: 1px;
+    --carousel-frame-color: #9ca3af;
+    --carousel-frame-inset: 0;
+    border-radius: 100px;
+    display: flex;
+    width: 100%;
+    min-width: 0;
+}
+
+:host ::ng-deep .media-detail-box .p-carousel-item {
+    display: flex;
+}
+
+:host ::ng-deep .media-detail-box .p-carousel-item > div {
+    width: 100%;
+    height: 100%;
+}
+
+:host ::ng-deep .media-detail-bar-container .p-carousel {
+    position: relative;
+}
+
+.media-detail-bar-container > p-carousel {
+    display: block;
+    width: 100%;
+    min-width: 0;
+}
+
+:host ::ng-deep .media-detail-bar-container .p-carousel,
+:host ::ng-deep .media-detail-bar-container .p-carousel-content-container,
+:host ::ng-deep .media-detail-bar-container .p-carousel-content,
+:host ::ng-deep .media-detail-bar-container .p-carousel-viewport,
+:host ::ng-deep .media-detail-bar-container .p-carousel-item-list,
+:host ::ng-deep .media-detail-bar-container .p-carousel-item {
+    min-width: 0;
+}
+
+:host ::ng-deep .media-detail-bar-container .p-carousel-viewport {
+    width: 100%;
+    overflow: hidden;
+}
+
+:host ::ng-deep .media-detail-bar-container .p-carousel-item {
+    max-width: 100%;
+}
+
+:host ::ng-deep .media-detail-panel-carousel .p-carousel-content-container,
+:host ::ng-deep .media-detail-bar-container .p-carousel-content-container {
+    overflow: visible;
+}
+
+:host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator-list,
+:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    z-index: 1;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    height: auto;
+    min-height: 0;
+    padding: 0.4rem 0.5rem;
+    transform: translate(-50%, 50%);
+    align-items: center;
+    flex-wrap: nowrap;
+    justify-content: safe center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: transparent;
+}
+
+:host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator-list::-webkit-scrollbar,
+:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list::-webkit-scrollbar {
+    display: none;
+}
+
+:host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator,
+:host ::ng-deep .media-detail-bar-container .p-carousel-indicator {
+    flex-shrink: 0;
+}
+
+.media-detail-box-left,
+.media-detail-box-right {
+    display: flex;
+    flex-direction: column;
+    border: 1px solid #9ca3af;
+    border-radius: 50px;
+    padding: 1.5rem;
+
+}
+
+.media-detail-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+}
+
+.media-detail-info-label {
+    opacity: 0.7;
+}
+
+.media-detail-info-value {
+    text-align: right;
+    font-weight: 500;
+}
+
+.media-detail-link-bar,
+.media-detail-genre-bar {
+    border: 1px solid transparent;
+    border-radius: 100px;
+    width: 100%;
+    min-width: 0;
+    max-width: 100%;
+    padding: 0.7rem;
+    display: flex;
+    flex-direction: row;
+    gap: 0.5rem;
+    background-color: rgba(0, 0, 0, 0.2);
+    overflow-x: auto;
+    white-space: nowrap;
+    scrollbar-width: none;
+}
+
+.media-detail-link-bar a {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    text-decoration: none;
+    color: inherit;
+    width: 100%;
+    height: 100%;
+}
+
+:host ::ng-deep .media-detail-link-bar p-tag{
+    border-radius: 100px !important;
+}
+
+:host ::ng-deep .media-detail-genre-bar p-tag {
+    border-radius: 100px !important;
+}
+
+.media-detail-tabs-scroll-wrapper {
+    width: 100%;
+    overflow-x: auto;
+    white-space: nowrap;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+    padding-bottom: 0.2rem;
+    margin: 1rem 0;
+}
+
+.media-detail-tabs-scroll-wrapper::-webkit-scrollbar {
+    display: none;
+}
+
+:host ::ng-deep .p-image {
+    border-radius: var(--border--radius);
+    overflow: hidden;
+    display: inline-flex;
+}
+
+:host ::ng-deep .p-tablist-tab-list {
+    display: flex;
+    gap: 0.25rem;
+
+    background-color: rgba(0, 0, 0, 0.3) !important;
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid #9ca3af !important;
+
+    border-radius: 100px !important;
+    padding: 0.3rem !important;
+}
+
+:host ::ng-deep .p-tablist-tab-list::-webkit-scrollbar {
+    display: none;
+}
+
+:host ::ng-deep .p-tablist-ink-bar {
+    display: none !important;
+}
+
+:host ::ng-deep .p-tab {
+    border: none !important;
+    background: transparent !important;
+    border-radius: 25px !important;
+    padding: 0.6rem 1.2rem !important;
+    color: rgba(255, 255, 255, 0.6) !important;
+    transition: all 0.3s ease;
+
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+:host ::ng-deep .p-tab:not(.p-tab-active):hover {
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    color: white !important;
+}
+
+:host ::ng-deep .p-tab-active {
+    background-color: var(--link--color) !important;
+    color: white !important;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.3) !important;
+}
+
+:host ::ng-deep .p-tablist-active-bar,
+:host ::ng-deep .p-tablist-ink-bar {
+    display: none !important;
+}
+
+@media (min-width: 850px) {
+    .media-detail-title {
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        flex: 1;
+        min-width: 0;
+    }
+
+    .media-detail-meta-content-container {
+        height: auto;
+    }
+}
+
+@media (min-width: 1200px) {
+    .media-detail-container {
+        height: 525px;
+    }
+    .media-detail-backdrop {
+        position: absolute;
+        z-index: -1;
+        top: 0;
+        left: 0;
+        right: 0;
+        height: 720px;
+
+        background-image: var(--bg-image);
+        background-size: cover;
+        background-position: center top;
+        background-repeat: no-repeat;
+
+        opacity: 0.95;
+
+        mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
+        -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
+
+        pointer-events: none;
+    }
+    .media-detail-meta-container {
+        height: 400px;
+        flex-direction: row;
+        gap: 1rem;
+    }
+
+    .media-detail-meta-poster {
+        height: 100%;
+    }
+
+    .media-detail-bottom-area {
+        margin-top: auto;
+    }
+
+    .media-detail-meta-content-container {
+        height: 100%;
+        min-height: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+    }
+
+    .media-detail-panel-carousel {
+        flex: 1 1 auto;
+        min-height: 0;
+        display: flex;
+    }
+
+    .media-detail-panel-carousel > p-carousel {
+        height: 100%;
+        min-height: 0;
+        display: block;
+    }
+
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-content-container,
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-content {
+        display: flex;
+        flex-direction: column;
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-item-list,
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-item {
+        height: 100%;
+        min-height: 0;
+        display: flex;
+    }
+
+    :host ::ng-deep .media-detail-panel-carousel .p-carousel-viewport {
+        height: 100% !important;
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    :host ::ng-deep .media-detail-panel-slide .p-panel,
+    :host ::ng-deep .media-detail-panel-slide .p-panel-content-container,
+    :host ::ng-deep .media-detail-panel-slide .p-panel-content {
+        flex: 1 1 auto;
+        min-height: 0;
+    }
+
+    .media-detail-meta-content-container h2 {
+        margin-top: 0;
+        margin-bottom: 0.5rem;
+    }
+}
+
+.media-detail-load-error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 1rem;
+    padding: 1.5rem;
+    border: 1px solid var(--p-content-border-color);
+    border-radius: var(--border--radius, 0.6rem);
+}

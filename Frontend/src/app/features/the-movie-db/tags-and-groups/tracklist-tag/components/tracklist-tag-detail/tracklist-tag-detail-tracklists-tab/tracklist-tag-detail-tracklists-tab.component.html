@@ -87,7 +87,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             <p-card class="tracklist-tag-detail-tracklist-card">
                 <ng-template pTemplate="title">
                     <div class="tracklist-tag-detail-tracklist-card-title">
-                        <a [routerLink]="['/media', tracklist.mediaType, tracklist.mediaId]">
+                        <a [routerLink]="['/' + mediaUrls.detail(tracklist.mediaType, tracklist.mediaId)]">
                             {{ tracklist.tracklistName }}
                         </a>
                     </div>

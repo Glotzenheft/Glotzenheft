@@ -1,0 +1,64 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<p-card styleClass="tracklist-card">
+    <ng-template #title><h3 class="tracklist-title">{{ tracklist.tracklistName }}</h3></ng-template>
+    <div class="tracklist-content">
+        <div class="poster-container">
+            @if (posterPath && failedPoster() !== posterPath) {
+                <p-image [src]="imageUrl()" [previewImageSrc]="imageUrl(true)"
+                    [alt]="'Poster für ' + media.name" [preview]="true" appendTo="body">
+                    <ng-template #image>
+                        <img [src]="imageUrl()" [alt]="'Poster für ' + media.name" width="176" height="250"
+                            loading="lazy" (error)="failedPoster.set(posterPath)" />
+                    </ng-template>
+                </p-image>
+            } @else {
+                <div class="poster-fallback" role="img" aria-label="Kein Poster verfügbar"><i class="pi pi-image" aria-hidden="true"></i></div>
+            }
+            <span class="rating" aria-label="Bewertung"><i class="pi pi-star-fill" aria-hidden="true"></i> {{ tracklist.rating ?? '–' }}</span>
+        </div>
+        <div class="tracklist-info">
+            <div class="info-item"><span>{{ media.type | mediaType }}</span><span>{{ media.runtime !== null ? media.runtime + ' Minuten' : '–' }}</span></div>
+            <div class="info-item"><span class="info-label">Erstausstrahlung!:</span><span>{{ (parseDate(tracklist.customAirDate ?? media.firstAirDate) | date:'dd.MM.yyyy') || '–' }}</span></div>
+            <div class="info-item"><span class="info-label">Start:</span><span>{{ (parseDate(tracklist.startDate) | date:"dd.MM.yyyy HH:mm 'Uhr'") || '–' }}</span></div>
+            <div class="info-item"><span class="info-label">Ende:</span><span>{{ (parseDate(tracklist.finishDate) | date:"dd.MM.yyyy HH:mm 'Uhr'") || '–' }}</span></div>
+            <div class="info-item centered elapsed-row"><span appFitSingleLineText>{{ elapsedText }}</span></div>
+            <div class="info-item languages"><span><i class="pi pi-microphone" aria-hidden="true"></i> {{ tracklist.language | languageName }}</span><span><i class="pi pi-language" aria-hidden="true"></i> {{ tracklist.subtitle | languageName }}</span></div>
+            <div class="info-item centered status-row"><span class="status" [style.background]="statusColors[tracklist.status]">{{ tracklist.status | tracklistStatus }} @if (tracklist.isRewatching) { <i class="pi pi-replay rewatch-icon" role="img" aria-label="Rewatch" pTooltip="Rewatch" tabindex="0"></i> }</span></div>
+        </div>
+    </div>
+    <div class="tag-row">
+        <nav class="tag-scroll" tabindex="0" aria-label="Tags der Trackliste, horizontal scrollbar">
+            @for (tag of tracklist.tags; track tag.id) {
+                <a [routerLink]="['/' + tagUrls.detailTracklist(tag.id)]"><p-tag [value]="tag.tagName" [style.background-color]="tag.color" [style.color]="tagTextColor(tag.color)" /></a>
+            } @empty { <span class="no-tags">Keine Tags</span> }
+        </nav>
+        <div class="tag-toolbar">
+            <p-button icon="pi pi-copy" [rounded]="true" [outlined]="true" [dt]="tagToolbarButtonTokens" size="small" ariaLabel="Alle Tag-IDs kopieren" pTooltip="Alle Tag-IDs kopieren" [disabled]="!tracklist.tags.length" (onClick)="copyTagIds()" />
+            <p-button icon="pi pi-table" [rounded]="true" [outlined]="true" [dt]="tagToolbarButtonTokens" size="small" ariaLabel="Tag-Tabelle öffnen" pTooltip="Tag-Tabelle öffnen" [disabled]="!tracklist.tags.length" (onClick)="openTagTable()" />
+        </div>
+    </div>
+    <div class="action-row">
+        <p-button class="edit-action" icon="pi pi-pencil" label="Bearbeiten" size="small" [outlined]="true" [ariaLabel]="'Trackliste ' + tracklist.tracklistName + ' bearbeiten'" [disabled]="busy()" (onClick)="edit.emit(tracklist)" />
+        <p-splitbutton #tagButton class="tag-action" menuStyleClass="tracklist-tag-action-menu" label="Tags hinzufügen" icon="pi pi-tags" size="small" [outlined]="true" [model]="tagActions" [disabled]="busy()" appendTo="body" (onMenuShow)="positionTagMenu(tagButton)" (onClick)="linkTags()" />
+        <span class="poster-action" pTooltip="Eigenes Poster setzen – noch nicht verfügbar" tooltipPosition="top"><p-button icon="pi pi-image" size="small" [outlined]="true" [disabled]="true" ariaLabel="Eigenes Poster setzen (noch nicht verfügbar)" /></span>
+    </div>
+    @if (error()) {
+        <div class="tag-error" role="alert"><span>{{ error() }}</span><p-button label="Erneut laden" size="small" [text]="true" [disabled]="busy()" (onClick)="refresh()" /></div>
+    }
+</p-card>

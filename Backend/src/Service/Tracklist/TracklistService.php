@@ -30,6 +30,7 @@ use App\Model\Request\Tracklist\UpdateTracklistDto;
 use App\Model\Response\Tracklist\Search\TracklistSearchResponseDto;
 use App\Model\Response\Tracklist\Search\TracklistSearchPaginatedResponseDto;
 use App\Model\Response\Tracklist\TracklistLightResponseDto;
+use App\Model\Response\Tracklist\TracklistResponseDto;
 use App\Repository\SeasonRepository;
 use App\Repository\TracklistRepository;
 use App\Service\Traits\EntityValidationTrait;
@@ -52,7 +53,7 @@ readonly class TracklistService
      * Get all tracklists of the user.
      *
      * @param User $user
-     * @return array
+     * @return array<TracklistLightResponseDto>
      */
     public function getUserTracklists(User $user): array
     {
@@ -67,36 +68,38 @@ readonly class TracklistService
     }
 
     /**
-     * Get tracklist entity based on its id.
+     * Get complete tracklist details based on its id.
      * Only returns the tracklist if the request is from the creator of the tracklist.
      *
      * @param int $tracklistId
      * @param User $user
-     * @return Tracklist
+     * @return TracklistResponseDto
      */
     public function getTracklist(
         int $tracklistId,
         User $user
-    ): Tracklist
+    ): TracklistResponseDto
     {
-        return $this->findAndValidateTracklist(
+        $tracklist = $this->findAndValidateTracklist(
             tracklistId: $tracklistId,
             user: $user,
             tracklistRepository: $this->tracklistRepository
         );
+
+        return TracklistResponseDto::fromEntity($tracklist);
     }
 
     /**
      * Creates a new tracklist for an existing user.
-     * Returns the tracklist entity.
+     * Returns the complete tracklist details after persistence.
      * @param CreateTracklistDto $dto
      * @param User $user
-     * @return TracklistLightResponseDto
+     * @return TracklistResponseDto
      */
     public function createTracklist(
         CreateTracklistDto $dto,
         User $user
-    ): TracklistLightResponseDto
+    ): TracklistResponseDto
     {
         $media = $this->entityManager
             ->getRepository(Media::class)
@@ -135,9 +138,7 @@ readonly class TracklistService
 
         if ($dto->mediaType === 'tv')
         {
-            $season = $this->entityManager
-                ->getRepository(Season::class)
-                ->find($dto->seasonId);
+            $season = $this->seasonRepository->find($dto->seasonId);
             if (!$season instanceof Season)
             {
                 throw new NotFoundHttpException(message: 'Season not found');
@@ -162,22 +163,22 @@ readonly class TracklistService
         $this->entityManager->persist($tracklist);
         $this->entityManager->flush();
 
-        return TracklistLightResponseDto::fromEntity($tracklist);
+        return TracklistResponseDto::fromEntity($tracklist);
     }
 
     /**
      * @param int $tracklistId
      * @param UpdateTracklistDto $dto
      * @param User $user
-     * @param array $requestData
-     * @return TracklistLightResponseDto
+     * @param array<string, mixed> $requestData
+     * @return TracklistResponseDto
      */
     public function updateTracklist(
         int $tracklistId,
         UpdateTracklistDto $dto,
         User $user,
         array $requestData
-    ): TracklistLightResponseDto
+    ): TracklistResponseDto
     {
         $tracklist = $this->findAndValidateTracklist(
             tracklistId: $tracklistId,
@@ -267,7 +268,7 @@ readonly class TracklistService
         }
 
         $this->entityManager->flush();
-        return TracklistLightResponseDto::fromEntity($tracklist);
+        return TracklistResponseDto::fromEntity($tracklist);
     }
 
     /**
@@ -292,7 +293,7 @@ readonly class TracklistService
 
     /**
      * @param TracklistSeason $tracklistSeason
-     * @param array $requestData
+     * @param array<string, mixed> $requestData
      * @param UpdateTracklistDto $dto
      * @return void
      */

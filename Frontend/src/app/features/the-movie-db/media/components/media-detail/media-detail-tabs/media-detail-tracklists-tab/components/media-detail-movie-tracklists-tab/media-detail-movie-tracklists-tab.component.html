@@ -1,0 +1,44 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<section class="movie-tracklists" aria-labelledby="movie-tracklists-heading">
+    <header class="movie-tracklists-header">
+        <h2 id="movie-tracklists-heading">
+            Tracklisten <span class="tracklist-count">({{ mediaData.tracklists.length }})</span>
+        </h2>
+        <p-button label="Neue Trackliste anlegen" icon="pi pi-plus" (onClick)="createTracklist()" />
+    </header>
+
+    @if (mediaData.tracklists.length === 0) {
+        <div class="empty-tracklists" role="status">
+            <i class="pi pi-list" aria-hidden="true"></i>
+            <p>Für diesen Film hast du noch keine Trackliste angelegt.</p>
+            <span>Lege eine Trackliste an, um deine Sichtung zu erfassen.</span>
+        </div>
+    } @else {
+        <div class="movie-tracklist-grid">
+            @for (tracklist of mediaData.tracklists; track tracklist.id) {
+                <app-tracklist-card
+                    [tracklist]="tracklist"
+                    [media]="mediaData.media"
+                    (edit)="editTracklist($event)"
+                    (updated)="updateTracklist($event)"
+                />
+            }
+        </div>
+    }
+</section>

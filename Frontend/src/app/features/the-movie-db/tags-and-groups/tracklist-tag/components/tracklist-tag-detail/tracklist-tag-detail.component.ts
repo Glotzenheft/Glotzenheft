@@ -282,7 +282,7 @@ export class TracklistTagDetailComponent implements OnInit{
         if (!currentTag) return;
 
         const ref = this.dialogService.open(TracklistTagFormDialogComponent, {
-            header: 'Neuen Tag erstellen',
+            header: 'Tag bearbeiten',
             modal: true,
             width: '50vw',
             closable: true,

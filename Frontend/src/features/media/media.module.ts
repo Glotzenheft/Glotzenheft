@@ -21,19 +21,19 @@ import { RouterModule, Routes } from '@angular/router';
 import { FilmPageComponent } from './mediaDetailsCOMPONENTS/film-page/film-page.component';
 import { SeasonPageComponent } from './mediaDetailsCOMPONENTS/season-page/season-page.component';
 import { MultiSearchComponent } from './mediaSearchCOMPONENTS/search/multi-search.component';
-import { ROUTES_LIST } from '../../app/shared/variables/routes-list';
+import { MEDIA_PATHS } from '../../app/core/constants/paths.constants';
 
 const mediaRoutes: Routes = [
     {
-        path: ROUTES_LIST[5].shortUrl + '/:id',
+        path: `${MEDIA_PATHS.movie}/:id`,
         component: FilmPageComponent,
     },
     {
-        path: ROUTES_LIST[6].shortUrl + '/:id',
+        path: `${MEDIA_PATHS.tv}/:id`,
         component: SeasonPageComponent,
     },
     {
-        path: ROUTES_LIST[4].shortUrl,
+        path: MEDIA_PATHS.multiSearch,
         component: MultiSearchComponent,
     },
 ];

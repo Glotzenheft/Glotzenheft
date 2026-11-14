@@ -55,6 +55,7 @@ import {
     getMessageObject,
 } from '../../../../app/shared/variables/message-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { MEDIA_URLS } from '../../../../app/core/constants/urls.constants';
 import { UC_ShortenString } from '../../../../app/core/use-cases/string/shorten-string.use-case';
 import { UC_ValidateMediaURL } from '../../../../app/core/use-cases/security/validate-media-url.use-case';
 import { UC_GetFilmDetails } from '../../../../app/core/use-cases/media/get-film-details.use-case';
@@ -93,14 +94,14 @@ import {
     TracklistTagFormDialogComponent
 } from '../../../../app/features/the-movie-db/tags-and-groups/tracklist-tag/components/tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import {TRACKLIST_TAG_URLS} from '../../../../app/core/constants/urls.constants';
-import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {MediaResponse} from '../../../../app/features/the-movie-db/media/models/response/media-response.dto';
 import {
     TracklistResponseDto
 } from '../../../../app/features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';
 import {
     TracklistStatusEnum
 } from '../../../../app/features/the-movie-db/tracklists/tracklist/models/enums/tracklist-status.enum';
-import {MediaType} from '../../../../app/features/media/models/enums/media-type.enum';
+import {MediaType} from '../../../../app/features/the-movie-db/media/models/enums/media-type.enum';
 
 @Component({
     selector: 'app-film-page',
@@ -359,7 +360,7 @@ export class FilmPageComponent implements OnInit, OnDestroy {
                     res.media.id
                 ) {
                     // replacing the url with "media_id" if necessary
-                    this.location.replaceState(`/media/movie/${res.media.id}`);
+                    this.location.replaceState(`/${MEDIA_URLS.movieUrl}/${res.media.id}`);
                 }
 
                 if (res.media.firstAirDate) {

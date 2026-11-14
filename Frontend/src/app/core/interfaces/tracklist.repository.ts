@@ -22,7 +22,7 @@ import {
     TVWithTracklist,
 } from '../../shared/interfaces/tracklist-interfaces';
 import { InjectionToken } from '@angular/core';
-import {MediaResponse} from '../../features/media/models/response/media-response.dto';
+import {MediaResponse} from '../../features/the-movie-db/media/models/response/media-response.dto';
 import {
     TracklistResponseDto
 } from '../../features/the-movie-db/tracklists/tracklist/models/response/tracklist-response.dto';

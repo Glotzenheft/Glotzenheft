@@ -1,0 +1,492 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+:host {
+    display: block;
+    min-width: 0;
+}
+.series-tracklists h2 {
+    margin: 0 0 1rem;
+}
+.season-page-information-area {
+    display: flex;
+    align-items: stretch;
+    gap: 1rem;
+    height: 300px;
+    margin: 0;
+}
+.season-page-season-poster {
+    position: relative;
+    flex: 0 0 200px;
+    width: 200px;
+    height: 300px;
+}
+.season-page-season-poster p-image,
+.season-page-season-poster img {
+    display: block;
+}
+.season-page-season-poster img,
+.season-poster-fallback {
+    width: 200px;
+    height: 300px;
+    box-sizing: border-box;
+    border-radius: var(--border--radius, 0.6rem);
+    object-fit: cover;
+}
+.season-poster-fallback,
+.episode-image-fallback {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    background: var(--p-content-background);
+    border: 1px solid var(--p-content-border-color);
+}
+.season-poster-fallback p {
+    padding: 0 1rem;
+    text-align: center;
+}
+.season-poster-fallback .pi,
+.episode-image-fallback .pi {
+    font-size: 2.5rem;
+}
+.season-poster-tracklist-wrapper {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: 1;
+    pointer-events: none;
+}
+.season-poster-tracklist {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    padding: 0.5rem 0.75rem;
+    margin: 0 0.5rem 0.5rem;
+    border-radius: 20em;
+    background: rgba(0, 0, 0, 0.4);
+    color: #fff;
+}
+.season-poster-rating {
+    display: flex;
+    align-items: center;
+    gap: 0.25rem;
+    font-size: 0.95rem;
+    font-weight: 550;
+}
+.season-poster-rating .pi {
+    color: #facc15;
+}
+.season-poster-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    box-sizing: border-box;
+    max-width: 100%;
+    min-width: 0;
+    padding: 0.25em 0.5em;
+    border-radius: 20em;
+    color: #fff;
+    font-size: 0.85rem;
+    font-weight: 600;
+    white-space: nowrap;
+}
+.season-poster-status-label {
+    min-width: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+.season-poster-status .pi {
+    flex-shrink: 0;
+}
+.season-page-season-meta {
+    flex: 1;
+    min-width: 0;
+    min-height: 0;
+    display: flex;
+    flex-direction: column;
+}
+.season-panel-carousel,
+.season-panel-carousel > p-carousel {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-width: 0;
+    min-height: 0;
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-content-container,
+:host ::ng-deep .season-panel-carousel .p-carousel-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-content {
+    overflow: hidden;
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-viewport {
+    height: 100% !important;
+    flex: 1 1 auto;
+    min-height: 0;
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-item-list,
+:host ::ng-deep .season-panel-carousel .p-carousel-item {
+    display: flex;
+    height: 100%;
+    min-height: 0;
+}
+.season-panel-slide,
+.season-panel-slide > p-panel {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+}
+:host ::ng-deep .season-panel-slide .p-panel {
+    display: flex;
+    flex-direction: column;
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    background: none;
+    border: 1px solid transparent;
+    border-radius: 8px;
+    box-shadow: none;
+}
+:host ::ng-deep .season-panel-slide .p-panel-header {
+    flex-shrink: 0;
+}
+:host ::ng-deep .season-panel-slide .p-panel-content-container {
+    display: flex;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow: hidden;
+}
+:host ::ng-deep .season-panel-slide .p-panel-content {
+    flex: 1 1 auto;
+    min-width: 0;
+    min-height: 0;
+    overflow-y: auto;
+    scrollbar-width: none;
+}
+.season-panel-carousel {
+    position: relative;
+    border-radius: 8px;
+    --carousel-frame-width: 1px;
+    --carousel-frame-color: var(--p-primary-color);
+    /* Two indicators, their gap and the list's horizontal padding. */
+    --carousel-frame-gap: calc(
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-list-gap, 0.5rem) + 1rem
+    );
+}
+.season-panel-carousel::after {
+    content: '';
+    position: absolute;
+    /* Draw the frame outside the translated slides, fully inside the container. */
+    inset: 0;
+    box-sizing: border-box;
+    border: var(--carousel-frame-width) solid var(--carousel-frame-color);
+    border-radius: inherit;
+    pointer-events: none;
+    /* Cut only the frame, leaving the backdrop visible beneath the indicators. */
+    clip-path: polygon(
+        0 0, 100% 0, 100% 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        0 100%
+    );
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-indicator-list {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    z-index: 1;
+    box-sizing: border-box;
+    width: max-content;
+    max-width: calc(100% - 2rem);
+    height: auto;
+    min-height: 0;
+    padding: 0.4rem 0.5rem;
+    transform: translate(-50%, 50%);
+    flex-wrap: nowrap;
+    justify-content: safe center;
+    overflow-x: auto;
+    scrollbar-width: none;
+    background: transparent;
+}
+:host ::ng-deep .season-panel-carousel .p-carousel-indicator-list::-webkit-scrollbar {
+    display: none;
+}
+.season-page-season-information-area {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+    margin-bottom: 1rem;
+}
+.season-page-description {
+    max-height: 85px;
+    overflow-y: auto;
+    margin: 0 0 0.5rem;
+}
+.season-page-tracklist-tag-area {
+    border: 1px solid var(--link--color, var(--p-primary-color));
+    border-radius: var(--border--radius, 0.6rem);
+    padding: 0.5rem;
+    min-width: 0;
+}
+.tracklist-detail-grid {
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0.5rem 1rem;
+    margin: 0;
+}
+.tracklist-air-date {
+    grid-column: span 2;
+}
+.season-identifier-grid {
+    display: grid;
+    gap: 0.75rem;
+    margin: 0;
+}
+.season-page-info-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 0.5rem;
+    min-width: 0;
+}
+.season-page-info-label {
+    opacity: 0.7;
+    overflow-wrap: anywhere;
+}
+.season-page-info-value {
+    margin: 0;
+    text-align: right;
+    font-weight: 500;
+    overflow-wrap: anywhere;
+}
+.tracklistSelectionDIV {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    margin: 1rem 0 0.5rem;
+}
+.season-page-action-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 0.5rem 0;
+}
+.unlink-icon {
+    position: relative;
+    margin-right: 0.5rem;
+}
+.unlink-icon .pi-times {
+    position: absolute;
+    right: -0.3rem;
+    bottom: -0.3rem;
+    font-size: 0.8rem;
+    font-weight: bold;
+}
+.season-page-tracklist-tag-area {
+    margin-bottom: 0.5rem;
+}
+.tracklist-tag-content {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+.tag-toolbar {
+    display: flex;
+    gap: 0.5rem;
+    flex: 0 0 auto;
+    margin-left: auto;
+}
+.inline-tags {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+.inline-tags {
+    flex: 1 1 auto;
+    min-width: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+    scrollbar-width: none;
+}
+.inline-tags a {
+    flex: 0 0 auto;
+}
+:host ::ng-deep .inline-tags .p-tag-label {
+    white-space: nowrap;
+}
+.episodeDIV {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-height: 3rem;
+    padding: 0.25rem 0.5rem;
+    margin: 0.75rem 0;
+    border: 1px solid var(--p-content-border-color);
+    border-radius: var(--border--radius, 0.6rem);
+    transition: background-color var(--transition--duration, 0.3s);
+}
+.episodeInTracklistDIV {
+    background: rgba(5, 150, 105, 0.9);
+    color: white;
+}
+.episodeDIV:hover {
+    background: #000;
+    color: #fff;
+}
+.episode-title-container {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    color: inherit;
+    cursor: pointer;
+    text-align: left;
+    font: inherit;
+    font-weight: bold;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    padding: 0.5rem 0;
+}
+.episode-title-container:focus-visible {
+    outline: 2px solid var(--p-primary-color);
+    outline-offset: 2px;
+}
+.episode-details-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.5rem;
+    min-width: 0;
+}
+.episode-details-image {
+    max-width: 800px;
+    min-height: 180px;
+    margin: 0 auto;
+    aspect-ratio: 16 / 9;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: hidden;
+    border-radius: 8px;
+    background: rgba(0, 0, 0, 0.03);
+}
+.episode-details-image p-image {
+    display: block;
+    width: 100%;
+    height: 100%;
+}
+.episode-details-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+.episode-details-image img:hover {
+    transform: scale(1.02);
+}
+.episode-image-fallback {
+    width: 100%;
+    height: 100%;
+    min-height: 180px;
+    text-align: center;
+    border: 0;
+    background: transparent;
+}
+.episode-details-info {
+    min-width: 0;
+}
+.episode-overview {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin: 0 0 1rem;
+    white-space: pre-wrap;
+}
+.episode-metadata {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+    gap: 1rem;
+    margin: 0;
+    padding-top: 0.75rem;
+    border-top: 1px solid #eee;
+}
+.episode-metadata dt {
+    display: inline;
+    font-weight: 700;
+}
+.episode-metadata dd {
+    display: inline;
+    margin: 0 0 0 0.25rem;
+    overflow-wrap: anywhere;
+}
+.tag-error {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.75rem;
+    margin-bottom: 1rem;
+}
+@media (max-width: 950px) {
+    .season-page-information-area {
+        flex-direction: column;
+        gap: 1.5rem;
+        height: auto;
+    }
+    .season-page-season-poster {
+        flex-basis: auto;
+        align-self: center;
+    }
+    .season-page-season-meta {
+        flex: none;
+        width: 100%;
+        height: 300px;
+    }
+    .tracklist-detail-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+    .tracklist-air-date {
+        grid-column: auto;
+    }
+    .season-page-action-bar {
+        flex-direction: column;
+    }
+    :host ::ng-deep .season-page-action-bar .p-button {
+        width: 100%;
+        min-height: 2.75rem;
+        justify-content: center;
+    }
+}
+@media (max-width: 560px) {
+    .episode-details-image {
+        max-width: 250px;
+    }
+}

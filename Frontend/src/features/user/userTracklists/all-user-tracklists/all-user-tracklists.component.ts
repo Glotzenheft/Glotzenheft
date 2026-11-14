@@ -41,6 +41,7 @@ import {
 } from '../../../../app/shared/variables/tracklist';
 import { TMDB_POSTER_PATH } from '../../../../app/shared/variables/tmdb-vars';
 import { ROUTES_LIST } from '../../../../app/shared/variables/routes-list';
+import { MEDIA_DETAILS_URLS } from '../../../../app/core/constants/urls.constants';
 import { UC_GetAllUserTracklists } from '../../../../app/core/use-cases/media/get-all-user-tracklists.use-case';
 import { TracklistFormularComponent } from '../../../media/mediaDetailsCOMPONENTS/tracklist-formular/tracklist-formular.component';
 import { UC_GetTracklistUPDATEResponseSubject } from '../../../../app/core/use-cases/media/get-tracklist-update-response-subject.use-case';
@@ -256,8 +257,8 @@ export class AllUserTracklistsComponent implements OnInit {
     public navigateToDetailspage = (mediaID: number, mediaType: string) => {
         let url: string =
             mediaType.trim() === 'movie'
-                ? `${ROUTES_LIST[5].fullUrl}/${mediaID}`
-                : `${ROUTES_LIST[6].fullUrl}/${mediaID}`;
+                ? `${MEDIA_DETAILS_URLS.movieUrl}/${mediaID}`
+                : `${MEDIA_DETAILS_URLS.tvUrl}/${mediaID}`;
 
         this.navigateToSpecificPageUseCase.execute(url);
     };

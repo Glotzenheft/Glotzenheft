@@ -1,0 +1,395 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<div class="media-detail-container">
+    @let viewState = state.viewState();
+    @if (viewState.loading) {
+        <div class="loadingWrapper">
+            <h1>Laden ...</h1>
+            <p-progress-spinner ariaLabel="loading" strokeWidth="8" [style]="{ width: '5rem', height: '5rem' }" />
+        </div>
+    } @else if (viewState.error) {
+        <div class="media-detail-load-error" role="alert">
+            <p>{{ viewState.error }}</p>
+            <p-button label="Erneut versuchen" icon="pi pi-refresh" (onClick)="loadMedia()" />
+        </div>
+    } @else if (viewState.data) {
+        @let data = viewState.data;
+        @let mediaData = data.media;
+        <div class="media-detail-backdrop"
+             [style.--bg-image]="'url(' + backdropPath + mediaData.backdropPath + ')'">
+        </div>
+        <header class="media-detail-header">
+            <h1 #mediaTitleElement
+                class="media-detail-title"
+                [pTooltip]="showOriginalTitle() ? data.media.originalName : data.media.name"
+                [tooltipDisabled]="isTooltipDisabled()"
+                tooltipPosition="bottom">
+                {{ showOriginalTitle() ? mediaData.originalName : mediaData.name }} {{ mediaData.tagline ? " - " + mediaData.tagline : ""}}
+            </h1>
+
+            <div class="media-detail-title-actions">
+                <p-button
+                    class="media-detail-title-copy-button"
+                    [icon]="isTitleCopied() ? 'pi pi-check' : 'pi pi-copy'"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="secondary"
+                    pTooltip="Titel in die Zwischenablage kopieren"
+                    [ariaLabel]="'Titel in die Zwischenablage kopieren'"
+                    (onClick)="copyTitle(showOriginalTitle() ? mediaData.originalName : mediaData.name)"
+                ></p-button>
+
+                <p-button
+                    class="media-detail-title-toggle-button"
+                    [icon]="showOriginalTitle() ? 'pi pi-language' : 'pi pi-globe'"
+                    [rounded]="true"
+                    [text]="true"
+                    severity="secondary"
+                    [pTooltip]="showOriginalTitle() ? 'Deutschen Titel anzeigen' : 'Originaltitel anzeigen'"
+                    (onClick)="toggleTitle()"
+                ></p-button>
+            </div>
+        </header>
+        <div class="media-detail-meta-container">
+            <div class="media-detail-meta-poster">
+                @if (mediaData.posterPath && !imageError()) {
+                    @if (isThumbnailLoading()) {
+                        <p-progressSpinner
+                            styleClass="w-4rem h-4rem"
+                            strokeWidth="4"
+                            fill="transparent"
+                            animationDuration="0.5s" />
+                    }
+
+                    <p-image
+                        [src]="posterPath + mediaData.posterPath"
+                        [previewImageSrc]="originalPosterPath + mediaData.posterPath"
+                        [alt]="'Poster für die Serie' + mediaData.name"
+                        [preview]="true"
+                        appendTo="body">
+                        <ng-template pTemplate="image">
+                            <img
+                                [ngSrc]="posterPath + mediaData.posterPath"
+                                (load)="isThumbnailLoading.set(false)"
+                                (error)="handleImageError()"
+                                alt="Poster für {{ mediaData.type === mediaTypes.MOVIE ? 'den Film ' : 'die Serie '}} {{ mediaData.name }}"
+                                width="267"
+                                height="400"
+                                class="episode-dialog-img"
+                                style="object-fit: cover; border-radius: 8px; cursor: pointer;"
+                            />
+                        </ng-template>
+                    </p-image>
+                    <div class="media-detail-poster-rating-wrapper">
+                        <div class="media-detail-poster-rating">
+                            <div class="media-detail-poster-rating-summary">
+                                <span class="media-detail-poster-rating-value">
+                                    <i class="pi pi-star-fill" aria-hidden="true"></i>
+                                    <span aria-label="Benutzerbewertung">{{ mediaData.voteAverage | number:'1.2-2':'en-US' }}</span>
+                                </span>
+                                <span class="media-detail-poster-rating-count">
+                                    {{ mediaData.voteCount | number:'1.0-0' }} Bewertungen
+                                </span>
+                            </div>
+                            <span class="media-detail-poster-popularity">
+                                <i class="pi pi-chart-line" aria-hidden="true"></i>
+                                {{ getPopularityLabel(mediaData.popularity) }} {{ mediaData.popularity | number:'1.1-1' }}
+                            </span>
+                        </div>
+                    </div>
+                }
+                @else {
+                    <div class="image-error-fallback2">
+                        <i class="pi pi-image" style="font-size: 3rem; color: #999;"></i>
+                        <p> Kein Poster für {{ mediaData.type === mediaTypes.MOVIE ? 'den Film' : 'die Serie' }} "{{ mediaData.name }}" vorhanden. </p>
+                    </div>
+                }
+            </div>
+
+            <div class="media-detail-meta-content-container">
+                <div class="media-detail-panel-carousel">
+                    <p-carousel
+                        [value]="boxPages"
+                        [numVisible]="1"
+                        [numScroll]="1"
+                        [circular]="true"
+                        [showNavigators]="false"
+                        [showIndicators]="true"
+                        [style]="{ height: '100%', position: 'relative' }"
+                    >
+                        <ng-template #item let-page>
+                            <div
+                                class="media-detail-panel-slide"
+                                (touchstart)="$event.stopPropagation()"
+                                (touchmove)="$event.stopPropagation()"
+                                (touchend)="$event.stopPropagation()"
+                            >
+                                @if (page === 'info') {
+                                    <p-panel header="Handlung">
+                                        <div class="media-detail-description">
+                                            {{mediaData.description ? mediaData.description : "Keine Beschreibung vorhanden"}}
+                                        </div>
+                                    </p-panel>
+                                } @else {
+                                    <p-panel header="Weitere Informationen">
+                                        @if (mediaData.type === mediaTypes.MOVIE) {
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Laufzeit:</span>
+                                                <span class="media-detail-info-value"> {{ mediaData.runtime | runtime }} </span>
+                                            </span>
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Budget:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.budget | dollarCurrency }}</span>
+                                            </span>
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Umsatz:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.revenue | dollarCurrency }}</span>
+                                            </span>
+                                        } @else if (mediaData.type === mediaTypes.TV_SHOW) {
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Staffeln:</span>
+                                                <span class="media-detail-info-value"> {{ mediaData.numberOfSeasons }}</span>
+                                            </span>
+                                            <span class="media-detail-info-item">
+                                                <span class="media-detail-info-label">Episoden:</span>
+                                                <span class="media-detail-info-value">{{ mediaData.numberOfEpisodes }}</span>
+                                            </span>
+                                        }
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Ursprungssprache</span>
+                                            <span class="media-detail-info-value"> {{ mediaData.originalLanguage | languageName }} </span>
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">TMDB Id:</span>
+                                            <span class="media-detail-info-value">{{ mediaData.tmdbId }}</span>
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">IMDB Id:</span>
+                                            <span class="media-detail-info-value">{{ mediaData.imdbId ? mediaData.imdbId : "-"}}</span>
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">TVDB Id:</span>
+                                            <span class="media-detail-info-value">{{ mediaData.tvdbId ? mediaData.tvdbId : "-" }}</span>
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Erstellt:</span>
+                                            @if (mediaData.createdAt) {
+                                                @let createDate = mediaData.createdAt | dateTimeWithUnitFormatting;
+                                                <span class="media-detail-info-value">
+                                                    {{ createDate }}
+                                                    <i class="pi pi-info-circle" [pTooltip]="'Dieses Medium wurde erstmalig am ' + createDate + ' im Glotzenheft erstellt.'"></i>
+                                                </span>
+                                            } @else {
+                                                <span class="media-detail-info-value">---</span>
+                                            }
+                                        </span>
+
+                                        <span class="media-detail-info-item">
+                                            <span class="media-detail-info-label">Aktualisiert:</span>
+                                            @if (mediaData.updatedAt) {
+                                                @let updateDate = mediaData.updatedAt | dateTimeWithUnitFormatting;
+                                                <span class="media-detail-info-value">
+                                                    {{ updateDate }}
+                                                    <i class="pi pi-info-circle" [pTooltip]="'Die Metadaten aus TMDB wurde zuletzt am ' + updateDate + ' aktualisiert.'"></i>
+                                                </span>
+                                            } @else {
+                                                <span class="media-detail-info-value">---</span>
+                                            }
+                                        </span>
+                                    </p-panel>
+                                }
+                            </div>
+                        </ng-template>
+                    </p-carousel>
+                </div>
+
+                <div class="media-detail-bottom-area">
+                    <div class="media-detail-bar-container">
+                        <p-carousel
+                            [value]="barPages"
+                            [numVisible]="1"
+                            [numScroll]="1"
+                            [circular]="true"
+                            [showNavigators]="false"
+                            [showIndicators]="true"
+                        >
+                            <ng-template #item let-page>
+                                <div
+                                    class="media-detail-bar-slide"
+                                    (touchstart)="$event.stopPropagation()"
+                                    (touchmove)="$event.stopPropagation()"
+                                    (touchend)="$event.stopPropagation()"
+                                >
+                                    @if (page === 'genres') {
+                                        <div class="media-detail-genre-bar">
+                                            @let genres = mediaData.tmdbGenres;
+                                            @for (genre of genres; track genre) {
+                                                <p-tag>
+                                                    {{ genre.name }}
+                                                </p-tag>
+                                            }
+                                        </div>
+                                    } @else {
+                                        <div class="media-detail-link-bar">
+                                            <p-tag>
+                                                <a [href]="tmdbMediaUrl + mediaData.type + '/' + mediaData.tmdbId"
+                                                   target="_blank"
+                                                   rel="noopener noreferrer">
+                                                    <i class="pi pi-link"></i>
+                                                    TMDB
+                                                </a>
+                                            </p-tag>
+
+                                            @if (mediaData.imdbId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.imdb.com/title/' + mediaData.imdbId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        IMDB
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.homepage) {
+                                                <p-tag>
+                                                    <a [href]="mediaData.homepage"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        Offizielle Homepage
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.tvdbId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.thetvdb.com/dereferrer/series/' + mediaData.tvdbId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        TVDB
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.twitterId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.x.com/' + mediaData.twitterId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-twitter"></i>
+                                                        X
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.facebookId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.facebook.com/' + mediaData.facebookId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-facebook"></i>
+                                                        Facebook
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.instagramId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.instagram.com/' + mediaData.instagramId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-instagram"></i>
+                                                        Instagram
+                                                    </a>
+                                                </p-tag>
+                                            }
+
+                                            @if (mediaData.wikidataId) {
+                                                <p-tag>
+                                                    <a [href]="'https://www.wikidata.org/wiki/' + mediaData.wikidataId"
+                                                       target="_blank"
+                                                       rel="noopener noreferrer">
+                                                        <i class="pi pi-link"></i>
+                                                        Wikidata
+                                                    </a>
+                                                </p-tag>
+                                            }
+                                        </div>
+                                    }
+                                </div>
+                            </ng-template>
+                        </p-carousel>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="media-detail-tabs-scroll-wrapper">
+            <p-tabs [value]="activeTab()" (valueChange)="onTabChange($event)">
+                <p-tablist>
+                    <p-tab [value]="paths.tracklists">
+                        <i [class]="'pi pi-list'"></i>
+                        <span>Tracklisten</span>
+                    </p-tab>
+                    <p-tab [value]="paths.recommendations">
+                        <i [class]="'pi pi-sparkles'"></i>
+                        <span>Ähnliches</span>
+                    </p-tab>
+                    <p-tab [value]="paths.analytics" disabled>
+                        <i [class]="'pi pi-chart-pie'"></i>
+                        <span>Analyse</span>
+                    </p-tab>
+                    <p-tab [value]="paths.activities" disabled>
+                        <i [class]="'pi pi-arrow-right-arrow-left'"></i>
+                        <span>Aktivitäten</span>
+                    </p-tab>
+                    <p-tab [value]="paths.persons" disabled>
+                        <i [class]="'pi pi-user'"></i>
+                        <span>Personen</span>
+                    </p-tab>
+                    <p-tab [value]="paths.persons" disabled>
+                        <i [class]="'pi pi-play-circle'"></i>
+                        <span>Anbieter</span>
+                    </p-tab>
+                    <p-tab [value]="paths.persons" disabled>
+                        <i [class]="'pi pi-comments'"></i>
+                        <span>Kommentare</span>
+                    </p-tab>
+                </p-tablist>
+            </p-tabs>
+        </div>
+
+        <router-outlet></router-outlet>
+    } @else if(!viewState.loading && !viewState.data) {
+        <div>
+            <p-panel header="Fehler beim Laden der Seite" class="error">
+                <p>
+                    Leider ist beim Laden der Season ein Fehler aufgetreten. Bitte
+                    versuchen Sie es erneut durch ein erneutes Laden der Seite.
+                </p>
+            </p-panel>
+        </div>
+    }
+</div>

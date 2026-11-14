@@ -14,10 +14,10 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 import { Component, input, InputSignal, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {MediaResponse} from '../../../../app/features/media/models/response/media-response.dto';
+import {MediaResponse} from '../../../../app/features/the-movie-db/media/models/response/media-response.dto';
 import {
     MediaSeasonDetailResponseDto
-} from '../../../../app/features/media/models/response/media-season-detail-response.dto';
+} from '../../../../app/features/the-movie-db/media/models/response/media-season-detail-response.dto';
 
 @Component({
     selector: 'app-media-metadata',
