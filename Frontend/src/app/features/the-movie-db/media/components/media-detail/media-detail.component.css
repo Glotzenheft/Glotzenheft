@@ -114,6 +114,35 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     min-width: 0;
 }
 
+.media-detail-panel-carousel,
+.media-detail-bar-container {
+    /* Two indicators, their gap and the list's horizontal padding. */
+    --carousel-frame-gap: calc(
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-list-gap, 0.5rem) + 1rem
+    );
+}
+
+:host ::ng-deep .media-detail-panel-slide .p-panel::after,
+.media-detail-bar-slide::after {
+    content: '';
+    position: absolute;
+    inset: var(--carousel-frame-inset);
+    border: var(--carousel-frame-width) solid var(--carousel-frame-color);
+    border-radius: inherit;
+    pointer-events: none;
+    /* Cut only the frame, leaving the backdrop visible beneath the indicators. */
+    clip-path: polygon(
+        0 0, 100% 0, 100% 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        0 100%
+    );
+}
+
 :host ::ng-deep .media-detail-meta-content-container .p-panel {
     display: flex;
     flex: 1 1 auto;
@@ -122,8 +151,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     min-height: 0;
     margin: 0;
     background: none;
-    border: 2px solid #ffffff;
-    border-bottom: 0;
+    position: relative;
+    --carousel-frame-width: 2px;
+    --carousel-frame-color: #fff;
+    --carousel-frame-inset: -2px;
+    border: 2px solid transparent;
     border-radius: 8px;
     box-shadow: none;
 }
@@ -171,6 +203,11 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .media-detail-bar-slide {
+    position: relative;
+    --carousel-frame-width: 1px;
+    --carousel-frame-color: #9ca3af;
+    --carousel-frame-inset: 0;
+    border-radius: 100px;
     display: flex;
     width: 100%;
     min-width: 0;
@@ -183,12 +220,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 :host ::ng-deep .media-detail-box .p-carousel-item > div {
     width: 100%;
     height: 100%;
-}
-
-:host ::ng-deep .p-carousel-indicator-list {
-    padding: 0.3rem 0;
-    height: auto;
-    min-height: 0;
 }
 
 :host ::ng-deep .media-detail-bar-container .p-carousel {
@@ -228,42 +259,26 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 :host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list {
     position: absolute;
     bottom: 0;
-    left: 0;
+    left: 50%;
     z-index: 1;
     box-sizing: border-box;
-    width: 100%;
+    width: max-content;
+    max-width: calc(100% - 2rem);
     height: auto;
     min-height: 0;
-    padding: 0.4rem 8px;
-    transform: translateY(50%);
+    padding: 0.4rem 0.5rem;
+    transform: translate(-50%, 50%);
     align-items: center;
     flex-wrap: nowrap;
     justify-content: safe center;
     overflow-x: auto;
     scrollbar-width: none;
-}
-
-:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list {
-    padding-inline: 1.4rem;
+    background: transparent;
 }
 
 :host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator-list::-webkit-scrollbar,
 :host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list::-webkit-scrollbar {
     display: none;
-}
-
-:host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator-list::before,
-:host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator-list::after,
-:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list::before,
-:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list::after {
-    content: '';
-    flex: 1 0 1rem;
-    border-top: 2px solid #fff;
-}
-
-:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list::before,
-:host ::ng-deep .media-detail-bar-container .p-carousel-indicator-list::after {
-    border-top: 1px solid #9ca3af;
 }
 
 :host ::ng-deep .media-detail-panel-carousel .p-carousel-indicator,
@@ -299,8 +314,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
 .media-detail-link-bar,
 .media-detail-genre-bar {
-    border: 1px solid #9ca3af;
-    border-bottom: 0;
+    border: 1px solid transparent;
     border-radius: 100px;
     width: 100%;
     min-width: 0;

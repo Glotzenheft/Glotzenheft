@@ -167,7 +167,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     min-height: 0;
     margin: 0;
     background: none;
-    border: 1px solid var(--p-primary-color);
+    border: 1px solid transparent;
     border-radius: 8px;
     box-shadow: none;
 }
@@ -187,6 +187,37 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     overflow-y: auto;
     scrollbar-width: none;
 }
+.season-panel-carousel {
+    position: relative;
+    border-radius: 8px;
+    --carousel-frame-width: 1px;
+    --carousel-frame-color: var(--p-primary-color);
+    /* Two indicators, their gap and the list's horizontal padding. */
+    --carousel-frame-gap: calc(
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-width, 2rem) +
+        var(--p-carousel-indicator-list-gap, 0.5rem) + 1rem
+    );
+}
+.season-panel-carousel::after {
+    content: '';
+    position: absolute;
+    /* Draw the frame outside the translated slides, fully inside the container. */
+    inset: 0;
+    box-sizing: border-box;
+    border: var(--carousel-frame-width) solid var(--carousel-frame-color);
+    border-radius: inherit;
+    pointer-events: none;
+    /* Cut only the frame, leaving the backdrop visible beneath the indicators. */
+    clip-path: polygon(
+        0 0, 100% 0, 100% 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        calc(50% + min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) calc(100% - var(--carousel-frame-width)),
+        calc(50% - min(var(--carousel-frame-gap), 100% - 2rem) / 2) 100%,
+        0 100%
+    );
+}
 :host ::ng-deep .season-panel-carousel .p-carousel-indicator-list {
     position: absolute;
     bottom: 0;
@@ -195,6 +226,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     box-sizing: border-box;
     width: max-content;
     max-width: calc(100% - 2rem);
+    height: auto;
     min-height: 0;
     padding: 0.4rem 0.5rem;
     transform: translate(-50%, 50%);
@@ -202,7 +234,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     justify-content: safe center;
     overflow-x: auto;
     scrollbar-width: none;
-    background: var(--p-accordion-content-background, var(--p-content-background));
+    background: transparent;
 }
 :host ::ng-deep .season-panel-carousel .p-carousel-indicator-list::-webkit-scrollbar {
     display: none;
