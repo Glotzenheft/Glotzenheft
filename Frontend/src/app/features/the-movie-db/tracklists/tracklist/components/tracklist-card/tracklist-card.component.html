@@ -30,7 +30,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
             } @else {
                 <div class="poster-fallback" role="img" aria-label="Kein Poster verfügbar"><i class="pi pi-image" aria-hidden="true"></i></div>
             }
-            <span class="rating" aria-label="Bewertung"><i class="pi pi-star-fill" aria-hidden="true"></i> {{ tracklist.rating ?? '–' }} / 10</span>
+            <span class="rating" aria-label="Bewertung"><i class="pi pi-star-fill" aria-hidden="true"></i> {{ tracklist.rating ?? '–' }}</span>
         </div>
         <div class="tracklist-info">
             <div class="info-item"><span>{{ media.type | mediaType }}</span><span>{{ media.runtime !== null ? media.runtime + ' Minuten' : '–' }}</span></div>
