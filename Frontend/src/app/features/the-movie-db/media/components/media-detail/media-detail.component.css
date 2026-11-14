@@ -425,6 +425,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
     .media-detail-backdrop {
         position: absolute;
+        z-index: -1;
         top: 0;
         left: 0;
         right: 0;
@@ -435,8 +436,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         background-position: center top;
         background-repeat: no-repeat;
 
-        opacity: 0.4;
-        filter: blur(1px);
+        opacity: 0.95;
 
         mask-image: linear-gradient(to bottom, black 0%, transparent 80%);
         -webkit-mask-image: linear-gradient(to bottom, black 0%, transparent 80%);

@@ -46,7 +46,6 @@ import {DecimalPipe, DOCUMENT, isPlatformBrowser, NgOptimizedImage} from '@angul
 import {MessageService, PrimeTemplate} from 'primeng/api';
 import {ProgressSpinner} from 'primeng/progressspinner';
 import {
-    TMDB_BACKDROP_PATH,
     TMDB_ORIGINAL_IMAGE_PATH,
     TMDB_POSTER_PATH
 } from '../../../../../shared/variables/tmdb-vars';
@@ -101,7 +100,7 @@ export class MediaDetailComponent implements OnChanges{
 
     protected readonly originalPosterPath = TMDB_ORIGINAL_IMAGE_PATH;
     protected readonly posterPath = TMDB_POSTER_PATH;
-    protected readonly backdropPath = TMDB_BACKDROP_PATH;
+    protected readonly backdropPath = TMDB_ORIGINAL_IMAGE_PATH;
     protected readonly tmdbMediaUrl: string = TMDB_MAIN_ROUTE;
     protected readonly mediaTypes = MediaType;
     protected readonly boxPages = ['info', 'meta'];
