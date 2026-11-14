@@ -119,24 +119,86 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                                 {{ formatDate(panel.season.airDate) }}
                                                             </span>
                                                         </div>
-                                                        @if (panel.tracklist) {
+                                                        @if (panel.tracklist; as tracklist) {
                                                             <dl class="tracklist-detail-grid">
-                                                                @for (
-                                                                    detail of panel.details;
-                                                                    track detail.label
-                                                                ) {
-                                                                    <div class="season-page-info-item">
-                                                                        <dt class="season-page-info-label">
-                                                                            {{ detail.label }}:
-                                                                        </dt>
-                                                                        <dd
-                                                                            class="season-page-info-value"
-                                                                            [title]="detail.title || ''"
-                                                                        >
-                                                                            {{ detail.value }}
-                                                                        </dd>
-                                                                    </div>
-                                                                }
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Startdatum:</dt>
+                                                                    <dd
+                                                                        class="season-page-info-value"
+                                                                        [title]="formatDate(tracklist.startDate, true)"
+                                                                    >
+                                                                        {{ formatDate(tracklist.startDate) }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Enddatum:</dt>
+                                                                    <dd
+                                                                        class="season-page-info-value"
+                                                                        [title]="formatDate(tracklist.finishDate, true)"
+                                                                    >
+                                                                        {{ formatDate(tracklist.finishDate) }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Sprache:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ tracklist.language | languageName }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Untertitel:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ tracklist.subtitle | languageName }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Erste Episode:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ tracklist.tracklistSeason?.startEpisodeNumber ?? '–' }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Letzte Episode:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ tracklist.tracklistSeason?.endEpisodeNumber ?? '–' }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Staffelnummer:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ tracklist.tracklistSeason?.customSeasonNumber ?? '–' }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Part:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ tracklist.tracklistSeason?.customPartNumber ?? '–' }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Erstelldatum:</dt>
+                                                                    <dd
+                                                                        class="season-page-info-value"
+                                                                        [title]="formatDate(tracklist.createdAt, true)"
+                                                                    >
+                                                                        {{ formatDate(tracklist.createdAt) }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item">
+                                                                    <dt class="season-page-info-label">Zuletzt geändert:</dt>
+                                                                    <dd
+                                                                        class="season-page-info-value"
+                                                                        [title]="formatDate(tracklist.updatedAt, true)"
+                                                                    >
+                                                                        {{ formatDate(tracklist.updatedAt) }}
+                                                                    </dd>
+                                                                </div>
+                                                                <div class="season-page-info-item tracklist-air-date">
+                                                                    <dt class="season-page-info-label">Erscheinungsdatum:</dt>
+                                                                    <dd class="season-page-info-value">
+                                                                        {{ formatDate(tracklist.customAirDate) }}
+                                                                    </dd>
+                                                                </div>
                                                             </dl>
                                                         } @else {
                                                             <p>

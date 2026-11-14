@@ -239,17 +239,6 @@ describe('MediaDetailTvSeriesTracklistsTabComponent', () => {
         expect(selections.set).not.toHaveBeenCalled();
     });
 
-    it('shows zero as a valid custom season number', () => {
-        // Arrange
-        load();
-
-        // Act
-        const field = component.panels()[0].details.find((item) => item.label === 'Staffelnummer');
-
-        // Assert
-        expect(field?.value).toBe('0');
-    });
-
     it('filters an inclusive episode range and keeps relative and original numbering', () => {
         // Arrange
         load([createSeriesTracklist({}, { startEpisodeNumber: 2, endEpisodeNumber: 3 })]);

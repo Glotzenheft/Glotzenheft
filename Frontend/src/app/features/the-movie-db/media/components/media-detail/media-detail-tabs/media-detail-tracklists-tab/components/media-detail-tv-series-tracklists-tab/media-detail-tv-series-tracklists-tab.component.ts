@@ -70,6 +70,7 @@ import {
         Dialog,
         FormsModule,
         Image,
+        LanguageNamePipe,
         Message,
         Panel,
         RouterLink,
@@ -94,7 +95,6 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     private readonly selectedIds = signal<Record<number, number>>({});
     private readonly allEpisodes = signal<ReadonlySet<number>>(new Set());
     private readonly openRefs = new Set<DynamicDialogRef>();
-    private readonly languages = new LanguageNamePipe();
     private readonly dateFormat = new Intl.DateTimeFormat('de-DE', {
         day: '2-digit',
         month: '2-digit',
@@ -181,7 +181,6 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
                     tracklist,
                     hasBoundaries,
                     showAll: all.has(season.id),
-                    details: tracklist ? this.tracklistDetails(tracklist) : [],
                     identifiers: [
                         { label: 'Tracklist Id', value: String(tracklist?.id ?? '–') },
                         { label: 'Tracklist-Staffel Id', value: String(range?.id ?? '–') },
@@ -489,40 +488,4 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
         return `${prefix}: ${episode.name}`;
     }
 
-    private tracklistDetails(tracklist: TracklistResponseDto) {
-        const season = tracklist.tracklistSeason;
-        return [
-            {
-                label: 'Startdatum',
-                value: this.formatDate(tracklist.startDate),
-                title: this.formatDate(tracklist.startDate, true),
-            },
-            { label: 'Bewertung', value: tracklist.rating === null ? '–' : `${tracklist.rating} / 10` },
-            { label: 'Sprache', value: this.languages.transform(tracklist.language) },
-            { label: 'Erste Episode', value: String(season?.startEpisodeNumber ?? '–') },
-            {
-                label: 'Enddatum',
-                value: this.formatDate(tracklist.finishDate),
-                title: this.formatDate(tracklist.finishDate, true),
-            },
-            { label: 'Status', value: TRACKLIST_STATUS_LABELS_DE[tracklist.status] },
-            { label: 'Untertitel', value: this.languages.transform(tracklist.subtitle) },
-            { label: 'Letzte Episode', value: String(season?.endEpisodeNumber ?? '–') },
-            {
-                label: 'Erstelldatum',
-                value: this.formatDate(tracklist.createdAt),
-                title: this.formatDate(tracklist.createdAt, true),
-            },
-            { label: 'Erneut glotzen?', value: tracklist.isRewatching ? 'Ja' : 'Nein' },
-            { label: 'Staffelnummer', value: String(season?.customSeasonNumber ?? '–') },
-            {
-                label: 'Zuletzt geändert',
-                value: this.formatDate(tracklist.updatedAt),
-                title: this.formatDate(tracklist.updatedAt, true),
-            },
-            { label: 'Eigenes Erscheinungsdatum', value: this.formatDate(tracklist.customAirDate) },
-            { label: 'Eigenes Poster?', value: tracklist.customPosterPath ? 'Ja' : 'Nein' },
-            { label: 'Part', value: String(season?.customPartNumber ?? '–') },
-        ];
-    }
 }

@@ -209,9 +209,12 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 .tracklist-detail-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(4, minmax(0, 1fr));
     gap: 0.5rem 1rem;
     margin: 0;
+}
+.tracklist-air-date {
+    grid-column: span 2;
 }
 .season-identifier-grid {
     display: grid;
@@ -403,11 +406,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     gap: 0.75rem;
     margin-bottom: 1rem;
 }
-@media (min-width: 1600px) {
-    .tracklist-detail-grid {
-        grid-template-columns: repeat(4, minmax(0, 1fr));
-    }
-}
 @media (max-width: 950px) {
     .season-page-information-area {
         flex-direction: column;
@@ -425,6 +423,9 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
     .tracklist-detail-grid {
         grid-template-columns: minmax(0, 1fr);
+    }
+    .tracklist-air-date {
+        grid-column: auto;
     }
     .season-page-action-bar {
         flex-direction: column;
