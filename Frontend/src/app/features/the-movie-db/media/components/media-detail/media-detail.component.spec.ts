@@ -19,7 +19,7 @@ import { HttpErrorResponse } from '@angular/common/http';
 import { TestBed } from '@angular/core/testing';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MessageService } from 'primeng/api';
-import { of, Subject, throwError } from 'rxjs';
+import { EMPTY, of, Subject, throwError } from 'rxjs';
 import { MediaResponse } from '../../models/response/media-response.dto';
 import { MediaDetailStateService } from '../../services/media-detail-state.service';
 import { MediaDetailService } from '../../services/media-detail.service';
@@ -39,8 +39,8 @@ describe('MediaDetailComponent loading', () => {
             providers: [
                 MediaDetailStateService,
                 { provide: MediaDetailService, useValue: api },
-                { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate']) },
-                { provide: ActivatedRoute, useValue: {} },
+                { provide: Router, useValue: jasmine.createSpyObj('Router', ['navigate'], { events: EMPTY }) },
+                { provide: ActivatedRoute, useValue: { snapshot: { firstChild: null } } },
                 { provide: MessageService, useValue: messageService },
             ],
         });

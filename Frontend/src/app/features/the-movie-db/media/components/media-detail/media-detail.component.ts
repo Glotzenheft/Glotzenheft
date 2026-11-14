@@ -26,17 +26,16 @@ import {
     OnChanges,
     PLATFORM_ID,
     signal,
-    viewChild,
-    WritableSignal
+    viewChild
 } from '@angular/core';
 import {MediaDetailService} from '../../services/media-detail.service';
 import {MediaDetailStateService} from '../../services/media-detail-state.service';
 import {MediaResponse} from '../../models/response/media-response.dto';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
-import {Subscription} from 'rxjs';
+import {filter, startWith, Subscription} from 'rxjs';
 import {MEDIA_DETAILS_PATHS} from '../../../../../core/constants/paths.constants';
-import {ActivatedRoute, Router, RouterOutlet} from '@angular/router';
+import {ActivatedRoute, NavigationEnd, Router, RouterOutlet} from '@angular/router';
 import {Tab, TabList, Tabs} from 'primeng/tabs';
 import {Tooltip} from 'primeng/tooltip';
 import {Button} from 'primeng/button';
@@ -112,7 +111,7 @@ export class MediaDetailComponent implements OnChanges{
 
     public state = inject(MediaDetailStateService);
 
-    activeTab: WritableSignal<string> = signal<string>('tracklists');
+    readonly activeTab = signal<string>(MEDIA_DETAILS_PATHS.tracklists);
     paths = MEDIA_DETAILS_PATHS;
 
     showOriginalTitle = signal<boolean>(false);
@@ -123,6 +122,14 @@ export class MediaDetailComponent implements OnChanges{
     isTitleCopied = signal<boolean>(false);
 
     constructor() {
+        this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd),
+            startWith(null),
+            takeUntilDestroyed(this.destroyRef),
+        ).subscribe(() => {
+            this.activeTab.set(this.route.snapshot.firstChild?.routeConfig?.path ?? MEDIA_DETAILS_PATHS.tracklists);
+        });
+
         effect(() => {
             if (this.mediaTitleElement()) {
                 setTimeout(() => this.checkTruncation())
@@ -172,7 +179,6 @@ export class MediaDetailComponent implements OnChanges{
 
     onTabChange(newRoute: string | number): void {
         const routeStr = newRoute.toString();
-        this.activeTab.set(routeStr);
         void this.router.navigate([routeStr], { relativeTo: this.route });
     }
 
