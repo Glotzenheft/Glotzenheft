@@ -45,7 +45,7 @@ export interface UserActivity {
     tracklistEpisodeID: number | null;
     tracklistID: number;
     tracklistName: string;
-    tracklistSeasinID: number | null;
+    tracklistSeasonID: number | null;
     type: string;
 }
 
@@ -70,7 +70,7 @@ export interface UserActivityWithDaySplitt {
     tracklistEpisodeID: number | null;
     tracklistID: number;
     tracklistName: string;
-    tracklistSeasinID: number | null;
+    tracklistSeasonID: number | null;
     type: string;
     isDateSplitter: boolean;
     picture: string | null;

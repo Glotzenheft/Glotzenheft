@@ -200,7 +200,7 @@ export class WatchedComponent implements OnInit {
                             tracklistEpisodeID: null,
                             tracklistID: -1,
                             tracklistName: '',
-                            tracklistSeasinID: null,
+                            tracklistSeasonID: null,
                             type: '',
                             isDateSplitter: true,
                             picture: null,

@@ -76,12 +76,6 @@ trait RequestTrait
 
         $watchDate = $request->query->get('watch_date') ?: null;
 
-        $statisticPeriodStartDate = $request->query->get('period_start_date') ?: null;
-
-        $statisticPeriodEndDate = $request->query->get('period_end_date') ?: null;
-
-        $userActivityPage = filter_var($request->query->get('user_activity_page'), FILTER_VALIDATE_INT) ?: null;
-
         return [
             'user_id' => $userID,
             'user_name' => $userName,
@@ -103,9 +97,6 @@ trait RequestTrait
             'tracklist_start_date' => $tracklistStartDate,
             'tracklist_finish_date' => $tracklistFinishDate,
             'watch_date' => $watchDate,
-            'period_start_date' => $statisticPeriodStartDate,
-            'period_end_date' => $statisticPeriodEndDate,
-            'user_activity_page' => $userActivityPage,
         ];
     }
 
@@ -377,14 +368,6 @@ trait RequestTrait
     {
         return [
             'error' => 'Invalid rating provided. Rating must be between 1 and 10.',
-            'code' => Response::HTTP_BAD_REQUEST
-        ];
-    }
-
-    private function returnInvalidDate(): array
-    {
-        return [
-            'error' => 'Invalid date provided. Use the following format: Y-m-d.',
             'code' => Response::HTTP_BAD_REQUEST
         ];
     }
