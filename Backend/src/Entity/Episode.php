@@ -84,9 +84,16 @@ class Episode
     #[ORM\Column(options: ['default' => 0])]
     private int $voteCount = 0;
 
+    /**
+     * @var Collection<int, WatchActivity>
+     */
+    #[ORM\OneToMany(targetEntity: WatchActivity::class, mappedBy: 'episode')]
+    private Collection $watchActivities;
+
     public function __construct()
     {
         $this->tracklistEpisodes = new ArrayCollection();
+        $this->watchActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -236,6 +243,36 @@ class Episode
     public function setVoteCount(int $voteCount): static
     {
         $this->voteCount = $voteCount;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WatchActivity>
+     */
+    public function getWatchActivities(): Collection
+    {
+        return $this->watchActivities;
+    }
+
+    public function addWatchActivity(WatchActivity $watchActivity): static
+    {
+        if (!$this->watchActivities->contains($watchActivity)) {
+            $this->watchActivities->add($watchActivity);
+            $watchActivity->setEpisode($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWatchActivity(WatchActivity $watchActivity): static
+    {
+        if ($this->watchActivities->removeElement($watchActivity)) {
+            // set the owning side to null (unless already changed)
+            if ($watchActivity->getEpisode() === $this) {
+                $watchActivity->setEpisode(null);
+            }
+        }
 
         return $this;
     }

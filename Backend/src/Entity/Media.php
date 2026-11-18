@@ -154,11 +154,18 @@ class Media
     #[ORM\Column(type: Types::BIGINT, options: ['default' => 0])]
     private string $revenue = '0';
 
+    /**
+     * @var Collection<int, WatchActivity>
+     */
+    #[ORM\OneToMany(targetEntity: WatchActivity::class, mappedBy: 'media')]
+    private Collection $watchActivities;
+
     public function __construct()
     {
         $this->tmdbGenres = new ArrayCollection();
         $this->seasons = new ArrayCollection();
         $this->tracklists = new ArrayCollection();
+        $this->watchActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -549,6 +556,36 @@ class Media
     public function setRevenue(string $revenue): static
     {
         $this->revenue = $revenue;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WatchActivity>
+     */
+    public function getWatchActivities(): Collection
+    {
+        return $this->watchActivities;
+    }
+
+    public function addWatchActivity(WatchActivity $watchActivity): static
+    {
+        if (!$this->watchActivities->contains($watchActivity)) {
+            $this->watchActivities->add($watchActivity);
+            $watchActivity->setMedia($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWatchActivity(WatchActivity $watchActivity): static
+    {
+        if ($this->watchActivities->removeElement($watchActivity)) {
+            // set the owning side to null (unless already changed)
+            if ($watchActivity->getMedia() === $this) {
+                $watchActivity->setMedia(null);
+            }
+        }
 
         return $this;
     }

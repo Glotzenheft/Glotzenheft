@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampsTrait;
+use App\Enum\WatchActivityVisibility;
 use App\Repository\TracklistEpisodeRepository;
 use DateTimeInterface;
 use Doctrine\DBAL\Types\Types;
@@ -59,6 +60,12 @@ class TracklistEpisode
 
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $backupHash = null;
+
+    #[ORM\OneToOne(mappedBy: 'tracklistEpisode', cascade: ['persist', 'remove'])]
+    private ?WatchActivity $watchActivity = null;
+
+    #[ORM\Column(nullable: true, enumType: WatchActivityVisibility::class)]
+    private ?WatchActivityVisibility $watchVisibilityOverride = null;
 
     public function getId(): ?int
     {
@@ -109,6 +116,40 @@ class TracklistEpisode
     public function setBackupHash(?string $backupHash): static
     {
         $this->backupHash = $backupHash;
+
+        return $this;
+    }
+
+    public function getWatchActivity(): ?WatchActivity
+    {
+        return $this->watchActivity;
+    }
+
+    public function setWatchActivity(?WatchActivity $watchActivity): static
+    {
+        // unset the owning side of the relation if necessary
+        if ($watchActivity === null && $this->watchActivity !== null) {
+            $this->watchActivity->setTracklistEpisode(null);
+        }
+
+        // set the owning side of the relation if necessary
+        if ($watchActivity !== null && $watchActivity->getTracklistEpisode() !== $this) {
+            $watchActivity->setTracklistEpisode($this);
+        }
+
+        $this->watchActivity = $watchActivity;
+
+        return $this;
+    }
+
+    public function getWatchVisibilityOverride(): ?WatchActivityVisibility
+    {
+        return $this->watchVisibilityOverride;
+    }
+
+    public function setWatchVisibilityOverride(?WatchActivityVisibility $watchVisibilityOverride): static
+    {
+        $this->watchVisibilityOverride = $watchVisibilityOverride;
 
         return $this;
     }
