@@ -34,11 +34,13 @@ use App\Repository\TracklistRepository;
 use App\Repository\TracklistSeasonRepository;
 use App\Service\RequestTrait;
 use App\Service\Traits\EntityValidationTrait;
+use App\Service\WatchActivity\WatchActivitySynchronizer;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 class TracklistEpisodeService
 {
@@ -51,12 +53,14 @@ class TracklistEpisodeService
         private readonly TracklistEpisodeRepository $tracklistEpisodeRepository,
         private readonly EpisodeRepository          $episodeRepository,
         private readonly EntityManagerInterface     $entityManager,
+        private readonly WatchActivitySynchronizer  $watchActivitySynchronizer,
     ){}
 
     /**
      * @param CreateTracklistEpisodeRequestDto $dto
      * @param User $user
      * @return TracklistEpisodeDetailDataDto
+     * @throws Throwable
      */
     public function createTracklistEpisode(
         CreateTracklistEpisodeRequestDto $dto,
@@ -66,7 +70,7 @@ class TracklistEpisodeService
         $tracklistEpisode = $this->prepareTracklistEpisode($dto, $user);
 
         $this->entityManager->persist($tracklistEpisode);
-        $this->entityManager->flush();
+        $this->watchActivitySynchronizer->flush(episodes: [$tracklistEpisode]);
 
         return TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
     }
@@ -75,23 +79,34 @@ class TracklistEpisodeService
      * @param CreateBulkTracklistEpisodeRequestDto $dto
      * @param User $user
      * @return array<TracklistEpisodeDetailDataDto>
+     * @throws Throwable
      */
     public function createBulkTracklistEpisodes(
         CreateBulkTracklistEpisodeRequestDto $dto,
         User $user,
     ): array
     {
-        $responses = [];
+        $episodes = [];
+        $seen = [];
 
         foreach ($dto->episodes as $episodeDto) {
             $tracklistEpisode = $this->prepareTracklistEpisode($episodeDto, $user);
-            $this->entityManager->persist($tracklistEpisode);
-            $responses[] = TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
+            $seasonId = $tracklistEpisode->getTracklistSeason()->getId();
+            $episodeId = $tracklistEpisode->getEpisode()->getId();
+            if (isset($seen[$seasonId][$episodeId])) {
+                throw new ConflictHttpException(message: 'This episode is already added to the tracklist season.');
+            }
+            $seen[$seasonId][$episodeId] = true;
+            $episodes[] = $tracklistEpisode;
         }
 
-        $this->entityManager->flush();
+        foreach ($episodes as $tracklistEpisode) {
+            $this->entityManager->persist($tracklistEpisode);
+        }
 
-        return $responses;
+        $this->watchActivitySynchronizer->flush(episodes: $episodes);
+
+        return array_map(TracklistEpisodeDetailDataDto::fromEntity(...), $episodes);
     }
 
     /**
@@ -100,6 +115,7 @@ class TracklistEpisodeService
      * @param User $user
      * @param Request $request
      * @return TracklistEpisodeDetailDataDto
+     * @throws Throwable
      */
     public function updateTracklistEpisode(
         int $tracklistEpisodeId,
@@ -126,7 +142,7 @@ class TracklistEpisodeService
         $tracklistEpisode->setUpdatedAt(new DateTimeImmutable());
 
         $this->entityManager->persist($tracklistEpisode);
-        $this->entityManager->flush();
+        $this->watchActivitySynchronizer->flush(episodes: [$tracklistEpisode]);
 
         return TracklistEpisodeDetailDataDto::fromEntity($tracklistEpisode);
     }
