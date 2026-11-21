@@ -19,13 +19,16 @@ import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { MediaDetailActivitiesTabComponent } from './media-detail-activities-tab.component';
 
+import { MediaDetailStateService } from '../../../../services/media-detail-state.service';
+
 describe('MediaDetailActivitiesTabComponent', () => {
   let component: MediaDetailActivitiesTabComponent;
   let fixture: ComponentFixture<MediaDetailActivitiesTabComponent>;
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      imports: [MediaDetailActivitiesTabComponent]
+      imports: [MediaDetailActivitiesTabComponent],
+      providers: [MediaDetailStateService]
     })
     .compileComponents();
 

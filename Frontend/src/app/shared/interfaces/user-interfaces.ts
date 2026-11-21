@@ -15,6 +15,29 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+import { MediaType } from '../../features/the-movie-db/media/models/enums/media-type.enum';
+
+export type ActivitySortOrder = 'desc' | 'asc';
+
+export interface ActivityPageRequestDto {
+    user_activity_page: number;
+    items_per_page: number;
+    media_type?: MediaType;
+    search?: string;
+    sort_order?: ActivitySortOrder;
+}
+
+export interface ActivityMedia {
+    id: number;
+    type: MediaType;
+}
+
+export interface ActivityDayResponseDto {
+    day: string;
+    count: number;
+    minutes: number;
+}
+
 interface UserMenuItem {
     label: string;
     icon: string;
@@ -54,31 +77,5 @@ export interface UserActivitiesResponse {
     total_pages: number;
     total_results: number;
     results: UserActivity[];
-}
-
-export interface UserActivityWithDaySplitt {
-    date: string;
-    episodeID: number | null;
-    episodeNumber: number | null;
-    mediaID: number;
-    mediaTitle: string;
-    posterPath: string | null;
-    runtime: number | null;
-    seasonID: number | null;
-    seasonNumber: number | null;
-    stillPath: string | null; // if episode
-    tracklistEpisodeID: number | null;
-    tracklistID: number;
-    tracklistName: string;
-    tracklistSeasonID: number | null;
-    type: string;
-    isDateSplitter: boolean;
-    picture: string | null;
-}
-
-export interface UserActivitiesPageEvent {
-    first: number;
-    rows: number;
-    page: number;
-    pageCount: number;
+    days: ActivityDayResponseDto[];
 }

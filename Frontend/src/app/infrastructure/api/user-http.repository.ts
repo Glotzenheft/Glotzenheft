@@ -59,6 +59,8 @@ import {
 } from '../../shared/statistic-interfaces';
 import {
     DeleteUserRequest,
+    ActivityMedia,
+    ActivityPageRequestDto,
     UserActivitiesResponse,
 } from '../../shared/interfaces/user-interfaces';
 import { I_UserRepository } from '../../core/interfaces/user.repository';
@@ -312,13 +314,9 @@ export class R_UserHTTP implements I_UserRepository {
                 );
         };
 
-    /**
-     * Function for getting the data of the recent user activities.
-     * @param responsePage number
-     * @returns Observable<UserActivity> | null
-     */
     public getUserActivities = (
-        responsePage: number,
+        request: ActivityPageRequestDto,
+        media?: ActivityMedia,
     ): Observable<UserActivitiesResponse> | null => {
         const header = this.getHeaderUseCase.execute();
 
@@ -326,16 +324,11 @@ export class R_UserHTTP implements I_UserRepository {
             return null;
         }
 
-        return this.http
-            .get<UserActivitiesResponse>(ROUTE_USER_ACTIVITIES + responsePage, {
-                headers: header,
-            })
-            .pipe(
-                shareReplay(1),
-                catchError((error: HttpErrorResponse) => {
-                    return throwError(() => error);
-                }),
-            );
+        const url = media ? `/api/${media.type}/${media.id}/activities` : ROUTE_USER_ACTIVITIES;
+        return this.http.get<UserActivitiesResponse>(url, {
+            headers: header,
+            params: { ...request },
+        });
     };
 
     public getUserRatings = (): Observable<RatingStatistic> | null => {
