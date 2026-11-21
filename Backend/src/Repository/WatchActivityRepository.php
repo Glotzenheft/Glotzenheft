@@ -22,6 +22,9 @@ namespace App\Repository;
 
 use App\Entity\User;
 use App\Entity\WatchActivity;
+use App\Enum\ActivitySortOrder;
+use App\Enum\MediaType;
+use App\Model\Response\User\ActivityDayResponseDto;
 use App\Model\Response\User\WatchActivityResponseDto;
 use DateTimeImmutable;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
@@ -58,20 +61,28 @@ class WatchActivityRepository extends ServiceEntityRepository
             ->getScalarResult();
     }
 
-    public function countDatedByUser(User $user): int
+    public function countDatedByUser(User $user, ?MediaType $type, ?int $mediaId, string $search = ''): int
     {
-        return (int) $this->datedActivities($user)
+        return (int) $this->datedActivities($user, $type, $mediaId, $search)
             ->select('COUNT(activity.id)')
             ->getQuery()
             ->getSingleScalarResult();
     }
 
     /** @return list<WatchActivityResponseDto> */
-    public function findDatedByUser(User $user, int $offset, int $limit): array
+    public function findDatedByUser(
+        User $user,
+        int $offset,
+        int $limit,
+        ?MediaType $type,
+        ?int $mediaId,
+        string $search = '',
+        ActivitySortOrder $sortOrder = ActivitySortOrder::Newest,
+    ): array
     {
         $dto = WatchActivityResponseDto::class;
 
-        return $this->datedActivities($user)
+        return $this->datedActivities($user, $type, $mediaId, $search)
             ->select(<<<DQL
                 NEW $dto(
                     activity.watchedAt,
@@ -90,25 +101,61 @@ class WatchActivityRepository extends ServiceEntityRepository
                     CASE WHEN episode.id IS NULL THEN media.backdropPath ELSE episode.stillPath END
                 )
                 DQL)
-            ->join('activity.media', 'media')
-            ->join('activity.tracklist', 'tracklist')
             ->leftJoin('activity.episode', 'episode')
             ->leftJoin('episode.season', 'season')
             ->leftJoin('activity.tracklistEpisode', 'tracklistEpisode')
             ->leftJoin('tracklistEpisode.tracklistSeason', 'tracklistSeason')
-            ->orderBy('activity.watchedAt', 'DESC')
-            ->addOrderBy('activity.id', 'DESC')
+            ->orderBy('activity.watchedAt', $sortOrder->value)
+            ->addOrderBy('activity.id', $sortOrder->value)
             ->setFirstResult($offset)
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
     }
 
-    private function datedActivities(User $user): QueryBuilder
+    /** @return list<ActivityDayResponseDto> */
+    public function summarizeDays(
+        User $user,
+        ?MediaType $type,
+        ?int $mediaId,
+        DateTimeImmutable $start,
+        DateTimeImmutable $endExclusive,
+        string $search = '',
+    ): array {
+        $dto = ActivityDayResponseDto::class;
+
+        return $this->datedActivities($user, $type, $mediaId, $search)
+            ->select("NEW $dto(WATCH_DATE(activity.watchedAt), COUNT(activity.id), SUM(CASE WHEN episode.id IS NULL THEN media.runtime ELSE episode.runtime END))")
+            ->leftJoin('activity.episode', 'episode')
+            ->andWhere('activity.watchedAt >= :start AND activity.watchedAt < :end')
+            ->setParameter('start', $start, Types::DATETIME_IMMUTABLE)
+            ->setParameter('end', $endExclusive, Types::DATETIME_IMMUTABLE)
+            ->addSelect('WATCH_DATE(activity.watchedAt) AS HIDDEN day')
+            ->groupBy('day')
+            ->getQuery()
+            ->getResult();
+    }
+
+    private function datedActivities(User $user, ?MediaType $type, ?int $mediaId, string $search): QueryBuilder
     {
-        return $this->createQueryBuilder('activity')
+        $query = $this->createQueryBuilder('activity')
+            ->join('activity.media', 'media')
+            ->join('activity.tracklist', 'tracklist')
             ->where('activity.user = :user')
             ->andWhere('activity.watchedAt IS NOT NULL')
             ->setParameter('user', $user);
+
+        if ($search !== '') {
+            $query->andWhere('(LOCATE(LOWER(:search), LOWER(media.name)) > 0 OR LOCATE(LOWER(:search), LOWER(tracklist.tracklistName)) > 0)')
+                ->setParameter('search', $search);
+        }
+        if ($type !== null) {
+            $query->andWhere('media.type = :type')->setParameter('type', $type->value);
+        }
+        if ($mediaId !== null) {
+            $query->andWhere('media.id = :mediaId')->setParameter('mediaId', $mediaId);
+        }
+
+        return $query;
     }
 }

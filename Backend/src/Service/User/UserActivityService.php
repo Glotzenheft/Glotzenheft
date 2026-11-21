@@ -21,30 +21,60 @@ declare(strict_types=1);
 namespace App\Service\User;
 
 use App\Entity\User;
+use App\Enum\MediaType;
+use App\Model\Request\User\ActivityPageRequestDto;
+use DateTimeImmutable;
 use App\Model\Request\User\UserActivitiesRequestDto;
 use App\Model\Response\User\UserActivitiesResponseDto;
 use App\Repository\WatchActivityRepository;
 
 class UserActivityService
 {
-    private const int PAGE_SIZE = 50;
-
     public function __construct(private readonly WatchActivityRepository $watchActivityRepository)
     {
     }
 
     public function getUserActivities(User $user, UserActivitiesRequestDto $request): UserActivitiesResponseDto
     {
-        $totalResults = $this->watchActivityRepository->countDatedByUser($user);
-        $totalPages = (int) ceil($totalResults / self::PAGE_SIZE);
+        return $this->getPage($user, $request, $request->mediaType, null);
+    }
+
+    public function getMediaActivities(User $user, ActivityPageRequestDto $request, MediaType $type, int $mediaId): UserActivitiesResponseDto
+    {
+        return $this->getPage($user, $request, $type, $mediaId);
+    }
+
+    private function getPage(User $user, ActivityPageRequestDto $request, ?MediaType $type, ?int $mediaId): UserActivitiesResponseDto
+    {
+        $search = trim($request->search);
+        $totalResults = $this->watchActivityRepository->countDatedByUser($user, $type, $mediaId, $search);
+        $totalPages = (int) ceil($totalResults / $request->itemsPerPage);
         $results = $request->page <= $totalPages
             ? $this->watchActivityRepository->findDatedByUser(
                 $user,
-                ($request->page - 1) * self::PAGE_SIZE,
-                self::PAGE_SIZE,
+                ($request->page - 1) * $request->itemsPerPage,
+                $request->itemsPerPage,
+                $type,
+                $mediaId,
+                $search,
+                $request->sortOrder,
             )
             : [];
 
-        return new UserActivitiesResponseDto($request->page, $totalPages, $totalResults, $results);
+        $days = [];
+        if ($results !== []) {
+            $first = new DateTimeImmutable($results[0]->date);
+            $last = new DateTimeImmutable($results[array_key_last($results)]->date);
+            $days = $this->watchActivityRepository->summarizeDays(
+                $user,
+                $type,
+                $mediaId,
+                min($first, $last)->setTime(0, 0),
+                max($first, $last)->modify('tomorrow midnight'),
+                $search,
+            );
+        }
+
+        return new UserActivitiesResponseDto($request->page, $totalPages, $totalResults, $results, $days);
     }
 }

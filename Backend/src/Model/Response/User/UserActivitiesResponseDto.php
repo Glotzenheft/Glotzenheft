@@ -24,7 +24,10 @@ use Symfony\Component\Serializer\Attribute\SerializedName;
 
 final readonly class UserActivitiesResponseDto
 {
-    /** @param list<WatchActivityResponseDto> $results */
+    /**
+     * @param list<WatchActivityResponseDto> $results
+     * @param list<ActivityDayResponseDto> $days
+     */
     public function __construct(
         public int $page,
         #[SerializedName('total_pages')]
@@ -32,5 +35,6 @@ final readonly class UserActivitiesResponseDto
         #[SerializedName('total_results')]
         public int $totalResults,
         public array $results,
+        public array $days,
     ){}
 }

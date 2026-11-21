@@ -20,14 +20,20 @@ declare(strict_types=1);
 
 namespace App\Model\Request\User;
 
+use App\Enum\ActivitySortOrder;
 use Symfony\Component\Serializer\Attribute\SerializedName;
-use Symfony\Component\Validator\Constraints as Assert;
+use App\Enum\MediaType;
 
-final readonly class UserActivitiesRequestDto
+final readonly class UserActivitiesRequestDto extends ActivityPageRequestDto
 {
     public function __construct(
-        #[SerializedName('user_activity_page')]
-        #[Assert\Positive]
-        public int $page = 1,
-    ){}
+        int $page = 1,
+        int $itemsPerPage = 50,
+        #[SerializedName('media_type')]
+        public ?MediaType $mediaType = null,
+        string $search = '',
+        ActivitySortOrder $sortOrder = ActivitySortOrder::Newest,
+    ) {
+        parent::__construct($page, $itemsPerPage, $search, $sortOrder);
+    }
 }
