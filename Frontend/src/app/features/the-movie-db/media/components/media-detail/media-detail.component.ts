@@ -30,6 +30,7 @@ import {
 } from '@angular/core';
 import {MediaDetailService} from '../../services/media-detail.service';
 import {MediaDetailStateService} from '../../services/media-detail-state.service';
+import { ACTIVITY_TABLE_STATE_PROVIDERS } from '../../../activities/components/activity-table/activity-table-state.service';
 import {MediaResponse} from '../../models/response/media-response.dto';
 import {HttpErrorResponse} from '@angular/common/http';
 import {takeUntilDestroyed} from '@angular/core/rxjs-interop';
@@ -81,7 +82,7 @@ import {
         Carousel,
         DatetimeWithUnitFormattingPipe
     ],
-    providers: [MediaDetailStateService],
+    providers: [MediaDetailStateService, ACTIVITY_TABLE_STATE_PROVIDERS],
     standalone: true,
     templateUrl: './media-detail.component.html',
     styleUrl: './media-detail.component.css'
