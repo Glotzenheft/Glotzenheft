@@ -28,9 +28,12 @@ use App\Model\Request\TracklistTag\UpdateTracklistTagRequestDto;
 use App\Model\Response\TracklistTag\TracklistTagLightResponseDto;
 use App\Model\Response\TracklistTag\TracklistTagResponseDto;
 use App\Model\Response\TracklistTag\TracklistTracklistTagResponseDto;
+use App\Model\Request\User\UserActivitiesRequestDto;
+use App\Model\Response\User\UserActivitiesResponseDto;
 use App\Repository\TracklistRepository;
 use App\Repository\TracklistTagRepository;
 use App\Service\Traits\EntityValidationTrait;
+use App\Service\User\UserActivityService;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
@@ -46,7 +49,15 @@ readonly class TracklistTagService
         private SluggerInterface       $slugger,
         private EntityManagerInterface $entityManager,
         private TracklistRepository    $tracklistRepository,
+        private UserActivityService    $activityService,
     ){}
+
+    public function getActivities(User $user, int $tagId, UserActivitiesRequestDto $request): UserActivitiesResponseDto
+    {
+        $tag = $this->findAndValidateTracklistTag($user, $tagId, $this->tracklistTagRepository);
+
+        return $this->activityService->getUserActivities($user, $request, $tag);
+    }
 
     /**
      * @param User $user

@@ -24,12 +24,14 @@ use App\Controller\API\Traits\ConditionalResponseTrait;
 use App\Entity\User;
 use App\Model\Request\TracklistTag\CreateTracklistTagRequestDto;
 use App\Model\Request\TracklistTag\UpdateTracklistTagRequestDto;
+use App\Model\Request\User\UserActivitiesRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\TracklistTag\TracklistTagService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -40,6 +42,23 @@ class TracklistTagController extends AbstractController
     public function __construct(
         private readonly TracklistTagService $tracklistTagService
     ){}
+
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tags/{tagId}/activities',
+        name: 'get_tracklist_tag_activities',
+        requirements: ['tagId' => '[1-9]\d*'],
+        methods: ['GET'],
+        stateless: true,
+    )]
+    public function getActivities(
+        User $user,
+        int $tagId,
+        #[MapQueryString(validationFailedStatusCode: Response::HTTP_UNPROCESSABLE_ENTITY)]
+        UserActivitiesRequestDto $request = new UserActivitiesRequestDto(),
+    ): JsonResponse {
+        return $this->json($this->tracklistTagService->getActivities($user, $tagId, $request));
+    }
 
     #[IsAuthenticated]
     #[Route(

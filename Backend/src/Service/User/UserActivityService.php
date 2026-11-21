@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace App\Service\User;
 
+use App\Entity\TracklistTag;
 use App\Entity\User;
 use App\Enum\MediaType;
 use App\Model\Request\User\ActivityPageRequestDto;
@@ -34,9 +35,9 @@ class UserActivityService
     {
     }
 
-    public function getUserActivities(User $user, UserActivitiesRequestDto $request): UserActivitiesResponseDto
+    public function getUserActivities(User $user, UserActivitiesRequestDto $request, ?TracklistTag $tag = null): UserActivitiesResponseDto
     {
-        return $this->getPage($user, $request, $request->mediaType, null);
+        return $this->getPage($user, $request, $request->mediaType, null, $tag);
     }
 
     public function getMediaActivities(User $user, ActivityPageRequestDto $request, MediaType $type, int $mediaId): UserActivitiesResponseDto
@@ -44,10 +45,16 @@ class UserActivityService
         return $this->getPage($user, $request, $type, $mediaId);
     }
 
-    private function getPage(User $user, ActivityPageRequestDto $request, ?MediaType $type, ?int $mediaId): UserActivitiesResponseDto
+    private function getPage(
+        User $user,
+        ActivityPageRequestDto $request,
+        ?MediaType $type,
+        ?int $mediaId,
+        ?TracklistTag $tag = null,
+    ): UserActivitiesResponseDto
     {
         $search = trim($request->search);
-        $totalResults = $this->watchActivityRepository->countDatedByUser($user, $type, $mediaId, $search);
+        $totalResults = $this->watchActivityRepository->countDatedByUser($user, $type, $mediaId, $search, $tag);
         $totalPages = (int) ceil($totalResults / $request->itemsPerPage);
         $results = $request->page <= $totalPages
             ? $this->watchActivityRepository->findDatedByUser(
@@ -58,6 +65,7 @@ class UserActivityService
                 $mediaId,
                 $search,
                 $request->sortOrder,
+                $tag,
             )
             : [];
 
@@ -72,6 +80,7 @@ class UserActivityService
                 min($first, $last)->setTime(0, 0),
                 max($first, $last)->modify('tomorrow midnight'),
                 $search,
+                $tag,
             );
         }
 

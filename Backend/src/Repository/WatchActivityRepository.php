@@ -20,6 +20,7 @@ declare(strict_types=1);
 
 namespace App\Repository;
 
+use App\Entity\TracklistTag;
 use App\Entity\User;
 use App\Entity\WatchActivity;
 use App\Enum\ActivitySortOrder;
@@ -61,9 +62,9 @@ class WatchActivityRepository extends ServiceEntityRepository
             ->getScalarResult();
     }
 
-    public function countDatedByUser(User $user, ?MediaType $type, ?int $mediaId, string $search = ''): int
+    public function countDatedByUser(User $user, ?MediaType $type, ?int $mediaId, string $search = '', ?TracklistTag $tag = null): int
     {
-        return (int) $this->datedActivities($user, $type, $mediaId, $search)
+        return (int) $this->datedActivities($user, $type, $mediaId, $search, $tag)
             ->select('COUNT(activity.id)')
             ->getQuery()
             ->getSingleScalarResult();
@@ -78,11 +79,12 @@ class WatchActivityRepository extends ServiceEntityRepository
         ?int $mediaId,
         string $search = '',
         ActivitySortOrder $sortOrder = ActivitySortOrder::Newest,
+        ?TracklistTag $tag = null,
     ): array
     {
         $dto = WatchActivityResponseDto::class;
 
-        return $this->datedActivities($user, $type, $mediaId, $search)
+        return $this->datedActivities($user, $type, $mediaId, $search, $tag)
             ->select(<<<DQL
                 NEW $dto(
                     activity.watchedAt,
@@ -121,10 +123,11 @@ class WatchActivityRepository extends ServiceEntityRepository
         DateTimeImmutable $start,
         DateTimeImmutable $endExclusive,
         string $search = '',
+        ?TracklistTag $tag = null,
     ): array {
         $dto = ActivityDayResponseDto::class;
 
-        return $this->datedActivities($user, $type, $mediaId, $search)
+        return $this->datedActivities($user, $type, $mediaId, $search, $tag)
             ->select("NEW $dto(WATCH_DATE(activity.watchedAt), COUNT(activity.id), SUM(CASE WHEN episode.id IS NULL THEN media.runtime ELSE episode.runtime END))")
             ->leftJoin('activity.episode', 'episode')
             ->andWhere('activity.watchedAt >= :start AND activity.watchedAt < :end')
@@ -136,7 +139,7 @@ class WatchActivityRepository extends ServiceEntityRepository
             ->getResult();
     }
 
-    private function datedActivities(User $user, ?MediaType $type, ?int $mediaId, string $search): QueryBuilder
+    private function datedActivities(User $user, ?MediaType $type, ?int $mediaId, string $search, ?TracklistTag $tag): QueryBuilder
     {
         $query = $this->createQueryBuilder('activity')
             ->join('activity.media', 'media')
@@ -154,6 +157,10 @@ class WatchActivityRepository extends ServiceEntityRepository
         }
         if ($mediaId !== null) {
             $query->andWhere('media.id = :mediaId')->setParameter('mediaId', $mediaId);
+        }
+
+        if ($tag !== null) {
+            $query->andWhere(':tag MEMBER OF tracklist.tracklistTags')->setParameter('tag', $tag);
         }
 
         return $query;
