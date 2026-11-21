@@ -146,6 +146,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 }
 
 .glass-row {
+    font-weight: 700;
     display: grid;
     grid-template-columns: var(--columns);
     grid-template-areas: "poster date episode runtime media tracklist";
@@ -156,10 +157,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     text-align: left;
 }
 
+.glass-row :is(a, strong) {
+    font-weight: inherit;
+}
+
 .column-header {
     /* Account for the body's padding and the inner bubble's border. */
     padding-inline: calc(var(--row-padding) + var(--body-inset) + 1px);
-    font-weight: 650;
 }
 .activity-body {
     display: grid;
@@ -176,7 +180,6 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 .day-group.glass-bubble > .glass-row + .glass-row {
     border-top: 1px solid rgba(255,255,255,.1);
 }
-.activity-day { font-weight: 600; }
 .day-date { grid-column: 1 / 5; }
 .day-count { grid-column: 5; }
 .day-runtime { grid-column: 6; }
