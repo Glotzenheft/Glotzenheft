@@ -15,19 +15,19 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-@let result = response();
+@let result = state.response();
 <div role="table" aria-label="Gesehene Aktivitäten" class="activity-table">
     <div class="sticky-stack">
         <section class="activity-toolbar" aria-label="Aktivitäten durchsuchen, filtern und blättern">
             <label class="activity-search">
                 <i class="pi pi-search" aria-hidden="true"></i>
                 <input pInputText type="search" aria-label="Nach Medien- oder Tracklistnamen suchen"
-                       placeholder="Medium oder Tracklist" [ngModel]="searchInput()" (ngModelChange)="searchInput.set($event)" />
+                       placeholder="Medium oder Tracklist" [ngModel]="state.searchInput()" (ngModelChange)="state.searchInput.set($event)" />
             </label>
 
             <div class="activity-paging">
                 <p-paginator
-                    [first]="(page() - 1) * rows()" [rows]="rows()" [totalRecords]="response()?.total_results ?? 0"
+                    [first]="(state.page() - 1) * state.rows()" [rows]="state.rows()" [totalRecords]="result?.total_results ?? 0"
                     [rowsPerPageOptions]="pageSizes" [showJumpToPageDropdown]="true"
                     [showPageLinks]="false" [showFirstLastIcon]="false" dropdownAppendTo="body"
                     currentPageReportTemplate="{currentPage} / {totalPages}"
@@ -35,15 +35,15 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                 />
                 <span class="activity-count" pTooltip="Gesamtaktivitäten" tooltipPosition="bottom">
                     <i class="pi pi-history" aria-hidden="true"></i>
-                    {{ response()?.total_results ?? '–' }} <span>Aktivitäten</span>
+                    {{ result?.total_results ?? '–' }} <span>Aktivitäten!</span>
                 </span>
             </div>
 
             <div class="activity-filters">
                 @if (showMediaFilter() && !media()) {
                     <p-select class="activity-media-filter" ariaLabel="Medientyp" placeholder="Alle Medien" [options]="mediaOptions"
-                              optionLabel="label" optionValue="value" [ngModel]="filter()"
-                              (ngModelChange)="filter.set($event)" appendTo="body">
+                              optionLabel="label" optionValue="value" [ngModel]="state.filter()"
+                              (ngModelChange)="state.filter.set($event)" appendTo="body">
                         <ng-template #selectedItem let-option>
                             <i [class]="option.icon" aria-hidden="true"></i>
                             <span>{{ option.label }}</span>
@@ -51,22 +51,22 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                     </p-select>
                 }
                 <p-select class="activity-view-select" ariaLabel="Tabellenansicht" [options]="viewOptions"
-                          optionLabel="label" optionValue="value" [ngModel]="view()"
-                          (ngModelChange)="view.set($event)" appendTo="body">
+                          optionLabel="label" optionValue="value" [ngModel]="state.view()"
+                          (ngModelChange)="state.view.set($event)" appendTo="body">
                     <ng-template #selectedItem let-option>
                         <i [class]="option.icon" aria-hidden="true"></i>
                         <span>{{ option.label }}</span>
                     </ng-template>
                 </p-select>
-                @let sortLabel = sortOrder() === 'desc' ? 'Neueste zuerst' : 'Älteste zuerst';
-                <p-button [icon]="sortOrder() === 'desc' ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-up-alt'"
+                @let sortLabel = state.sortOrder() === 'desc' ? 'Neueste zuerst' : 'Älteste zuerst';
+                <p-button [icon]="state.sortOrder() === 'desc' ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-up-alt'"
                           [ariaLabel]="'Reihenfolge wechseln. Aktuell: ' + sortLabel" [pTooltip]="sortLabel"
-                          severity="secondary" tooltipPosition="bottom" (onClick)="reverseSort()" />
+                          severity="secondary" tooltipPosition="bottom" (onClick)="state.reverseSort()" />
             </div>
         </section>
-        @if (result?.total_results && !error()) {
+        @if (result?.total_results && !state.error()) {
             <div class="column-header glass-row" role="row">
-                @if (view() === 'days') {
+                @if (state.view() === 'days') {
                     <span class="day-date" role="columnheader" aria-colspan="4">Tag</span>
                     <span class="day-count" role="columnheader">Geschaut</span>
                     <span class="day-runtime" role="columnheader">Laufzeit</span>
@@ -82,27 +82,27 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         }
     </div>
 
-    @if (error()) {
-        <p role="alert">{{ error() }}</p>
-        <p-button label="Erneut versuchen" (onClick)="retry()" />
+    @if (state.error()) {
+        <p role="alert">{{ state.error() }}</p>
+        <p-button label="Erneut versuchen" (onClick)="state.retry()" />
     } @else if (!result) {
         <p-progress-spinner ariaLabel="Aktivitäten werden geladen" />
     } @else if (!result.total_results) {
         <p>Keine Aktivitäten gefunden.</p>
     } @else {
-        <div class="activity-body" [attr.aria-busy]="loading()">
+        <div class="activity-body" [attr.aria-busy]="state.loading()">
             @for (day of days(); track day.date; let firstDay = $first) {
-                <div class="day-group" role="rowgroup" [class.glass-bubble]="view() !== 'activities'">
-                    @if (view() !== 'activities' && day.summary; as summary) {
+                <div class="day-group" role="rowgroup" [class.glass-bubble]="state.view() !== 'activities'">
+                    @if (state.view() !== 'activities' && day.summary; as summary) {
                         <div class="activity-day glass-row" role="row">
                             <strong class="day-date" role="rowheader" aria-colspan="4">{{ day.label }}</strong>
                             <span class="day-count" role="cell">Geschaut: {{ summary.count }}×</span>
                             <span class="day-runtime" role="cell">{{ summary.minutes | runtime:'detailed' }}</span>
                         </div>
                     }
-                    @if (view() !== 'days') {
+                    @if (state.view() !== 'days') {
                         @for (activity of day.activities; track activity; let index = $index) {
-                            <div class="activity-row glass-row" role="row" [class.glass-bubble]="view() === 'activities'">
+                            <div class="activity-row glass-row" role="row" [class.glass-bubble]="state.view() === 'activities'">
                                 <div class="poster" role="cell">
                                     @if (activity.stillPath ?? activity.posterPath; as picture) {
                                         <p-image [src]="originalPosterPath + picture" [preview]="true"

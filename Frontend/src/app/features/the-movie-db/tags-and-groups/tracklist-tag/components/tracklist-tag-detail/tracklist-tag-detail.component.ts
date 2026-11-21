@@ -32,6 +32,7 @@ import { TracklistTagService } from '../../services/tracklist-tag.service';
 import { TracklistTagFormDialogComponent } from '../tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import { TRACKLIST_TAG_URLS} from '../../../../../../core/constants/urls.constants';
 import { TracklistTagTypeLabelPipe } from '../../../../../../shared/pipes/tracklist-tags/tracklist-tag-type-label.pipe';
+import { ACTIVITY_TABLE_STATE_PROVIDERS } from '../../../../activities/components/activity-table/activity-table-state.service';
 import { TracklistTagDetailStateService } from '../../services/tracklist-tag-detail-state.service';
 import {TRACKLIST_TAG_PATHS} from '../../../../../../core/constants/paths.constants';
 import { convertTracklistStatusIntoGerman } from '../../../../../../shared/variables/tracklist';
@@ -57,7 +58,8 @@ import { RATING_COLORS, STATUS_COLORS, FALLBACK_COLOR, getHoverColor } from '../
     ],
     providers: [
         DialogService,
-        TracklistTagDetailStateService
+        TracklistTagDetailStateService,
+        ACTIVITY_TABLE_STATE_PROVIDERS,
     ],
     standalone: true,
     templateUrl: './tracklist-tag-detail.component.html',
