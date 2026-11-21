@@ -59,7 +59,7 @@ import {
 } from '../../shared/statistic-interfaces';
 import {
     DeleteUserRequest,
-    ActivityMedia,
+    ActivityScope,
     ActivityPageRequestDto,
     UserActivitiesResponse,
 } from '../../shared/interfaces/user-interfaces';
@@ -316,7 +316,7 @@ export class R_UserHTTP implements I_UserRepository {
 
     public getUserActivities = (
         request: ActivityPageRequestDto,
-        media?: ActivityMedia,
+        scope?: ActivityScope,
     ): Observable<UserActivitiesResponse> | null => {
         const header = this.getHeaderUseCase.execute();
 
@@ -324,7 +324,7 @@ export class R_UserHTTP implements I_UserRepository {
             return null;
         }
 
-        const url = media ? `/api/${media.type}/${media.id}/activities` : ROUTE_USER_ACTIVITIES;
+        const url = scope ? `/api/${scope.type}/${scope.id}/activities` : ROUTE_USER_ACTIVITIES;
         return this.http.get<UserActivitiesResponse>(url, {
             headers: header,
             params: { ...request },

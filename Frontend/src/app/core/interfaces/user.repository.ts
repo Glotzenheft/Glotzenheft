@@ -24,7 +24,7 @@ import {
 } from '../../shared/interfaces/login';
 import {
     DeleteUserRequest,
-    ActivityMedia,
+    ActivityScope,
     ActivityPageRequestDto,
     UserActivitiesResponse,
 } from '../../shared/interfaces/user-interfaces';
@@ -59,7 +59,7 @@ export interface I_UserRepository {
     getUserStatisticWatchTime: () => Observable<WatchTimeStatistic> | null;
     getUserActivities: (
         request: ActivityPageRequestDto,
-        media?: ActivityMedia,
+        scope?: ActivityScope,
     ) => Observable<UserActivitiesResponse> | null;
     getUserRatings: () => Observable<RatingStatistic> | null;
 }

@@ -31,7 +31,7 @@ import { PaginatorModule, PaginatorState } from 'primeng/paginator';
 import { ProgressSpinnerModule } from 'primeng/progressspinner';
 import { MessageService } from 'primeng/api';
 import { MediaType } from '../../../media/models/enums/media-type.enum';
-import { ActivityDayResponseDto, ActivityMedia, ActivitySortOrder, UserActivitiesResponse, UserActivity } from '../../../../../shared/interfaces/user-interfaces';
+import { ActivityDayResponseDto, ActivityMedia, ActivityScope, ActivitySortOrder, UserActivitiesResponse, UserActivity } from '../../../../../shared/interfaces/user-interfaces';
 import { UC_GetUserActivites } from '../../../../../core/use-cases/user/get-user-activities.use-case';
 import { UC_LogoutOfAccount } from '../../../../../core/use-cases/user/log-out-of-account.use-case';
 import { ROUTES_LIST } from '../../../../../shared/variables/routes-list';
@@ -59,6 +59,11 @@ interface ActivityDay {
 })
 export class ActivityTableComponent {
     readonly media = input<ActivityMedia>();
+    readonly tagId = input<number>();
+    private readonly scope = computed<ActivityScope | undefined>(() => {
+        const tagId = this.tagId();
+        return tagId === undefined ? this.media() : { type: 'tags', id: tagId };
+    });
     readonly showMediaFilter = input(true);
     protected readonly mediaOptions = [
         { label: 'Alle Medien', value: 'all', icon: 'pi pi-filter' },
@@ -78,7 +83,7 @@ export class ActivityTableComponent {
     protected readonly rows = signal(50);
     protected readonly filter = signal<MediaType | 'all'>('all');
     protected readonly page = linkedSignal({
-        source: () => [this.media(), this.filter(), this.rows(), this.showMediaFilter(), this.sortOrder(), this.search()],
+        source: () => [this.scope(), this.filter(), this.rows(), this.showMediaFilter(), this.sortOrder(), this.search()],
         computation: () => 1,
     });
     protected readonly view = signal<ActivityView>('grouped');
@@ -127,7 +132,7 @@ export class ActivityTableComponent {
                 sort_order: this.sortOrder(),
                 ...(search && { search }),
                 ...(type && type !== 'all' && { media_type: type }),
-            }, media);
+            }, this.scope());
             this.loading.set(true);
             this.error.set('');
             if (!request) {

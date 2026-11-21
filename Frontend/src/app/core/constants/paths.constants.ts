@@ -67,6 +67,7 @@ export const BACKUP_PATHS = {
 export const TRACKLIST_TAG_PATHS = {
     base: 'tags',
     detail: ':tagId',
+    activities: 'activities',
     tracklists: 'tracklists',
     analytics: 'analytics',
 } as const;

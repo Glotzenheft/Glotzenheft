@@ -32,6 +32,8 @@ export interface ActivityMedia {
     type: MediaType;
 }
 
+export type ActivityScope = ActivityMedia | { type: 'tags'; id: number };
+
 export interface ActivityDayResponseDto {
     day: string;
     count: number;
