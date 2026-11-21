@@ -22,6 +22,7 @@ namespace App\Entity;
 
 use App\Entity\Traits\TimestampsTrait;
 use App\Enum\TracklistStatus;
+use App\Enum\WatchActivityVisibility;
 use App\Repository\TracklistRepository;
 use DateTimeImmutable;
 use DateTimeInterface;
@@ -113,9 +114,19 @@ class Tracklist
     #[ORM\Column(length: 255, nullable: true)]
     private ?string $customPosterPath = null;
 
+    /**
+     * @var Collection<int, WatchActivity>
+     */
+    #[ORM\OneToMany(targetEntity: WatchActivity::class, mappedBy: 'tracklist', orphanRemoval: true)]
+    private Collection $watchActivities;
+
+    #[ORM\Column(enumType: WatchActivityVisibility::class, options: ['default' => WatchActivityVisibility::PUBLIC->value])]
+    private WatchActivityVisibility $watchVisibility = WatchActivityVisibility::PUBLIC;
+
     public function __construct()
     {
         $this->tracklistTags = new ArrayCollection();
+        $this->watchActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -326,6 +337,48 @@ class Tracklist
     public function setCustomPosterPath(?string $customPosterPath): static
     {
         $this->customPosterPath = $customPosterPath;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WatchActivity>
+     */
+    public function getWatchActivities(): Collection
+    {
+        return $this->watchActivities;
+    }
+
+    public function addWatchActivity(WatchActivity $watchActivity): static
+    {
+        if (!$this->watchActivities->contains($watchActivity)) {
+            $this->watchActivities->add($watchActivity);
+            $watchActivity->setTracklist($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWatchActivity(WatchActivity $watchActivity): static
+    {
+        if ($this->watchActivities->removeElement($watchActivity)) {
+            // set the owning side to null (unless already changed)
+            if ($watchActivity->getTracklist() === $this) {
+                $watchActivity->setTracklist(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getWatchVisibility(): WatchActivityVisibility
+    {
+        return $this->watchVisibility;
+    }
+
+    public function setWatchVisibility(WatchActivityVisibility $watchVisibility): static
+    {
+        $this->watchVisibility = $watchVisibility;
 
         return $this;
     }

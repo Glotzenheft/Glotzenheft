@@ -34,6 +34,7 @@ use App\Repository\TracklistEpisodeRepository;
 use App\Repository\TracklistRepository;
 use App\Repository\TracklistSeasonRepository;
 use App\Service\Media\MediaService;
+use App\Service\WatchActivity\WatchActivitySynchronizer;
 use App\TmdbApi\ApiException;
 use DateTime;
 use DateTimeImmutable;
@@ -54,6 +55,7 @@ class ImportBackupService
         private readonly TracklistEpisodeRepository $tracklistEpisodeRepository,
         private readonly MediaService               $mediaService,
         private readonly LoggerInterface            $logger,
+        private readonly WatchActivitySynchronizer  $watchActivitySynchronizer,
     ){}
 
     /**
@@ -79,6 +81,7 @@ class ImportBackupService
             if (!$this->checkTracklistData($tracklistData))
                 continue;
 
+            $episodes = [];
             try
             {
                 $media = $this->mediaService->findOrCreateMedia(new MediaIdDto(
@@ -103,7 +106,7 @@ class ImportBackupService
 
                 if ($media->getType() === MediaType::TV)
                 {
-                    $this->importSeasonsAndEpisodes($tracklistEntity, $tracklistData['seasons']);
+                    $episodes = $this->importSeasonsAndEpisodes($tracklistEntity, $tracklistData['seasons']);
                 }
             }
             catch (ApiException $e)
@@ -116,14 +119,17 @@ class ImportBackupService
                     ]
                 );
                 $this->importStatus = false;
+                continue;
             }
             catch (Exception)
             {
                 $this->importStatus = false;
+                continue;
             }
+
+            $this->watchActivitySynchronizer->flush($tracklistEntity, $episodes);
         }
 
-        $this->entityManager->flush();
         return $this->importStatus;
     }
 
@@ -208,12 +214,12 @@ class ImportBackupService
     /**
      * @param Tracklist $tracklist
      * @param array $seasonsData
-     * @return void
+     * @return list<TracklistEpisode>
      */
     private function importSeasonsAndEpisodes(
         Tracklist $tracklist,
         array $seasonsData
-    ): void
+    ): array
     {
         $user = $tracklist->getUser();
         if (!$user instanceof User)
@@ -221,8 +227,9 @@ class ImportBackupService
             $this->logger->error(
                 message: 'Error importing tracklist seasons and episodes... The user was not found!',
             );
-            return;
+            return [];
         }
+        $episodes = [];
         foreach ($seasonsData as $seasonData)
         {
             try
@@ -248,6 +255,7 @@ class ImportBackupService
                             episodeData: $episodeData
                         );
                         $this->entityManager->persist($tracklistEpisode);
+                        $episodes[] = $tracklistEpisode;
                     }
                     catch (Exception $e)
                     {
@@ -274,6 +282,8 @@ class ImportBackupService
                 $this->importStatus = false;
             }
         }
+
+        return $episodes;
     }
 
     /**

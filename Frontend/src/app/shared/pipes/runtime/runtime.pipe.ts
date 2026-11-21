@@ -22,23 +22,23 @@ import {Pipe, PipeTransform} from '@angular/core';
     standalone: true
 })
 export class RuntimePipe implements PipeTransform {
-    transform(value: number | null | undefined): string {
-        if (!value || value <= 0) {
-            return '';
+    transform(
+        value: number | null | undefined,
+        format: 'compact' | 'detailed' | 'multiline' = 'compact',
+    ): string {
+        if (value == null || value < 0 || (value === 0 && format === 'compact')) {
+            return format === 'compact' ? '' : '–';
         }
 
+        const total = `${value} Min.`;
         const hours = Math.floor(value / 60);
+        if (hours === 0) return total;
+
         const minutes = value % 60;
+        const duration = minutes ? `${hours} Std. ${minutes} Min.` : `${hours} Std.`;
+        if (format === 'compact') return duration;
 
-        if (hours === 0) {
-            return `${minutes} Min.`;
-        }
-
-        if (minutes === 0) {
-            return `${hours} Std.`;
-        }
-
-        return `${hours} Std. ${minutes} Min.`;
+        const separator = format === 'multiline' ? '\n' : ' ';
+        return `${total}${separator}(${duration})`;
     }
-
 }

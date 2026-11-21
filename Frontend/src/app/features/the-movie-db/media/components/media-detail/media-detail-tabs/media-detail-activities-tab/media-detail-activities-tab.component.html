@@ -15,4 +15,6 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 -->
 
-<p>media-detail-activities-tab works!</p>
+@if (state.mediaData(); as detail) {
+    <app-activity-table [media]="detail.media" [showMediaFilter]="false" />
+}

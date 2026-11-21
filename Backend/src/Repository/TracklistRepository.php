@@ -37,6 +37,21 @@ class TracklistRepository extends ServiceEntityRepository
     }
 
     /**
+     * @return list<array{rating: int|string|null, ratingCount: int|string}>
+     */
+    public function countByRating(User $user): array
+    {
+        return $this->createQueryBuilder('tracklist')
+            ->select('tracklist.rating AS rating', 'COUNT(tracklist.id) AS ratingCount')
+            ->where('tracklist.user = :user')
+            ->groupBy('tracklist.rating')
+            ->orderBy('tracklist.rating', 'ASC')
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getScalarResult();
+    }
+
+    /**
      * @param User $user
      * @param Media $media
      * @return array

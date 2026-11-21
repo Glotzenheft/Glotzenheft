@@ -1,0 +1,219 @@
+/*
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+*/
+
+:host {
+    display: block;
+    min-width: 0;
+    container-type: inline-size;
+}
+
+.activity-toolbar {
+    display: grid;
+    grid-template-columns: minmax(8rem, 1fr) auto minmax(max-content, 1fr);
+    grid-template-areas: "search paging filters";
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.6rem 0.8rem;
+}
+
+.sticky-stack {
+    position: sticky;
+    top: .5rem;
+    z-index: 100;
+    display: grid;
+    gap: var(--bubble-gap);
+    margin: .75rem 0 var(--bubble-gap);
+}
+
+.activity-toolbar, .column-header, .activity-body {
+    background: linear-gradient(135deg, rgba(255,255,255,.08), rgba(255,255,255,.02));
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(255,255,255,.1);
+    border-top-color: rgba(255,255,255,.2);
+    border-radius: 24px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.25), inset 0 1px 0 rgba(255,255,255,.1);
+}
+
+.activity-search {
+    grid-area: search;
+    position: relative;
+    min-width: 0;
+    max-width: 16rem;
+}
+.activity-search i {
+    position: absolute;
+    inset-inline-start: 0.7rem;
+    top: 50%;
+    transform: translateY(-50%);
+    pointer-events: none;
+}
+.activity-search input {
+    width: 100%;
+    min-width: 0;
+    padding-inline-start: 2rem;
+}
+
+.activity-paging, .activity-filters {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.activity-filters { grid-area: filters; justify-self: end; }
+.activity-paging { grid-area: paging; justify-self: center; }
+.activity-count i, .activity-media-filter i, .activity-view-select i { display: none; }
+.activity-count { font-size: 0.83rem; white-space: nowrap; }
+
+:host ::ng-deep .activity-toolbar .p-select {
+    width: auto;
+    flex: 0 0 auto;
+}
+
+:host ::ng-deep .activity-toolbar .p-paginator {
+    background: transparent;
+    flex-wrap: nowrap;
+    gap: 0.2rem;
+    padding: 0;
+    --p-paginator-nav-button-width: 2rem;
+    --p-paginator-nav-button-height: 2rem;
+}
+
+@container (max-width: 65rem) {
+    .activity-view-select i { display: inline; }
+    .activity-view-select span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+    }
+}
+
+@container (max-width: 57rem) {
+    .activity-toolbar {
+        grid-template-columns: minmax(0,1fr) auto;
+        grid-template-areas: "search filters" "paging paging";
+    }
+}
+
+@container (max-width: 30rem) {
+    .activity-toolbar { padding: 0.5rem; gap: 0.35rem; }
+    .activity-filters, .activity-paging { gap: 0.25rem; }
+    :host ::ng-deep .activity-toolbar .p-select-label { padding-inline: 0.35rem; }
+    :host ::ng-deep .activity-toolbar .p-select-dropdown { width: 1.35rem; }
+}
+
+@container (max-width: 24rem) {
+    .activity-count i, .activity-media-filter i { display: inline; }
+    .activity-count span, .activity-media-filter span {
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        overflow: hidden;
+        clip-path: inset(50%);
+    }
+    :host ::ng-deep .activity-media-filter .p-select { align-items: center; }
+    :host ::ng-deep .activity-toolbar .p-paginator {
+        --p-paginator-nav-button-width: 1.75rem;
+    }
+}
+
+@container (min-width: 30rem) {
+    :host ::ng-deep .activity-paging .p-paginator-rpp-dropdown .p-select-label::after {
+        content: " / Seite";
+    }
+}
+
+.activity-table {
+    --bubble-gap: .35rem;
+    --body-inset: .35rem;
+    --row-padding: .75rem;
+    --columns: minmax(0, 1fr) minmax(0, 1.1fr) minmax(0, .55fr) minmax(0, .9fr) repeat(2, minmax(0, 1.45fr));
+}
+
+.glass-row {
+    font-weight: 700;
+    display: grid;
+    grid-template-columns: var(--columns);
+    grid-template-areas: "poster date episode runtime media tracklist";
+    align-items: center;
+    column-gap: .55rem;
+    padding: .65rem var(--row-padding);
+    overflow-wrap: anywhere;
+    text-align: left;
+}
+
+.glass-row :is(a, strong) {
+    font-weight: inherit;
+}
+
+.column-header {
+    /* Account for the body's padding and the inner bubble's border. */
+    padding-inline: calc(var(--row-padding) + var(--body-inset) + 1px);
+}
+.activity-body {
+    display: grid;
+    gap: var(--bubble-gap);
+    padding: var(--body-inset);
+}
+.day-group:not(.glass-bubble) { display: grid; gap: var(--bubble-gap); }
+.glass-bubble {
+    border: 1px solid rgba(255,255,255,.16);
+    border-radius: 18px;
+    background: linear-gradient(135deg, rgba(255,255,255,.09), rgba(255,255,255,.035));
+    box-shadow: inset 0 1px 0 rgba(255,255,255,.08), 0 2px 5px rgba(0,0,0,.1);
+}
+.day-group.glass-bubble > .glass-row + .glass-row {
+    border-top: 1px solid rgba(255,255,255,.1);
+}
+.day-date { grid-column: 1 / 5; }
+.day-count { grid-column: 5; }
+.day-runtime { grid-column: 6; }
+.poster { grid-area: poster; }
+.date { grid-area: date; }
+.episode { grid-area: episode; }
+.runtime { grid-area: runtime; white-space: pre-line; }
+.media { grid-area: media; }
+.tracklist { grid-area: tracklist; }
+.poster img, .poster .image-error-fallback {
+    display: block;
+    width: 100%;
+    max-width: 160px;
+    height: auto;
+    aspect-ratio: 16 / 9;
+    object-fit: cover;
+    border-radius: 10px;
+}
+.poster .image-error-fallback { display: grid; place-items: center; }
+:host ::ng-deep .poster .p-image { max-width: 100%; }
+.activity-body[aria-busy="true"] { opacity: .65; }
+
+@container (max-width: 42rem) {
+    .activity-table {
+        --row-padding: .45rem;
+        --columns: minmax(0, 1fr) minmax(0, 1.2fr) minmax(0, 1fr);
+    }
+    .glass-row {
+        grid-template-areas: "poster media runtime" "date tracklist episode";
+        row-gap: .25rem;
+        font-size: .85rem;
+    }
+    .activity-day, .column-header:has(.day-date) { grid-template-areas: none; }
+    .day-date { grid-column: 1; }
+    .day-count { grid-column: 2; }
+    .day-runtime { grid-column: 3; }
+}

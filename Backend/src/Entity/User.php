@@ -16,6 +16,8 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+declare(strict_types=1);
+
 namespace App\Entity;
 
 use App\Entity\Traits\TimestampsTrait;
@@ -85,10 +87,17 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\OneToMany(targetEntity: Backup::class, mappedBy: 'user', orphanRemoval: true)]
     private Collection $backups;
 
+    /**
+     * @var Collection<int, WatchActivity>
+     */
+    #[ORM\OneToMany(targetEntity: WatchActivity::class, mappedBy: 'user', orphanRemoval: true)]
+    private Collection $watchActivities;
+
     public function __construct()
     {
         $this->tracklists = new ArrayCollection();
         $this->backups = new ArrayCollection();
+        $this->watchActivities = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -258,6 +267,36 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
             // set the owning side to null (unless already changed)
             if ($backup->getUser() === $this) {
                 $backup->setUser(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, WatchActivity>
+     */
+    public function getWatchActivities(): Collection
+    {
+        return $this->watchActivities;
+    }
+
+    public function addWatchActivity(WatchActivity $watchActivity): static
+    {
+        if (!$this->watchActivities->contains($watchActivity)) {
+            $this->watchActivities->add($watchActivity);
+            $watchActivity->setUser($this);
+        }
+
+        return $this;
+    }
+
+    public function removeWatchActivity(WatchActivity $watchActivity): static
+    {
+        if ($this->watchActivities->removeElement($watchActivity)) {
+            // set the owning side to null (unless already changed)
+            if ($watchActivity->getUser() === $this) {
+                $watchActivity->setUser(null);
             }
         }
 

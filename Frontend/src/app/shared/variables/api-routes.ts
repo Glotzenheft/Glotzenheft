@@ -81,7 +81,7 @@ export const ROUTE_STATISTIC_GET_WATCHTIME_PER_DAY: string =
     API_ROUTE + 'statistic/watchtime-per-day';
 
 export const ROUTE_USER_ACTIVITIES: string =
-    API_ROUTE + 'user-activities?user_activity_page=';
+    API_ROUTE + 'user-activities';
 
 export const ROUTE_STATISTICS_GET_USER_RATINGS: string =
     API_ROUTE + 'statistic/user-ratings';

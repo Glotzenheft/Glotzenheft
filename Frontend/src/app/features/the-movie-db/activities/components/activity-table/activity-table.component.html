@@ -1,0 +1,133 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+@let result = state.response();
+<div role="table" aria-label="Gesehene Aktivitäten" class="activity-table">
+    <div class="sticky-stack">
+        <section class="activity-toolbar" aria-label="Aktivitäten durchsuchen, filtern und blättern">
+            <label class="activity-search">
+                <i class="pi pi-search" aria-hidden="true"></i>
+                <input pInputText type="search" aria-label="Nach Medien- oder Tracklistnamen suchen"
+                       placeholder="Medium oder Tracklist" [ngModel]="state.searchInput()" (ngModelChange)="state.searchInput.set($event)" />
+            </label>
+
+            <div class="activity-paging">
+                <p-paginator
+                    [first]="(state.page() - 1) * state.rows()" [rows]="state.rows()" [totalRecords]="result?.total_results ?? 0"
+                    [rowsPerPageOptions]="pageSizes" [showJumpToPageDropdown]="true"
+                    [showPageLinks]="false" [showFirstLastIcon]="false" dropdownAppendTo="body"
+                    currentPageReportTemplate="{currentPage} / {totalPages}"
+                    (onPageChange)="changePage($event)"
+                />
+                <span class="activity-count" pTooltip="Gesamtaktivitäten" tooltipPosition="bottom">
+                    <i class="pi pi-history" aria-hidden="true"></i>
+                    {{ result?.total_results ?? '–' }} <span>Aktivitäten</span>
+                </span>
+            </div>
+
+            <div class="activity-filters">
+                @if (showMediaFilter() && !media()) {
+                    <p-select class="activity-media-filter" ariaLabel="Medientyp" placeholder="Alle Medien" [options]="mediaOptions"
+                              optionLabel="label" optionValue="value" [ngModel]="state.filter()"
+                              (ngModelChange)="state.filter.set($event)" appendTo="body">
+                        <ng-template #selectedItem let-option>
+                            <i [class]="option.icon" aria-hidden="true"></i>
+                            <span>{{ option.label }}</span>
+                        </ng-template>
+                    </p-select>
+                }
+                <p-select class="activity-view-select" ariaLabel="Tabellenansicht" [options]="viewOptions"
+                          optionLabel="label" optionValue="value" [ngModel]="state.view()"
+                          (ngModelChange)="state.view.set($event)" appendTo="body">
+                    <ng-template #selectedItem let-option>
+                        <i [class]="option.icon" aria-hidden="true"></i>
+                        <span>{{ option.label }}</span>
+                    </ng-template>
+                </p-select>
+                @let sortLabel = state.sortOrder() === 'desc' ? 'Neueste zuerst' : 'Älteste zuerst';
+                <p-button [icon]="state.sortOrder() === 'desc' ? 'pi pi-sort-amount-down' : 'pi pi-sort-amount-up-alt'"
+                          [ariaLabel]="'Reihenfolge wechseln. Aktuell: ' + sortLabel" [pTooltip]="sortLabel"
+                          severity="secondary" tooltipPosition="bottom" (onClick)="state.reverseSort()" />
+            </div>
+        </section>
+        @if (result?.total_results && !state.error()) {
+            <div class="column-header glass-row" role="row">
+                @if (state.view() === 'days') {
+                    <span class="day-date" role="columnheader" aria-colspan="4">Tag</span>
+                    <span class="day-count" role="columnheader">Geschaut</span>
+                    <span class="day-runtime" role="columnheader">Laufzeit</span>
+                } @else {
+                    <span class="poster" role="columnheader">Vorschau</span>
+                    <span class="date" role="columnheader">Datum/Uhrzeit</span>
+                    <span class="episode" role="columnheader">Episode</span>
+                    <span class="runtime" role="columnheader">Laufzeit</span>
+                    <span class="media" role="columnheader">Film/Serie</span>
+                    <span class="tracklist" role="columnheader">Tracklist-Name</span>
+                }
+            </div>
+        }
+    </div>
+
+    @if (state.error()) {
+        <p role="alert">{{ state.error() }}</p>
+        <p-button label="Erneut versuchen" (onClick)="state.retry()" />
+    } @else if (!result) {
+        <p-progress-spinner ariaLabel="Aktivitäten werden geladen" />
+    } @else if (!result.total_results) {
+        <p>Keine Aktivitäten gefunden.</p>
+    } @else {
+        <div class="activity-body" [attr.aria-busy]="state.loading()">
+            @for (day of days(); track day.date; let firstDay = $first) {
+                <div class="day-group" role="rowgroup" [class.glass-bubble]="state.view() !== 'activities'">
+                    @if (state.view() !== 'activities' && day.summary; as summary) {
+                        <div class="activity-day glass-row" role="row">
+                            <strong class="day-date" role="rowheader" aria-colspan="4">{{ day.label }}</strong>
+                            <span class="day-count" role="cell">Geschaut: {{ summary.count }}×</span>
+                            <span class="day-runtime" role="cell">{{ summary.minutes | runtime:'detailed' }}</span>
+                        </div>
+                    }
+                    @if (state.view() !== 'days') {
+                        @for (activity of day.activities; track activity; let index = $index) {
+                            <div class="activity-row glass-row" role="row" [class.glass-bubble]="state.view() === 'activities'">
+                                <div class="poster" role="cell">
+                                    @if (activity.stillPath ?? activity.posterPath; as picture) {
+                                        <p-image [src]="originalPosterPath + picture" [preview]="true"
+                                                 [alt]="'Cover von ' + activity.mediaTitle" appendTo="body" loading="lazy">
+                                            <ng-template #image>
+                                                <img [ngSrc]="posterPath + picture" [alt]="'Poster von ' + activity.mediaTitle"
+                                                     [priority]="firstDay && index < 2" width="160" height="90" />
+                                            </ng-template>
+                                        </p-image>
+                                    } @else {
+                                        <div class="image-error-fallback"><i class="pi pi-image" aria-hidden="true"></i></div>
+                                    }
+                                </div>
+                                <span class="date" role="cell">{{ activity.date | dateTimeWithUnitFormatting }}</span>
+                                <span class="episode" role="cell">{{ activity.episodeNumber !== null ? 'E' + activity.episodeNumber.toString().padStart(2, '0') : '–' }}</span>
+                                <span class="runtime" role="cell">{{ activity.runtime | runtime:'multiline' }}</span>
+                                <span class="media" role="cell">
+                                    <a [routerLink]="['/' + (activity.type === 'movie' ? urls.movieUrl : urls.tvUrl), activity.mediaID]">{{ activity.mediaTitle }}</a>
+                                </span>
+                                <span class="tracklist" role="cell">{{ activity.tracklistName }}</span>
+                            </div>
+                        }
+                    }
+                </div>
+            }
+        </div>
+    }
+</div>

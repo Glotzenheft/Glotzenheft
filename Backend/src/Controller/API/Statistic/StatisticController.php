@@ -20,54 +20,63 @@ declare(strict_types=1);
 
 namespace App\Controller\API\Statistic;
 
+use App\Entity\User;
+use App\Model\Request\Statistic\WatchTimePerDayRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\Statistic\StatisticService;
+use DateMalformedStringException;
+use Doctrine\DBAL\Exception as DatabaseException;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\JsonResponse;
-use Symfony\Component\HttpFoundation\Request;
+use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpKernel\Attribute\MapQueryString;
 use Symfony\Component\Routing\Attribute\Route;
 
 class StatisticController extends AbstractController
 {
     public function __construct(
-        private readonly StatisticService $statisticService
+        private readonly StatisticService $statisticService,
     ){}
 
-    /**
-     * Get all watch hours for each day from a user.
-     * @param Request $request
-     * @return JsonResponse
-     */
     #[IsAuthenticated]
-    #[Route('/api/statistic/watchtime-per-day', name: 'watch_time_per_day', methods: ['GET'])]
-    public function getWatchTimePerDay(Request $request): JsonResponse
+    #[Route(
+        path:'/api/statistic/watchtime-per-day',
+        name: 'watch_time_per_day',
+        methods: ['GET'],
+        stateless: true,
+    )]
+    public function getWatchTimePerDay(
+        User $user,
+        #[MapQueryString(validationFailedStatusCode: Response::HTTP_BAD_REQUEST)]
+        WatchTimePerDayRequestDto $request = new WatchTimePerDayRequestDto(),
+    ): JsonResponse
     {
-        $response = $this->statisticService->getWatchTimePerDay($request);
-
-        if (isset($response['error']))
-        {
-            return $this->json(['error' => $response['error']], $response['code']);
+        try {
+            $response = $this->statisticService->getWatchTimePerDay($user, $request);
+        } catch (DateMalformedStringException) {
+            return $this->json(['error' => 'Invalid date provided. Use the following format: Y-m-d.'], Response::HTTP_BAD_REQUEST);
+        } catch (DatabaseException) {
+            return $this->json(['error' => 'Database error occurred.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->json($response);
+        return $this->json($response->toArray());
     }
 
-    /**
-     * Get all tracklist ratings from a user.
-     * @param Request $request
-     * @return JsonResponse
-     */
     #[IsAuthenticated]
-    #[Route('/api/statistic/user-ratings', name: 'user_ratings', methods: ['GET'])]
-    public function getUserRatings(Request $request): JsonResponse
+    #[Route(
+        path:'/api/statistic/user-ratings',
+        name: 'user_ratings',
+        methods: ['GET'],
+        stateless: true,
+    )]
+    public function getUserRatings(User $user): JsonResponse
     {
-        $response = $this->statisticService->getUserRatings($request);
-
-        if (isset($response['error']))
-        {
-            return $this->json(['error' => $response['error']], $response['code']);
+        try {
+            $response = $this->statisticService->getUserRatings($user);
+        } catch (DatabaseException) {
+            return $this->json(['error' => 'Database error occurred.'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
 
-        return $this->json($response);
+        return $this->json($response->toArray());
     }
 }

@@ -24,6 +24,8 @@ import {
 } from '../../shared/interfaces/login';
 import {
     DeleteUserRequest,
+    ActivityScope,
+    ActivityPageRequestDto,
     UserActivitiesResponse,
 } from '../../shared/interfaces/user-interfaces';
 import {
@@ -56,7 +58,8 @@ export interface I_UserRepository {
     getUserName: () => string | null;
     getUserStatisticWatchTime: () => Observable<WatchTimeStatistic> | null;
     getUserActivities: (
-        responsePage: number,
+        request: ActivityPageRequestDto,
+        scope?: ActivityScope,
     ) => Observable<UserActivitiesResponse> | null;
     getUserRatings: () => Observable<RatingStatistic> | null;
 }

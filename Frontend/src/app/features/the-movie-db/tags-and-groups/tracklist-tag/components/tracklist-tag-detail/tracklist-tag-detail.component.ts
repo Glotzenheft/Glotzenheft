@@ -15,9 +15,11 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import {Component, computed, inject, Input, OnInit, signal, WritableSignal} from '@angular/core';
+import {Component, computed, inject, Input, OnChanges, signal, DestroyRef} from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {RouterModule, Router, ActivatedRoute} from '@angular/router';
+import {RouterModule, Router, ActivatedRoute, NavigationEnd} from '@angular/router';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { filter, map, startWith, Subscription } from 'rxjs';
 import { ButtonModule } from 'primeng/button';
 import { DialogService } from 'primeng/dynamicdialog';
 import { TabsModule } from 'primeng/tabs';
@@ -30,6 +32,7 @@ import { TracklistTagService } from '../../services/tracklist-tag.service';
 import { TracklistTagFormDialogComponent } from '../tracklist-tag-form-dialog/tracklist-tag-form-dialog.component';
 import { TRACKLIST_TAG_URLS} from '../../../../../../core/constants/urls.constants';
 import { TracklistTagTypeLabelPipe } from '../../../../../../shared/pipes/tracklist-tags/tracklist-tag-type-label.pipe';
+import { ACTIVITY_TABLE_STATE_PROVIDERS } from '../../../../activities/components/activity-table/activity-table-state.service';
 import { TracklistTagDetailStateService } from '../../services/tracklist-tag-detail-state.service';
 import {TRACKLIST_TAG_PATHS} from '../../../../../../core/constants/paths.constants';
 import { convertTracklistStatusIntoGerman } from '../../../../../../shared/variables/tracklist';
@@ -55,13 +58,14 @@ import { RATING_COLORS, STATUS_COLORS, FALLBACK_COLOR, getHoverColor } from '../
     ],
     providers: [
         DialogService,
-        TracklistTagDetailStateService
+        TracklistTagDetailStateService,
+        ACTIVITY_TABLE_STATE_PROVIDERS,
     ],
     standalone: true,
     templateUrl: './tracklist-tag-detail.component.html',
     styleUrl: './tracklist-tag-detail.component.css'
 })
-export class TracklistTagDetailComponent implements OnInit{
+export class TracklistTagDetailComponent implements OnChanges{
     private tracklistTagService = inject(TracklistTagService);
     private tracklistTagAssociationService = inject(TracklistTagAssociationService);
     private dialogService = inject(DialogService);
@@ -72,7 +76,13 @@ export class TracklistTagDetailComponent implements OnInit{
 
     public state = inject(TracklistTagDetailStateService);
 
-    activeTab: WritableSignal<string> = signal<string>('tracklists')
+    private readonly destroyRef = inject(DestroyRef);
+    private tagSubscription?: Subscription;
+    readonly activeTab = toSignal(this.router.events.pipe(
+        filter(event => event instanceof NavigationEnd),
+        startWith(null),
+        map(() => this.route.snapshot.firstChild?.routeConfig?.path ?? TRACKLIST_TAG_PATHS.tracklists),
+    ), { requireSync: true });
     paths = TRACKLIST_TAG_PATHS;
 
     showUnratedTracklists = signal<boolean>(true);
@@ -253,18 +263,21 @@ export class TracklistTagDetailComponent implements OnInit{
         };
     });
 
-    ngOnInit(): void {
+    ngOnChanges(): void {
         this.loadTag();
     }
 
     private loadTag(): void {
         this.state.isLoading.set(true);
-        this.tracklistTagService.getTagWithTracklists(Number(this.tagId)).subscribe({
+        this.tagSubscription?.unsubscribe();
+        this.tagSubscription = this.tracklistTagService.getTagWithTracklists(Number(this.tagId))
+            .pipe(takeUntilDestroyed(this.destroyRef)).subscribe({
             next: (tag) => {
                 this.state.tagData.set(tag);
                 this.state.isLoading.set(false);
             },
             error: (err) => {
+                this.state.tagData.set(null);
                 console.error('Fehler beim Laden des Tags!', err);
                 this.state.isLoading.set(false);
             }
@@ -273,7 +286,6 @@ export class TracklistTagDetailComponent implements OnInit{
 
     onTabChange(newRoute: string | number): void {
         const routeStr = newRoute.toString();
-        this.activeTab.set(routeStr);
         void this.router.navigate([routeStr], { relativeTo: this.route });
     }
 

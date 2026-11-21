@@ -21,7 +21,7 @@ import {
     IT_USER_REPOSITORY,
 } from '../../interfaces/user.repository';
 import { Observable } from 'rxjs';
-import { UserActivitiesResponse } from '../../../shared/interfaces/user-interfaces';
+import { ActivityScope, ActivityPageRequestDto, UserActivitiesResponse } from '../../../shared/interfaces/user-interfaces';
 
 @Injectable()
 export class UC_GetUserActivites {
@@ -31,8 +31,9 @@ export class UC_GetUserActivites {
     ) {}
 
     public execute = (
-        responsePage: number,
+        request: ActivityPageRequestDto,
+        scope?: ActivityScope,
     ): Observable<UserActivitiesResponse> | null => {
-        return this.userRepository.getUserActivities(responsePage);
+        return this.userRepository.getUserActivities(request, scope);
     };
 }

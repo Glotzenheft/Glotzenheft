@@ -34,10 +34,12 @@ use App\Model\Response\Tracklist\TracklistResponseDto;
 use App\Repository\SeasonRepository;
 use App\Repository\TracklistRepository;
 use App\Service\Traits\EntityValidationTrait;
+use App\Service\WatchActivity\WatchActivitySynchronizer;
 use DateTimeImmutable;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpKernel\Exception\ConflictHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Throwable;
 
 readonly class TracklistService
 {
@@ -46,7 +48,8 @@ readonly class TracklistService
     public function __construct(
         private TracklistRepository $tracklistRepository,
         private SeasonRepository    $seasonRepository,
-        private EntityManagerInterface $entityManager
+        private EntityManagerInterface $entityManager,
+        private WatchActivitySynchronizer $watchActivitySynchronizer,
     ){}
 
     /**
@@ -95,6 +98,7 @@ readonly class TracklistService
      * @param CreateTracklistDto $dto
      * @param User $user
      * @return TracklistResponseDto
+     * @throws Throwable
      */
     public function createTracklist(
         CreateTracklistDto $dto,
@@ -161,7 +165,7 @@ readonly class TracklistService
         }
 
         $this->entityManager->persist($tracklist);
-        $this->entityManager->flush();
+        $this->watchActivitySynchronizer->flush(tracklist: $tracklist);
 
         return TracklistResponseDto::fromEntity($tracklist);
     }
@@ -172,6 +176,7 @@ readonly class TracklistService
      * @param User $user
      * @param array<string, mixed> $requestData
      * @return TracklistResponseDto
+     * @throws Throwable
      */
     public function updateTracklist(
         int $tracklistId,
@@ -267,7 +272,7 @@ readonly class TracklistService
             );
         }
 
-        $this->entityManager->flush();
+        $this->watchActivitySynchronizer->flush(tracklist: $tracklist);
         return TracklistResponseDto::fromEntity($tracklist);
     }
 

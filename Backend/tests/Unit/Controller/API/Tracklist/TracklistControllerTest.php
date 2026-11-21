@@ -37,7 +37,9 @@ use App\Model\Request\Tracklist\UpdateTracklistDto;
 use App\Repository\SeasonRepository;
 use App\Repository\TracklistRepository;
 use App\Service\Tracklist\TracklistService;
+use App\Service\WatchActivity\WatchActivitySynchronizer;
 use DateTimeImmutable;
+use Doctrine\DBAL\Connection;
 use Doctrine\ORM\EntityManagerInterface;
 use Doctrine\ORM\EntityRepository;
 use PHPUnit\Framework\MockObject\MockObject;
@@ -77,6 +79,9 @@ class TracklistControllerTest extends TestCase
         $this->mediaRepository = $this->createMock(EntityRepository::class);
         $this->seasonRepository = $this->createMock(SeasonRepository::class);
         $entityManager = $this->createMock(EntityManagerInterface::class);
+        $connection = $this->createMock(Connection::class);
+        $connection->method('transactional')->willReturnCallback(static fn (callable $callback) => $callback($connection));
+        $entityManager->method('getConnection')->willReturn($connection);
         $entityManager->method('getRepository')->willReturnMap([
             [Media::class, $this->mediaRepository],
             [Season::class, $this->seasonRepository],
@@ -96,7 +101,12 @@ class TracklistControllerTest extends TestCase
             $this->persisted = [];
         });
 
-        $service = new TracklistService($this->tracklistRepository, $this->seasonRepository, $entityManager);
+        $service = new TracklistService(
+            $this->tracklistRepository,
+            $this->seasonRepository,
+            $entityManager,
+            new WatchActivitySynchronizer($entityManager),
+        );
         $this->controller = new TracklistController($service);
 
         $metadata = new ClassMetadataFactory(new AttributeLoader());

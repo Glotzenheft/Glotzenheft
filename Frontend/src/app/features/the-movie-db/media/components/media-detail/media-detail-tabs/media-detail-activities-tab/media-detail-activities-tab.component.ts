@@ -15,14 +15,18 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
+
+import { ActivityTableComponent } from '../../../../../activities/components/activity-table/activity-table.component';
+import { MediaDetailStateService } from '../../../../services/media-detail-state.service';
 
 @Component({
   selector: 'app-media-detail-activities-tab',
-  imports: [],
+  imports: [ActivityTableComponent],
   templateUrl: './media-detail-activities-tab.component.html',
   styleUrl: './media-detail-activities-tab.component.css'
 })
 export class MediaDetailActivitiesTabComponent {
+    protected readonly state = inject(MediaDetailStateService);
 
 }

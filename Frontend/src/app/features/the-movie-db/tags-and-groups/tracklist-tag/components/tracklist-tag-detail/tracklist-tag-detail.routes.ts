@@ -38,6 +38,11 @@ export const TRACKLIST_TAG_DETAIL_ROUTES: Routes = [
                 path: TRACKLIST_TAG_PATHS.analytics,
                 loadComponent: () => import('./tracklist-tag-detail-analytics-tab/tracklist-tag-detail-analytics-tab.component')
                     .then(m => m.TracklistTagDetailAnalyticsTabComponent)
+            },
+            {
+                path: TRACKLIST_TAG_PATHS.activities,
+                loadComponent: () => import('./tracklist-tag-detail-activities-tab/tracklist-tag-detail-activities-tab.component')
+                    .then(m => m.TracklistTagDetailActivitiesTabComponent)
             }
         ]
     }

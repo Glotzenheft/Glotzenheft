@@ -34,7 +34,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         </div>
         <div class="tracklist-info">
             <div class="info-item"><span>{{ media.type | mediaType }}</span><span>{{ media.runtime !== null ? media.runtime + ' Minuten' : '–' }}</span></div>
-            <div class="info-item"><span class="info-label">Erstausstrahlung!:</span><span>{{ (parseDate(tracklist.customAirDate ?? media.firstAirDate) | date:'dd.MM.yyyy') || '–' }}</span></div>
+            <div class="info-item"><span class="info-label">Erstausstrahlung:</span><span>{{ (parseDate(tracklist.customAirDate ?? media.firstAirDate) | date:'dd.MM.yyyy') || '–' }}</span></div>
             <div class="info-item"><span class="info-label">Start:</span><span>{{ (parseDate(tracklist.startDate) | date:"dd.MM.yyyy HH:mm 'Uhr'") || '–' }}</span></div>
             <div class="info-item"><span class="info-label">Ende:</span><span>{{ (parseDate(tracklist.finishDate) | date:"dd.MM.yyyy HH:mm 'Uhr'") || '–' }}</span></div>
             <div class="info-item centered elapsed-row"><span appFitSingleLineText>{{ elapsedText }}</span></div>
