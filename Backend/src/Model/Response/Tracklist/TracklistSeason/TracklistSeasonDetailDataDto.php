@@ -73,7 +73,7 @@ readonly class TracklistSeasonDetailDataDto
             customSeasonNumber: $tracklistSeason->getCustomSeasonNumber(),
             customPartNumber: $tracklistSeason->getCustomPartNumber(),
             seasonDto: $seasonDto,
-            tracklistEpisodes: $tracklistEpisodeDtos,
+            tracklistEpisodes: array_values($tracklistEpisodeDtos),
         );
     }
 }
