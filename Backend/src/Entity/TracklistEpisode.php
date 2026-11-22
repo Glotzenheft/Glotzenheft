@@ -32,6 +32,7 @@ use Symfony\Component\Serializer\Attribute\Context;
 #[ORM\Entity(repositoryClass: TracklistEpisodeRepository::class)]
 #[ORM\HasLifecycleCallbacks]
 #[ORM\Table(name: 'tracklist_episode')]
+#[ORM\UniqueConstraint(name: 'uniq_tracklist_season_episode', columns: ['tracklist_season_id', 'episode_id'])]
 #[ORM\Index(name: 'idx_episode_watch_date', columns: ['watch_date'])]
 class TracklistEpisode
 {
