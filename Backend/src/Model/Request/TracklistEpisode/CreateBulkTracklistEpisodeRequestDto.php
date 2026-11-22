@@ -31,7 +31,7 @@ readonly class CreateBulkTracklistEpisodeRequestDto
         #[Assert\NotBlank(message: 'The episodes array cannot be empty.')]
         #[Assert\Count(min: 1, minMessage: 'You must provide at least one episode.')]
         #[Assert\Valid]
-        #[Assert\Type('array')]
+        #[Assert\All([new Assert\Type(CreateTracklistEpisodeRequestDto::class), new Assert\NotNull()])]
         public array $episodes = []
     ){}
 }
