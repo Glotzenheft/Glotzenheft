@@ -20,6 +20,8 @@ import { TracklistResponseDto } from '../../tracklists/tracklist/models/response
 import { MediaResponse } from '../models/response/media-response.dto';
 import { TracklistEpisodeDetailDataDto } from '../../tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';
 
+import { TracklistSeasonDetailDataDto } from '../../tracklists/tracklist/models/response/tracklist-season/tracklist-season-detail-data.dto';
+
 @Injectable()
 export class MediaDetailStateService {
     private readonly data = signal<MediaResponse | null>(null);
@@ -97,6 +99,40 @@ export class MediaDetailStateService {
         const episodes = update(season.tracklistEpisodes);
         if (episodes === season.tracklistEpisodes) return;
         this.upsertTracklist({ ...tracklist, tracklistSeason: { ...season, tracklistEpisodes: episodes } });
+    }
+
+    replaceTracklistSeason(context: TracklistResponseDto, updated: TracklistSeasonDetailDataDto): void {
+        this.updateTracklistSeason(context, () => updated);
+    }
+
+    addTracklistEpisodes(context: TracklistResponseDto, created: TracklistEpisodeDetailDataDto[]): void {
+        this.updateTracklistSeason(context, (season) => {
+            const merged = new Map(season.tracklistEpisodes.map((te) => [te.episode.id, te]));
+            for (const te of created) merged.set(te.episode.id, te);
+            return { ...season, tracklistEpisodes: [...merged.values()] };
+        });
+    }
+
+    removeTracklistEpisodes(context: TracklistResponseDto, ids: number[]): void {
+        const removed = new Set(ids);
+        this.updateTracklistSeason(context, (season) => ({
+            ...season,
+            tracklistEpisodes: season.tracklistEpisodes.filter((te) => !removed.has(te.id)),
+        }));
+    }
+
+    private updateTracklistSeason(
+        context: TracklistResponseDto,
+        update: (season: TracklistSeasonDetailDataDto) => TracklistSeasonDetailDataDto,
+    ): void {
+        const current = this.data();
+        if (current?.media.id !== context.media.id || current.media.type !== context.media.type) return;
+        const tracklist = current.tracklists.find((item) => item.id === context.id);
+        const season = tracklist?.tracklistSeason;
+        if (!tracklist || !season || season.id !== context.tracklistSeason?.id) return;
+        const updated = update(season);
+        if (updated.id === season.id && updated.season.id === season.season.id)
+            this.upsertTracklist({ ...tracklist, tracklistSeason: updated });
     }
 
     removeTracklist(tracklistId: number): void {

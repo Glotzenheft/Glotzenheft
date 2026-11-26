@@ -171,6 +171,39 @@ describe('MediaDetailStateService', () => {
         expect(state.mediaData()?.tracklists[0].tracklistSeason?.tracklistEpisodes).toEqual([other]);
     });
 
+    it('applies bulk responses to the captured season while preserving other tracklists and catalogue data', () => {
+        const state = new MediaDetailStateService();
+        const context = createSeriesTracklist();
+        const other = createSeriesTracklist({ id: 43 }, { id: 51 });
+        const data = createSeriesMedia([context, other]);
+        state.setMedia(data);
+        const first = createEpisodeSighting();
+        const second = createEpisodeSighting({ id: 71, episode: { ...first.episode, id: 61 } });
+        const third = createEpisodeSighting({ id: 72, episode: { ...first.episode, id: 62 } });
+        state.addTracklistEpisodes(context, [first, second, third]);
+        state.removeTracklistEpisodes(context, [70, 72]);
+        expect(state.mediaData()?.tracklists[0].tracklistSeason?.tracklistEpisodes).toEqual([second]);
+        const season = {
+            ...context.tracklistSeason!,
+            tracklistEpisodes: [{ ...second, watchDateTime: '2026-11-24 20:21:22' }],
+        };
+        state.replaceTracklistSeason(context, season);
+        expect(state.mediaData()?.tracklists[0].tracklistSeason).toBe(season);
+        expect(state.mediaData()?.tracklists[1]).toBe(other);
+        expect(state.mediaData()?.media).toBe(data.media);
+
+        state.removeTracklist(42);
+        const removed = state.mediaData();
+        state.replaceTracklistSeason(context, season);
+        expect(state.mediaData()).toBe(removed);
+        const later = createMediaDetailResponse([context], { id: 99 });
+        state.setMedia(later);
+        state.addTracklistEpisodes(context, [first]);
+        state.removeTracklistEpisodes(context, [71]);
+        state.replaceTracklistSeason(context, season);
+        expect(state.mediaData()).toBe(later);
+    });
+
     it('ignores changes for unknown tracklists or sightings and for movies', () => {
         // Arrange
         const state = new MediaDetailStateService();
