@@ -19,7 +19,25 @@ import { Component, computed, DestroyRef, inject, Input, signal, Type } from '@a
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { RouterLink } from '@angular/router';
-import { MessageService } from 'primeng/api';
+import { ConfirmationService, MenuItem, MessageService } from 'primeng/api';
+import { Checkbox } from 'primeng/checkbox';
+import { ConfirmDialog } from 'primeng/confirmdialog';
+import { SplitButton } from 'primeng/splitbutton';
+import { HttpErrorResponse } from '@angular/common/http';
+import {
+    EpisodeSelectionToolbarComponent,
+    EpisodeSelectionMode,
+} from './episode-selection-toolbar.component';
+import { TracklistEpisodeService } from '../../../../../../../tracklists/tracklist-episode/services/tracklist-episode.service';
+import {
+    TracklistSeasonEpisodesDialogComponent,
+    SeasonEpisodesDialogData,
+} from '../../../../../../../tracklists/tracklist/components/tracklist-season-episodes-dialog/tracklist-season-episodes-dialog.component';
+import {
+    EPISODE_REQUEST_TIMEOUT_MS,
+    inTracklistRange,
+    unknownEpisodeWriteResult,
+} from '../../../../../../../tracklists/tracklist/utils/tracklist-episode.utils';
 import { AccordionModule } from 'primeng/accordion';
 import { Button } from 'primeng/button';
 import { Carousel } from 'primeng/carousel';
@@ -31,7 +49,8 @@ import { Panel } from 'primeng/panel';
 import { Select } from 'primeng/select';
 import { Tag } from 'primeng/tag';
 import { Tooltip } from 'primeng/tooltip';
-import { EMPTY, finalize, Observable, switchMap, take } from 'rxjs';
+import { EMPTY, finalize, Observable, switchMap, take, timeout } from 'rxjs';
+import { TracklistEpisodeDetailDataDto } from '../../../../../../../tracklists/tracklist/models/response/tracklist-season/tracklist-episode/tracklist-episode-detail-data.dto';
 import { MediaResponse } from '../../../../../../models/response/media-response.dto';
 import { MediaType } from '../../../../../../models/enums/media-type.enum';
 import { MediaDetailStateService } from '../../../../../../services/media-detail-state.service';
@@ -60,6 +79,18 @@ import {
     TMDB_ORIGINAL_IMAGE_PATH,
 } from '../../../../../../../../../shared/variables/tmdb-vars';
 
+interface EpisodeSelection {
+    tracklist: TracklistResponseDto;
+    tracklistSeasonId: number;
+    mode: EpisodeSelectionMode;
+    visibleIds: Set<number>;
+}
+
+interface EpisodeRow {
+    episode: MediaSeasonEpisodeDetailResponseDto;
+    sighting?: { id: number };
+}
+
 @Component({
     selector: 'app-media-detail-tv-series-tracklists-tab',
     standalone: true,
@@ -67,6 +98,10 @@ import {
         AccordionModule,
         Button,
         Carousel,
+        Checkbox,
+        ConfirmDialog,
+        SplitButton,
+        EpisodeSelectionToolbarComponent,
         Dialog,
         FormsModule,
         Image,
@@ -78,7 +113,7 @@ import {
         Tag,
         Tooltip,
     ],
-    providers: [DialogService, TracklistFormDialogService],
+    providers: [DialogService, TracklistFormDialogService, ConfirmationService],
     templateUrl: './media-detail-tv-series-tracklists-tab.component.html',
     styleUrl: './media-detail-tv-series-tracklists-tab.component.css',
 })
@@ -101,6 +136,14 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
         year: 'numeric',
     });
     private readonly timeFormat = new Intl.DateTimeFormat('de-DE', { hour: '2-digit', minute: '2-digit' });
+
+    private readonly episodeApi = inject(TracklistEpisodeService);
+    private readonly confirmation = inject(ConfirmationService);
+    readonly selection = signal<EpisodeSelection | null>(null);
+    readonly marked = signal<ReadonlySet<number>>(new Set());
+    readonly episodeBusy = signal(false);
+    readonly episodeError = signal('');
+    readonly reloadStatus = signal<'available' | 'required' | null>(null);
 
     readonly data = this.media.asReadonly();
     readonly activeSeasonId = signal<string | number>('');
@@ -141,6 +184,19 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
             this.allEpisodes.set(new Set());
             this.posterErrors.set(new Set());
         }
+        const selecting = this.selection();
+        if (selecting) {
+            const season = value.tracklists.find(
+                (item) => item.id === selecting.tracklist.id,
+            )?.tracklistSeason;
+            if (
+                !sameMedia ||
+                season?.id !== selecting.tracklistSeasonId ||
+                ids[season.season.id] !== selecting.tracklist.id
+            ) {
+                this.endSelection();
+            }
+        }
         this.media.set(value);
         this.selectedIds.set(ids);
     }
@@ -164,22 +220,22 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
                 const sightings = new Map(
                     range?.tracklistEpisodes.map((item) => [item.episode.id, item]) ?? [],
                 );
+                const selection = this.selection();
+                const visibleIds =
+                    selection && selection.tracklist.id === tracklist?.id ? selection.visibleIds : null;
                 const episodes = [...season.episodes]
                     .sort((a, b) => a.episodeNumber - b.episodeNumber)
-                    .filter(
-                        (episode) =>
-                            all.has(season.id) ||
-                            !range ||
-                            ((range.startEpisodeNumber === null ||
-                                episode.episodeNumber >= range.startEpisodeNumber) &&
-                                (range.endEpisodeNumber === null ||
-                                    episode.episodeNumber <= range.endEpisodeNumber)),
+                    .filter((episode) =>
+                        visibleIds
+                            ? visibleIds.has(episode.id)
+                            : all.has(season.id) || !range || inTracklistRange(episode.episodeNumber, range),
                     );
                 return {
                     season,
                     options,
                     tracklist,
                     hasBoundaries,
+                    bulkMenu: this.bulkMenu(tracklist, episodes, sightings),
                     showAll: all.has(season.id),
                     identifiers: [
                         { label: 'Tracklist Id', value: String(tracklist?.id ?? '–') },
@@ -196,6 +252,215 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
             });
     });
 
+    readonly eligibleIds = computed(() => {
+        const selection = this.selection();
+        const panel = this.panels().find((item) => item.tracklist?.id === selection?.tracklist.id);
+        if (!selection || !panel) return [];
+        return panel.episodes
+            .map((row) => this.selectionId(row, selection.mode))
+            .filter((id) => id !== undefined);
+    });
+
+    readonly selectedEligible = computed(() => this.eligibleIds().filter((id) => this.marked().has(id)));
+
+    selectionId(row: EpisodeRow, mode: EpisodeSelectionMode): number | undefined {
+        if (mode === 'remove') return row.sighting?.id;
+        if (mode === 'add' && row.sighting) return undefined;
+        return row.episode.id;
+    }
+
+    private bulkMenu(
+        tracklist: TracklistResponseDto | null,
+        episodes: MediaSeasonEpisodeDetailResponseDto[],
+        sightings: ReadonlyMap<number, unknown>,
+    ): MenuItem[] {
+        const tracklistSeasonId = tracklist?.tracklistSeason?.id;
+        if (!tracklist || tracklistSeasonId === undefined) return [];
+        const ids = episodes.map((e) => e.id);
+        const start = (mode: EpisodeSelectionMode) => {
+            this.endSelection();
+            this.selection.set({ mode, tracklist, tracklistSeasonId, visibleIds: new Set(ids) });
+        };
+        return [
+            {
+                label: 'Episoden auswählen und bearbeiten',
+                disabled: !ids.length,
+                command: () => start('edit'),
+            },
+            {
+                label: 'Episoden auswählen und entfernen',
+                disabled: !ids.some((id) => sightings.has(id)),
+                command: () => start('remove'),
+            },
+            {
+                label: 'Episoden auswählen und ohne Datum hinzufügen',
+                disabled: !ids.some((id) => !sightings.has(id)),
+                command: () => start('add'),
+            },
+        ];
+    }
+
+    endSelection(): void {
+        this.selection.set(null);
+        this.marked.set(new Set());
+        this.episodeBusy.set(false);
+        this.episodeError.set('');
+        this.reloadStatus.set(null);
+    }
+
+    toggleRow(id: number | undefined): void {
+        if (id === undefined || this.episodeBusy()) return;
+        const next = new Set(this.marked());
+        if (next.has(id)) next.delete(id);
+        else next.add(id);
+        this.marked.set(next);
+    }
+
+    toggleAll(): void {
+        if (this.episodeBusy()) return;
+        const ids = this.eligibleIds();
+        this.marked.set(new Set(this.selectedEligible().length === ids.length ? [] : ids));
+    }
+
+    openEpisodeEditor(tracklist: TracklistResponseDto, selectedIds?: number[]): void {
+        const season = this.media()?.media.seasons.find((s) => s.id === tracklist.tracklistSeason?.season.id);
+        if (!season || !tracklist.tracklistSeason) return;
+        const data: SeasonEpisodesDialogData = {
+            tracklistName: tracklist.tracklistName,
+            season: tracklist.tracklistSeason,
+            episodes: season.episodes,
+            selectedIds,
+            updateSeason: (updated) => this.state.replaceTracklistSeason(tracklist, updated),
+        };
+        const selection = this.selection();
+        this.openAuxiliary<boolean>(
+            TracklistSeasonEpisodesDialogComponent,
+            data,
+            `Episoden bearbeiten · Staffel ${season.seasonNumber} · ${tracklist.tracklistName}`,
+            false,
+        ).subscribe((saved) => {
+            if (saved && selection === this.selection()) this.endSelection();
+        });
+    }
+
+    proceed(): void {
+        const selection = this.selection();
+        const ids = this.selectedEligible();
+        if (!selection || !ids.length || this.episodeBusy() || this.reloadStatus() === 'required') return;
+        const tracklist = this.panels().find((p) => p.tracklist?.id === selection.tracklist.id)?.tracklist;
+        if (!tracklist?.tracklistSeason) return;
+        if (selection.mode === 'edit') {
+            this.openEpisodeEditor(tracklist, ids);
+            return;
+        }
+        const add = selection.mode === 'add';
+        const label = add ? 'Hinzufügen' : 'Entfernen';
+        const episodes = ids.length === 1 ? '1 Episode' : `${ids.length} Episoden`;
+        const sightings = ids.length === 1 ? '1 Sichtung' : `${ids.length} Sichtungen`;
+        this.confirmation.confirm({
+            key: 'season-episode-selection',
+            header: `Episoden ${label.toLowerCase()}`,
+            message: add
+                ? `${episodes} ohne Schaudatum zu „${tracklist.tracklistName}“ hinzufügen?`
+                : `${sightings} aus „${tracklist.tracklistName}“ entfernen? Die zugehörigen Schaudaten gehen verloren.`,
+            acceptLabel: label,
+            rejectLabel: 'Zurück',
+            defaultFocus: 'reject',
+            accept: () => this.writeSelection(selection, ids),
+        });
+    }
+
+    private writeSelection(selection: EpisodeSelection, ids: number[]): void {
+        if (selection !== this.selection() || this.episodeBusy() || this.reloadStatus() === 'required')
+            return;
+        const tracklist = selection.tracklist;
+        const add = selection.mode === 'add';
+        const request: Observable<TracklistEpisodeDetailDataDto[] | void> = add
+            ? this.episodeApi.createBulkTracklistEpisodes({
+                  episodes: ids.map((episode_id) => ({
+                      tracklist_id: tracklist.id,
+                      tracklist_season_id: selection.tracklistSeasonId,
+                      episode_id,
+                      watch_date_time: null,
+                  })),
+              })
+            : this.episodeApi.deleteBulkTracklistEpisodes(ids);
+        this.episodeBusy.set(true);
+        this.episodeError.set('');
+
+        request.pipe(timeout(EPISODE_REQUEST_TIMEOUT_MS), takeUntilDestroyed(this.destroyRef)).subscribe({
+            next: (created) => {
+                if (created) this.state.addTracklistEpisodes(tracklist, created);
+                else if (!add) this.state.removeTracklistEpisodes(tracklist, ids);
+                if (selection === this.selection()) this.endSelection();
+            },
+            error: (err: unknown) => {
+                if (selection !== this.selection()) return;
+                this.episodeBusy.set(false);
+                if (unknownEpisodeWriteResult(err)) {
+                    this.reloadStatus.set('required');
+                    this.episodeError.set(
+                        'Das Speicherergebnis ist unbekannt. Lade die Trackliste zum Abgleich neu.',
+                    );
+                    return;
+                }
+                if (err instanceof HttpErrorResponse && [404, 409].includes(err.status))
+                    this.reloadStatus.set('available');
+                this.episodeError.set(
+                    `Die Episoden konnten nicht ${add ? 'hinzugefügt' : 'entfernt'} werden.`,
+                );
+            },
+        });
+    }
+
+    reloadSelection(): void {
+        const selection = this.selection();
+        if (!selection || this.episodeBusy() || !this.reloadStatus()) return;
+        this.episodeBusy.set(true);
+        this.tracklists
+            .getTracklist(selection.tracklist.id)
+            .pipe(timeout(EPISODE_REQUEST_TIMEOUT_MS), takeUntilDestroyed(this.destroyRef))
+            .subscribe({
+                next: (tracklist) => {
+                    if (this.selection() !== selection) return;
+                    this.episodeBusy.set(false);
+                    const season = tracklist.tracklistSeason;
+                    if (
+                        !season ||
+                        season.id !== selection.tracklistSeasonId ||
+                        tracklist.id !== selection.tracklist.id
+                    ) {
+                        this.endSelection();
+                        return;
+                    }
+                    const loaded = this.state
+                        .mediaData()
+                        ?.tracklists.find((item) => item.id === tracklist.id);
+                    if (loaded?.tracklistSeason?.id !== season.id) {
+                        this.endSelection();
+                        return;
+                    }
+                    this.state.upsertTracklist(tracklist);
+                    const removing = selection.mode === 'remove';
+                    const existing = new Set(
+                        season.tracklistEpisodes.map((te) => (removing ? te.id : te.episode.id)),
+                    );
+                    this.marked.update(
+                        (ids) => new Set([...ids].filter((id) => removing === existing.has(id))),
+                    );
+                    this.reloadStatus.set(null);
+                    this.episodeError.set('');
+                },
+                error: () => {
+                    if (this.selection() !== selection) return;
+                    this.episodeBusy.set(false);
+                    this.episodeError.set(
+                        'Die Trackliste konnte für den Episodenabgleich nicht geladen werden.',
+                    );
+                },
+            });
+    }
+
     constructor() {
         this.destroyRef.onDestroy(() => {
             for (const ref of this.openRefs) ref.destroy();
@@ -204,6 +469,7 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     }
 
     onSeasonChange(value: string | number | string[] | number[] | null | undefined): void {
+        if (value !== this.activeSeasonId()) this.endSelection();
         this.activeSeasonId.set(value === null || value === undefined || Array.isArray(value) ? '' : value);
     }
 
@@ -435,6 +701,7 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
     }
 
     private rememberSelection(seasonId: number, tracklistId: number | null): void {
+        if (this.selectedIds()[seasonId] !== tracklistId) this.endSelection();
         this.selectedIds.update((current) => {
             const next = { ...current };
             if (tracklistId === null) delete next[seasonId];
@@ -457,13 +724,15 @@ export class MediaDetailTvSeriesTracklistsTabComponent {
         component: Type<unknown>,
         data: unknown,
         header: string,
+        useDefaultHeader = true,
     ): Observable<T | undefined> {
         const ref = this.dialogs.open(component, {
             data,
             header,
             modal: true,
-            closable: true,
-            closeOnEscape: true,
+            showHeader: useDefaultHeader,
+            closable: useDefaultHeader,
+            closeOnEscape: useDefaultHeader,
             dismissableMask: false,
             draggable: false,
             width: '60vw',

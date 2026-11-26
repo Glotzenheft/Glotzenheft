@@ -16,7 +16,8 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
 import { TestBed } from '@angular/core/testing';
-import { MessageService } from 'primeng/api';
+import { MessageService, ConfirmationService } from 'primeng/api';
+import { provideHttpClient } from '@angular/common/http';
 import { DialogService, DynamicDialogRef } from 'primeng/dynamicdialog';
 import { of, Subject, throwError } from 'rxjs';
 import { MediaDetailStateService } from '../../../../../../services/media-detail-state.service';
@@ -81,6 +82,8 @@ describe('MediaDetailTvSeriesTracklistsTabComponent', () => {
         dialogs.open.and.returnValue(ref);
         TestBed.configureTestingModule({
             providers: [
+                provideHttpClient(),
+                ConfirmationService,
                 MediaDetailStateService,
                 { provide: TracklistFormDialogService, useValue: forms },
                 { provide: TracklistSelectionService, useValue: selections },

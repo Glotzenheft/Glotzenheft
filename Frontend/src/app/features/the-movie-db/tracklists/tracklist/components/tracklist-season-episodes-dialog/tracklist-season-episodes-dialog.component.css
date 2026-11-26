@@ -1,0 +1,87 @@
+.sr-only {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    overflow: hidden;
+    clip-path: inset(50%);
+    white-space: nowrap;
+}
+:host {
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    height: min(48rem, calc(100dvh - 4rem));
+}
+header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding-top: 1rem;
+}
+h2 small {
+    display: block;
+    font-weight: normal;
+    font-size: 0.9rem;
+    margin-top: 0.25rem;
+}
+h2 {
+    margin: 0;
+    font-size: 1.25rem;
+    overflow-wrap: anywhere;
+}
+.list {
+    flex: 1 1 auto;
+    overflow: auto;
+    min-height: 3rem;
+}
+.episode {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 0.25rem;
+    border-bottom: 1px solid var(--p-content-border-color);
+}
+.episode strong {
+    flex: 1 1 12rem;
+    overflow-wrap: anywhere;
+}
+.date,
+footer,
+.summary {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+}
+.date p-datepicker {
+    flex: 1;
+    min-width: 0;
+}
+.hint {
+    flex-basis: 100%;
+}
+.watched {
+    color: var(--p-green-600);
+}
+.unwatched {
+    color: var(--p-red-600);
+}
+footer {
+    border-top: 1px solid var(--p-content-border-color);
+    padding-top: 0.75rem;
+    justify-content: flex-end;
+}
+@media (max-width: 700px) {
+    .episode {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .episode strong {
+        flex: 0 0 auto;
+    }
+    footer {
+        justify-content: flex-start;
+    }
+}

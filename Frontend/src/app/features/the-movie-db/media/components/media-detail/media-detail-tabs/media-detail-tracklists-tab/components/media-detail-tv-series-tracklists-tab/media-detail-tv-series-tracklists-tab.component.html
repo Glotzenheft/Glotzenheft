@@ -239,7 +239,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
 
                         @if (panel.options.length) {
                             <div class="tracklistSelectionDIV">
-                                <label [for]="'tracklist-selection-' + panel.season.id"></label>
+                                <label [for]="'tracklist-selection-' + panel.season.id">Trackliste</label>
                                 <p-select
                                     [inputId]="'tracklist-selection-' + panel.season.id"
                                     [options]="panel.options"
@@ -253,6 +253,18 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             </div>
                         }
                         <div class="season-page-action-bar">
+                            @if (panel.tracklist?.tracklistSeason && panel.tracklist; as tracklist) {
+                                <p-splitbutton
+                                    label="Episoden bearbeiten"
+                                    icon="pi pi-list"
+                                    size="small"
+                                    [disabled]="!!selection() || tagBusy()"
+                                    [menuButtonProps]="{ ariaLabel: 'Episodenaktionen auswählen' }"
+                                    [model]="panel.bulkMenu"
+                                    appendTo="body"
+                                    (onClick)="openEpisodeEditor(tracklist)"
+                                />
+                            }
                             @if (panel.tracklist; as tracklist) {
                                 <p-button
                                     icon="pi pi-pencil"
@@ -313,7 +325,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                     [severity]="panel.showAll ? 'secondary' : 'info'"
                                     [outlined]="panel.showAll"
                                     size="small"
-                                    [disabled]="!panel.hasBoundaries"
+                                    [disabled]="!panel.hasBoundaries || !!selection()"
                                     (onClick)="toggleEpisodeFilter(panel.season.id)"
                                     [title]="
                                         panel.hasBoundaries
@@ -366,6 +378,13 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                             }
                         }
 
+                        @if (selection(); as current) {
+                            @if (current.tracklist.id === panel.tracklist?.id) {
+                                <p>{{ current.mode === 'add' ? 'Wähle bisher nicht geschaute Episoden aus.' :
+                                    current.mode === 'remove' ? 'Wähle geschaute Episoden zum Entfernen aus.' :
+                                    'Wähle die Episoden für den Editor aus.' }}</p>
+                            }
+                        }
                         <div class="episodeDIVWrapper">
                             @for (row of panel.episodes; track row.episode.id) {
                                 <div class="episodeDIV" [class.episodeInTracklistDIV]="!!row.sighting">
@@ -377,7 +396,17 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                     >
                                         {{ row.title }}
                                     </button>
-                                    @if (panel.tracklist; as tracklist) {
+                                    @let current = selection();
+                                    @if (current && current.tracklist.id === panel.tracklist?.id) {
+                                        @let id = selectionId(row, current.mode);
+                                        <p-checkbox
+                                            [binary]="true"
+                                            [ngModel]="id !== undefined && marked().has(id)"
+                                            [ariaLabel]="row.title + ' auswählen'"
+                                            [disabled]="id === undefined || episodeBusy()"
+                                            (onChange)="toggleRow(id)"
+                                        />
+                                    } @else if (panel.tracklist) {
                                         <p-button
                                             [icon]="row.sighting ? 'pi pi-pencil' : 'pi pi-plus'"
                                             severity="secondary"
@@ -392,7 +421,7 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
                                                     : 'Episode zur Trackliste hinzufügen'
                                             "
                                             [disabled]="tagBusy()"
-                                            (onClick)="trackEpisode(tracklist, row.episode)"
+                                            (onClick)="trackEpisode(panel.tracklist, row.episode)"
                                         />
                                     }
                                 </div>
@@ -408,6 +437,23 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
         <p role="status">Für diese Serie sind noch keine Staffeln vorhanden.</p>
     }
 </section>
+
+@if (selection(); as current) {
+    <div class="selection-clearance"></div>
+    <app-episode-selection-toolbar
+        [mode]="current.mode"
+        [count]="selectedEligible().length"
+        [total]="eligibleIds().length"
+        [pending]="episodeBusy()"
+        [error]="episodeError()"
+        [reloadStatus]="reloadStatus()"
+        (toggleAll)="toggleAll()"
+        (cancel)="endSelection()"
+        (proceed)="proceed()"
+        (reload)="reloadSelection()"
+    />
+}
+<p-confirmdialog key="season-episode-selection" appendTo="body" [style]="{ width: 'min(30rem, 94vw)' }" />
 
 @if (episodeDetails(); as details) {
     <p-dialog

@@ -1,0 +1,58 @@
+:host {
+    position: fixed;
+    z-index: 10;
+    bottom: max(0.75rem, env(safe-area-inset-bottom));
+    left: 50%;
+    transform: translateX(-50%);
+    width: max-content;
+    max-width: calc(100% - 1rem);
+    max-height: 45dvh;
+    overflow: auto;
+    border-radius: 24px;
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.02));
+    -webkit-backdrop-filter: blur(24px) saturate(200%);
+    backdrop-filter: blur(24px) saturate(200%);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-top-color: rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 10px 30px rgba(0, 0, 0, 0.25),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+    --p-toolbar-background: transparent;
+    --p-toolbar-border-color: transparent;
+    --p-toolbar-padding: 0.6rem 0.8rem;
+}
+.actions {
+    display: grid;
+    grid-template-columns: 1fr auto 1fr;
+    align-items: center;
+    gap: 0.5rem;
+    width: 100%;
+}
+.actions > strong {
+    text-align: center;
+}
+.selection-buttons {
+    display: flex;
+    justify-content: flex-end;
+    gap: 0.4rem;
+}
+.actions > [role='alert'] {
+    grid-column: 1 / -1;
+}
+@media (max-width: 700px) {
+    :host {
+        width: calc(100% - 1rem);
+    }
+    .selection-buttons {
+        flex-direction: column;
+    }
+    .actions {
+        grid-template-columns: minmax(0, 1fr) minmax(5rem, auto) minmax(0, 1fr);
+    }
+    :host ::ng-deep .p-button {
+        width: 100%;
+        padding: 0.35rem;
+        white-space: normal;
+        font-size: 0.85rem;
+    }
+}
