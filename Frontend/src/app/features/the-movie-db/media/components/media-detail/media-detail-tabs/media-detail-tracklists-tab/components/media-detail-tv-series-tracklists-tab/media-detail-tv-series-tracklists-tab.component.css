@@ -15,6 +15,9 @@ You should have received a copy of the GNU General Public License
 along with this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
+.selection-clearance {
+    height: calc(45dvh + 1.5rem);
+}
 :host {
     display: block;
     min-width: 0;
@@ -475,6 +478,16 @@ along with this program.  If not, see <http://www.gnu.org/licenses/>.
     }
     .tracklist-air-date {
         grid-column: auto;
+    }
+    :host ::ng-deep .season-page-action-bar .p-splitbutton {
+        display: flex;
+        width: 100%;
+    }
+    :host ::ng-deep .season-page-action-bar .p-splitbutton .p-splitbutton-button {
+        flex: 1;
+    }
+    :host ::ng-deep .season-page-action-bar .p-splitbutton .p-splitbutton-dropdown {
+        width: auto;
     }
     .season-page-action-bar {
         flex-direction: column;

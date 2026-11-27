@@ -115,6 +115,16 @@ describe('TracklistEpisodeService API contract', () => {
         expect(completed).toHaveBeenCalledTimes(1);
     });
 
+    it('deletes a batch by sighting ID with a JSON body and accepts an empty 204', () => {
+        const completed = jasmine.createSpy('completed');
+        service.deleteBulkTracklistEpisodes([703, 704]).subscribe({ complete: completed });
+        const req = http.expectOne({ method: 'DELETE', url: '/api/tracklist-episodes/bulk' });
+        expect(req.request.body).toEqual({ tracklist_episode_ids: [703, 704] });
+        expect(req.request.detectContentTypeHeader()).toBe('application/json');
+        req.flush(null, { status: 204, statusText: 'No Content' });
+        expect(completed).toHaveBeenCalledTimes(1);
+    });
+
     it('forwards a conflict and permits a subsequent request', () => {
         const failed = jasmine.createSpy('failed');
         service.createTracklistEpisode(dto).subscribe({error: failed});

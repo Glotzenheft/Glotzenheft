@@ -25,6 +25,8 @@ use App\Entity\User;
 use App\Model\Request\TracklistEpisode\CreateTracklistEpisodeRequestDto;
 use App\Model\Request\TracklistEpisode\CreateBulkTracklistEpisodeRequestDto;
 use App\Model\Request\TracklistEpisode\UpdateTracklistEpisodeRequestDto;
+use App\Model\Request\TracklistEpisode\DeleteBulkTracklistEpisodeRequestDto;
+use App\Model\Request\TracklistEpisode\UpdateBulkTracklistEpisodeRequestDto;
 use App\Security\IsAuthenticated;
 use App\Service\Tracklist\TracklistEpisodeService;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
@@ -32,6 +34,7 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Attribute\MapRequestPayload;
+use Symfony\Component\Serializer\Normalizer\AbstractNormalizer;
 use Symfony\Component\Routing\Attribute\Route;
 
 class TracklistEpisodeController extends AbstractController
@@ -102,6 +105,42 @@ class TracklistEpisodeController extends AbstractController
             data: $tracklistEpisodeResponses,
             successStatus: Response::HTTP_CREATED,
         );
+    }
+
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tracklist-episodes/bulk',
+        name: 'update_tracklist_episodes',
+        methods: ['PATCH'],
+        stateless: true
+    )]
+    public function updateTracklistEpisodes(
+        #[MapRequestPayload(serializationContext: [AbstractNormalizer::REQUIRE_ALL_PROPERTIES => true])]
+        UpdateBulkTracklistEpisodeRequestDto $dto,
+        User $user,
+        Request $request,
+    ): Response
+    {
+        $episodes = $this->tracklistEpisodeService->updateBulkTracklistEpisodes($dto, $user);
+
+        return $this->createConditionalResponse($request, $episodes, Response::HTTP_OK);
+    }
+
+    #[IsAuthenticated]
+    #[Route(
+        path: '/api/tracklist-episodes/bulk',
+        name: 'delete_tracklist_episodes',
+        methods: ['DELETE'],
+        stateless: true
+    )]
+    public function deleteTracklistEpisodes(
+        #[MapRequestPayload] DeleteBulkTracklistEpisodeRequestDto $dto,
+        User $user,
+    ): Response
+    {
+        $this->tracklistEpisodeService->deleteBulkTracklistEpisodes($dto->tracklistEpisodeIds, $user);
+
+        return new Response(status: Response::HTTP_NO_CONTENT);
     }
 
     #[IsAuthenticated]

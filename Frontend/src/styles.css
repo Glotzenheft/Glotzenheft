@@ -1699,3 +1699,9 @@ p {
     font-size: 0.9rem;
     line-height: 1.2;
 }
+
+/* PrimeNG 19 applies relative positioning to all mobile tiered menus, including
+   popups. Their inline anchor coordinates require an absolutely positioned box. */
+.p-tieredmenu-mobile.p-tieredmenu-overlay {
+    position: absolute;
+}

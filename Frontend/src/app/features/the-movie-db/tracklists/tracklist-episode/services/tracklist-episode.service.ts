@@ -49,6 +49,10 @@ export class TracklistEpisodeService {
         return this.http.patch<TracklistEpisodeDetailDataDto>(`${this.baseUrl}/${tracklistEpisodeId}`, dto);
     }
 
+    deleteBulkTracklistEpisodes(ids: number[]): Observable<void> {
+        return this.http.delete<void>(`${this.baseUrl}/bulk`, { body: { tracklist_episode_ids: ids } });
+    }
+
     deleteTracklistEpisode(tracklistEpisodeId: number): Observable<void> {
         return this.http.delete<void>(`${this.baseUrl}/${tracklistEpisodeId}`);
     }

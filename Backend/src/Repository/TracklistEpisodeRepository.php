@@ -35,6 +35,23 @@ class TracklistEpisodeRepository extends ServiceEntityRepository
         parent::__construct($registry, TracklistEpisode::class);
     }
 
+    /**
+     * @param int[] $ids
+     * @return array<int, TracklistEpisode>
+     */
+    public function findByIdsAndUser(array $ids, User $user): array
+    {
+        return $this->createQueryBuilder('te', 'te.id')
+            ->innerJoin('te.tracklistSeason', 'ts')
+            ->innerJoin('ts.tracklist', 't')
+            ->andWhere('te.id IN (:ids)')
+            ->andWhere('t.user = :user')
+            ->setParameter('ids', $ids)
+            ->setParameter('user', $user)
+            ->getQuery()
+            ->getResult();
+    }
+
     public function findOneByBackupHashAndUser(string $backupHash, User $user): ?TracklistEpisode
     {
         return $this->createQueryBuilder('te')

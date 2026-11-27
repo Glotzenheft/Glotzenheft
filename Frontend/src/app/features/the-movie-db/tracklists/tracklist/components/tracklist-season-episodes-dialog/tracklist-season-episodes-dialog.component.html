@@ -1,0 +1,168 @@
+<!--
+This file is part of Glotzenheft.
+
+Glotzenheft is free software: you can redistribute it and/or modify
+it under the terms of the GNU General Public License as published by
+the Free Software Foundation, either version 3 of the License, or
+(at your option) any later version.
+
+Glotzenheft is distributed in the hope that it will be useful,
+but WITHOUT ANY WARRANTY; without even the implied warranty of
+MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+GNU General Public License for more details.
+
+You should have received a copy of the GNU General Public License
+along with this program.  If not, see <http://www.gnu.org/licenses/>.
+-->
+
+<header>
+    <h2 [attr.id]="dialog?.ariaLabelledBy">
+        {{ title }} <small>Episoden bearbeiten · Staffel {{ seasonNumber }}</small>
+    </h2>
+    <p-button
+        ariaLabel="Editor schließen"
+        icon="pi pi-times"
+        [text]="true"
+        [rounded]="true"
+        severity="secondary"
+        [disabled]="pending"
+        (onClick)="cancel()"
+    />
+</header>
+@if (picking) {
+    <div class="list">
+        <p-picklist
+            [source]="source"
+            [target]="target"
+            dataKey="id"
+            filterBy="episodeNumber,name"
+            sourceHeader="Ausgeblendet"
+            targetHeader="Im Editor angezeigt"
+            [responsive]="true"
+            breakpoint="700px"
+            [showSourceControls]="false"
+            [showTargetControls]="false"
+            rightButtonAriaLabel="Ausgewählte einblenden"
+            leftButtonAriaLabel="Ausgewählte ausblenden"
+            allRightButtonAriaLabel="Alle einblenden"
+            allLeftButtonAriaLabel="Alle ausblenden"
+            sourceFilterPlaceholder="Folge oder Titel suchen"
+            targetFilterPlaceholder="Folge oder Titel suchen"
+        >
+            <ng-template #sourceHeader><strong>Ausgeblendet</strong></ng-template>
+            <ng-template #targetHeader><strong>Im Editor angezeigt</strong></ng-template>
+            <ng-template #item let-episode>E{{ episode.episodeNumber }} · {{ episode.name }}</ng-template>
+        </p-picklist>
+        <p-button label="Tracklist-Bereich wiederherstellen" [text]="true" (onClick)="restoreRange()" />
+    </div>
+    <footer>
+        <p-button label="Zurück" severity="secondary" (onClick)="picking = false" />
+        <p-button label="Auswahl übernehmen" (onClick)="applyList()" />
+    </footer>
+} @else {
+    <div class="list">
+        @for (row of rows; track row.episode.id) {
+            @if (visible.has(row.episode.id)) {
+                <section class="episode">
+                    <strong [id]="'status-' + row.episode.id"
+                        >E{{ row.episode.episodeNumber }} · {{ row.episode.name }}</strong
+                    >
+                    <p-selectbutton
+                        [options]="statuses"
+                        optionLabel="label"
+                        optionValue="value"
+                        [allowEmpty]="false"
+                        [ariaLabelledBy]="'status-' + row.episode.id"
+                        [disabled]="locked"
+                        [ngModel]="row.watched"
+                        (ngModelChange)="setWatched(row, $event)"
+                    >
+                        <ng-template #item let-option>
+                            <i
+                                [class]="option.value ? 'pi pi-eye' : 'pi pi-eye-slash'"
+                                [class.watched]="option.value && row.watched"
+                                [class.unwatched]="!option.value && !row.watched"
+                                aria-hidden="true"
+                            ></i>
+                            {{ option.label }}<span class="sr-only"> · E{{ row.episode.episodeNumber }}</span>
+                        </ng-template>
+                    </p-selectbutton>
+                    <div class="date">
+                        <p-datepicker
+                            #picker
+                            [formControl]="row.date"
+                            (input)="readDateInput(row, picker, $event)"
+                            dateFormat="dd.mm.yy"
+                            hourFormat="24"
+                            [showTime]="true"
+                            [showIcon]="true"
+                            [showOnFocus]="false"
+                            [keepInvalid]="true"
+                            [showButtonBar]="true"
+                            appendTo="body"
+                            [fluid]="true"
+                            placeholder="Schaudatum"
+                            [ariaLabel]="'Schaudatum für E' + row.episode.episodeNumber"
+                        ></p-datepicker>
+                        <p-button
+                            label="Jetzt"
+                            [ariaLabel]="'Jetzt für E' + row.episode.episodeNumber"
+                            [text]="true"
+                            [disabled]="locked"
+                            (onClick)="setNow(row)"
+                        />
+                    </div>
+                    @if (effect(row); as hint) {
+                        <span class="hint">
+                            @if (!row.watched) {
+                                <i class="pi pi-trash" aria-hidden="true"></i>
+                            }
+                            {{ hint }}</span
+                        >
+                    }
+                </section>
+            }
+        }
+        @if (!visible.size) {
+            <p>Keine Episoden eingeblendet.</p>
+        }
+    </div>
+    <div class="summary" role="status">
+        {{ summary }}
+        @if (hiddenChanges.length) {
+            <span>{{
+                hiddenChanges.length === 1
+                    ? '1 Änderung in einer ausgeblendeten Episode'
+                    : hiddenChanges.length + ' Änderungen in ausgeblendeten Episoden'
+            }}</span>
+            <p-button label="Geänderte anzeigen" [text]="true" (onClick)="showChanged()" />
+        }
+    </div>
+    @if (error) {
+        <p role="alert">{{ error }}</p>
+    }
+    <footer>
+        @if (awaitingReconcile) {
+            <p-button label="Staffel neu laden" [disabled]="pending" (onClick)="reconcile()" />
+        }
+        <p-button
+            label="Alle als geschaut markieren"
+            [outlined]="true"
+            [disabled]="locked || !visible.size"
+            (onClick)="markVisible(true)"
+            size="small"
+        />
+        <p-button
+            label="Alle als nicht geschaut markieren"
+            [outlined]="true"
+            [disabled]="locked || !visible.size"
+            (onClick)="markVisible(false)"
+            size="small"
+        />
+        <p-button label="Liste anpassen" [outlined]="true" [disabled]="locked" (onClick)="pick()" size="small"/>
+        <p-button label="Änderungen zurücksetzen" [text]="true" [disabled]="locked" (onClick)="reset()" size="small"/>
+        <p-button label="Abbrechen" severity="secondary" [disabled]="pending" (onClick)="cancel()" size="small"/>
+        <p-button label="Änderungen speichern" icon="pi pi-save" [disabled]="!canSave" (onClick)="save()" size="small"/>
+    </footer>
+}
+<p-confirmdialog key="season-episode-editor" appendTo="body" [style]="{ width: 'min(30rem, 94vw)' }"></p-confirmdialog>
